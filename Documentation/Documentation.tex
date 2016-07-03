@@ -1,5 +1,8 @@
 \documentclass{article}
 \usepackage{hyperref} % used for links
+\usepackage{listings} 
+
+\lstset{language=C, basicstyle=\ttfamily, breaklines=true}
 
 % Hyperlink setup
 \hypersetup{
@@ -11,14 +14,25 @@
 
 \begin{document}
 	\section{Setup of the project}
-	\subsection{Hardware used}
-	We used an Arduino Nano ATmega328, bought at \href{http://nl.rs-online.com/}{rs-components}.
-	
-	We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano. This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
-	\subsection{Software used}
-	We decided on the \href{http://platformio.org/platformio-ide}{PlatformIO IDE}, (which uses python 2.7 and Clang for autocompletion) because it is a lot better than the standard Arduino IDE, and also seemed better than the Stino plugin for Sublime Text 3. A plugin for CLion also looked good but we didn't get that to work. PlatformIO only worked when we imported an existing Arduino project, creating new files or new projects resulted in all kinds of errors.
+		\subsection{Hardware used}
+			We used an Arduino Nano ATmega328, bought at \href{http://nl.rs-online.com/}{rs-components}.
+			
+			We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano. This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
+		\subsection{External software used}
+			We decided on the \href{http://platformio.org/platformio-ide}{PlatformIO IDE}, (which uses python 2.7 and Clang for autocompletion) because it is a lot better than the standard Arduino IDE, and also seemed better than the Stino plugin for Sublime Text 3. A plugin for CLion also looked good but we didn't get that to work. PlatformIO worked when we imported an existing Arduino project, or when we created a new project with only one ino file in the source folder.
 	
 	\section{Code}
+		\subsection{Internet/Ethernet connection}
+			To connect the Arduino and the Ethernet shield to the internet, we used the \href{https://github.com/jcw/ethercard}{EtherCard} library. Because the ENC28j60 uses a different default CS pin (10 instead of 8), we had to add that in the code when making the connection. This is done by changing
+			\begin{lstlisting}
+if (ether.begin(sizeof Ethernet::buffer, mymac) == 0) 
+			\end{lstlisting}
+			(with no pin specified, so the default pin is used) to
+			\begin{lstlisting}
+if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) 
+			\end{lstlisting}
+			Note the third argument \lstinline|10| added after \lstinline|mymac|.
+			
 	
 	
 \end{document}
