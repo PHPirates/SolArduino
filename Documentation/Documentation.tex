@@ -1,15 +1,24 @@
 \documentclass{article}
+\usepackage{hyperref} % used for links
+
+% Hyperlink setup
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
 
 \begin{document}
-	\section{Hardware used}
-	We used an Arduino Nano ATMega 328P, bought at http://nl.rs-online.com/
-	datasheet http://docs-europe.electrocomponents.com/webdocs/0db9/0900766b80db99cb.pdf
+	\section{Setup of the project}
+	\subsection{Hardware used}
+	We used an Arduino Nano ATmega328, bought at \href{http://nl.rs-online.com/}{rs-components}.
 	
-	ENC28j60 Ethernet module
-	http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html
-	datasheet http://ww1.microchip.com/downloads/en/devicedoc/39662a.pdf
-	\section{Software used}
-	platformIO
-	http://platformio.org/platformio-ide
-	has git integration package but we don't use it
+	We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano. This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
+	\subsection{Software used}
+	We decided on the \href{http://platformio.org/platformio-ide}{PlatformIO IDE}, (which uses python 2.7 and Clang for autocompletion) because it is a lot better than the standard Arduino IDE, and also seemed better than the Stino plugin for Sublime Text 3. A plugin for CLion also looked good but we didn't get that to work. PlatformIO only worked when we imported an existing Arduino project, creating new files or new projects resulted in all kinds of errors.
+	
+	\section{Code}
+	
+	
 \end{document}
