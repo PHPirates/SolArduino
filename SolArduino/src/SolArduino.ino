@@ -1,31 +1,40 @@
-#include <Arduino.h>
+// Arduino demo sketch for testing the DHCP client code
+//
+// Original author: Andrew Lindsay
+// Major rewrite and API overhaul by jcw, 2011-06-07
+//
+// Copyright: GPL V2
+// See http://www.gnu.org/licenses/gpl.html
 
-/*
-  Blink
-  Turns on an LED on for one second, then off for one second, repeatedly.
+#include <EtherCard.h>
 
-  Most Arduinos have an on-board LED you can control. On the Uno and
-  Leonardo, it is attached to digital pin 13. If you're unsure what
-  pin the on-board LED is connected to on your Arduino model, check
-  the documentation at http://www.arduino.cc
+static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
-  This example code is in the public domain.
+byte Ethernet::buffer[700];
 
-  modified 8 May 2014
-  by Scott Fitzgerald
- */
+void setup () {
+  Serial.begin(57600);
+  Serial.println(F("\n[testDHCP]"));
 
+  Serial.print("MAC: ");
+  for (byte i = 0; i < 6; ++i) {
+    Serial.print(mymac[i], HEX);
+    if (i < 5)
+      Serial.print(':');
+  }
+  Serial.println();
+  
+  if (ether.begin(sizeof Ethernet::buffer, mymac) == 0) 
+    Serial.println(F("Failed to access Ethernet controller"));
 
-// the setup function runs once when you press reset or power the board
-void setup() {
-  // initialize digital pin 13 as an output.
-  pinMode(13, OUTPUT);
+  Serial.println(F("Setting up DHCP"));
+  if (!ether.dhcpSetup())
+    Serial.println(F("DHCP failed"));
+  
+  ether.printIp("My IP: ", ether.myip);
+  ether.printIp("Netmask: ", ether.netmask);
+  ether.printIp("GW IP: ", ether.gwip);
+  ether.printIp("DNS IP: ", ether.dnsip);
 }
 
-// the loop function runs over and over again forever
-void loop() {
-  digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);              // wait for a second
-  digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);              // wait for a second
-}
+void loop () {}
