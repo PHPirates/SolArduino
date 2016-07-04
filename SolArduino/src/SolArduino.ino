@@ -7,8 +7,10 @@
 // See http://www.gnu.org/licenses/gpl.html
 
 #include <EtherCard.h>
+#include <Time.h>
 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
+static long dayMs = 1000 * 60 * 60 * 24;
 
 byte Ethernet::buffer[700];
 
@@ -38,3 +40,12 @@ void setup () {
 }
 
 void loop () {}
+
+void getSunAltitude() {
+  int days = millisToDays(); //days since epoch, gets current time in millis
+}
+
+int millisToDays() {
+  time_t currentTime = now(); //get current time in millis
+  return currentTime / dayMs - 0.5 + 2440588 - 2451545;
+}
