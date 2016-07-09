@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{hyperref} % used for links
 \usepackage{listings}
+\usepackage{circuitikz}
 
 \lstset{language=C, basicstyle=\ttfamily, breaklines=true}
 
@@ -12,6 +13,25 @@
 	urlcolor=cyan,
 }
 
+% circuitikz shapes ---------------
+\makeatletter
+% create the shape (switch without arrow) 
+\pgfcircdeclarebipole{}{\ctikzvalof{bipoles/interr/height 2}}{spst}{\ctikzvalof{bipoles/interr/height}}{\ctikzvalof{bipoles/interr/width}}{
+	
+	\pgfsetlinewidth{\pgfkeysvalueof{/tikz/circuitikz/bipoles/thickness}\pgfstartlinewidth}
+	
+	\pgfpathmoveto{\pgfpoint{\pgf@circ@res@left}{0pt}}
+	\pgfpathlineto{\pgfpoint{.6\pgf@circ@res@right}{\pgf@circ@res@up}}
+	\pgfusepath{draw}   
+}
+
+% make the shape accessible with nice syntax
+\def\pgf@circ@spst@path#1{\pgf@circ@bipole@path{spst}{#1}}
+\tikzset{switch/.style = {\circuitikzbasekey, /tikz/to path=\pgf@circ@spst@path, l=#1}}
+\tikzset{spst/.style = {switch = #1}}
+\makeatother
+% --------------------------------
+
 \begin{document}
 	\section{Setup of the project}
 	\subsection{Hardware used}
@@ -19,8 +39,48 @@
 	
 	We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano. This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
 
-	\subsubsection{Potmeter}
-	The yellow-green wire from the potmeter to the main control box is the signal wire, on connection 8 in that box. With the Arduino we measured 74 (analog in so scale 0-1024) in the highest position and 360 in the lowest position, with connection 9 to ground on the Arduino.
+	\subsubsection{Wiring buttons}
+		\begin{center}\begin{circuitikz}
+			\draw 
+			% 20, 28, E4
+				(4,0) node {20} 
+				(6,0) node {28}
+				(8,0) node {E4}
+				
+			% button hoog
+				(1 , -6) node {hoog}
+				(2.25, -5.25) node {1A}
+				(2.25, -6) node {1}
+				(2.25, -6.75) node {1B}
+				(3.75, -5.25) node {2A}
+				(3.75, -6) node {2}
+				(3.75, -6.75) node {2B}
+			
+			% button laag
+				(10 ,-6) node {laag}
+				(7.25, -5.25) node {1A}
+				(7.25,-6) node {1}
+				(7.25, -6.75) node {1B}
+				(8.5, -5.25) node {2A}
+				(8.5, -6) node {2}
+				(8.5, -6.75) node {2B}
+				
+			% drawing
+				% 28 to hoog{1,2} via eindstoppen
+					(6,-0.25) to (6,-1)
+						to (3,-1) 
+						to (3,-2)
+					(2.5,-2) to (3.5,-2)
+					(2.5,-2) to[switch, l_= hoog] (2.5,-4) %eindstop hoog
+						to (2,-4)
+						to (2,-6) to (2.1,-6) 
+					(3.5,-2) to[switch = laag] (3.5,-4) %eindstop laag
+						to (4,-4)
+						to (4,-6) to (3.9,-6) 
+			;
+		\end{circuitikz}\end{center}
+	\subsubsection{Potentiometer}
+	The yellow-green wire from the potentiometer to the main control box is the signal wire, on connection 8 in that box. With the Arduino we measured 74 (analog in so scale 0-1024) in the highest position and 360 in the lowest position, with connection 9 to ground on the Arduino.
 	\subsubsection{Motor control}
 	We bought BC517 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4-11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also ...K ohm base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
 
