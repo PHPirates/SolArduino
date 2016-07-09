@@ -1,0 +1,82 @@
+<html>
+	<body>
+		<script>
+			var PI   = Math.PI,
+				sin  = Math.sin,
+				cos  = Math.cos,
+				tan  = Math.tan,
+				asin = Math.asin,
+				atan = Math.atan2,
+				acos = Math.acos,
+				rad  = PI / 180,
+				e = rad * 23.4397;
+			
+
+			var date = new Date(); //current date, date.valueOf() = 1467723183373
+			var dayMs = 1000 * 60 * 60 * 24;
+			var J1970 = 2440588; 
+			var J2000 = 2451545;
+	
+			function toJulian(date) { return date.valueOf() / dayMs - 0.5 + J1970; } // number of days since January 1, 4713 BC 
+			function toDays(date)   { return toJulian(date) - J2000; } // days since January 1, 2000, 12:00
+			var days = toDays(date);
+			var latitude = 51.546825;
+			var longitude = 4.412033;
+
+
+			getPosition = function (days, latitude, longitude) {
+
+				var lw  = rad * -longitude,
+					phi = rad * latitude,
+
+					c  = sunCoords(days),
+					H  = siderealTime(days, lw) - c.ra;
+					//H  = siderealTime(days, lw);
+
+				return {
+					azimuth: azimuth(H, phi, c.dec),
+					altitude: altitude(H, phi, c.dec)
+				};
+			};
+			
+			function sunCoords(days) {
+
+				var M = solarMeanAnomaly(days),
+					L = eclipticLongitude(M);
+
+				return {
+					dec: declination(L, 0),
+					ra: rightAscension(L, 0)
+				};
+			}
+
+			function solarMeanAnomaly(days) { return rad * (357.5291 + 0.98560028 * days); }
+			function eclipticLongitude(M) {
+
+				var C = rad * (1.9148 * sin(M) + 0.02 * sin(2 * M) + 0.0003 * sin(3 * M)), // equation of center
+					P = rad * 102.9372; // perihelion of the Earth
+
+				return M + C + P + PI;
+			}
+
+			function declination(l, b)    { return asin(sin(b) * cos(e) + cos(b) * sin(e) * sin(l)); }
+
+			function rightAscension(l, b) { return atan(sin(l) * cos(e) - tan(b) * sin(e), cos(l)); }
+
+			function siderealTime(d, lw) { return rad * (280.16 + 360.9856235 * d) - lw; }
+
+			function azimuth(H, phi, dec)  { return atan(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi)); }
+
+			function altitude(H, phi, dec) { return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H)); }
+
+			var pos = getPosition(days, latitude, longitude);
+			//var last = azimuth(siderealTime(days, rad * -longitude));
+			var last = pos.azimuth * 180 / PI;
+			var lasttwo = pos.altitude * 180 / PI;
+
+			var test = toDays(date);
+			//document.write(test);
+			document.write("date in ms: " + date.valueOf() + "<br>azimuth: " + last + "<br>latitude: "+ lasttwo);
+		</script>
+	</body>
+</html>
