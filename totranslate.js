@@ -5,7 +5,12 @@ var PI   = Math.PI,
     asin = Math.asin,
     atan = Math.atan2,
     acos = Math.acos,
-    rad  = PI / 180;
+    rad  = PI / 180,
+	e = rad * 23.4397;
+	
+	double lat = 51.546825;
+	double lng = 4.412033;
+
 	
 SunCalc.getPosition = function (date, lat, lng) {
 
