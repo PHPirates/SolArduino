@@ -8,11 +8,21 @@
 
 #include <EtherCard.h>
 
+//pin declarations
+const byte POTMETERPIN = 14;
+
+//experimentally determined values
+const int POTMETER_LOWEND = 360;
+const int POTMETER_HIGHEND = 74;
+const byte DEGREES_HIGHEND = 50;
+const byte DEGREES_LOWEND = 5;
+
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
 static byte myip[] = {192, 168, 2, 14};
 
 byte Ethernet::buffer[700];
+
 
 void setup () {
   Serial.begin(9600);
@@ -45,3 +55,11 @@ void setup () {
 }
 
 void loop () {}
+
+
+void setSolarPanel(byte degrees) {
+  int potMeterValue = analogRead(POTMETERPIN);
+  int expectedVoltage = POTMETER_LOWEND +
+  ( (degrees - DEGREES_LOWEND) / (DEGREES_HIGHEND - DEGREES_LOWEND) )
+  * (POTMETER_HIGHEND - POTMETER_LOWEND);
+}
