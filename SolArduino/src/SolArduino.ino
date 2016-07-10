@@ -68,17 +68,26 @@ void setSolarPanel(byte degrees) {
   int expectedVoltage = POTMETER_LOWEND +
   ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
   * (POTMETER_HIGHEND - POTMETER_LOWEND) / 100 ;
-  if (expectedVoltage > POTMETER_LOWEND || expectedVoltage < POTMETER_HIGHEND) { //TODO assumes high voltage on low end
+  if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND) || expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
     sendErrorMessage("Degrees Out Of Range");
   } else {
     int potMeterValue = analogRead(POTMETERPIN);
     while (abs (potMeterValue - expectedVoltage) > 3) { //3 is about half a degree accuracy
-      if (potMeterValue > expectedVoltage) { //TODO assumes high voltage on low end
-        solarPanelUp;
+      if (POTMETER_LOWEND > POTMETER_HIGHEND) {
+        if (potMeterValue > expectedVoltage) {
+          solarPanelUp;
+        } else {
+          solarPanelDown;
+        }
       } else {
-        solarPanelDown;
+        if (potMeterValue < expectedVoltage) {
+          solarPanelUp;
+        } else {
+          solarPanelDown;
+        }
       }
       potMeterValue = analogRead(POTMETERPIN);
+
     }
   }
 }
