@@ -39,7 +39,8 @@
 	
 	We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano. This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
 
-	\subsubsection{Wiring buttons}
+	\subsubsection{Button circuit}
+		We implemented the begin- and endstops in the circuit for the buttons that move the panels up and down. When a button is NOT pushed, 1 and 1B, and 2 and 2B of that button are connected. When a button is pushed, connections are made between 1 and 1A, and 2 and 2A of that button.
 		\begin{center}\begin{circuitikz}
 			\draw 
 			% 20, 28, E4
@@ -66,17 +67,39 @@
 				(8.5, -6.75) node {2B}
 				
 			% drawing
-				% 28 to hoog{1,2} via eindstoppen
+				% 28 to 1,2 hoog via eindstoppen
 					(6,-0.25) to (6,-1)
 						to (3,-1) 
 						to (3,-2)
 					(2.5,-2) to (3.5,-2)
 					(2.5,-2) to[switch, l_= hoog] (2.5,-4) %eindstop hoog
-						to (2,-4)
-						to (2,-6) to (2.1,-6) 
+						to (1.75,-4)
+						to (1.75,-6) to (2,-6) 
 					(3.5,-2) to[switch = laag] (3.5,-4) %eindstop laag
-						to (4,-4)
-						to (4,-6) to (3.9,-6) 
+						to (4.25,-4)
+						to (4.25,-6) to (4,-6) 
+				% 1A hoog to 1B laag
+					(2,-5.25) to (1.9,-5.25)
+						to (1.9,-4.75)
+						to(5.75,-4.75)
+						to(5.75,-6.75)
+						to(7,-6.75)
+				% 2B hoog to 1A laag
+					(4,-6.75) to (5.25,-6.75)
+						to (5.25,-5.25)
+						to (7,-5.25)
+				% 20 to 1 laag
+					(4,-0.25) to (4,-1.25)
+						to (6.25,-1.25)
+						to (6.25,-6)
+						to (7,-6)
+				% 1 laag to 2 laag
+					(7.5,-6) to (8.25,-6)
+				% E4 to 2A laag
+					(8,-0.25) to (8,-4.75)
+						to (9,-4.75)
+						to (9,-5.25)
+						to (8.75,-5.25)
 			;
 		\end{circuitikz}\end{center}
 	\subsubsection{Potentiometer}
