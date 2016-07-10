@@ -49,7 +49,7 @@
 				(8,0) node {E4}
 				
 			% button hoog
-				(1 , -6) node {hoog}
+				(1 , -6) node {button up}
 				(2.25, -5.25) node {1A}
 				(2.25, -6) node {1}
 				(2.25, -6.75) node {1B}
@@ -58,7 +58,7 @@
 				(3.75, -6.75) node {2B}
 			
 			% button laag
-				(10 ,-6) node {laag}
+				(10 ,-6) node {button down}
 				(7.25, -5.25) node {1A}
 				(7.25,-6) node {1}
 				(7.25, -6.75) node {1B}
@@ -72,10 +72,10 @@
 						to (3,-1) 
 						to (3,-2)
 					(2.5,-2) to (3.5,-2)
-					(2.5,-2) to[switch, l_= hoog] (2.5,-4) %eindstop hoog
+					(2.5,-2) to[switch, l_= high end stop] (2.5,-4) %eindstop hoog
 						to (1.75,-4)
 						to (1.75,-6) to (2,-6) 
-					(3.5,-2) to[switch = laag] (3.5,-4) %eindstop laag
+					(3.5,-2) to[switch = low end stop] (3.5,-4) %eindstop laag
 						to (4.25,-4)
 						to (4.25,-6) to (4,-6) 
 				% 1A hoog to 1B laag
@@ -122,6 +122,16 @@ if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0)
 			\end{lstlisting}
 			Note the third argument \lstinline|10| added after \lstinline|mymac|.
 
-	
+		\subsection{Solar Panel control}
+			The calculation to find the goal value of the potmeter is with half a degree accuracy because of integer division and the resulting decimal truncation. The offset can be seen with this Mathematica command:
+			\begin{lstlisting}
+Plot[
+N[360 + ( Floor[(x - 5) * 100 / (50 - 5) ]) * (74 - 360) /100] - 
+N[360 + ( (x - 5) * 100 / (50 - 5) ) * (74 - 360) /100]
+, {x, 10, 15}]
+			\end{lstlisting}
+			The idea is to keep setting the right pins high until the difference between the current voltage and the expected voltage is less than 3 'voltage points', about half a degree.
+			
+			To get the current time using NTP, we adapted \href{http://forum.arduino.cc/index.php?topic=171941.0}{example code} from the Arduino forum.
 	
 \end{document}
