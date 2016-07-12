@@ -3,25 +3,35 @@
 
 #include <EtherCard.h>
 
+//choose a unique mac address
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
 static byte myip[] = {192, 168, 2, 10};
 
 byte Ethernet::buffer[500];
 
-BufferFiller bfill;   //used in homepage
+BufferFiller bfill;   //used in every http response sent
+
+//to be reused in every http response sent
+const char http_OK[] PROGMEM =
+   "HTTP/1.0 200 OK\r\n"
+   "Content-Type: text/html\r\n"
+   "Pragma: no-cache\r\n\r\n";
 
 void setup () {
   Serial.begin(9600);
 
-  if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0)
+  //do not forget to add the extra '10' argument because of this ethernet shield
+  if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) {
     Serial.println(F("Failed to access Ethernet controller"));
-
-    ether.staticSetup(myip);
-    ether.printIp("Address: http://", ether.myip);
+  }
+  ether.staticSetup(myip);
+  //no serial print because ether.myip is a char[] array
+  ether.printIp("Address: http://", ether.myip);
 }
 
 void loop () {
+  //receive the http request
  word len = ether.packetReceive();
  word pos = ether.packetLoop(len);
  if (pos) { // check if valid tcp data is received
@@ -33,24 +43,26 @@ void loop () {
      }
      else {
          data += 5;
+         //start parsing data
+         Serial.println(data);
          if (data[0] == ' ') {
-             // Return home page
+             // No parameters given (http://192.168.2.10), return home page
              homePage();
          }
          else if (strncmp("?panel=up ", data, 10) == 0) {
-             Serial.println("up");
+             acknowledge("Panels going up"); //send acknowledge http response
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
-             Serial.println("down");
+             acknowledge("Panels going down");
          }
          else if (strncmp("?panel=stop ", data, 12) == 0) {
-             Serial.println("stop");
+             acknowledge("Panels stopped");
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
-             Serial.println("auto");
+             acknowledge("Panels going on auto");
          }
          else {
-             Serial.println("page not found");
+             Serial.println("Page not found");
          }
      }
    ether.httpServerReply(bfill.position()); //send the reply, if there was one
@@ -64,12 +76,20 @@ void homePage() {
  byte s = t % 60;
  bfill = ether.tcpOffset();
  bfill.emit_p(PSTR(
-   "HTTP/1.0 200 OK\r\n"
-   "Content-Type: text/html\r\n"
-   "Pragma: no-cache\r\n"
-   "\r\n"
+   "$F"
   //  "<meta http-equiv='refresh' content='1'/>"
-   "<title>RBBB server</title>"
+   "<title>SolArduino</title>"
    "<h1>$D$D:$D$D:$D$D</h1>"),
+   http_OK,
      h/10, h%10, m/10, m%10, s/10, s%10);
+  }
+
+  void acknowledge(char* message) {
+    //send a http response
+    bfill = ether.tcpOffset();
+    bfill.emit_p(PSTR(
+      "$F" //$F is for a progmem string,
+      "<title>SolArduino</title>"
+      "<h1>$S</h1>"), //$S for a c string
+    http_OK,message); //parameters to be replaced go here
   }
