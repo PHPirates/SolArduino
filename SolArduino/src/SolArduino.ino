@@ -69,6 +69,15 @@ void loop () {
              int degrees = string.toInt(); //convert string to integer
              Serial.print("panels to degrees: ");
              Serial.println(degrees);
+            //  setSolarPanel(degrees);
+
+             //add degrees in a string
+             String message1 = "Panel going to ";
+             String message2 = " degrees";
+             String message = message1 + degrees + message2;
+             char charMessage[message.length() +1];
+             //convert string to const char, easier than a modifiable char array
+             acknowledge(message.c_str());
          }
          else {
              Serial.println("Page not found");
@@ -93,7 +102,7 @@ void homePage() {
      h/10, h%10, m/10, m%10, s/10, s%10);
   }
 
-  void acknowledge(char* message) {
+  void acknowledge(const char* message) {
     //send a http response
     bfill = ether.tcpOffset();
     bfill.emit_p(PSTR(
