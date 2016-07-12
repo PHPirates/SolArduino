@@ -44,7 +44,7 @@ void loop () {
      else {
          data += 5;
          //start parsing data
-         Serial.println(data);
+        //  Serial.println(data);
          if (data[0] == ' ') {
              // No parameters given (http://192.168.2.10), return home page
              homePage();
@@ -60,6 +60,15 @@ void loop () {
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
              acknowledge("Panels going on auto");
+         }
+         else if (strncmp("?degrees=", data, 9) == 0) {
+              //print digit that comes after
+              String string;
+              string += (char)data[9]; //convert to char and add to string
+              string += (char)data[10];
+             int degrees = string.toInt(); //convert string to integer
+             Serial.print("panels to degrees: ");
+             Serial.println(degrees);
          }
          else {
              Serial.println("Page not found");
