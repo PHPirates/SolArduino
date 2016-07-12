@@ -89,9 +89,12 @@ void setSolarPanel(byte degrees) {
       potMeterValue = analogRead(POTMETERPIN);
 
     }
+    solarPanelStop(); //stop movement when close enough
   }
 }
 
+//assumes setting either high or low end pin high will move the panel
+//up or down
 void solarPanelDown() {
   digitalWrite(HIGH_END_PIN, LOW); //disconnect high end stop circuit
   digitalWrite(LOW_END_PIN, HIGH); //connect with circuit though low end stop
@@ -104,6 +107,12 @@ void solarPanelUp() {
   digitalWrite(PANEL_DOWN_PIN, LOW); //solar panel up
 }
 
+void solarPanelStop() {
+  digitalWrite(HIGH_END_PIN, LOW); //disconnect high end stop circuit
+  digitalWrite(LOW_END_PIN, LOW); //disconnect with circuit though low end stop
+  digitalWrite(PANEL_DOWN_PIN, LOW); //solar panel up, not that it matters
+}
+
 void sendErrorMessage(char* message) {
-  //dispatch error message to phone
+  //dispatch error message to all phones?
 }
