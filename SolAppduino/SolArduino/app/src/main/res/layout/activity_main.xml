@@ -13,37 +13,68 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <TableRow>
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!" />
-    </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hello World!" />
+        </TableRow>
 
-    <TableRow>
-        <Button
-            android:id="@+id/upButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:padding="25dp"
-            android:text="@string/up"/>
-        <Button
-            android:id="@+id/downButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:padding="25dp"
-            android:text="@string/down"/>
-    </TableRow>
+        <TableRow>
+            <Button
+                android:id="@+id/upButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="25dp"
+                android:text="@string/up"/>
+            <Button
+                android:id="@+id/downButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="25dp"
+                android:text="@string/down"/>
+        </TableRow>
 
-    <TableRow>
-        <TextView
-            android:id="@+id/response"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/response"/>
-    </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/response"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/response"/>
+
+        </TableRow>
+        <!--<TableRow>-->
+            <!--<ImageView-->
+                <!--android:id="@+id/imageView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:src="@drawable/line"/>-->
+        <!--</TableRow>-->
+
+        <!--<TableRow>-->
+            <!--<TextView-->
+                <!--android:id="@+id/touchx"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="x"/>-->
+            <!--<TextView-->
+                <!--android:id="@+id/touchy"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="y"/>-->
+        <!--</TableRow>-->
+        <TableRow android:layout_height="200dp">
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:rotation="270"/>
+        </TableRow>
     </TableLayout>
 </ScrollView>

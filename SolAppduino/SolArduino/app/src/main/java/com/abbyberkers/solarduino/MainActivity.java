@@ -8,8 +8,12 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -19,14 +23,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
     TextView textView;
     TextView responseTV;
+    TextView touchx;
+    TextView touchy;
+
+    ImageView imageView;
+
     Button upButton;
     Button downButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +42,48 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         textView = (TextView) findViewById(R.id.textView);
         responseTV = (TextView) findViewById(R.id.response);
+//        touchx = (TextView) findViewById(R.id.touchx);
+//        touchy = (TextView) findViewById(R.id.touchy);
+
+//        imageView = (ImageView) findViewById(R.id.imageView);
+//        imageView.getViewTreeObserver().addOnPreDrawListener(
+//                new ViewTreeObserver.OnPreDrawListener() {
+//                    public boolean onPreDraw() {
+//                        int finalHeight = imageView.getMeasuredHeight();
+//                        int finalWidth = imageView.getMeasuredWidth();
+//                        Log.e("height", String.valueOf(finalHeight));
+//                        Log.e("width", String.valueOf(finalWidth));
+//                        return true;
+//                    }
+//                });
 
         upButton = (Button) findViewById(R.id.upButton);
         downButton = (Button) findViewById(R.id.downButton);
+
+//        imageView.setOnTouchListener(new View.OnTouchListener() {
+//            float touchX;
+//            float touchY;
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                touchX = motionEvent.getX();
+//                touchY = motionEvent.getY();
+//
+//                String xtext = "x = " + String.valueOf(touchX);
+//                String ytext = "y = " +String.valueOf(touchY);
+//
+//                touchx.setText(xtext);
+//                touchy.setText(ytext);
+//                switch (motionEvent.getAction()){
+//                    case MotionEvent.ACTION_DOWN:
+//                        imageView.setImageResource(R.drawable.line_touched);
+//                        break;
+//                    case MotionEvent.ACTION_UP:
+//                        imageView.setImageResource(R.drawable.line);
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
 
         upButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
