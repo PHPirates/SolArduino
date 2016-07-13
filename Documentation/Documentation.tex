@@ -38,6 +38,15 @@
 	We used an Arduino Nano ATmega328, bought at \href{http://nl.rs-online.com/}{rs-components}.
 	
 	We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano. This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
+	
+	\subsubsection{Components list}
+		\begin{itemize}
+			\item BC547 NPN transistor
+			\item BC557 PNP transistor
+			\item $4.7$k $\Omega$ resistor (yellow - violet - red - gold)
+			\item $1$k $\Omega$ resistor (brown - black - black - brown - brown - red)
+			\item $10$k $\Omega$ resistor (brown - black - orange - gold)
+		\end{itemize}
 
 	\subsubsection{Button circuit}
 		We implemented the begin- and endstops in the circuit for the buttons that move the panels up and down. When a button is NOT pushed, 1 and 1B, and 2 and 2B of that button are connected. When a button is pushed, connections are made between 1 and 1A, and 2 and 2A of that button.
@@ -49,7 +58,7 @@
 				(8,0) node {E4}
 				
 			% button hoog
-				(1 , -6) node {button up}
+				(0.75 , -6) node {button up}
 				(2.25, -5.25) node {1A}
 				(2.25, -6) node {1}
 				(2.25, -6.75) node {1B}
@@ -105,7 +114,7 @@
 	\subsubsection{Potentiometer}
 	The yellow-green wire from the potentiometer to the main control box is the signal wire, on connection 8 in that box. With the Arduino we measured 74 (analog in so scale 0-1024) in the highest position and 360 in the lowest position, with connection 9 to ground on the Arduino.
 	\subsubsection{Motor control}
-	We bought BC517 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4-11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also ...K ohm base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
+	We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4-11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also ...K ohm base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
 
 	\subsection{Software used}
 	We decided on the \href{http://platformio.org/platformio-ide}{PlatformIO IDE}, (which uses python 2.7 and Clang for autocompletion) because it is a lot better than the standard Arduino IDE, and also seemed better than the Stino plugin for Sublime Text 3. A plugin for CLion also looked good but we didn't get that to work. PlatformIO only worked when we imported an existing Arduino project, creating new files or new projects resulted in all kinds of errors.
