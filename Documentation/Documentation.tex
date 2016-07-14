@@ -152,8 +152,8 @@ N[360 + ( (x - 5) * 100 / (50 - 5) ) * (74 - 360) /100]
 			To get the current time using NTP, we adapted \href{http://forum.arduino.cc/index.php?topic=171941.0}{example code} from the Arduino forum.
 			
 		\subsection{Communication with the Android app}
-			Communication goes by http requests, in the form of \verb|http://192.168.2.10/?panel=up|. Currently implemented are \verb|panel=up,panel=down,panel=stop,panel=auto|, but these actions do not do anything yet. When you request \verb|http://192.168.2.10/| you get a homepage with the current status of the solar panels (currently just the internal time of the Arduino...). It is also possible to request to set the panel to $x$ degrees by sending \verb|http://192.168.2.10/?degrees=xx| where $xx$ is an integer which needs to consist of two digits.
+			Communication goes by http requests, in the form of \url{http://192.168.2.10/?panel=up}. Currently implemented are \verb|panel=up,panel=down,panel=stop,panel=auto|, but these actions do not do anything yet. When you request \url{http://192.168.2.10/} you get a homepage with the current status of the solar panels (currently just the internal time of the Arduino...). It is also possible to request to set the panel to $x$ degrees by sending \url{http://192.168.2.10/?degrees=xx} where $xx$ is an integer which needs to consist of two digits. To get an update of the current solar panel status, which currently only gives back the current angle, request \url{http://192.168.2.10/?update}. You'll get back some html, with \verb|<body>[angle]</body>|.
 			
-			On every action sent, the Arduino will send back an http response starting with \verb|HTTP/1.0 200 OK|, and including something like \verb|<h1>Panels going up</h1>|.
+			On every action sent, the Arduino will send back an http response starting with \verb|HTTP/1.0 200 OK|, and including something like \verb|<body>Panels going up</body>|.
 	
 \end{document}
