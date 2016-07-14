@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -27,13 +29,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     TextView textView;
     TextView responseTV;
-    TextView touchx;
+    TextView progress;
     TextView touchy;
 
     ImageView imageView;
 
+    SeekBar seekbar;
+
     Button upButton;
     Button downButton;
+    Button setAngle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +47,48 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         textView = (TextView) findViewById(R.id.textView);
         responseTV = (TextView) findViewById(R.id.response);
+        progress = (TextView) findViewById(R.id.seekbarTV);
 //        touchx = (TextView) findViewById(R.id.touchx);
 //        touchy = (TextView) findViewById(R.id.touchy);
 
-//        imageView = (ImageView) findViewById(R.id.imageView);
-//        imageView.getViewTreeObserver().addOnPreDrawListener(
-//                new ViewTreeObserver.OnPreDrawListener() {
-//                    public boolean onPreDraw() {
-//                        int finalHeight = imageView.getMeasuredHeight();
-//                        int finalWidth = imageView.getMeasuredWidth();
-//                        Log.e("height", String.valueOf(finalHeight));
-//                        Log.e("width", String.valueOf(finalWidth));
-//                        return true;
-//                    }
-//                });
+        seekbar = (SeekBar) findViewById(R.id.seekBar);
+
+        imageView = (ImageView) findViewById(R.id.linePanel);
+        imageView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+                        int finalWidth = imageView.getMeasuredWidth();
+                        imageView.setPivotX(finalWidth);
+                        return true;
+                    }
+                });
 
         upButton = (Button) findViewById(R.id.upButton);
         downButton = (Button) findViewById(R.id.downButton);
+        setAngle = (Button) findViewById(R.id.setAngle);
+
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                String angle = "Set angle at " + i + " \u00b0";
+                setAngle.setText(angle);
+                rotate(i);
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+//                rotate(seekBar.getProgress());
+//                String angle = "Angle = " + seekBar.getProgress() + " \u00b0";
+//                progress.setText(angle);
+//                setAngle.setText(angle);
+            }
+        });
 
 //        imageView.setOnTouchListener(new View.OnTouchListener() {
 //            float touchX;
@@ -123,6 +153,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent){
         return false;
+    }
+
+    public void rotate(int i){
+        imageView.setRotation(i);
     }
 
     public void sendDirectionRequest(String direction) {
