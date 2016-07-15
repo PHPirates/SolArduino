@@ -8,8 +8,14 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -19,14 +25,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
     TextView textView;
-    TextView responseTV;
-    Button upButton;
-    Button downButton;
+    TextView responseTV;    // textView to show response from arduino
 
+    ImageView imageView;    // image of solar panels
+
+    SeekBar seekbar;        // seekbar to change angle of solar panels
+
+    Button upButton;        // button to make the solar panels move up
+    Button downButton;      // button to make the solar panels move down
+    Button setAngle;        // button to set angle of solar panels
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +46,48 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         textView = (TextView) findViewById(R.id.textView);
         responseTV = (TextView) findViewById(R.id.response);
 
+        seekbar = (SeekBar) findViewById(R.id.seekBar);
+
+        imageView = (ImageView) findViewById(R.id.linePanel);
+        // set the right point of the solar panel as turning axis
+        imageView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+                        int finalWidth = imageView.getMeasuredWidth();
+                        imageView.setPivotX(finalWidth);
+                        return true;
+                    }
+                });
+
         upButton = (Button) findViewById(R.id.upButton);
         downButton = (Button) findViewById(R.id.downButton);
+        setAngle = (Button) findViewById(R.id.setAngle);
 
+        // seekbar listener
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                // do something when the progress of the seekbar is changing ("live")
+                String angle = "Set angle at " + i + " \u00b0";
+                setAngle.setText(angle);
+                rotate(i);
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // do something when the user starts changing the progress of the seekbar
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // do something when the user stops changing the progress of the seekbar
+
+            }
+        });
+
+        // set OnTouchListener for the up button, send http request when putton pressed and released
         upButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -56,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         });
 
+        // set OnTouchListener for the down button, send http request when putton pressed and released
         downButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -74,19 +124,46 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         });
     }
 
+    // fatal exception when this is removed...
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent){
         return false;
     }
 
+    /**
+     * set the angle of the imageView
+     *
+     * @param i the angle at which to set the solar panel
+     */
+    public void rotate(int i){
+        imageView.setRotation(i);
+    }
+
+    /**
+     * send a http request to the arduino, to move panels up and down
+     * @param direction up, down, or stop (and auto?)
+     */
     public void sendDirectionRequest(String direction) {
         String url = "http://192.168.2.10/?panel=" + direction;
 //        String url = "http://www.google.com";
         new SendRequest().execute(url);
 
-
     }
 
+    /**
+     * send a http request to the arduino, to set solar panels at specified angle
+     * @param view
+     */
+    public void sendAngleRequest(View view){
+        int prog = seekbar.getProgress();
+        String url = "http://192.168.2.10/?degree=" + String.valueOf(prog);
+        new SendRequest().execute(url);
+    }
+
+
+    /**
+     * class to do html stuff...
+     */
     private class SendRequest extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... url){

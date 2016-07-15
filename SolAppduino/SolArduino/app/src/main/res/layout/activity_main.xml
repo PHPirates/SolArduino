@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,40 +10,102 @@
     tools:context="com.abbyberkers.solarduino.MainActivity">
 
     <TableLayout
+        android:id="@+id/table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <TableRow>
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!" />
-    </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hello World!" />
+        </TableRow>
 
-    <TableRow>
-        <Button
-            android:id="@+id/upButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:padding="25dp"
-            android:text="@string/up"/>
-        <Button
-            android:id="@+id/downButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:padding="25dp"
-            android:text="@string/down"/>
-    </TableRow>
+        <TableRow>
+            <Button
+                android:id="@+id/upButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="25dp"
+                android:text="@string/up"/>
+            <Button
+                android:id="@+id/downButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="25dp"
+                android:text="@string/down"/>
+        </TableRow>
 
-    <TableRow>
-        <TextView
-            android:id="@+id/response"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/response"/>
-    </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/response"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/response"/>
+
+        </TableRow>
+        <!--<TableRow>-->
+            <!--<ImageView-->
+                <!--android:id="@+id/imageView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:src="@drawable/line"/>-->
+        <!--</TableRow>-->
+
+        <!--<TableRow>-->
+            <!--<TextView-->
+                <!--android:id="@+id/touchx"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="x"/>-->
+            <!--<TextView-->
+                <!--android:id="@+id/touchy"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="y"/>-->
+        <!--</TableRow>-->
+
     </TableLayout>
-</ScrollView>
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="390px"
+            android:layout_below="@+id/table"
+            android:orientation="horizontal">
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:max="55"
+                android:translationX="-100dp"
+                android:translationY="125dp"
+                android:rotation="270"/>
+            <ImageView
+                android:id="@+id/linePanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:scaleType="fitXY"
+                android:src="@drawable/panel"/>
+
+        </FrameLayout>
+
+    <Button
+        android:id="@+id/setAngle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/frame"
+        android:text="set angle"
+        android:onClick="sendAngleRequest"/>
+    <TextView
+        android:id="@+id/seekbarTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setAngle"/>
+</RelativeLayout>
