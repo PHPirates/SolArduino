@@ -1,25 +1,22 @@
 package com.abbyberkers.solarduino;
 
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -27,26 +24,42 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
-    TextView textView;
-    TextView responseTV;    // textView to show response from arduino
+    String message;         // response from http requests
+    TextView currentAngle;  // show current angle of solar panels
+    TextView responseTV;    // show response from arduino
 
     ImageView imageView;    // image of solar panels
 
     SeekBar seekbar;        // seekbar to change angle of solar panels
+    int seekBarHeight;
 
     Button upButton;        // button to make the solar panels move up
     Button downButton;      // button to make the solar panels move down
     Button setAngle;        // button to set angle of solar panels
+
+    FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView) findViewById(R.id.textView);
+        currentAngle = (TextView) findViewById(R.id.textView);
         responseTV = (TextView) findViewById(R.id.response);
 
         seekbar = (SeekBar) findViewById(R.id.seekBar);
+
+        seekbar.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+                        seekBarHeight = seekbar.getMeasuredWidth();
+                        ViewGroup.LayoutParams params = frameLayout.getLayoutParams();
+                        params.height = seekBarHeight + 15;
+                        return true;
+                    }
+                });
+
+//        Log.e("seekbarHeight", String.valueOf(seekBarHeight));
 
         imageView = (ImageView) findViewById(R.id.linePanel);
         // set the right point of the solar panel as turning axis
@@ -59,9 +72,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
                 });
 
+
+
         upButton = (Button) findViewById(R.id.upButton);
         downButton = (Button) findViewById(R.id.downButton);
         setAngle = (Button) findViewById(R.id.setAngle);
+
+        frameLayout = (FrameLayout) findViewById(R.id.frame);
+//        int height = frameLayout.getLayoutParams().height;
+//        Log.e("height", String.valueOf(height));
 
         // seekbar listener
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -93,11 +112,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        textView.setText("Up button pressed.");
+                        currentAngle.setText("Up button pressed.");
                         sendDirectionRequest("up");
                         break;
                     case MotionEvent.ACTION_UP:
-                        textView.setText("Up button released.");
+                        currentAngle.setText("Up button released.");
                         sendDirectionRequest("stop");
                         break;
                 }
@@ -111,15 +130,23 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        textView.setText("Down button pressed.");
+                        currentAngle.setText("Down button pressed.");
                         sendDirectionRequest("down");
                         break;
                     case MotionEvent.ACTION_UP:
-                        textView.setText("Down button released.");
+                        currentAngle.setText("Down button released.");
                         sendDirectionRequest("stop");
                         break;
                 }
                 return true;
+            }
+        });
+
+        setAngle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int prog = seekbar.getProgress();
+                sendAngleRequest(prog);
             }
         });
     }
@@ -144,19 +171,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * @param direction up, down, or stop (and auto?)
      */
     public void sendDirectionRequest(String direction) {
-        String url = "http://192.168.2.10/?panel=" + direction;
+//        String url = "http://192.168.2.10/?panel=" + direction;
 //        String url = "http://www.google.com";
+        String url = "http://pannenkoekenwagen.nl/pkw/test.html";
         new SendRequest().execute(url);
 
     }
 
     /**
      * send a http request to the arduino, to set solar panels at specified angle
-     * @param view
+     * @param angle
      */
-    public void sendAngleRequest(View view){
-        int prog = seekbar.getProgress();
-        String url = "http://192.168.2.10/?degree=" + String.valueOf(prog);
+    public void sendAngleRequest(int angle){
+        String url;
+        if(angle < 10){
+            url = "http://192.168.2.10/?degree=0" + String.valueOf(angle);
+        } else {
+            url = "http://192.168.2.10/?degree=" + String.valueOf(angle);
+        }
+        url = "http://pannenkoekenwagen.nl/pkw/test.html";
         new SendRequest().execute(url);
     }
 
@@ -176,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
-            responseTV.setText(Html.fromHtml(result));
+            responseTV.setText(result);
         }
         private String sendRequest(String myURL) {
             String message = "";

@@ -75,7 +75,7 @@
         <FrameLayout
             android:id="@+id/frame"
             android:layout_width="match_parent"
-            android:layout_height="390px"
+            android:layout_height="300px"
             android:layout_below="@+id/table"
             android:orientation="horizontal">
             <SeekBar
