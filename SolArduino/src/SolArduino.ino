@@ -12,7 +12,6 @@
 const byte POTMETERPIN = 14;
 const byte HIGH_END_PIN = 2;
 const byte LOW_END_PIN = 3;
-const byte PANEL_DOWN_PIN = 4;
 
 //experimentally determined values
 const int POTMETER_LOWEND = 360;
@@ -98,21 +97,27 @@ void setSolarPanel(byte degrees) {
 void solarPanelDown() {
   digitalWrite(HIGH_END_PIN, LOW); //disconnect high end stop circuit
   digitalWrite(LOW_END_PIN, HIGH); //connect with circuit though low end stop
-  digitalWrite(PANEL_DOWN_PIN, HIGH); //solar panel down
 }
 
 void solarPanelUp() {
   digitalWrite(HIGH_END_PIN, HIGH); //connect high end stop circuit
   digitalWrite(LOW_END_PIN, LOW); //disconnect with circuit though low end stop
-  digitalWrite(PANEL_DOWN_PIN, LOW); //solar panel up
 }
 
 void solarPanelStop() {
   digitalWrite(HIGH_END_PIN, LOW); //disconnect high end stop circuit
   digitalWrite(LOW_END_PIN, LOW); //disconnect with circuit though low end stop
-  digitalWrite(PANEL_DOWN_PIN, LOW); //solar panel up, not that it matters
 }
 
 void sendErrorMessage(char* message) {
   //dispatch error message to all phones?
+}
+
+int getCurrentAngle() {
+  int potMeterValue = analogRead(POTMETERPIN);
+  //fraction of potmetervalue from the low end. Times hundred
+  //to maintain accuracy with integer division
+  int fraction = ( ( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
+  / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
+  return ( fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
 }
