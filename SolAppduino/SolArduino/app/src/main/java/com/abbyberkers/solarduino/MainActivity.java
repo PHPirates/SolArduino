@@ -1,7 +1,6 @@
 package com.abbyberkers.solarduino;
 
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -15,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,14 +24,16 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
-    String message;         // response from http requests
+    String urlString;
+    String ipString = "http://192.168.0.23/";
+
+    TextView textView;
     TextView currentAngle;  // show current angle of solar panels
     TextView responseTV;    // show response from arduino
 
     ImageView imageView;    // image of solar panels
 
     SeekBar seekbar;        // seekbar to change angle of solar panels
-    int seekBarHeight;
 
     Button upButton;        // button to make the solar panels move up
     Button downButton;      // button to make the solar panels move down
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        currentAngle = (TextView) findViewById(R.id.textView);
+        textView = (TextView) findViewById(R.id.textView);
+        currentAngle = (TextView) findViewById(R.id.currentAngle);
         responseTV = (TextView) findViewById(R.id.response);
 
         seekbar = (SeekBar) findViewById(R.id.seekBar);
@@ -52,14 +55,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         seekbar.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
                     public boolean onPreDraw() {
-                        seekBarHeight = seekbar.getMeasuredWidth();
+                        // set the height of the framelayout, depends on the height of the seekbar (in px)
+                        // height of the seekbar is different for every device(/API?)...
+                        int seekBarHeight = seekbar.getMeasuredWidth(); // get height of seekbar
+                        // get layout parameters of framelayout
                         ViewGroup.LayoutParams params = frameLayout.getLayoutParams();
-                        params.height = seekBarHeight + 15;
+                        params.height = seekBarHeight + 15; // set height of framelayout
                         return true;
                     }
                 });
-
-//        Log.e("seekbarHeight", String.valueOf(seekBarHeight));
 
         imageView = (ImageView) findViewById(R.id.linePanel);
         // set the right point of the solar panel as turning axis
@@ -71,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         return true;
                     }
                 });
-
-
 
         upButton = (Button) findViewById(R.id.upButton);
         downButton = (Button) findViewById(R.id.downButton);
@@ -112,11 +114,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        currentAngle.setText("Up button pressed.");
+                        textView.setText("Up button pressed.");
                         sendDirectionRequest("up");
                         break;
                     case MotionEvent.ACTION_UP:
-                        currentAngle.setText("Up button released.");
+                        textView.setText("Up button released.");
                         sendDirectionRequest("stop");
                         break;
                 }
@@ -130,11 +132,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        currentAngle.setText("Down button pressed.");
+                        textView.setText("Down button pressed.");
                         sendDirectionRequest("down");
                         break;
                     case MotionEvent.ACTION_UP:
-                        currentAngle.setText("Down button released.");
+                        textView.setText("Down button released.");
                         sendDirectionRequest("stop");
                         break;
                 }
@@ -171,10 +173,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * @param direction up, down, or stop (and auto?)
      */
     public void sendDirectionRequest(String direction) {
-//        String url = "http://192.168.2.10/?panel=" + direction;
-//        String url = "http://www.google.com";
-        String url = "http://pannenkoekenwagen.nl/pkw/test.html";
-        new SendRequest().execute(url);
+        urlString = ipString + "?panel=" + direction;
+//        String urlString = "http://www.google.com";
+//        urlString = "http://pannenkoekenwagen.nl/pkw/test.html";
+        new SendRequest().execute(urlString);
 
     }
 
@@ -183,14 +185,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * @param angle
      */
     public void sendAngleRequest(int angle){
-        String url;
+//        String urlString;
         if(angle < 10){
-            url = "http://192.168.2.10/?degree=0" + String.valueOf(angle);
+            urlString = ipString + "?degrees=0" + String.valueOf(angle);
         } else {
-            url = "http://192.168.2.10/?degree=" + String.valueOf(angle);
+            urlString = ipString + "?degrees=" + String.valueOf(angle);
         }
-        url = "http://pannenkoekenwagen.nl/pkw/test.html";
-        new SendRequest().execute(url);
+//        urlString = "http://pannenkoekenwagen.nl/pkw/test.html";
+        new SendRequest().execute(urlString);
     }
 
 
@@ -209,7 +211,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
-            responseTV.setText(result);
+            String message = urlString.substring(20);
+            Log.e("urlString", urlString);
+            Log.e("message", message);
+            if(message.contains("panel")){
+                responseTV.setText(Html.fromHtml(result));
+                Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
+            } else if(message.contains("degrees") || message.contains("update")) {
+                Log.e("message", result);
+                currentAngle.setText(Html.fromHtml(result));
+            }
         }
         private String sendRequest(String myURL) {
             String message = "";
