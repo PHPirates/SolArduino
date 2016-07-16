@@ -78,6 +78,11 @@ void loop () {
              //convert string to const char, easier than a modifiable char array
              acknowledge(stringDegrees.c_str());
          }
+         else if (strncmp("?update", data, 7) == 0) {
+           //update requested, sent back current angle
+           int angle = getCurrentAngle();
+           acknowledge(String(angle).c_str()); //convert to string, then to const char
+         }
          else {
              Serial.println("Page not found");
          }
@@ -108,4 +113,9 @@ void homePage() {
       "$F" //$F is for a progmem string,
       "$S"), //$S for a c string
     http_OK,message); //parameters to be replaced go here
+  }
+
+    //in branch setSolarPanel
+  int getCurrentAngle() {
+    return 42;
   }
