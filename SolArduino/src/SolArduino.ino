@@ -64,21 +64,16 @@ void loop () {
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
               //print digit that comes after
-              String string;
-              string += (char)data[9]; //convert to char and add to string
-              string += (char)data[10];
-             int degrees = string.toInt(); //convert string to integer
+              String stringDegrees;
+              stringDegrees += (char)data[9]; //convert to char and add to string
+              stringDegrees += (char)data[10];
+             int degrees = stringDegrees.toInt(); //convert string to integer
              Serial.print("panels to degrees: ");
              Serial.println(degrees);
             //  setSolarPanel(degrees);
 
-             //add degrees in a string
-             String message1 = "Panel going to ";
-             String message2 = " degrees";
-             String message = message1 + degrees + message2;
-             char charMessage[message.length() +1];
              //convert string to const char, easier than a modifiable char array
-             acknowledge(message.c_str());
+             acknowledge(stringDegrees.c_str());
          }
          else {
              Serial.println("Page not found");
@@ -108,7 +103,6 @@ void homePage() {
     bfill = ether.tcpOffset();
     bfill.emit_p(PSTR(
       "$F" //$F is for a progmem string,
-      "<title>SolArduino</title>"
-      "<h1>$S</h1>"), //$S for a c string
+      "$S"), //$S for a c string
     http_OK,message); //parameters to be replaced go here
   }
