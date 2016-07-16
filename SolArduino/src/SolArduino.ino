@@ -6,7 +6,8 @@
 //choose a unique mac address
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
-static byte myip[] = {192, 168, 2, 10};
+// static byte myip[] = {192, 168, 2, 10};// ip Thomas
+static byte myip[] = {192, 168, 0, 23}; // ip Abby
 
 byte Ethernet::buffer[500];
 
