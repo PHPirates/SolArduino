@@ -67,6 +67,7 @@ void loop () {
               String stringDegrees;
               stringDegrees += (char)data[9]; //convert to char and add to string
               stringDegrees += (char)data[10];
+              stringDegrees += " &#176;";
              int degrees = stringDegrees.toInt(); //convert string to integer
              Serial.print("panels to degrees: ");
              Serial.println(degrees);
