@@ -2,5 +2,6 @@
     <string name="app_name">SolArduino</string>
     <string name="up">Up</string>
     <string name="down">Down</string>
+    <string name="auto">Auto</string>
     <string name="response">No response yet.</string>
 </resources>

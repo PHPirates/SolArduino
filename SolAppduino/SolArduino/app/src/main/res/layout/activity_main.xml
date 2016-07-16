@@ -30,6 +30,18 @@
                 android:layout_height="wrap_content"
                 android:padding="25dp"
                 android:text="@string/up"/>
+
+            <Button
+                android:id="@+id/autoButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="25dp"
+                android:text="@string/auto"/>
+
+        </TableRow>
+
+        <TableRow>
             <Button
                 android:id="@+id/downButton"
                 android:layout_width="0dp"
@@ -37,6 +49,16 @@
                 android:layout_height="wrap_content"
                 android:padding="25dp"
                 android:text="@string/down"/>
+
+            <TextView
+                android:id="@+id/currentAngle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textSize="50sp"
+                android:text="20 \u00b0"/>
         </TableRow>
 
         <TableRow>
@@ -47,35 +69,11 @@
                 android:text="@string/response"/>
 
         </TableRow>
-        <!--<TableRow>-->
-            <!--<ImageView-->
-                <!--android:id="@+id/imageView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:adjustViewBounds="true"-->
-                <!--android:src="@drawable/line"/>-->
-        <!--</TableRow>-->
-
-        <!--<TableRow>-->
-            <!--<TextView-->
-                <!--android:id="@+id/touchx"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:text="x"/>-->
-            <!--<TextView-->
-                <!--android:id="@+id/touchy"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:text="y"/>-->
-        <!--</TableRow>-->
-
     </TableLayout>
         <FrameLayout
             android:id="@+id/frame"
             android:layout_width="match_parent"
-            android:layout_height="390px"
+            android:layout_height="300px"
             android:layout_below="@+id/table"
             android:orientation="horizontal">
             <SeekBar

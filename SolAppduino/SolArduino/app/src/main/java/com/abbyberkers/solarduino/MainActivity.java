@@ -3,23 +3,20 @@ package com.abbyberkers.solarduino;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -27,8 +24,12 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
+    String urlString;
+    String ipString = "http://192.168.0.23/";
+
     TextView textView;
-    TextView responseTV;    // textView to show response from arduino
+    TextView currentAngle;  // show current angle of solar panels
+    TextView responseTV;    // show response from arduino
 
     ImageView imageView;    // image of solar panels
 
@@ -38,15 +39,31 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     Button downButton;      // button to make the solar panels move down
     Button setAngle;        // button to set angle of solar panels
 
+    FrameLayout frameLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         textView = (TextView) findViewById(R.id.textView);
+        currentAngle = (TextView) findViewById(R.id.currentAngle);
         responseTV = (TextView) findViewById(R.id.response);
 
         seekbar = (SeekBar) findViewById(R.id.seekBar);
+
+        seekbar.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+                        // set the height of the framelayout, depends on the height of the seekbar (in px)
+                        // height of the seekbar is different for every device(/API?)...
+                        int seekBarHeight = seekbar.getMeasuredWidth(); // get height of seekbar
+                        // get layout parameters of framelayout
+                        ViewGroup.LayoutParams params = frameLayout.getLayoutParams();
+                        params.height = seekBarHeight + 15; // set height of framelayout
+                        return true;
+                    }
+                });
 
         imageView = (ImageView) findViewById(R.id.linePanel);
         // set the right point of the solar panel as turning axis
@@ -62,6 +79,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         upButton = (Button) findViewById(R.id.upButton);
         downButton = (Button) findViewById(R.id.downButton);
         setAngle = (Button) findViewById(R.id.setAngle);
+
+        frameLayout = (FrameLayout) findViewById(R.id.frame);
+//        int height = frameLayout.getLayoutParams().height;
+//        Log.e("height", String.valueOf(height));
 
         // seekbar listener
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -122,6 +143,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 return true;
             }
         });
+
+        setAngle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int prog = seekbar.getProgress();
+                sendAngleRequest(prog);
+            }
+        });
     }
 
     // fatal exception when this is removed...
@@ -144,20 +173,26 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * @param direction up, down, or stop (and auto?)
      */
     public void sendDirectionRequest(String direction) {
-        String url = "http://192.168.2.10/?panel=" + direction;
-//        String url = "http://www.google.com";
-        new SendRequest().execute(url);
+        urlString = ipString + "?panel=" + direction;
+//        String urlString = "http://www.google.com";
+//        urlString = "http://pannenkoekenwagen.nl/pkw/test.html";
+        new SendRequest().execute(urlString);
 
     }
 
     /**
      * send a http request to the arduino, to set solar panels at specified angle
-     * @param view
+     * @param angle
      */
-    public void sendAngleRequest(View view){
-        int prog = seekbar.getProgress();
-        String url = "http://192.168.2.10/?degree=" + String.valueOf(prog);
-        new SendRequest().execute(url);
+    public void sendAngleRequest(int angle){
+//        String urlString;
+        if(angle < 10){
+            urlString = ipString + "?degrees=0" + String.valueOf(angle);
+        } else {
+            urlString = ipString + "?degrees=" + String.valueOf(angle);
+        }
+//        urlString = "http://pannenkoekenwagen.nl/pkw/test.html";
+        new SendRequest().execute(urlString);
     }
 
 
@@ -176,7 +211,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
-            responseTV.setText(Html.fromHtml(result));
+            String message = urlString.substring(20);
+            Log.e("urlString", urlString);
+            Log.e("message", message);
+            if(message.contains("panel")){
+                responseTV.setText(Html.fromHtml(result));
+                Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
+            } else if(message.contains("degrees") || message.contains("update")) {
+                Log.e("message", result);
+                currentAngle.setText(Html.fromHtml(result));
+            }
         }
         private String sendRequest(String myURL) {
             String message = "";
