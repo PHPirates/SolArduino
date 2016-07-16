@@ -51,24 +51,26 @@ void loop () {
              homePage();
          }
          else if (strncmp("?panel=up ", data, 10) == 0) {
-             acknowledge("Panels going up"); //send acknowledge http response
+             acknowledge("Panels going up."); //send acknowledge http response
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
-             acknowledge("Panels going down");
+             acknowledge("Panels going down.");
          }
          else if (strncmp("?panel=stop ", data, 12) == 0) {
-             acknowledge("Panels stopped");
+             acknowledge("Panels stopped/not moving.");
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
-             acknowledge("Panels going on auto");
+             acknowledge("Panels going on auto.");
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
               //print digit that comes after
               String stringDegrees;
               stringDegrees += (char)data[9]; //convert to char and add to string
               stringDegrees += (char)data[10];
-              stringDegrees += " &#176;";
+
              int degrees = stringDegrees.toInt(); //convert string to integer
+             stringDegrees = String(degrees);
+             stringDegrees += " &#176;";
              Serial.print("panels to degrees: ");
              Serial.println(degrees);
             //  setSolarPanel(degrees);
