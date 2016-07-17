@@ -144,13 +144,31 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         });
 
-        setAngle.setOnClickListener(new View.OnClickListener() {
+        setAngle.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                int prog = seekbar.getProgress();
-                sendAngleRequest(prog);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        Log.e("setAngle", "pressed");
+                        int prog = seekbar.getProgress();
+                        sendAngleRequest(prog);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.e("setAngle", "released");
+                        sendUpdateRequest();
+                        break;
+                }
+                return true;
             }
         });
+
+//        setAngle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                int prog = seekbar.getProgress();
+//                sendAngleRequest(prog);
+//            }
+//        });
     }
 
     // fatal exception when this is removed...
@@ -195,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         new SendRequest().execute(urlString);
     }
 
+    public void sendUpdateRequest() {
+        urlString = ipString + "?update";
+
+        new SendRequest().execute(urlString);
+    }
+
 
     /**
      * class to do html stuff...
@@ -218,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 responseTV.setText(Html.fromHtml(result));
                 Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
             } else if(message.contains("degrees") || message.contains("update")) {
-                Log.e("message", result);
+                Log.e("result", result);
                 currentAngle.setText(Html.fromHtml(result));
             }
         }
