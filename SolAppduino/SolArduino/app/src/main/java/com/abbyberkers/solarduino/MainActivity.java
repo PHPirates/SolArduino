@@ -1,8 +1,11 @@
 package com.abbyberkers.solarduino;
 
+import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.ExpandedMenuView;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,8 +22,11 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
@@ -91,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 // do something when the progress of the seekbar is changing ("live")
                 String angle = "Set angle at " + i + " \u00b0";
                 setAngle.setText(angle);
-                rotate(i);
+//                rotate(i);
 
             }
 
@@ -155,20 +161,51 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.e("setAngle", "released");
-                        sendUpdateRequest();
+//                        String angleString = (currentAngle.getText().toString()).substring(0,2);
+//                        int angleInt = Integer.valueOf(angleString);
+//                        int seekBarProgress = seekbar.getProgress();
+//                        Log.e("angles", "current " + angleInt + " seekbar " + seekBarProgress);
+//
+//                        sendUpdateRequest();
+
+                        final Timer timer = new Timer();
+
+                        final TimerTask task = new TimerTask() {
+                            String angleString = (currentAngle.getText().toString())
+                                    .substring(0,2)
+                                    .trim();
+
+                            int angleInt = Integer.valueOf(angleString);
+                            int seekBarProgress = seekbar.getProgress();
+                            @Override
+                            public void run() {
+                                Log.e("angles", "current " + angleInt + " seekbar " + seekBarProgress);
+
+                                if(Math.abs(angleInt - seekBarProgress) == 1) {
+                                    Log.w("timer", "cancel");
+                                    timer.cancel();
+                                } else {
+
+                                    angleString = (currentAngle.getText().toString())
+                                            .substring(0, 2)
+                                            .trim();
+
+                                    angleInt = Integer.valueOf(angleString);
+                                    seekBarProgress = seekbar.getProgress();
+
+                                    sendUpdateRequest();
+                                }
+
+                            }
+                        };
+
+                        timer.schedule(task, 800, 800);
+
                         break;
                 }
                 return true;
             }
         });
-
-//        setAngle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int prog = seekbar.getProgress();
-//                sendAngleRequest(prog);
-//            }
-//        });
     }
 
     // fatal exception when this is removed...
@@ -215,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void sendUpdateRequest() {
         urlString = ipString + "?update";
-
         new SendRequest().execute(urlString);
     }
 
@@ -241,9 +277,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             if(message.contains("panel")){
                 responseTV.setText(Html.fromHtml(result));
                 Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
-            } else if(message.contains("degrees") || message.contains("update")) {
+            } else if(message.contains("degrees")) {
+                Log.e("result", result);
+            } else if(message.contains("update")) {
                 Log.e("result", result);
                 currentAngle.setText(Html.fromHtml(result));
+                result = result.substring(0,2).trim();
+                rotate(Integer.valueOf(result));
             }
         }
         private String sendRequest(String myURL) {
