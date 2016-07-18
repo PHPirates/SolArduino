@@ -3,6 +3,7 @@
 \usepackage{listings}
 \usepackage{circuitikz}
 \usepackage{amsmath}
+\usepackage{graphicx}
 
 %--------------------Make usable space all of page
 \setlength{\oddsidemargin}{0in}
@@ -188,5 +189,21 @@ N[360 + ( (x - 5) * 100 / (50 - 5) ) * (74 - 360) /100]
 			  \[ 
 				  \alpha = \arccos (\cos (\gamma_p - \gamma_s) \cos \theta_s \sin \theta_p + \sin \theta_s \cos \theta_p)\,.
 			   \]
+			   
+			   \subsection{Mathematica calculations}
+			   
+			   The Mathematica notebook can calculate the optimal angle for a given day. To do that, it calculates for each angle between $0$ and $90$ the total of the percentages of power loss at each $1/10$ hour of that day (function \verb|g|). Then it finds the angle for which that value is minimal. (function \verb|day|).  To find a percentage of power loss for a given hour, function \verb|f| calculates the misalignment with the sun using the formula from the previous subsection, and then calculates the percentage of loss of power using a formula from \href{https://en.wikipedia.org/wiki/Solar_tracker#/media/File:SolarPanel_alignment.png}{Wikipedia}.
+			   
+			   It can therefore make graphs for optimal angles for a month, and averaging the values for a month, also for a year, as seen below.
+			   \begin{figure}[h]
+			   	\centering
+			   	\includegraphics[width=0.8\textwidth]{graph_dec.JPG}
+			   	\label{fig:graph_dec}
+			   \end{figure}
+			   \begin{figure}[h]
+			   	\centering
+			   	\includegraphics[width=0.8\textwidth]{graph_2016.JPG}
+			   	\label{fig:graph_dec}
+			   \end{figure}
 			   	
 \end{document}
