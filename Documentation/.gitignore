@@ -3,3 +3,7 @@
 !*.tex
 !*.cls
 !documentation.pdf
+!*.nb
+!*.JPG
+!*.jpg
+!*.png
