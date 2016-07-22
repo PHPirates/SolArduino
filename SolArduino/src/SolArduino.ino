@@ -24,43 +24,45 @@ Timezone timeZone(summerTime, winterTime);
 
 void setup () {
   Serial.begin(9600);
-  Serial.println(F("\n[testDHCP]"));
-
-  Serial.print("MAC: ");
-  for (byte i = 0; i < 6; ++i) {
-    Serial.print(mymac[i], HEX);
-    if (i < 5)
-      Serial.print(':');
-  }
-  Serial.println();
-
-  if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0)
-    Serial.println(F("Failed to access Ethernet controller"));
-
-  Serial.println(F("Setting up DHCP"));
-  if (!ether.dhcpSetup())
-    Serial.println(F("DHCP failed"));
-
-  ether.printIp("My IP: ", ether.myip);
-  ether.printIp("Netmask: ", ether.netmask);
-  ether.printIp("GW IP: ", ether.gwip);
-  ether.printIp("DNS IP: ", ether.dnsip);
-
-  //Find ip address of a time server from the pool
-  if (!ether.dnsLookup(poolNTP)) {
-    Serial.println("DNS failed");
-  }
-  ether.printIp("Lookup IP   : ", ether.hisip);
-
-  //sync arduino clock, current time in seconds can be found with now();
-  setTime(getNtpTime());
+  // Serial.println(F("\n[testDHCP]"));
+  //
+  // Serial.print("MAC: ");
+  // for (byte i = 0; i < 6; ++i) {
+  //   Serial.print(mymac[i], HEX);
+  //   if (i < 5)
+  //     Serial.print(':');
+  // }
+  // Serial.println();
+  //
+  // if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0)
+  //   Serial.println(F("Failed to access Ethernet controller"));
+  //
+  // Serial.println(F("Setting up DHCP"));
+  // if (!ether.dhcpSetup())
+  //   Serial.println(F("DHCP failed"));
+  //
+  // ether.printIp("My IP: ", ether.myip);
+  // ether.printIp("Netmask: ", ether.netmask);
+  // ether.printIp("GW IP: ", ether.gwip);
+  // ether.printIp("DNS IP: ", ether.dnsip);
+  //
+  // //Find ip address of a time server from the pool
+  // if (!ether.dnsLookup(poolNTP)) {
+  //   Serial.println("DNS failed");
+  // }
+  // ether.printIp("Lookup IP   : ", ether.hisip);
+  //
+  // //sync arduino clock, current time in seconds can be found with now();
+  // setTime(getNtpTime());
 }
 
 void loop () {
-  Serial.print("time: ");
-  Serial.println(now());
-  Serial.println("azimuth, altitude");
-  getSunPosition(&position[0], locationLatitude, locationLongitude);
+  // Serial.print("time: ");
+  // Serial.println(now());
+  // Serial.println("azimuth, altitude");
+  // getSunPosition(&position[0], locationLatitude, locationLongitude);
+  double times[2];
+  getTimes(&times[0],locationLatitude,locationLongitude);
   delay(60000);
 }
 
@@ -149,9 +151,83 @@ double siderealTime(int days, double lw) {
 }
 
 double azimuth(double h, double phi, double sun) {
-  return atan2(sin(h), cos(h) * sin(phi) - tan(sun) * cos(phi));
+  return PI + atan2(sin(h), cos(h) * sin(phi) - tan(sun) * cos(phi));
 }
 
 double altitude(double h, double phi, double sun) {
   return asin(sin(phi) * sin(sun) + cos(phi) * cos(sun) * cos(h));
+}
+
+void getTimes(double *times, double locationLatitude,
+  double locationLongitude) {
+    double lw = rad * -locationLongitude; // what is lw?
+    double phi = rad * locationLatitude;
+    //int d = secondsToDays(); //days since epoch, gets current time in millis
+    double d = 6030.036844594906;
+    int n = julianCycle(d,lw);
+    double ds = approxTransit(0,-0.0767,6030);
+    double M = solarMeanAnomaly(ds);
+    double L = eclipticLongitude(M);
+    double dec = declination(L, 0);
+    double Jnoon = solarTransitJ(ds, M, L);
+    //result
+    Serial.println(-0.833 * rad);
+    Serial.println(lw);
+    Serial.println(phi);
+    Serial.println(dec);
+    n = 6046;
+    Serial.println(n);
+    M = 110.24;
+    Serial.println(M);
+    Serial.println(L);
+    Serial.println();
+    double Jset = getSetJ(-0.833 * rad, lw, phi, dec, n, M, L);
+    //Jset is 2457575.25 instead of .30 as in the .js, 91.33 full js
+    // Serial.println(Jset*100);
+
+    // long sunsetSeconds = (Jset + 0.5 - 2440588)  * 60 * 60 * 24;
+    // long sunsetSeconds = ((Jset*100 + 0.5*100 - 2440588*100)  * 60 * 60 * 24)/100;
+    // Serial.println(sunsetSeconds);
+
+    // Jset2 = (2457591.33 + 0.5 - 2440588)  * 60 * 60 * 24;
+    // Serial.println((2457591.33 + 0.5 - 2440588)  * 60 * 60 * 24);
+    // Serial.print("12457591.51 is changed into");
+    // Serial.println(12457591.51);
+    // Serial.print("2457591.80 is changed into");
+    // Serial.println(2457591.80);
+    // Serial.print("1234567.89 is changed into");
+    // Serial.println(1234567.89);
+}
+
+//tested
+double julianCycle(double d, double lw) {
+  //first adding half and then casting to int is equal to rounding
+  return (int)((d - 0.0009 - ( lw / (2 * PI) ) ) + 0.5);
+}
+
+//tested
+double approxTransit(double Ht, double lw, double n) {
+  return 0.0009 + (Ht + lw) / (2 * PI) + n;
+}
+
+//tested
+double solarTransitJ(double ds, double M, double L) {
+  return 2451545 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L);
+}
+
+//tested
+//returns time in seconds
+long fromJulian(double j) {
+  return (j + 0.5 - 2440588)  * 60 * 60 * 24;
+}
+
+double getSetJ(double h, double lw, double phi, double dec,
+  double n, double M, double L) {
+  double w = hourAngle(h, phi, dec); //2.00 compared to 1.99 from .js
+  double a = approxTransit(w, lw, n);
+  return solarTransitJ(a, M, L);
+}
+
+double hourAngle(double h, double phi, double d) {
+  return acos((sin(h) - sin (phi) * sin (d)) / (cos(phi) * cos(d)));
 }
