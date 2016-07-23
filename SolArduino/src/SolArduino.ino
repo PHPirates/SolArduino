@@ -9,15 +9,18 @@
 #include <EtherCard.h>
 
 //pin declarations
-const byte POTMETERPIN = 14;
-const byte HIGH_END_PIN = 2;
-const byte LOW_END_PIN = 3;
+const byte POWER_HIGH = 2;
+const byte DIRECTION_PIN = 3;
+const byte POWER_LOW = 4;
+
+const byte POTMETERPIN = A7;
 
 //experimentally determined values
-const int POTMETER_LOWEND = 360;
-const int POTMETER_HIGHEND = 74;
+const int POTMETER_LOWEND = 641;
+const int POTMETER_HIGHEND = 1022;
 const byte DEGREES_HIGHEND = 50;
 const byte DEGREES_LOWEND = 5;
+
 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
@@ -27,6 +30,10 @@ byte Ethernet::buffer[700];
 
 
 void setup () {
+  pinMode(POWER_HIGH,OUTPUT);
+  pinMode(DIRECTION_PIN,OUTPUT);
+  pinMode(POWER_LOW,OUTPUT);
+
   Serial.begin(9600);
   // Serial.println(F("\n[testDHCP]"));
   //
@@ -55,10 +62,16 @@ void setup () {
   // ether.printIp("GW IP: ", ether.gwip);
   // ether.printIp("DNS IP: ", ether.dnsip);
 
-  setSolarPanel(27);
+  // setSolarPanel(27);
+  solarPanelUp();
 }
 
-void loop () {}
+void loop () {
+  int sensorValue = analogRead(A7);
+  // print out the value you read:
+  Serial.println(sensorValue);
+  delay(100);        // delay in between reads for stability
+}
 
 
 void setSolarPanel(byte degrees) {
@@ -92,21 +105,23 @@ void setSolarPanel(byte degrees) {
   }
 }
 
-//assumes setting either high or low end pin high will move the panel
-//up or down
+//solar panel movements
 void solarPanelDown() {
-  digitalWrite(HIGH_END_PIN, LOW); //disconnect high end stop circuit
-  digitalWrite(LOW_END_PIN, HIGH); //connect with circuit though low end stop
+  digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
+  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
+  digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
 }
 
 void solarPanelUp() {
-  digitalWrite(HIGH_END_PIN, HIGH); //connect high end stop circuit
-  digitalWrite(LOW_END_PIN, LOW); //disconnect with circuit though low end stop
+  digitalWrite(POWER_LOW, LOW);
+  digitalWrite(POWER_HIGH, HIGH);
+  digitalWrite(DIRECTION_PIN, LOW);
 }
 
 void solarPanelStop() {
-  digitalWrite(HIGH_END_PIN, LOW); //disconnect high end stop circuit
-  digitalWrite(LOW_END_PIN, LOW); //disconnect with circuit though low end stop
+  digitalWrite(POWER_LOW, LOW);
+  digitalWrite(POWER_HIGH, LOW);
+  digitalWrite(DIRECTION_PIN, LOW);
 }
 
 void sendErrorMessage(char* message) {
