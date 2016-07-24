@@ -19,8 +19,8 @@ const byte DEGREES_LOWEND = 5;
 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
-// static byte myip[] = {192, 168, 2, 10};// ip Thomas
-static byte myip[] = {192, 168, 0, 23}; // ip Abby
+static byte myip[] = {192, 168, 2, 10};// ip Thomas
+// static byte myip[] = {192, 168, 0, 23}; // ip Abby
 
 byte Ethernet::buffer[500];
 
@@ -37,6 +37,8 @@ void setup () {
   pinMode(DIRECTION_PIN,OUTPUT);
   pinMode(POWER_LOW,OUTPUT);
 
+  solarPanelStop();
+
   Serial.begin(9600);
 
 
@@ -50,11 +52,11 @@ void setup () {
 }
 
 void loop () {
+  //testprint potmeter
   int sensorValue = analogRead(A7);
-  // print out the value you read:
-  Serial.println(sensorValue);
+  // Serial.println(sensorValue);
 
-    //receive the http request
+  //receive the http request
  word len = ether.packetReceive();
  word pos = ether.packetLoop(len);
  if (pos) { // check if valid tcp data is received
@@ -73,15 +75,19 @@ void loop () {
              homePage();
          }
          else if (strncmp("?panel=up ", data, 10) == 0) {
+           solarPanelUp();
              acknowledge("Panels going up."); //send acknowledge http response
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
+           solarPanelDown();
              acknowledge("Panels going down.");
          }
          else if (strncmp("?panel=stop ", data, 12) == 0) {
+           solarPanelStop();
              acknowledge("Panels stopped/not moving.");
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
+           //solarPanelAuto(); //to be implemented
              acknowledge("Panels going on auto.");
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
@@ -102,7 +108,8 @@ void loop () {
          }
          else if (strncmp("?update", data, 7) == 0) {
            //update requested, sent back current angle
-           int angle = getCurrentAngle();
+          //  int angle = getCurrentAngle();
+          int angle = 42;
            acknowledge(String(angle).c_str()); //convert to string, then to const char
          }
          else {
@@ -121,7 +128,8 @@ void setSolarPanel(byte degrees) {
   ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
   * (POTMETER_HIGHEND - POTMETER_LOWEND) / 100 ;
   if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND) || expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
-    sendErrorMessage("Degrees Out Of Range");
+    // sendErrorMessage("Degrees Out Of Range");
+    Serial.println("Degrees Out Of Range");
   } else {
     int potMeterValue = analogRead(POTMETERPIN);
     while (abs (potMeterValue - expectedVoltage) > 3) { //3 is about half a degree accuracy
@@ -180,6 +188,7 @@ void solarPanelStop() {
   }
 
   void acknowledge(const char* message) {
+    Serial.println(message);
     //send a http response
     bfill = ether.tcpOffset();
     bfill.emit_p(PSTR(
