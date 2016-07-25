@@ -338,6 +338,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     currentAngle.setText(angle);
                     result = result.substring(0, 2).trim();
                     rotate(Integer.valueOf(result));
+                } else if (message.contains("Page")) {
+                    Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getBaseContext(), "Something went wrong.", Toast.LENGTH_SHORT).show();
                 }
             }
         }

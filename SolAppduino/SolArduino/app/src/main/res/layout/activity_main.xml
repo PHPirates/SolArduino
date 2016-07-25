@@ -42,6 +42,8 @@
                         android:src="@drawable/up_button"
                         android:background="#00000000"/>
 
+                </TableRow>
+                <TableRow>
                     <ImageButton
                         android:id="@+id/downButton"
                         android:layout_width="0dp"
@@ -51,45 +53,35 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/down_button"
                         android:background="#00000000"/>
-
-                    <!--<Button-->
-                        <!--android:id="@+id/upButton"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="@drawable/up_button"/>-->
-
-                    <!--<Button-->
-                        <!--android:id="@+id/downButton"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:background="@drawable/down_button"/>-->
-                </TableRow>
-                <TableRow>
-                    <Button
-                        android:id="@+id/autoButton"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:padding="25dp"
-                        android:text="@string/auto"/>
                 </TableRow>
 
             </TableLayout>
 
-            <TextView
-                android:id="@+id/currentAngle"
+            <TableLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_gravity="center_vertical"
-                android:textSize="75sp"
-                android:text="20 \u00b0"
-                android:onClick="sendUpdateRequest"/>
+                android:layout_weight="3"
+                android:orientation="vertical">
+                <TableRow>
+                    <TextView
+                        android:id="@+id/currentAngle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="100sp"
+                        android:text="20 \u00b0"
+                        android:onClick="sendUpdateRequest"/>
+                </TableRow>
+                <TableRow
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/autoBox"
+                        android:layout_width="wrap_content"
+                        android:text="@string/auto" />
+                </TableRow>
+            </TableLayout>
         </TableRow>
-
         <TableRow>
             <TextView
                 android:id="@+id/response"
