@@ -181,8 +181,11 @@ void getTimes(double *times, double locationLatitude,
     Serial.println(M);
     Serial.println(L);
     Serial.println();
-    double Jset = getSetJ(-0.833 * rad, lw, phi, dec, n, M, L);
-    //Jset is 2457575.25 instead of .30 as in the .js, 91.33 full js
+    long Jset = getSetJ(-0.833 * rad, lw, phi, dec, n, M, L);
+    //Jset is 2457575.25 instead of .30 as in the .js
+    unsigned long JsetJs = 2457596320; //is Jset * 1000, from js. 10 is about 15mins, 1 about 1.5 mins (accurate enough)
+    long sunsetSeconds = (JsetJs + 500 - 2440588000) * 36 * 2.4; //*24 and then /10 doesn't work.
+
     // Serial.println(Jset*100);
 
     // long sunsetSeconds = (Jset + 0.5 - 2440588)  * 60 * 60 * 24;
@@ -191,12 +194,6 @@ void getTimes(double *times, double locationLatitude,
 
     // Jset2 = (2457591.33 + 0.5 - 2440588)  * 60 * 60 * 24;
     // Serial.println((2457591.33 + 0.5 - 2440588)  * 60 * 60 * 24);
-    // Serial.print("12457591.51 is changed into");
-    // Serial.println(12457591.51);
-    // Serial.print("2457591.80 is changed into");
-    // Serial.println(2457591.80);
-    // Serial.print("1234567.89 is changed into");
-    // Serial.println(1234567.89);
 }
 
 //tested
@@ -221,11 +218,11 @@ long fromJulian(double j) {
   return (j + 0.5 - 2440588)  * 60 * 60 * 24;
 }
 
-double getSetJ(double h, double lw, double phi, double dec,
+long getSetJ(double h, double lw, double phi, double dec,
   double n, double M, double L) {
   double w = hourAngle(h, phi, dec); //2.00 compared to 1.99 from .js
   double a = approxTransit(w, lw, n);
-  return solarTransitJ(a, M, L);
+  return solarTransitJ(a, M, L)*100; //should be a long to retain enough precision
 }
 
 double hourAngle(double h, double phi, double d) {
