@@ -76,7 +76,8 @@
 				var lw = rad * -lng,
 					phi = rad * lat,
 
-					d = toDays(date),
+					//d = toDays(date),
+					d = 6030.04,
 					n = julianCycle(d, lw),
 					ds = approxTransit(0, lw, n),
 
@@ -96,19 +97,27 @@
 
 				//for (i = 0, len = times.length; i < len; i += 1) {
 					time = times[0];
-					
-					document.write(time[0]*rad +"<br>");
+					var h = time[0] * rad;
+					document.write(h +"<br>");
 					document.write(lw +"<br>");
 					document.write(phi +"<br>");
 					document.write(dec +"<br>");
 					document.write(n +"<br>");
 					document.write(M +"<br>");
 					document.write(L +"<br>");
+					
+					h = -0.0145; //adding two digits is useful
+					lw = -0.08; //adding two digits doesn't help
+					phi = 0.90; //,,
+					dec = 0.3970; //+2 and correct => +25
+					n = 6030;
+					M = 109.97; //+2 => 0
+					L = 114.9055; //+2 and correct => remaining + 10				
 
-					Jset = getSetJ(time[0] * rad, lw, phi, dec, n, M, L);
+					Jset = getSetJ(h, lw, phi, dec, n, M, L);
 					Jrise = Jnoon - (Jset - Jnoon);
 					
-					document.write("sunset:"+Jset+"<br>");
+					document.write("Jset:"+Jset*1000+"<br>");
 					//document.write("sunset:"+fromJulian(Jset).valueOf()/1000+"<br>");
 					var test1 = new Date((Jset + 0.5 - J1970) * 60 * 60 * 24);
 					document.write("sunsetsecs:"+test1.valueOf()+"<br>");
@@ -169,6 +178,12 @@
 			
 			var test = getSetJ(-0.01,-0.08,0.90,0.30,6030,109.97,113.95);
 			document.write("<br>"+times.sunset);
+			
+			var h = -0.01,
+				phi = 0.90,
+				dec = 0.30;
+			//document.write("<br>acos("+acos( (sin(h) - sin (phi) * sin (d)) / (cos(phi) * cos(d)) ) ) ;
+			document.write("<br>acos("+hourAngle(h,phi,dec) ) ;
 		</script>
 	</body>
 </html>

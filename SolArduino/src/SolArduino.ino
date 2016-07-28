@@ -163,37 +163,26 @@ void getTimes(double *times, double locationLatitude,
     double lw = rad * -locationLongitude; // what is lw?
     double phi = rad * locationLatitude;
     //int d = secondsToDays(); //days since epoch, gets current time in millis
-    double d = 6030.036844594906;
+    double d = 6030.04;
     int n = julianCycle(d,lw);
-    double ds = approxTransit(0,-0.0767,6030);
+    double ds = approxTransit(0,lw,n); //n=6030?
     double M = solarMeanAnomaly(ds);
     double L = eclipticLongitude(M);
-    double dec = declination(L, 0);
+    double dec = declination(L, 0); //uses asin
     double Jnoon = solarTransitJ(ds, M, L);
     //result
-    Serial.println(-0.833 * rad);
-    Serial.println(lw);
-    Serial.println(phi);
-    Serial.println(dec);
-    n = 6046;
-    Serial.println(n);
-    M = 110.24;
-    Serial.println(M);
-    Serial.println(L);
+    Serial.println(-0.833 * rad); //-0.01
+    Serial.println(lw); //-0.08
+    Serial.println(phi); //0.90
+    Serial.println(dec); //0.30 //uses asin
+    Serial.println(n); //6030
+    Serial.println(M); //109.97
+    Serial.println(L); //113.95
     Serial.println();
-    long Jset = getSetJ(-0.833 * rad, lw, phi, dec, n, M, L);
-    //Jset is 2457575.25 instead of .30 as in the .js
+    unsigned long Jset = getSetJ(-0.833 * rad, lw, phi, dec, n, M, L);
+    //Jset is 2457575.25 ?? instead of 2,457,575,335 as in the .js
     unsigned long JsetJs = 2457596320; //is Jset * 1000, from js. 10 is about 15mins, 1 about 1.5 mins (accurate enough)
     long sunsetSeconds = (JsetJs + 500 - 2440588000) * 36 * 2.4; //*24 and then /10 doesn't work.
-
-    // Serial.println(Jset*100);
-
-    // long sunsetSeconds = (Jset + 0.5 - 2440588)  * 60 * 60 * 24;
-    // long sunsetSeconds = ((Jset*100 + 0.5*100 - 2440588*100)  * 60 * 60 * 24)/100;
-    // Serial.println(sunsetSeconds);
-
-    // Jset2 = (2457591.33 + 0.5 - 2440588)  * 60 * 60 * 24;
-    // Serial.println((2457591.33 + 0.5 - 2440588)  * 60 * 60 * 24);
 }
 
 //tested
@@ -218,13 +207,14 @@ long fromJulian(double j) {
   return (j + 0.5 - 2440588)  * 60 * 60 * 24;
 }
 
-long getSetJ(double h, double lw, double phi, double dec,
+unsigned long getSetJ(double h, double lw, double phi, double dec,
   double n, double M, double L) {
   double w = hourAngle(h, phi, dec); //2.00 compared to 1.99 from .js
   double a = approxTransit(w, lw, n);
-  return solarTransitJ(a, M, L)*100; //should be a long to retain enough precision
+  return solarTransitJ(a, M, L)*1000; //should be a long to retain enough precision
 }
 
+//uses acos
 double hourAngle(double h, double phi, double d) {
   return acos((sin(h) - sin (phi) * sin (d)) / (cos(phi) * cos(d)));
 }
