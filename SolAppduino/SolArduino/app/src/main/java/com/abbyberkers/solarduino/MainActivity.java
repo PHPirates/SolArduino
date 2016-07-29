@@ -1,6 +1,7 @@
 package com.abbyberkers.solarduino;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
@@ -28,15 +29,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.AbstractSequentialList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
     String urlString;
-    String ipString = "http://192.168.2.10/"; // IP Thomas
-//    String ipString = "http://192.168.0.23/"; // IP Abby
+//    String ipString = "http://192.168.2.10/"; // IP Thomas
+    String ipString = "http://192.168.0.23/"; // IP Abby
 
     int delay = 900;        // delay for the Timer/TimerTask
 
@@ -300,15 +305,30 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         new SendRequest().execute(urlString);
     }
 
+    public void testButton(View view){
+        urlString = ipString;
+        new SendRequest().execute(urlString);
+    }
 
     /**
      * class to do html stuff...
      */
     private class SendRequest extends AsyncTask<String, Void, String> {
 
+//        int defaultColor;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            defaultColor = currentAngle.getCurrentTextColor();
+//            Log.e("color", String.valueOf(defaultColor));
+//            Log.e("color", Integer.toHexString(defaultColor));
+//            currentAngle.setTextColor(Color.parseColor("#00929F"));
+//        }
+
         @Override
         protected String doInBackground(String... url){
             try{
+//                return pingIP();
                 return sendRequest(url[0]);
             } catch (Exception e){
                 return "Unable to retrieve web page.";
@@ -317,6 +337,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
+//            String color = "#" + String.valueOf(Integer.toHexString(defaultColor));
+//            currentAngle.setTextColor(Color.parseColor(color));
             if(result.contains("Unable")){
                 Toast.makeText(getBaseContext(), result, Toast.LENGTH_LONG).show();
                 seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
@@ -324,10 +346,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         .trim()));
                 Log.w("internet", "not connected");
             } else {
-                String message = urlString.substring(20);
+                String message = urlString;
+//                String message = urlString.substring(20);
                 Log.e("urlString", urlString);
                 Log.e("message", message);
-                if (message.contains("panel")) {
+                if (message.equals(ipString)) {
+                   Log.e("message", "homepage");
+                } else if (message.contains("panel")) {
                     responseTV.setText(Html.fromHtml(result));
                     Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
                 } else if (message.contains("degrees")) {
@@ -341,10 +366,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 } else if (message.contains("Page")) {
                     Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.e("message", message);
                     Toast.makeText(getBaseContext(), "Something went wrong.", Toast.LENGTH_SHORT).show();
                 }
             }
         }
+
         private String sendRequest(String myURL) {
             String message = "";
             HttpURLConnection urlConnection = null;
@@ -380,6 +407,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
             return message;
         }
+
+
     }
 }
 
