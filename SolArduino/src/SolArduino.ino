@@ -12,8 +12,6 @@ byte Ethernet::buffer[700];
 double rad = PI / 180;
 double e = rad * 23.4397;
 
-double days;
-double position[2];
 double locationLatitude = 51.546825;
 double locationLongitude = 4.412033;
 
@@ -59,24 +57,27 @@ void setup () {
 void loop () {
   // Serial.print("time: ");
   // Serial.println(now());
-  // Serial.println("azimuth, altitude");
-  // getSunPosition(&position[0], locationLatitude, locationLongitude);
-  double times[2];
-  getTimes(&times[0],locationLatitude,locationLongitude);
-  delay(60000);
+  Serial.println("azimuth, altitude");
+  double position[2];
+  getSunPosition(&position[0], locationLatitude, locationLongitude, 6030.04);
+
+  // double times[2];
+  // getTimes(&times[0],locationLatitude,locationLongitude);
+  // delay(60000);
+
+  Serial.println(powerLoss(6030.04,30)); //should print TODO
 }
 
 void getSunPosition(double *position, double locationLatitude,
-  double locationLongitude) { // previously getSunAltitude()
+  double locationLongitude, double days) { // previously getSunAltitude()
 
     double lw = rad * -locationLongitude; // what is lw?
     double phi = rad * locationLatitude;
-    //int days = secondsToDays(); //days since epoch, gets current time in millis
-    days = 6030.036844594906;
+    //int days = secondsToDays(); //days since epoch?, gets current time in millis
+    // days = 6030.036844594906;
 
     double sun[2];
-    sun[0] = days;
-    sunCoords(&sun[0]);
+    sunCoords(&sun[0],days);
 
     double h = siderealTime(days, lw) - sun[1]; // what is h?
     position[0] = azimuth(h, phi, sun[0]);
@@ -97,7 +98,7 @@ void getSunPosition(double *position, double locationLatitude,
 
 int secondsToDays() {
   long currentTime = now(); //get current time in seconds
-  return currentTime / daySecs - 0.5 + 2440588 - 2451545;
+  return currentTime / daySecs - 0.5 + 2440588 - 2451545; //-10957.5
 }
 
 unsigned long getNtpTime() {
@@ -116,7 +117,7 @@ unsigned long getNtpTime() {
   return 0;
 }
 
-void sunCoords(double *sun) {
+void sunCoords(double *sun, double days) {
   sun[0] = 1;
   sun[1] = 3;
 
@@ -156,4 +157,37 @@ double azimuth(double h, double phi, double sun) {
 
 double altitude(double h, double phi, double sun) {
   return asin(sin(phi) * sin(sun) + cos(phi) * cos(sun) * cos(h));
+}
+
+int powerLoss(double daysEpoch, int angle) {
+  //daysEpoch is a double so accurate to 15 mins
+  double position[2]; //initialise array in which getSunPosition will put
+  //azimuth and altitude of the sun
+  getSunPosition(&position[0], locationLatitude, locationLongitude, daysEpoch);
+  //convert everything to radians
+  double azimuth = position[0] * rad;
+  double altitude = position[1] * rad;
+  double azimuthPanel = 0;
+  double anglePanel = angle * rad;
+  //now the magik formula (see docs)
+  double angleSunPanel = acos(cos(azimuthPanel-azimuth)
+  *cos(altitude)*sin(anglePanel)+cos(anglePanel)*sin(altitude)) * rad;
+  return 1- cos(angleSunPanel * rad) * 100; //convert to power loss percentage
+}
+
+//only works for today, because hollandpirates.bitbucket.org gives back times for today
+int sumPowerLoss(int angle) {
+  int sunriseSet[5]; //will contain sunrise hour, minute and same for sunset
+  //and then days of today's sunrise
+  // getSunriseSunset();
+  int sunriseHour = sunriseSet[0] * 100 + (int) (sunriseSet[1] * 1.67); //is hour * 100
+  int sunsetHour = sunriseSet[2] * 100 + (int) (sunriseSet[3] * 1.67);
+  int sum = 0;
+  //get sunrise in days (*100) from js
+  int sunriseDaysEpoch = sunriseSet[4];
+  int sunsetDays = sunsetHour * 41.67; // ( /24 hours * 100)
+  for (int i = sunriseDaysEpoch; i < sunriseDaysEpoch + sunsetDays; i++) {
+      sum += powerLoss(i, angle);
+  }
+
 }
