@@ -42,8 +42,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     String urlString;
 //    String ipString = "http://192.168.2.10/"; // IP Thomas
     String ipString = "http://192.168.0.23/"; // IP Abby
+//    String host = "192.168.2.10"; // host Thomas
+    String host = "192.168.0.63"; // host Abby
+    String toast;
 
     int delay = 900;        // delay for the Timer/TimerTask
+
+    boolean reachable;
 
     Timer downTimer;
     Timer upTimer;
@@ -301,13 +306,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     public void sendUpdateRequest() {
+        if(toast.contains("Un") || toast.contains("not")) {
+            return;
+        }
         urlString = ipString + "?update";
         new SendRequest().execute(urlString);
     }
 
     public void testButton(View view){
         urlString = ipString;
-        new SendRequest().execute(urlString);
+
     }
 
     /**
@@ -315,32 +323,54 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      */
     private class SendRequest extends AsyncTask<String, Void, String> {
 
-//        int defaultColor;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            defaultColor = currentAngle.getCurrentTextColor();
-//            Log.e("color", String.valueOf(defaultColor));
-//            Log.e("color", Integer.toHexString(defaultColor));
-//            currentAngle.setTextColor(Color.parseColor("#00929F"));
-//        }
+        @Override
+        protected void onPreExecute() {
+            try{
+                String s;
+                ProcessBuilder processbuilder = new ProcessBuilder("system/bin/ping", host);
+                Process process = processbuilder.start();
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+                while ((s = stdInput.readLine()) != null)
+                {
+                    Log.e("output", s);
+                    if(s.contains("seq=1 ")){
+                        Log.e("ping", "first");
+                        if (s.contains("Host Unreachable")) {
+                            reachable = false;
+                        } else {
+                            reachable = true;
+                        }
+                        break;
+                    }
+                }
+
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         @Override
         protected String doInBackground(String... url){
-            try{
-//                return pingIP();
-                return sendRequest(url[0]);
-            } catch (Exception e){
-                return "Unable to retrieve web page.";
+            if (reachable) {
+                try {
+                    return sendRequest(url[0]);
+                } catch (Exception e) {
+                    return "Unable to retrieve web page.";
+                }
+            } else {
+                return "Arduino could not be reached.";
             }
         }
 
         @Override
         protected void onPostExecute(String result) {
+            toast = result;
 //            String color = "#" + String.valueOf(Integer.toHexString(defaultColor));
 //            currentAngle.setTextColor(Color.parseColor(color));
-            if(result.contains("Unable")){
-                Toast.makeText(getBaseContext(), result, Toast.LENGTH_LONG).show();
+            if(result.contains("Un") || result.contains("not")){
+                Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
                 seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
                         .substring(0, 2)
                         .trim()));
