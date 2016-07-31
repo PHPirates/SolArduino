@@ -191,3 +191,5 @@ int sumPowerLoss(int angle) {
   }
 
 }
+
+//todo: write function to find optimal angle for today
