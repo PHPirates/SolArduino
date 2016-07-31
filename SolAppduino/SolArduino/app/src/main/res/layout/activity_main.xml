@@ -6,7 +6,7 @@
     android:paddingBottom="4dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="4dp"
+    android:paddingTop="@dimen/activity_horizontal_margin"
     tools:context="com.abbyberkers.solarduino.MainActivity">
 
     <RelativeLayout
@@ -18,13 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TableRow>
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello World!"/>
-        </TableRow>
+        <!--<TableRow>-->
+            <!--<TextView-->
+                <!--android:id="@+id/textView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Hello World!"/>-->
+        <!--</TableRow>-->
 
         <TableRow>
             <TableLayout
@@ -90,14 +90,14 @@
                 </TableRow>
             </TableLayout>
         </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/response"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/response"/>
+        <!--<TableRow>-->
+            <!--<TextView-->
+                <!--android:id="@+id/response"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/response"/>-->
 
-        </TableRow>
+        <!--</TableRow>-->
     </TableLayout>
         <FrameLayout
             android:id="@+id/frame"

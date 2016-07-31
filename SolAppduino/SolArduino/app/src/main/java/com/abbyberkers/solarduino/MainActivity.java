@@ -43,19 +43,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //    String ipString = "http://192.168.2.10/"; // IP Thomas
     String ipString = "http://192.168.0.23/"; // IP Abby
 //    String host = "192.168.2.10"; // host Thomas
-    String host = "192.168.0.63"; // host Abby
-    String toast;
+    String host = "192.168.0.23"; // host Abby
+
+    String toast;           // String containing the result from the last http-request
 
     int delay = 900;        // delay for the Timer/TimerTask
 
-    boolean reachable;
+    boolean reachable;      // boolean to know whether the Arduino is reachable or not
 
     Timer downTimer;
     Timer upTimer;
 
-    TextView textView;
+//    TextView textView;
     TextView currentAngle;  // show current angle of solar panels
-    TextView responseTV;    // show response from arduino
+//    TextView responseTV;    // show response from arduino
 
     ImageView imageView;    // image of solar panels
 
@@ -72,9 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView) findViewById(R.id.textView);
+//        textView = (TextView) findViewById(R.id.textView);
         currentAngle = (TextView) findViewById(R.id.currentAngle);
-        responseTV = (TextView) findViewById(R.id.response);
+//        responseTV = (TextView) findViewById(R.id.response);
 
         seekbar = (SeekBar) findViewById(R.id.seekBar);
 
@@ -114,10 +115,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
                 // do something when the progress of the seekbar is changing ("live")
                 String angle = "Set angle at " + i + " \u00b0";
-                setAngle.setText(angle);
-//                rotate(i);
+                setAngle.setText(angle); // set the text "Set angle at xx" on the button
 
             }
 
@@ -140,11 +141,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        textView.setText("Up button pressed.");
-                        upButton.setPressed(true);
+//                        textView.setText("Up button pressed.");
+                        upButton.setPressed(true); // set pressed state true so colour changes
                         sendDirectionRequest("up");
 
-                        upTimer = new Timer();
+                        upTimer = new Timer(); // timer to schedule the update requests
                         TimerTask timerTask = new TimerTask() {
                             @Override
                             public void run() {
@@ -152,12 +153,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             }
                         };
 
+                        // wait 1500ms with first task, then delay interval
                         upTimer.schedule(timerTask, 1500, delay);
                         break;
                     case MotionEvent.ACTION_UP:
-                        textView.setText("Up button released.");
-                        upButton.setPressed(false);
-                        upTimer.cancel();
+//                        textView.setText("Up button released.");
+                        upButton.setPressed(false); // set pressed state false so colour changes back to default
+                        upTimer.cancel(); // stop the update requests being sent
                         sendDirectionRequest("stop");
                         break;
                 }
@@ -171,22 +173,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        textView.setText("Down button pressed.");
-                        downButton.setPressed(true);
+//                        textView.setText("Down button pressed.");
+                        downButton.setPressed(true); // set pressed state true to change colour
                         sendDirectionRequest("down");
-                        downTimer = new Timer();
+
+                        downTimer = new Timer(); // timer to schedule the update requests
                         TimerTask timerTask = new TimerTask() {
                             @Override
                             public void run() {
                                 sendUpdateRequest();
                             }
                         };
+                        // wait 1500ms with first task, then delay interval
                         downTimer.schedule(timerTask, 1500, delay);
                         break;
+
                     case MotionEvent.ACTION_UP:
-                        textView.setText("Down button released.");
-                        downButton.setPressed(false);
-                        downTimer.cancel();
+//                        textView.setText("Down button released.");
+                        downButton.setPressed(false); // set pressed state false to change colour to default
+                        downTimer.cancel(); // stop the update request being sent
                         sendDirectionRequest("stop");
                         break;
                 }
@@ -201,8 +206,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     case MotionEvent.ACTION_DOWN:
 
                         Log.e("setAngle", "pressed");
-                        int prog = seekbar.getProgress();
-                        sendAngleRequest(prog);
+                        int prog = seekbar.getProgress(); // get the value from the seekbar
+                        sendAngleRequest(prog); // set the panels at angle
                         break;
 
                     case MotionEvent.ACTION_UP:
@@ -222,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     .trim();
 
                             int angleInt = Integer.valueOf(angleString);
-                            int seekBarProgress = seekbar.getProgress();
+                            int seekBarProgress = seekbar.getProgress(); // value seekbar
                             @Override
                             public void run() {
                                 Log.e("angles", "current " + angleInt + " seekbar " + seekBarProgress);
@@ -234,10 +239,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     Log.w("timer", "cancel");
                                     timer.cancel();
                                 } else {
+                                    // update the angle as long as the desired angle not reached
 
+                                    // get current angle from TextView
                                     angleString = (currentAngle.getText().toString())
-                                            .substring(0, 2)
-                                            .trim();
+                                            .substring(0, 2) // get the first 2 chars of string
+                                            .trim(); // trim spaces off
 
                                     angleInt = Integer.valueOf(angleString);
                                     seekBarProgress = seekbar.getProgress();
@@ -248,7 +255,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             }
                         };
 
-                        timer.schedule(task, delay, delay);
+                        timer.schedule(task, delay, delay); // send update request if necessary
+                        // send first after 'delay' ms, then with 'delay' interval
                         break;
                 }
                 return true;
@@ -290,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public void sendAngleRequest(int angle){
         Toast.makeText(getBaseContext(), "Angle set at " + angle + "\u00b0", Toast.LENGTH_SHORT).show();
 //        String urlString;
-        if(angle < 10){
+        if(angle < 10){ // make sure the url is always the same length, no matter what degree
             urlString = ipString + "?degrees=0" + String.valueOf(angle);
         } else {
             urlString = ipString + "?degrees=" + String.valueOf(angle);
@@ -299,14 +307,28 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         new SendRequest().execute(urlString);
     }
 
+    /**
+     * Triggered by pressing/tapping the currentAngle TextView.
+     * Send an update http-request to the Arduino
+     * @param view
+     */
     public void sendUpdateRequest(View view) {
         Toast.makeText(getBaseContext(), "Updating...", Toast.LENGTH_SHORT).show();
         urlString = ipString + "?update";
         new SendRequest().execute(urlString);
     }
 
+    /**
+     * Triggered by loops in which the angle needs to be frequently updated.
+     *      Button up/down pressed.
+     *      When the angle is set at a certain degree, and moving towards there.
+     *      TODO when the panels are moving after auto mode has been enabled?
+     * Send an update http-request to the Arduino.
+     */
     public void sendUpdateRequest() {
         if(toast.contains("Un") || toast.contains("not")) {
+            // if the previous request returns that the Arduino is not available or unreachable,
+            // don't send another request
             return;
         }
         urlString = ipString + "?update";
@@ -326,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         @Override
         protected void onPreExecute() {
             try{
+                // try to ping the Arduino first to find out if it's reachable or not.
                 String s;
                 ProcessBuilder processbuilder = new ProcessBuilder("system/bin/ping", host);
                 Process process = processbuilder.start();
@@ -341,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         } else {
                             reachable = true;
                         }
-                        break;
+                        return;
                     }
                 }
 
@@ -354,10 +377,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         @Override
         protected String doInBackground(String... url){
             if (reachable) {
+                // try to send request when the Arduino is reachable.
                 try {
                     return sendRequest(url[0]);
                 } catch (Exception e) {
-                    return "Unable to retrieve web page.";
+                    return "Arduino reachable, but unable to retrieve webpage.";
                 }
             } else {
                 return "Arduino could not be reached.";
@@ -366,11 +390,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
-            toast = result;
+            toast = result; // set toast to be the latest result.
 //            String color = "#" + String.valueOf(Integer.toHexString(defaultColor));
 //            currentAngle.setTextColor(Color.parseColor(color));
             if(result.contains("Un") || result.contains("not")){
                 Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
+                // set seekbar at current angle, so update requests aren't sent anymore.
                 seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
                         .substring(0, 2)
                         .trim()));
@@ -383,19 +408,26 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 if (message.equals(ipString)) {
                    Log.e("message", "homepage");
                 } else if (message.contains("panel")) {
-                    responseTV.setText(Html.fromHtml(result));
+//                    responseTV.setText(Html.fromHtml(result));
+                    // Toast that the panels are going up or down so the user knows the Arduino
+                    // received the request and knows what to do
                     Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
                 } else if (message.contains("degrees")) {
                     Log.e("result", result);
                 } else if (message.contains("update")) {
                     Log.e("result", result);
+                    // string with current angle plus degree symbol
                     String angle = Html.fromHtml(result) + "\u00b0";
                     currentAngle.setText(angle);
+                    // get the current angle from the result, without spaces
                     result = result.substring(0, 2).trim();
+                    // convert string to integer, then rotate the image
                     rotate(Integer.valueOf(result));
                 } else if (message.contains("Page")) {
                     Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
                 } else {
+                    // Back up, don't know what happened when we arrive here, should never happen.
+                    // But has happened in the past.
                     Log.e("message", message);
                     Toast.makeText(getBaseContext(), "Something went wrong.", Toast.LENGTH_SHORT).show();
                 }
@@ -426,8 +458,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 message = stringBuilder.toString();
 
             } catch (IOException e) {
-                Log.e("IOException", "no internet?");
-                Toast.makeText(getBaseContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+//                Toast.makeText(getBaseContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
