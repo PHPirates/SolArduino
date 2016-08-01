@@ -65,7 +65,9 @@ void loop () {
   // getTimes(&times[0],locationLatitude,locationLongitude);
   // delay(60000);
 
-  Serial.println(powerLoss(6030.04,30)); //should print TODO
+  //values for 1 aug. 2016
+  Serial.println(powerLoss(6057.11,30));
+  Serial.println(sumPowerLoss(30));
 }
 
 void getSunPosition(double *position, double locationLatitude,
@@ -175,21 +177,22 @@ int powerLoss(double daysEpoch, int angle) {
   return 1- cos(angleSunPanel * rad) * 100; //convert to power loss percentage
 }
 
-//only works for today, because hollandpirates.bitbucket.org gives back times for today
 int sumPowerLoss(int angle) {
-  int sunriseSet[5]; //will contain sunrise hour, minute and same for sunset
-  //and then days of today's sunrise
-  // getSunriseSunset();
-  int sunriseHour = sunriseSet[0] * 100 + (int) (sunriseSet[1] * 1.67); //is hour * 100
-  int sunsetHour = sunriseSet[2] * 100 + (int) (sunriseSet[3] * 1.67);
+  long sunriseSet[3];
+  // getTimes(); //returns an array with first today's sunrise in days*100,
+  //then the hoursOfDay of the sunset, and then minutes.
+  sunriseSet[0] = 6056672;
+  sunriseSet[1] = 22;
+  sunriseSet[2] = 32;
+
+  //int sunriseHour = sunriseSet[0] * 100 + (int) (sunriseSet[1] * 1.67); //is hour * 100
+  int sunsetHour = sunriseSet[1] * 100 + (int) (sunriseSet[2] * 1.67);
   int sum = 0;
-  //get sunrise in days (*100) from js
-  int sunriseDaysEpoch = sunriseSet[4];
+  //get sunrise in days (*100)
+  int sunriseDaysEpoch = sunriseSet[0];
   int sunsetDays = sunsetHour * 41.67; // ( /24 hours * 100)
   for (int i = sunriseDaysEpoch; i < sunriseDaysEpoch + sunsetDays; i++) {
       sum += powerLoss(i, angle);
   }
 
 }
-
-//todo: write function to find optimal angle for today
