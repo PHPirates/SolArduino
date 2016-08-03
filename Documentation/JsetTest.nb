@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     16626,        433]
-NotebookOptionsPosition[     15765,        400]
-NotebookOutlinePosition[     16107,        415]
-CellTagsIndexPosition[     16064,        412]
+NotebookDataLength[     17131,        425]
+NotebookOptionsPosition[     16542,        401]
+NotebookOutlinePosition[     16883,        416]
+CellTagsIndexPosition[     16840,        413]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -176,230 +176,231 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell[BoxData[{
- RowBox[{
-  RowBox[{"powerLoss", ":=", " ", 
-   RowBox[{"Function", "[", " ", 
+ RowBox[{"powerLoss", ":=", " ", 
+  RowBox[{"Function", "[", " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{"params", ":", " ", 
+      RowBox[{"hour", " ", "of", " ", "day"}]}], ",", " ", 
+     RowBox[{"solar", " ", "panel", " ", "angle"}], ",", " ", "date", ",", 
+     " ", 
+     RowBox[{
+     "returns", " ", "power", " ", "loss", " ", "percentage", " ", "with", 
+      " ", "this", " ", "misalignment"}]}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"sunPos", " ", "=", " ", 
+     RowBox[{"SunPosition", "[", 
+      RowBox[{
+       RowBox[{"GeoPosition", "[", 
+        RowBox[{"{", 
+         RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
+       RowBox[{"DateObject", "[", 
+        RowBox[{"#3", ",", 
+         RowBox[{"{", 
+          RowBox[{"#1", "/", "100"}], "}"}]}], "]"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
     RowBox[{"(*", " ", 
      RowBox[{
-      RowBox[{"params", ":", " ", 
-       RowBox[{"hour", " ", "of", " ", "day"}]}], ",", " ", 
-      RowBox[{"solar", " ", "panel", " ", "angle"}], ",", " ", "date", ",", 
-      " ", 
+      RowBox[{"remove", " ", "degree", " ", "unit"}], ",", " ", 
+      RowBox[{"then", " ", "convert", " ", "to", " ", "radians"}]}], " ", 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Gamma]", "s"], "=", " ", 
+     RowBox[{
+      RowBox[{"QuantityMagnitude", "[", 
+       RowBox[{"Quantity", "[", 
+        RowBox[{"sunPos", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "*", 
+      RowBox[{"Pi", "/", "180"}]}]}], ";", "  ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"Azimuth", " ", "of", " ", "sun", " ", "position"}], ",", " ", 
+      RowBox[{"0", " ", "due", " ", "South"}], ",", " ", 
+      RowBox[{"negative", " ", "to", " ", "the", " ", "east"}]}], " ", "*)"}],
+     "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
       RowBox[{
-      "returns", " ", "power", " ", "loss", " ", "percentage", " ", "with", 
-       " ", "this", " ", "misalignment"}]}], " ", "*)"}], 
+      "Because", " ", "Mathematica", " ", "gives", " ", "azimuth", " ", "in", 
+       " ", "compass", " ", "angle"}], ",", " ", 
+      RowBox[{"we", " ", "subtract", " ", "180", " ", "degrees"}]}], " ", 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Gamma]", "s"], " ", "=", " ", 
+     RowBox[{
+      SubscriptBox["\[Gamma]", "s"], " ", "-", " ", "Pi"}]}], ";", 
     "\[IndentingNewLine]", 
     RowBox[{
-     RowBox[{"sunPos", " ", "=", " ", 
-      RowBox[{"SunPosition", "[", 
-       RowBox[{
-        RowBox[{"GeoPosition", "[", 
-         RowBox[{"{", 
-          RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", "#1"}], 
-       "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{"remove", " ", "degree", " ", "unit"}], ",", " ", 
-       RowBox[{"then", " ", "convert", " ", "to", " ", "radians"}]}], " ", 
-      "*)"}], "\[IndentingNewLine]", 
+     SubscriptBox["\[Theta]", "s"], "=", " ", 
      RowBox[{
-      SubscriptBox["\[Gamma]", "s"], "=", " ", 
-      RowBox[{
-       RowBox[{"QuantityMagnitude", "[", 
-        RowBox[{"Quantity", "[", 
-         RowBox[{"sunPos", "[", 
-          RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "*", 
-       RowBox[{"Pi", "/", "180"}]}]}], ";", "  ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{"Azimuth", " ", "of", " ", "sun", " ", "position"}], ",", " ", 
-       RowBox[{"0", " ", "due", " ", "South"}], ",", " ", 
-       RowBox[{"negative", " ", "to", " ", "the", " ", "east"}]}], " ", 
-      "*)"}], "\[IndentingNewLine]", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{
-       "Because", " ", "Mathematica", " ", "gives", " ", "azimuth", " ", "in",
-         " ", "compass", " ", "angle"}], ",", " ", 
-       RowBox[{"we", " ", "subtract", " ", "180", " ", "degrees"}]}], " ", 
-      "*)"}], "\[IndentingNewLine]", 
-     RowBox[{
-      SubscriptBox["\[Gamma]", "s"], " ", "=", " ", 
-      RowBox[{
-       SubscriptBox["\[Gamma]", "s"], " ", "-", " ", "Pi"}]}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{
-      SubscriptBox["\[Theta]", "s"], "=", " ", 
-      RowBox[{
-       RowBox[{"QuantityMagnitude", "[", 
-        RowBox[{"Quantity", "[", 
-         RowBox[{"sunPos", "[", 
-          RowBox[{"[", "2", "]"}], "]"}], "]"}], "]"}], "*", 
-       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{"Sun", " ", "altitude"}], " ", "*)"}], "\[IndentingNewLine]", 
-     RowBox[{
-      SubscriptBox["\[Gamma]", "p"], " ", "=", " ", "0"}], ";", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{"Solar", " ", "panels", " ", "azimuth"}], " ", "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{
-      SubscriptBox["\[Theta]", "p"], " ", "=", " ", 
-      RowBox[{"#2", " ", "*", " ", 
-       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-      "Solar", " ", "panels", " ", "angle", " ", "with", " ", "horizontal"}], 
-      " ", "*)"}], "\[IndentingNewLine]", 
-     RowBox[{"a", "=", " ", 
-      RowBox[{
-       RowBox[{"ArcCos", "[", 
-        RowBox[{
-         RowBox[{
-          RowBox[{"Cos", "[", 
-           RowBox[{
-            SubscriptBox["\[Gamma]", "p"], "-", 
-            SubscriptBox["\[Gamma]", "s"]}], "]"}], " ", 
-          RowBox[{"Cos", "[", 
-           SubscriptBox["\[Theta]", "s"], "]"}], " ", 
-          RowBox[{"Sin", "[", 
-           SubscriptBox["\[Theta]", "p"], "]"}]}], "+", 
-         RowBox[{
-          RowBox[{"Cos", "[", 
-           SubscriptBox["\[Theta]", "p"], "]"}], " ", 
-          RowBox[{"Sin", "[", 
-           SubscriptBox["\[Theta]", "s"], "]"}]}]}], "]"}], "*", 
-       RowBox[{"180", "/", "Pi"}]}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"1", "-", 
-      RowBox[{"Cos", "[", 
-       RowBox[{"a", "*", 
-        RowBox[{"Pi", "/", "80"}]}], "]"}]}]}], 
+      RowBox[{"QuantityMagnitude", "[", 
+       RowBox[{"Quantity", "[", 
+        RowBox[{"sunPos", "[", 
+         RowBox[{"[", "2", "]"}], "]"}], "]"}], "]"}], "*", 
+      RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
     RowBox[{"(*", " ", 
-     RowBox[{"1", "-", 
-      RowBox[{
-       RowBox[{"Cos", "[", "i", "]"}], " ", "gives", " ", "power", " ", 
-       "loss", " ", "due", " ", "to", " ", "misalignment"}]}], " ", "*)"}], 
-    "\[IndentingNewLine]", "]"}]}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{"powerLoss", "[", 
-  RowBox[{
-   RowBox[{"FromUnixTime", "[", 
-    RowBox[{"6030.04", " ", "24", " ", "60", " ", "60"}], "]"}], ",", "30"}], 
-  "]"}]}], "Input",
- CellChangeTimes->{{3.678862518057906*^9, 3.678862546745589*^9}, {
-  3.678862629603565*^9, 3.6788626818790956`*^9}, {3.6788628737496266`*^9, 
-  3.678862891240471*^9}, {3.6788629629142423`*^9, 3.6788629629454913`*^9}}],
-
-Cell[BoxData[
- RowBox[{
-  StyleBox[
-   RowBox[{"Quantity", "::", "unkunit"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"Unable to interpret unit specification \
-\[NoBreak]\\!\\(\\*RowBox[{\\\"Missing\\\", \\\"[\\\", \
-\\\"\\\\\\\"UnknownLocation\\\\\\\"\\\", \\\"]\\\"}]\\)\[NoBreak]. \
-\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
-ButtonFrame->None, ButtonData:>\\\"paclet:ref/Quantity\\\", ButtonNote -> \
-\\\"Quantity::unkunit\\\"]\\)\"\>"}]], "Message", "MSG",
- CellChangeTimes->{
-  3.6788627372094564`*^9, {3.678862879474653*^9, 3.6788628924492216`*^9}}],
-
-Cell[BoxData[
- RowBox[{
-  StyleBox[
-   RowBox[{"Quantity", "::", "unkunit"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"Unable to interpret unit specification \
-\[NoBreak]\\!\\(\\*RowBox[{\\\"Missing\\\", \\\"[\\\", \
-\\\"\\\\\\\"UnknownLocation\\\\\\\"\\\", \\\"]\\\"}]\\)\[NoBreak]. \
-\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
-ButtonFrame->None, ButtonData:>\\\"paclet:ref/Quantity\\\", ButtonNote -> \
-\\\"Quantity::unkunit\\\"]\\)\"\>"}]], "Message", "MSG",
- CellChangeTimes->{
-  3.6788627372094564`*^9, {3.678862879474653*^9, 3.6788628926991973`*^9}}],
-
-Cell[BoxData[
- RowBox[{"1", "-", 
-  RowBox[{"Cos", "[", 
-   RowBox[{
-    FractionBox["9", "4"], " ", 
-    RowBox[{"ArcCos", "[", 
+     RowBox[{"Sun", " ", "altitude"}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Gamma]", "p"], " ", "=", " ", "0"}], ";", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Solar", " ", "panels", " ", "azimuth"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Theta]", "p"], " ", "=", " ", 
+     RowBox[{"#2", " ", "*", " ", 
+      RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+    RowBox[{"(*", " ", 
      RowBox[{
-      RowBox[{
-       RowBox[{"-", 
-        FractionBox["1", "2"]}], " ", 
-       SuperscriptBox[
-        RowBox[{"Cos", "[", 
-         RowBox[{
-          FractionBox["1", "180"], " ", "\[Pi]", " ", 
-          RowBox[{"QuantityMagnitude", "[", 
-           RowBox[{"Quantity", "[", 
-            RowBox[{"Missing", "[", "\<\"UnknownLocation\"\>", "]"}], "]"}], 
-           "]"}]}], "]"}], "2"]}], "+", 
-      RowBox[{
-       FractionBox["1", "2"], " ", 
-       SqrtBox["3"], " ", 
-       RowBox[{"Sin", "[", 
+     "Solar", " ", "panels", " ", "angle", " ", "with", " ", "horizontal"}], 
+     " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"a", "=", " ", 
+     RowBox[{
+      RowBox[{"ArcCos", "[", 
+       RowBox[{
         RowBox[{
-         FractionBox["1", "180"], " ", "\[Pi]", " ", 
-         RowBox[{"QuantityMagnitude", "[", 
-          RowBox[{"Quantity", "[", 
-           RowBox[{"Missing", "[", "\<\"UnknownLocation\"\>", "]"}], "]"}], 
-          "]"}]}], "]"}]}]}], "]"}]}], "]"}]}]], "Output",
- CellChangeTimes->{
-  3.678862737771967*^9, {3.6788628800059395`*^9, 3.6788628926991973`*^9}}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"SunPosition", "[", 
-  RowBox[{
-   RowBox[{"GeoPosition", "[", 
-    RowBox[{"{", 
-     RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
-   RowBox[{"DateObject", "[", "]"}]}], "]"}]], "Input",
- CellChangeTimes->{{3.6788629878196163`*^9, 3.6788629936331844`*^9}, {
-  3.678870201788644*^9, 3.6788702063609657`*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"Missing", "[", "\<\"UnknownLocation\"\>", "]"}], ",", 
-   RowBox[{"Missing", "[", "\<\"UnknownLocation\"\>", "]"}]}], 
-  "}"}]], "Output",
- CellChangeTimes->{3.6788629962737837`*^9, 3.678870207493038*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"FromUnixTime", "[", "1469851477", "]"}]], "Input",
- CellChangeTimes->{{3.6788754651038127`*^9, 3.6788754651437597`*^9}, {
-   3.678875547914768*^9, 3.6788756062006164`*^9}, 3.6788769468359632`*^9}],
-
-Cell[BoxData[
- TemplateBox[{RowBox[{"\"Sat 30 Jul 2016 07:04:37\"", 
-     StyleBox[
-      RowBox[{"\"GMT+\"", "\[InvisibleSpace]", "3.`"}], FontColor -> 
-      GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
+         RowBox[{"Cos", "[", 
+          RowBox[{
+           SubscriptBox["\[Gamma]", "p"], "-", 
+           SubscriptBox["\[Gamma]", "s"]}], "]"}], " ", 
+         RowBox[{"Cos", "[", 
+          SubscriptBox["\[Theta]", "s"], "]"}], " ", 
+         RowBox[{"Sin", "[", 
+          SubscriptBox["\[Theta]", "p"], "]"}]}], "+", 
+        RowBox[{
+         RowBox[{"Cos", "[", 
+          SubscriptBox["\[Theta]", "p"], "]"}], " ", 
+         RowBox[{"Sin", "[", 
+          SubscriptBox["\[Theta]", "s"], "]"}]}]}], "]"}], "*", 
+      RowBox[{"180", "/", "Pi"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"1", "-", 
+       RowBox[{"Cos", "[", 
+        RowBox[{"a", "*", 
+         RowBox[{"Pi", "/", "80"}]}], "]"}]}], ")"}], "*", "100"}]}], 
+   RowBox[{"(*", " ", 
+    RowBox[{"1", "-", 
      RowBox[{
-       RowBox[{"{", 
-         RowBox[{"2016", ",", "7", ",", "30"}], "}"}], ",", 
-       RowBox[{"TimeObject", "[", 
-         RowBox[{
-           RowBox[{"{", 
-             RowBox[{"7", ",", "4", ",", "37.`"}], "}"}], ",", 
-           RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}], ",", 
-       RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}]},
-  "DateObject",
-  Editable->False]], "Output",
- CellChangeTimes->{3.6788754666654143`*^9, 3.6788756072626886`*^9, 
-  3.678876948242256*^9}]
+      RowBox[{"Cos", "[", "i", "]"}], " ", "gives", " ", "power", " ", "loss",
+       " ", "due", " ", "to", " ", "misalignment"}]}], " ", "*)"}], 
+   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"date", " ", "=", " ", 
+   RowBox[{"FromUnixTime", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"6029.649", " ", "+", " ", "10957.5"}], ")"}], "*", "3600", "*",
+      "24"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dateHour", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"DateValue", "[", 
+     RowBox[{"date", ",", "\"\<Hour\>\""}], "]"}], "+", 
+    RowBox[{
+     RowBox[{"DateValue", "[", 
+      RowBox[{"date", ",", " ", "\"\<Minute\>\""}], "]"}], "/", "60"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"powerLoss", "[", 
+   RowBox[{"dateHour", ",", "30", ",", "date"}], "]"}], "\[IndentingNewLine]",
+   "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Define", " ", "a", " ", "function", " ", "that", " ", "sums", " ", "up", 
+    " ", "the", " ", "total", " ", "%", " ", "of", " ", "power", " ", "loss", 
+    " ", "at", " ", "each", " ", "hour"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"sumPowerLoss", ":=", 
+  RowBox[{"Function", "[", " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{"params", ":", " ", 
+      RowBox[{"solar", " ", "panel", " ", "angle"}]}], ",", " ", "date"}], 
+    " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"position", " ", "=", " ", 
+     RowBox[{"GeoPosition", "[", 
+      RowBox[{"{", 
+       RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"sunUp", " ", "=", " ", 
+     RowBox[{"Sunrise", "[", 
+      RowBox[{"position", ",", "#2"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"sunUpHour", " ", "=", " ", 
+     RowBox[{
+      RowBox[{"DateValue", "[", 
+       RowBox[{"sunUp", ",", "\"\<Hour\>\""}], "]"}], "+", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunUp", ",", " ", "\"\<Minute\>\""}], "]"}], "/", "60"}]}]}],
+     ";", "\[IndentingNewLine]", 
+    RowBox[{"sunset", " ", "=", " ", 
+     RowBox[{"Sunset", "[", 
+      RowBox[{"position", ",", "#2"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"sunsetHour", " ", "=", " ", 
+     RowBox[{
+      RowBox[{"DateValue", "[", 
+       RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+       "60"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{
+      "Times", " ", "100", " ", "so", " ", "the", " ", "sum", " ", "starts", 
+       " ", "closer", " ", "to", " ", "the", " ", "real", " ", "sunUpHour"}], 
+      ",", " ", 
+      RowBox[{
+      "and", " ", "not", " ", "floors", " ", "it", " ", "to", " ", "an", " ", 
+       "integer", " ", "when", " ", "calculating", " ", "the", " ", 
+       RowBox[{"sum", ".", " ", "Otherwise"}], " ", "weird", " ", "jumps", 
+       " ", "in", " ", "graphs", " ", "appear", " ", "when", " ", "the", " ", 
+       "sunUpHour", " ", "jumps", " ", "one", " ", "hour"}]}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"Sum", "[", 
+     RowBox[{
+      RowBox[{"powerLoss", "[", 
+       RowBox[{"h", ",", "#1", ",", "#2"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"h", ",", 
+        RowBox[{"sunUpHour", "*", "100"}], ",", 
+        RowBox[{"sunsetHour", "*", "100"}], ",", "10"}], "}"}]}], "]"}]}], 
+   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"sumPowerLoss", "[", 
+  RowBox[{"30", ",", 
+   RowBox[{"DateObject", "[", 
+    RowBox[{"{", 
+     RowBox[{"2016", ",", "7", ",", "5"}], "}"}], "]"}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.678862518057906*^9, 3.678862546745589*^9}, {
+   3.678862629603565*^9, 3.6788626818790956`*^9}, {3.6788628737496266`*^9, 
+   3.678862891240471*^9}, {3.6788629629142423`*^9, 3.6788629629454913`*^9}, {
+   3.679228846491622*^9, 3.679228847295163*^9}, {3.679238243588357*^9, 
+   3.6792382444569707`*^9}, 3.679238536781246*^9, {3.6792387278571672`*^9, 
+   3.6792387416970215`*^9}, {3.679238877458816*^9, 3.6792389377679768`*^9}, {
+   3.6792395258959436`*^9, 3.679239542285098*^9}, {3.6792397232858458`*^9, 
+   3.679239777225666*^9}, {3.6792398618036003`*^9, 3.6792399004703217`*^9}, {
+   3.6792406753589664`*^9, 3.6792407294765296`*^9}, {3.6792408330764318`*^9, 
+   3.679240852676673*^9}, {3.679240883786662*^9, 3.679240904798957*^9}, {
+   3.6792412997890606`*^9, 3.6792413146239505`*^9}}],
+
+Cell[BoxData["99.10610766486238665579679627615661814276`4.254661719849825"], \
+"Output",
+ CellChangeTimes->{{3.6792398813449764`*^9, 3.6792398944218903`*^9}, 
+   3.6792407479641547`*^9, {3.6792408858677826`*^9, 3.6792409054864798`*^9}, {
+   3.679241301988722*^9, 3.679241315727131*^9}}],
+
+Cell[BoxData["20382.57109616536554782425772030651274416744`4.414916003404066"]\
+, "Output",
+ CellChangeTimes->{{3.6792398813449764`*^9, 3.6792398944218903`*^9}, 
+   3.6792407479641547`*^9, {3.6792408858677826`*^9, 3.6792409054864798`*^9}, {
+   3.679241301988722*^9, 3.6792413222112494`*^9}}]
 }, Open  ]]
 },
 WindowSize->{942, 960},
-WindowMargins->{{33, Automatic}, {Automatic, 0}},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
 FrontEndVersion->"10.4 for Microsoft Windows (64-bit) (April 11, 2016)",
 StyleDefinitions->"Default.nb"
 ]
@@ -422,18 +423,9 @@ Cell[5008, 122, 1182, 24, 41, "Output"],
 Cell[6193, 148, 1164, 24, 41, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[7394, 177, 4520, 113, 332, "Input"],
-Cell[11917, 292, 593, 12, 21, "Message"],
-Cell[12513, 306, 593, 12, 21, "Message"],
-Cell[13109, 320, 1032, 29, 83, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[14178, 354, 346, 8, 31, "Input"],
-Cell[14527, 364, 256, 6, 31, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[14820, 375, 220, 3, 31, "Input"],
-Cell[15043, 380, 706, 17, 74, "Output"]
+Cell[7394, 177, 8549, 209, 652, "Input"],
+Cell[15946, 388, 286, 4, 31, "Output"],
+Cell[16235, 394, 291, 4, 31, "Output"]
 }, Open  ]]
 }
 ]
