@@ -52,21 +52,22 @@ void setup () {
   //
   // //sync arduino clock, current time in seconds can be found with now();
   // setTime(getNtpTime());
+  Serial.println(powerLoss(6029.649,30)); //
+  Serial.println(sumPowerLoss(30)); //
 }
 
 void loop () {
   // Serial.print("time: ");
   // Serial.println(now());
-  Serial.println("azimuth, altitude");
-  double position[2];
-  getSunPosition(&position[0], locationLatitude, locationLongitude, 6030.04);
+  // Serial.println("azimuth, altitude");
+  // double position[2];
+  // getSunPosition(&position[0], locationLatitude, locationLongitude, 6030.04);
 
   // double times[2];
   // getTimes(&times[0],locationLatitude,locationLongitude);
   // delay(60000);
 
-  Serial.println(powerLoss(6029.649,30)); //
-  Serial.println(sumPowerLoss(30)); //
+
 }
 
 void getSunPosition(double *position, double locationLatitude,
