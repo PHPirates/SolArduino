@@ -53,7 +53,7 @@ void setup () {
   // //sync arduino clock, current time in seconds can be found with now();
   // setTime(getNtpTime());
   Serial.println(powerLoss(6029.649,30)); //
-  Serial.println(sumPowerLoss(30)); //
+  // Serial.println(sumPowerLoss(30)); //
 }
 
 void loop () {
