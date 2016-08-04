@@ -76,7 +76,7 @@ void getSunPosition(double *position, double locationLatitude,
     double lw = rad * -locationLongitude; // what is lw?
     double phi = rad * locationLatitude;
     //int days = secondsToDays(); //days since epoch?, gets current time in millis
-    // days = 6030.036844594906;
+    // days = 6030.0368445949s06;
 
     double sun[2];
     sunCoords(&sun[0],days);
@@ -86,14 +86,14 @@ void getSunPosition(double *position, double locationLatitude,
     position[1] = altitude(h, phi, sun[0]);
 
     for (size_t i = 0; i < 2; i++) {
-      Serial.print(position[i]);
-      Serial.println(" rad");
+      // Serial.print(position[i]);
+      // Serial.println(" rad");
     }
 
     for (size_t i = 0; i < 2; i++) {
       position[i] = position[i] * 180 / PI;
-      Serial.print(position[i]);
-      Serial.println(" degree");
+      // Serial.print(position[i]);
+      // Serial.println(" degree");
     }
 }
 
