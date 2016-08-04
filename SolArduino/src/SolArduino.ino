@@ -166,6 +166,8 @@ int powerLoss(double daysEpoch, int angle) {
   double position[2]; //initialise array in which getSunPosition will put
   //azimuth and altitude of the sun
   getSunPosition(&position[0], locationLatitude, locationLongitude, daysEpoch);
+  Serial.println(position[0]);
+  Serial.println(position[1]);
   //convert everything to radians
   double azimuth = position[0] * rad;
   double altitude = position[1] * rad;
