@@ -166,8 +166,6 @@ int powerLoss(double daysEpoch, int angle) {
   double position[2]; //initialise array in which getSunPosition will put
   //azimuth and altitude of the sun
   getSunPosition(&position[0], locationLatitude, locationLongitude, daysEpoch);
-  Serial.println(position[0]);
-  Serial.println(position[1]);
   //convert everything to radians
   double azimuth = position[0] * rad;
   double altitude = position[1] * rad;
@@ -175,8 +173,9 @@ int powerLoss(double daysEpoch, int angle) {
   double anglePanel = angle * rad;
   //now the magik formula (see docs)
   double angleSunPanel = acos(cos(azimuthPanel-azimuth)
-  *cos(altitude)*sin(anglePanel)+cos(anglePanel)*sin(altitude)) * rad;
-  return 1- cos(angleSunPanel * rad) * 100; //convert to power loss percentage
+  *cos(altitude)*sin(anglePanel)+cos(anglePanel)*sin(altitude)); //is in radians?
+  Serial.println(angleSunPanel*1000);
+  return 1- cos(angleSunPanel) * 100; //convert to power loss percentage
 }
 
 int sumPowerLoss(int angle) {
