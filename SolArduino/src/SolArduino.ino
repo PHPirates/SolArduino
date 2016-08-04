@@ -174,7 +174,7 @@ int powerLoss(double daysEpoch, int angle) {
   //now the magik formula (see docs)
   double angleSunPanel = acos(cos(azimuthPanel-azimuth)
   *cos(altitude)*sin(anglePanel)+cos(anglePanel)*sin(altitude)); //is in radians?
-  Serial.println(angleSunPanel*1000);
+  Serial.println(angleSunPanel*1000); //value is not right
   return 1- cos(angleSunPanel) * 100; //convert to power loss percentage
 }
 
