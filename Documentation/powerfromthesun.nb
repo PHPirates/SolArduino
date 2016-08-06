@@ -1,0 +1,592 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.4' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     26276,        584]
+NotebookOptionsPosition[     25956,        568]
+NotebookOutlinePosition[     26297,        583]
+CellTagsIndexPosition[     26254,        580]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"angle", ":=", " ", 
+   RowBox[{"Function", "[", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"params", ":", " ", 
+       RowBox[{"hour", " ", "of", " ", "day"}]}], ",", " ", 
+      RowBox[{"solar", " ", "panel", " ", "angle"}], ",", " ", "date", ",", 
+      " ", 
+      RowBox[{
+      "returns", " ", "misalignment", " ", "with", " ", "the", " ", "sun", 
+       " ", "in", " ", "radians"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"sunPos", " ", "=", " ", 
+      RowBox[{"SunPosition", "[", 
+       RowBox[{
+        RowBox[{"GeoPosition", "[", 
+         RowBox[{"{", 
+          RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
+        RowBox[{"DateObject", "[", 
+         RowBox[{"#3", ",", 
+          RowBox[{"{", "#1", "}"}]}], "]"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"remove", " ", "degree", " ", "unit"}], ",", " ", 
+       RowBox[{"then", " ", "convert", " ", "to", " ", "radians"}]}], " ", 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["\[Gamma]", "s"], "=", " ", 
+      RowBox[{
+       RowBox[{"QuantityMagnitude", "[", 
+        RowBox[{"Quantity", "[", 
+         RowBox[{"sunPos", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "*", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", "  ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"Azimuth", " ", "of", " ", "sun", " ", "position"}], ",", " ", 
+       RowBox[{"0", " ", "due", " ", "South"}], ",", " ", 
+       RowBox[{"negative", " ", "to", " ", "the", " ", "east"}]}], " ", 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{
+       "Because", " ", "Mathematica", " ", "gives", " ", "azimuth", " ", "in",
+         " ", "compass", " ", "angle"}], ",", " ", 
+       RowBox[{"we", " ", "subtract", " ", "180", " ", "degrees"}]}], " ", 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["\[Gamma]", "s"], " ", "=", " ", 
+      RowBox[{
+       SubscriptBox["\[Gamma]", "s"], " ", "-", " ", "Pi"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["\[Theta]", "s"], "=", " ", 
+      RowBox[{
+       RowBox[{"QuantityMagnitude", "[", 
+        RowBox[{"Quantity", "[", 
+         RowBox[{"sunPos", "[", 
+          RowBox[{"[", "2", "]"}], "]"}], "]"}], "]"}], "*", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"Sun", " ", "altitude"}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["\[Gamma]", "p"], " ", "=", " ", 
+      RowBox[{"0", " ", "*", " ", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"Solar", " ", "panels", " ", "azimuth"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["\[Theta]", "p"], " ", "=", " ", 
+      RowBox[{"#2", " ", "*", " ", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "Solar", " ", "panels", " ", "angle", " ", "with", " ", "horizontal"}], 
+      " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"a", "=", " ", 
+      RowBox[{"ArcCos", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Cos", "[", 
+          RowBox[{
+           SubscriptBox["\[Gamma]", "p"], "-", 
+           SubscriptBox["\[Gamma]", "s"]}], "]"}], " ", 
+         RowBox[{"Cos", "[", 
+          SubscriptBox["\[Theta]", "s"], "]"}], " ", 
+         RowBox[{"Sin", "[", 
+          SubscriptBox["\[Theta]", "p"], "]"}]}], "+", 
+        RowBox[{
+         RowBox[{"Cos", "[", 
+          SubscriptBox["\[Theta]", "p"], "]"}], " ", 
+         RowBox[{"Sin", "[", 
+          SubscriptBox["\[Theta]", "s"], "]"}]}]}], "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"date", "  ", "=", " ", 
+   RowBox[{"DateObject", "[", 
+    RowBox[{"{", 
+     RowBox[{"2016", ",", "8", ",", "6"}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"n", "=", " ", 
+   RowBox[{"QuantityMagnitude", "[", 
+    RowBox[{"Quantity", "[", 
+     RowBox[{"date", " ", "-", " ", 
+      RowBox[{"DateObject", "[", 
+       RowBox[{"{", 
+        RowBox[{"2016", ",", "1", ",", "1"}], "}"}], "]"}]}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   SubscriptBox["I", "0"], "=", " ", 
+   RowBox[{"1367", " ", 
+    RowBox[{"(", 
+     RowBox[{"1", "+", 
+      RowBox[{"0.034", " ", 
+       RowBox[{"Cos", "[", 
+        RowBox[{"360", "*", 
+         RowBox[{"n", "/", "365.25"}]}], "]"}]}]}], ")"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"position", " ", "=", " ", 
+   RowBox[{"GeoPosition", "[", 
+    RowBox[{"{", 
+     RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sunrise", " ", "=", " ", 
+   RowBox[{"TimeZoneConvert", "[", 
+    RowBox[{
+     RowBox[{"Sunrise", "[", 
+      RowBox[{"position", ",", "date"}], "]"}], ",", "2"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   SubscriptBox["t", "sunrise"], " ", "=", " ", 
+   RowBox[{"N", "[", 
+    RowBox[{
+     RowBox[{"DateValue", "[", 
+      RowBox[{"sunrise", ",", "\"\<Hour\>\""}], "]"}], "+", 
+     RowBox[{
+      RowBox[{"DateValue", "[", 
+       RowBox[{"sunrise", ",", " ", "\"\<Minute\>\""}], "]"}], "/", "60"}]}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sunset", " ", "=", " ", 
+   RowBox[{"TimeZoneConvert", "[", 
+    RowBox[{
+     RowBox[{"Sunset", "[", 
+      RowBox[{"position", ",", "date"}], "]"}], ",", "2"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    SubscriptBox["t", "sunset"], " ", "=", " ", 
+    RowBox[{"N", "[", 
+     RowBox[{
+      RowBox[{"DateValue", "[", 
+       RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", "60"}]}], 
+     "]"}]}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"simplePower", " ", ":=", " ", 
+   RowBox[{"Function", "[", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"simple", " ", "model"}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"day", " ", "of", " ", "year"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["I", "noon"], " ", "=", " ", "1000"}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"peak", ",", " ", 
+       RowBox[{"noontime", " ", "solar", " ", "irradiance", " ", "level"}]}], 
+      " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"t", " ", "=", " ", "17"}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"time", " ", "in", " ", "hours"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"simple", " ", "version"}], ",", " ", 
+       RowBox[{"uses", " ", 
+        SubscriptBox["I", "noon"]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["I", "si"], "=", " ", 
+      RowBox[{"N", "[", 
+       RowBox[{
+        SubscriptBox["I", "noon"], " ", 
+        RowBox[{"Sin", "[", 
+         RowBox[{"180", " ", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"t", " ", "-", " ", 
+             SubscriptBox["t", "sunrise"]}], ")"}], "/", 
+           RowBox[{"(", 
+            RowBox[{
+             SubscriptBox["t", "sunset"], "-", 
+             SubscriptBox["t", "sunrise"]}], ")"}]}], " ", 
+          RowBox[{"Pi", "/", "180"}]}], "]"}]}], "]"}]}]}], " ", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"convert", " ", "to", " ", "radians"}], "*)"}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"directPower", "  ", ":=", " ", 
+   RowBox[{"Function", " ", "[", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"param", ":", " ", 
+      RowBox[{"hour", " ", "of", " ", "day"}]}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Theta]", "z"], "=", 
+      RowBox[{"angle", "[", 
+       RowBox[{"#1", ",", "30", ",", "date"}], "]"}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"solar", " ", "zenith", " ", 
+       RowBox[{"(", "misalignment", ")"}], " ", "in", " ", "radians"}], " ", 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["a", "0"], " ", "=", " ", 
+      RowBox[{"0.4237", " ", "-", " ", 
+       RowBox[{"0.00821", " ", "36"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["a", "1"], " ", "=", " ", 
+      RowBox[{"0.5055", " ", "+", " ", 
+       RowBox[{"0.00595", " ", 
+        RowBox[{"6.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"k", " ", "=", " ", 
+      RowBox[{"0.2711", " ", "+", " ", 
+       RowBox[{"0.01858", " ", 
+        RowBox[{"2.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Cos", "[", 
+         SubscriptBox["\[Theta]", "z"], "]"}], "<", "0"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        SubscriptBox["I", "direct"], "=", "0"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        SubscriptBox["I", "direct"], " ", "=", " ", 
+        RowBox[{
+         SubscriptBox["I", "0"], " ", 
+         RowBox[{"(", 
+          RowBox[{
+           SubscriptBox["a", "0"], " ", "+", " ", 
+           RowBox[{
+            SubscriptBox["a", "1"], " ", 
+            RowBox[{"E", "^", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"-", "k"}], "/", 
+               RowBox[{"Cos", "[", 
+                SubscriptBox["\[Theta]", "z"], "]"}]}], ")"}]}]}]}], 
+          ")"}]}]}]}], " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{
+        "If", " ", "the", " ", "sun", " ", "is", " ", "more", " ", "than", 
+         " ", "90", " ", "degrees", " ", "off"}], ",", " ", 
+        RowBox[{
+        "the", " ", "formula", " ", "is", " ", "not", " ", "correct"}], ",", 
+        " ", 
+        RowBox[{
+        "and", " ", "we", " ", "set", " ", "the", " ", "value", " ", "to", 
+         " ", "be", " ", "0"}]}], " ", "*)"}], "\[IndentingNewLine]", "]"}]}],
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"DiscretePlot", "[", 
+   RowBox[{
+    RowBox[{"directPower", "[", "x", "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", 
+      SubscriptBox["t", "sunrise"], ",", 
+      SubscriptBox["t", "sunset"], ",", "0.1"}], "}"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "Large"}], ",", 
+    RowBox[{"AxesLabel", " ", "\[Rule]", " ", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Hour of day\>\"", ",", " ", 
+       "\"\<W/\!\(\*SuperscriptBox[\(m\), \(2\)]\)\>\""}], "}"}]}]}], "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.67946401091586*^9, 3.6794641487766247`*^9}, {
+   3.679464199910451*^9, 3.6794642096302443`*^9}, {3.679464345394108*^9, 
+   3.679464432181937*^9}, {3.6794644921873183`*^9, 3.6794644944488707`*^9}, {
+   3.679464847198904*^9, 3.6794649083723335`*^9}, {3.67946499414554*^9, 
+   3.6794650058646464`*^9}, {3.6794650597439003`*^9, 
+   3.6794651451877756`*^9}, {3.679465191142537*^9, 3.679465253019583*^9}, {
+   3.6794662626450253`*^9, 3.679466262778417*^9}, {3.6794663266952243`*^9, 
+   3.6794663599693947`*^9}, {3.679466437168155*^9, 3.679466443827005*^9}, {
+   3.6794665753975286`*^9, 3.679466588591362*^9}, {3.6794666332556844`*^9, 
+   3.679466658545863*^9}, {3.6794667399005303`*^9, 3.6794668353681197`*^9}, {
+   3.6794668730546293`*^9, 3.679466879182575*^9}, {3.6794670333088827`*^9, 
+   3.6794670518899245`*^9}, {3.6794672330336113`*^9, 
+   3.6794672337022867`*^9}, {3.6794673193832207`*^9, 
+   3.6794673194990044`*^9}, {3.6794674649812384`*^9, 3.679467478088408*^9}, 
+   3.6794675104356856`*^9, {3.6794676907434597`*^9, 3.679467740252929*^9}, {
+   3.679467818586088*^9, 3.679467838950859*^9}, {3.6794679409522157`*^9, 
+   3.679467957098284*^9}, {3.6794682243954124`*^9, 3.679468275378651*^9}, {
+   3.679468307499316*^9, 3.6794684532208223`*^9}, {3.6794685454763403`*^9, 
+   3.67946857111338*^9}, {3.6794688470649996`*^9, 3.6794689555184693`*^9}, {
+   3.6794690045144825`*^9, 3.6794690160759892`*^9}, {3.6794692451286573`*^9, 
+   3.679469371690121*^9}, {3.67946942204245*^9, 3.679469440562115*^9}, {
+   3.6794694709937553`*^9, 3.6794696277726793`*^9}, {3.679469680841861*^9, 
+   3.679469689224842*^9}, {3.679469727435172*^9, 3.6794697436994886`*^9}, {
+   3.679469891569916*^9, 3.679469966477399*^9}, 3.679470028624875*^9, {
+   3.679470099067356*^9, 3.6794701052493563`*^9}, {3.6794702797351217`*^9, 
+   3.67947028743371*^9}, {3.679470340586507*^9, 3.6794704067903185`*^9}, {
+   3.6794704369045773`*^9, 3.6794704370615826`*^9}, {3.679477350781726*^9, 
+   3.679477361364335*^9}, {3.679477486364504*^9, 3.6794775283117204`*^9}, {
+   3.6794846927655897`*^9, 3.6794848111469836`*^9}, {3.6794849317536488`*^9, 
+   3.6794849321849985`*^9}, {3.6794853639197035`*^9, 3.679485513144245*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{
+   {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.0038500000000000006`],
+     AbsoluteThickness[1.6], 
+    {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+     0.0038500000000000006`], AbsoluteThickness[1.6], Opacity[0.2], 
+     PolygonBox[{{6.25, 0.}, {6.35, 0.}, {6.45, 0.}, {6.55, 0.}, {6.65, 0.}, {
+       6.75, 0.}, {6.85, 0.}, {6.95, 0.}, {7.05, 0.}, {7.15, 0.}, {7.25, 
+       0.}, {7.35, 0.}, {7.45, 0.}, {7.55, 0.}, {7.65, 0.}, {7.75, 0.}, {7.85,
+        0.}, {7.95, 0.}, {8.05, 0.}, {8.15, 0.}, {8.25, 0.}, {8.35, 0.}, {
+       8.45, 177.1117370897832}, {8.55, 177.16207967074328`}, {8.65, 
+       179.18962746118768`}, {8.75, 188.43734351225527`}, {8.85, 
+       206.98132154463207`}, {8.95, 233.05265079259968`}, {9.05, 
+       263.87967747155153`}, {9.15, 297.0925022458552}, {9.25, 
+       331.0090828476454}, {9.35, 364.53963940461364`}, {9.45, 
+       397.022875580222}, {9.55, 428.0859941237942}, {9.65, 
+       457.54317586427436`}, {9.75, 485.32675823265356`}, {9.85, 
+       511.4418221969145}, {9.95, 535.9368010951351}, {10.05, 
+       558.8845836818451}, {10.15, 580.3704824454463}, {10.25, 
+       600.4846839983365}, {10.350000000000001`, 619.3175621294982}, {10.45, 
+       636.9568813178811}, {10.55, 653.4861816022618}, {10.65, 
+       668.9839565665455}, {10.75, 683.5232951831192}, {10.850000000000001`, 
+       697.1718643568349}, {10.95, 709.9920329626651}, {11.05, 
+       722.0411500009473}, {11.15, 733.3718348547347}, {11.25, 
+       744.0323294405547}, {11.350000000000001`, 754.0668270283238}, {11.45, 
+       763.5158057619226}, {11.55, 772.4163441662133}, {11.65, 
+       780.8024100137096}, {11.75, 788.7051368761003}, {11.850000000000001`, 
+       796.1530685676958}, {11.95, 803.1723911231494}, {12.05, 
+       809.787135362214}, {12.15, 816.0193687870875}, {12.25, 
+       821.8893592609538}, {12.350000000000001`, 827.4157364214957}, {12.45, 
+       832.6156203787322}, {12.55, 837.504755826558}, {12.65, 
+       842.0976158419782}, {12.75, 846.4075099198611}, {12.850000000000001`, 
+       850.446671071739}, {12.95, 854.2263394162936}, {13.05, 
+       857.7568368977855}, {13.15, 861.0476320656842}, {13.25, 
+       864.1074020230989}, {13.350000000000001`, 866.9440844559274}, {13.45, 
+       869.5649279764656}, {13.55, 871.9765330570469}, {13.65, 
+       874.1848943800276}, {13.75, 876.1954316995232}, {13.850000000000001`, 
+       878.0130246030858}, {13.95, 879.6420366820707}, {14.05, 
+       881.0863423761034}, {14.15, 882.3493466640616}, {14.25, 
+       883.434004542518}, {14.35, 884.3428362793396}, {14.450000000000001`, 
+       885.0779411987477}, {14.55, 885.6410089073547}, {14.65, 
+       886.0333278601507}, {14.75, 886.2557924302182}, {14.85, 
+       886.3089073519792}, {14.950000000000001`, 886.192790455448}, {15.05, 
+       885.9071733092411}, {15.15, 885.4513995610452}, {15.25, 
+       884.8244219959732}, {15.35, 884.0247962593219}, {15.450000000000001`, 
+       883.0506742445496}, {15.55, 881.8997933195474}, {15.65, 
+       880.5694650823366}, {15.75, 879.0565602184203}, {15.850000000000001`, 
+       877.3574921837294}, {15.950000000000001`, 875.4681973593506}, {16.05, 
+       873.38411210401}, {16.15, 871.1001481719594}, {16.25, 
+       868.6106624568114}, {16.35, 865.9094267261654}, {16.450000000000003`, 
+       862.9895877199795}, {16.55, 859.8436308980182}, {16.65, 
+       856.4633300186395}, {16.75, 852.8397019059812}, {16.85, 
+       848.9629443713126}, {16.950000000000003`, 844.8223794740725}, {17.05, 
+       840.4063788611472}, {17.15, 835.7022901624174}, {17.25, 
+       830.6963484075094}, {17.35, 825.3735830171448}, {17.450000000000003`, 
+       819.7177111578999}, {17.55, 813.7110190585033}, {17.65, 
+       807.3342346720957}, {17.75, 800.5663793903339}, {17.85, 
+       793.3846141852152}, {17.950000000000003`, 785.7640532128219}, {18.05, 
+       777.6775800501314}, {18.15, 769.0956190861139}, {18.25, 
+       759.9859117906013}, {18.35, 750.3132463217696}, {18.450000000000003`, 
+       740.039184128225}, {18.55, 729.1217505896315}, {18.65, 
+       717.5151183098554}, {18.75, 705.1692641296228}, {18.85, 
+       692.0296328609959}, {18.950000000000003`, 678.03680329591}, {19.05, 
+       663.1261868033307}, {19.15, 647.227816410123}, {19.25, 
+       630.2662363796252}, {19.35, 612.1606653708106}, {19.450000000000003`, 
+       592.8254736201164}, {19.55, 572.1713076318223}, {19.65, 
+       550.1070732471159}, {19.75, 526.5434214724729}, {19.85, 
+       501.3983983872134}, {19.950000000000003`, 474.60658908842584`}, {20.05,
+        446.13354261326634`}, {20.15, 415.9984135147115}, {20.25, 
+       384.3090822839598}, {20.35, 351.316112520919}, {20.450000000000003`, 
+       317.49392819681066`}, {20.55, 283.6581490029603}, {20.65, 
+       251.1202941997311}, {20.75, 221.84425007023071`}, {20.85, 
+       198.4471141727031}, {20.950000000000003`, 183.57225013607294`}, {21.05,
+        177.7926086971694}, {21.15, 177.11379082573703`}, {21.25, 
+       177.11173706931552`}, {21.35, 0.}, {21.35, 0}, {21.25, 0}, {
+       21.15, 0}, {21.05, 0}, {20.950000000000003`, 0}, {20.85, 0}, {
+       20.75, 0}, {20.65, 0}, {20.55, 0}, {20.450000000000003`, 0}, {
+       20.35, 0}, {20.25, 0}, {20.15, 0}, {20.05, 0}, {
+       19.950000000000003`, 0}, {19.85, 0}, {19.75, 0}, {19.65, 0}, {
+       19.55, 0}, {19.450000000000003`, 0}, {19.35, 0}, {19.25, 0}, {
+       19.15, 0}, {19.05, 0}, {18.950000000000003`, 0}, {18.85, 0}, {
+       18.75, 0}, {18.65, 0}, {18.55, 0}, {18.450000000000003`, 0}, {
+       18.35, 0}, {18.25, 0}, {18.15, 0}, {18.05, 0}, {
+       17.950000000000003`, 0}, {17.85, 0}, {17.75, 0}, {17.65, 0}, {
+       17.55, 0}, {17.450000000000003`, 0}, {17.35, 0}, {17.25, 0}, {
+       17.15, 0}, {17.05, 0}, {16.950000000000003`, 0}, {16.85, 0}, {
+       16.75, 0}, {16.65, 0}, {16.55, 0}, {16.450000000000003`, 0}, {
+       16.35, 0}, {16.25, 0}, {16.15, 0}, {16.05, 0}, {
+       15.950000000000001`, 0}, {15.850000000000001`, 0}, {15.75, 0}, {
+       15.65, 0}, {15.55, 0}, {15.450000000000001`, 0}, {15.35, 0}, {
+       15.25, 0}, {15.15, 0}, {15.05, 0}, {14.950000000000001`, 0}, {
+       14.85, 0}, {14.75, 0}, {14.65, 0}, {14.55, 0}, {
+       14.450000000000001`, 0}, {14.35, 0}, {14.25, 0}, {14.15, 0}, {
+       14.05, 0}, {13.95, 0}, {13.850000000000001`, 0}, {13.75, 0}, {
+       13.65, 0}, {13.55, 0}, {13.45, 0}, {13.350000000000001`, 0}, {
+       13.25, 0}, {13.15, 0}, {13.05, 0}, {12.95, 0}, {
+       12.850000000000001`, 0}, {12.75, 0}, {12.65, 0}, {12.55, 0}, {
+       12.45, 0}, {12.350000000000001`, 0}, {12.25, 0}, {12.15, 0}, {
+       12.05, 0}, {11.95, 0}, {11.850000000000001`, 0}, {11.75, 0}, {
+       11.65, 0}, {11.55, 0}, {11.45, 0}, {11.350000000000001`, 0}, {
+       11.25, 0}, {11.15, 0}, {11.05, 0}, {10.95, 0}, {
+       10.850000000000001`, 0}, {10.75, 0}, {10.65, 0}, {10.55, 0}, {
+       10.45, 0}, {10.350000000000001`, 0}, {10.25, 0}, {10.15, 0}, {
+       10.05, 0}, {9.95, 0}, {9.85, 0}, {9.75, 0}, {9.65, 0}, {9.55, 0}, {
+       9.45, 0}, {9.35, 0}, {9.25, 0}, {9.15, 0}, {9.05, 0}, {8.95, 0}, {
+       8.85, 0}, {8.75, 0}, {8.65, 0}, {8.55, 0}, {8.45, 0}, {8.35, 0}, {
+       8.25, 0}, {8.15, 0}, {8.05, 0}, {7.95, 0}, {7.85, 0}, {7.75, 0}, {
+       7.65, 0}, {7.55, 0}, {7.45, 0}, {7.35, 0}, {7.25, 0}, {7.15, 0}, {
+       7.05, 0}, {6.95, 0}, {6.85, 0}, {6.75, 0}, {6.65, 0}, {6.55, 0}, {
+       6.45, 0}, {6.35, 0}, {6.25, 0}},
+      VertexColors->None]}, 
+    {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+     0.0038500000000000006`], AbsoluteThickness[1.6], Opacity[0.2]}}, 
+   {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.0038500000000000006`],
+     AbsoluteThickness[1.6], LineBox[CompressedData["
+1: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
+
+     "]], {}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesLabel->{
+    FormBox["\"Hour of day\"", TraditionalForm], 
+    FormBox[
+    "\"W/\\!\\(\\*SuperscriptBox[\\(m\\), \\(2\\)]\\)\"", TraditionalForm]},
+  AxesOrigin->{6.25, 0},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  ImageSize->Large,
+  Method->{
+   "MessagesHead" -> DiscretePlot, "AxisPadding" -> Scaled[0.02], 
+    "DefaultBoundaryStyle" -> Automatic, "DefaultMeshStyle" -> 
+    AbsolutePointSize[6], "DefaultPlotStyle" -> {
+      Directive[
+       RGBColor[0.368417, 0.506779, 0.709798], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.880722, 0.611041, 0.142051], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.560181, 0.691569, 0.194885], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.922526, 0.385626, 0.209179], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.528488, 0.470624, 0.701351], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.772079, 0.431554, 0.102387], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.363898, 0.618501, 0.782349], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[1, 0.75, 0], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.647624, 0.37816, 0.614037], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.571589, 0.586483, 0.], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.915, 0.3325, 0.2125], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.40082222609352647`, 0.5220066643438841, 0.85], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.9728288904374106, 0.621644452187053, 0.07336199581899142], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.736782672705901, 0.358, 0.5030266573755369], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.28026441037696703`, 0.715, 0.4292089322474965], 
+       AbsoluteThickness[1.6]]}, "DomainPadding" -> Scaled[0.02], 
+    "PointSizeFunction" -> "SmallPointSize", "RangePadding" -> Scaled[0.05]},
+  PlotRange->{{6.25, 21.35}, {0, 886.3089073519792}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{{3.679485505697245*^9, 3.6794855205059586`*^9}}]
+}, Open  ]]
+},
+WindowSize->{942, 960},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"10.4 for Microsoft Windows (64-bit) (April 11, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 13113, 323, 1017, "Input"],
+Cell[13696, 347, 12244, 218, 390, "Output"]
+}, Open  ]]
+}
+]
+*)
+
