@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     17304,        427]
-NotebookOptionsPosition[     16715,        403]
-NotebookOutlinePosition[     17056,        418]
-CellTagsIndexPosition[     17013,        415]
+NotebookDataLength[     21556,        531]
+NotebookOptionsPosition[     20805,        502]
+NotebookOutlinePosition[     21146,        517]
+CellTagsIndexPosition[     21103,        514]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -386,19 +386,118 @@ Cell[BoxData[{
    3.679240852676673*^9}, {3.679240883786662*^9, 3.679240904798957*^9}, {
    3.6792412997890606`*^9, 3.6792413146239505`*^9}, {3.6792937486475515`*^9, 
    3.6792937624762783`*^9}, {3.6792938007622023`*^9, 3.679293807580739*^9}, {
-   3.679293981247451*^9, 3.6792939973831296`*^9}}],
+   3.679293981247451*^9, 3.6792939973831296`*^9}, {3.679295004660715*^9, 
+   3.6792950704590116`*^9}}],
 
-Cell[BoxData["150"], "Output",
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "write"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Tag \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"Times\\\"}]\\)\[NoBreak] in \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"2.24704902657076881529841773272487719799`5.\
+109735180456635\\\", \\\" \\\", RowBox[{\\\"(\\\", \
+TemplateBox[List[RowBox[List[\\\"-\\\", \
+\\\"7.3859812898263630387418743339367210865`3.8684082031612297\\\"]], \
+RowBox[List[\\\"\\\\[InvisibleSpace]\\\", \
+\\\"\\\\\\\"\\\\[Degree]\\\\\\\"\\\"]], \\\"degrees\\\", \
+\\\"\\\\\\\"AngularDegrees\\\\\\\"\\\"], \\\"QuantityPostfix\\\", \
+Rule[SyntaxForm, Mod]], \\\")\\\"}], \\\" \\\", RowBox[{\\\"(\\\", \
+TemplateBox[List[\\\"322.25794399289179636980406939983367919922`5.\
+508203631967267\\\", RowBox[List[\\\"\\\\[InvisibleSpace]\\\", \\\"\\\\\\\"\\\
+\\[Degree]\\\\\\\"\\\"]], \\\"degrees\\\", \\\"\\\\\\\"AngularDegrees\\\\\\\"\
+\\\"], \\\"QuantityPostfix\\\", Rule[SyntaxForm, Mod]], \\\")\\\"}]}]\\)\
+\[NoBreak] is Protected. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/write\\\", ButtonNote -> \
+\\\"Set::write\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.679295019763923*^9}],
+
+Cell[BoxData["80"], "Output",
  CellChangeTimes->{{3.6792398813449764`*^9, 3.6792398944218903`*^9}, 
    3.6792407479641547`*^9, {3.6792408858677826`*^9, 3.6792409054864798`*^9}, {
    3.679241301988722*^9, 3.679241315727131*^9}, 3.679293776654607*^9, 
-   3.679293822455326*^9, 3.67929400108736*^9}],
+   3.679293822455326*^9, 3.67929400108736*^9, 3.679295019810792*^9}],
 
-Cell[BoxData["8626"], "Output",
- CellChangeTimes->{{3.6792398813449764`*^9, 3.6792398944218903`*^9}, 
-   3.6792407479641547`*^9, {3.6792408858677826`*^9, 3.6792409054864798`*^9}, {
-   3.679241301988722*^9, 3.679241315727131*^9}, 3.679293776654607*^9, 
-   3.679293822455326*^9, 3.679294007750395*^9}]
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "write"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Tag \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"Times\\\"}]\\)\[NoBreak] in \
+\[NoBreak]\\!\\(\\*RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.89454362701902442316422565055462568621`4.709724158432286\\\"}], \\\" \\\
+\", RowBox[{\\\"(\\\", TemplateBox[List[RowBox[List[\\\"-\\\", \
+\\\"0.87042679658329225045321209108806215227`2.9397322525621936\\\"]], \
+RowBox[List[\\\"\\\\[InvisibleSpace]\\\", \
+\\\"\\\\\\\"\\\\[Degree]\\\\\\\"\\\"]], \\\"degrees\\\", \
+\\\"\\\\\\\"AngularDegrees\\\\\\\"\\\"], \\\"QuantityPostfix\\\", \
+Rule[SyntaxForm, Mod]], \\\")\\\"}], \\\" \\\", RowBox[{\\\"(\\\", \
+TemplateBox[List[\\\"50.14342996518982431553013157099485397339`4.\
+70021403771966\\\", RowBox[List[\\\"\\\\[InvisibleSpace]\\\", \
+\\\"\\\\\\\"\\\\[Degree]\\\\\\\"\\\"]], \\\"degrees\\\", \
+\\\"\\\\\\\"AngularDegrees\\\\\\\"\\\"], \\\"QuantityPostfix\\\", \
+Rule[SyntaxForm, Mod]], \\\")\\\"}]}]\\)\[NoBreak] is Protected. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/General/write\\\", \
+ButtonNote -> \\\"Set::write\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6792950200920734`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"powerLoss2", ":=", " ", 
+   RowBox[{"Function", "[", "\[IndentingNewLine]", 
+    RowBox[{"SunPosition", "[", 
+     RowBox[{
+      RowBox[{"GeoPosition", "[", 
+       RowBox[{"{", 
+        RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
+      RowBox[{"DateObject", "[", 
+       RowBox[{"#3", ",", 
+        RowBox[{"{", 
+         RowBox[{"#1", "/", "100"}], "}"}]}], "]"}]}], "]"}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"date", " ", "=", " ", 
+   RowBox[{"FromUnixTime", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"6029.649", " ", "+", " ", "10957.5"}], ")"}], "*", "3600", "*",
+      "24"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dateHour", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"DateValue", "[", 
+     RowBox[{"date", ",", "\"\<Hour\>\""}], "]"}], "+", 
+    RowBox[{
+     RowBox[{"DateValue", "[", 
+      RowBox[{"date", ",", " ", "\"\<Minute\>\""}], "]"}], "/", "60"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"powerLoss2", "[", 
+  RowBox[{"dateHour", ",", "30", ",", "date"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.679295116496292*^9, 3.6792951480444756`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TemplateBox[{
+    "322.25794399289179636980406939983367919922`5.508203631967267",
+     RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
+     "\"AngularDegrees\""},
+    "QuantityPostfix"], ",", 
+   TemplateBox[{
+    RowBox[{"-", 
+       "7.3859812898263630387418743339367210865`3.8684082031612297"}],
+     RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
+     "\"AngularDegrees\""},
+    "QuantityPostfix"]}], "}"}]], "Output",
+ CellChangeTimes->{3.679295148966308*^9}]
 }, Open  ]]
 },
 WindowSize->{942, 960},
@@ -425,9 +524,14 @@ Cell[5008, 122, 1182, 24, 41, "Output"],
 Cell[6193, 148, 1164, 24, 41, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[7394, 177, 8703, 211, 672, "Input"],
-Cell[16100, 390, 297, 4, 31, "Output"],
-Cell[16400, 396, 299, 4, 31, "Output"]
+Cell[7394, 177, 8755, 212, 672, "Input"],
+Cell[16152, 391, 1249, 23, 31, "Message"],
+Cell[17404, 416, 318, 4, 31, "Output"],
+Cell[17725, 422, 1271, 23, 31, "Message"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19033, 450, 1225, 33, 152, "Input"],
+Cell[20261, 485, 528, 14, 40, "Output"]
 }, Open  ]]
 }
 ]

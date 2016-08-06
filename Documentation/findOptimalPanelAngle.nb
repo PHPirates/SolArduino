@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     44285,       1049]
-NotebookOptionsPosition[     43766,       1028]
-NotebookOutlinePosition[     44107,       1043]
-CellTagsIndexPosition[     44064,       1040]
+NotebookDataLength[     40942,        968]
+NotebookOptionsPosition[     40427,        947]
+NotebookOutlinePosition[     40768,        962]
+CellTagsIndexPosition[     40725,        959]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -88,7 +88,10 @@ Cell[BoxData[{
      RowBox[{"(*", " ", 
       RowBox[{"Sun", " ", "altitude"}], " ", "*)"}], "\[IndentingNewLine]", 
      RowBox[{
-      SubscriptBox["\[Gamma]", "p"], " ", "=", " ", "0"}], ";", " ", 
+      SubscriptBox["\[Gamma]", "p"], " ", "=", " ", 
+      RowBox[{
+       RowBox[{"-", "90"}], " ", "*", " ", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
      RowBox[{"(*", " ", 
       RowBox[{"Solar", " ", "panels", " ", "azimuth"}], " ", "*)"}], 
      "\[IndentingNewLine]", 
@@ -276,8 +279,11 @@ Cell[BoxData[{
     "END", " ", "OF", " ", 
     RowBox[{
     "FUNCTIONS", " ", "**", "**", "**", "**", "**", "**", "**", "**", "**", "**",
-      "**", "**", "**", "**", "**"}], "*"}], " ", "*)"}], 
-  "\[IndentingNewLine]", 
+      "**", "**", "**", "**", "**"}], "*"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"day", "[", 
+   RowBox[{"20", ",", "6"}], "]"}], "\[IndentingNewLine]", 
   RowBox[{"(*", " ", 
    RowBox[{"Graph", " ", "for", " ", "a", " ", "specific", " ", "day"}], " ", 
    "*)"}], "\[IndentingNewLine]", 
@@ -334,18 +340,19 @@ Cell[BoxData[{
    RowBox[{"Graph", " ", "for", " ", "this", " ", "year"}], " ", 
    "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"AbsoluteTiming", "[", 
-   RowBox[{"DiscretePlot", "[", 
-    RowBox[{
-     RowBox[{"month", "[", "x", "]"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"x", ",", "1", ",", "12"}], "}"}], ",", 
-     RowBox[{"ImageSize", "\[Rule]", "Large"}], ",", 
-     RowBox[{"AxesLabel", " ", "\[Rule]", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"AbsoluteTiming", "[", 
+    RowBox[{"DiscretePlot", "[", 
+     RowBox[{
+      RowBox[{"month", "[", "x", "]"}], ",", 
       RowBox[{"{", 
-       RowBox[{
-       "\"\<Month\>\"", ",", " ", "\"\<Average of optimal angle\>\""}], 
-       "}"}]}]}], "]"}], " ", "]"}], " ", 
+       RowBox[{"x", ",", "1", ",", "12"}], "}"}], ",", 
+      RowBox[{"ImageSize", "\[Rule]", "Large"}], ",", 
+      RowBox[{"AxesLabel", " ", "\[Rule]", " ", 
+       RowBox[{"{", 
+        RowBox[{
+        "\"\<Month\>\"", ",", " ", "\"\<Average of optimal angle\>\""}], 
+        "}"}]}]}], "]"}], " ", "]"}], " ", "*)"}], 
   RowBox[{"(*", " ", 
    RowBox[{"562", " ", "secs"}], " ", "*)"}]}]}], "Input",
  CellChangeTimes->{{3.677823637064593*^9, 3.677823787994485*^9}, {
@@ -394,103 +401,15 @@ Cell[BoxData[{
    3.6792978061589394`*^9}, {3.6792978364195147`*^9, 
    3.6792979000546722`*^9}, {3.6792979756847577`*^9, 3.679298001688184*^9}, {
    3.6792980376287727`*^9, 3.6792980708998537`*^9}, {3.679303024376347*^9, 
-   3.6793030294406557`*^9}}],
+   3.6793030294406557`*^9}, {3.6793035577558393`*^9, 
+   3.6793036135225773`*^9}, {3.6793038146128073`*^9, 3.67930387361384*^9}, {
+   3.6793039856023493`*^9, 3.6793040067616916`*^9}}],
 
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"562.478254479289`", ",", 
-   GraphicsBox[{
-     {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
-      0.012833333333333334`], AbsoluteThickness[1.6], {
-       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
-        0.012833333333333334`], AbsoluteThickness[1.6], Opacity[0.2], 
-        LineBox[{{{6., 35.4452366650841}, {6., 35.4452366650841}}},
-         VertexColors->None]}, 
-       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
-        0.012833333333333334`], AbsoluteThickness[1.6], Opacity[0.2], 
-        LineBox[CompressedData["
-1:eJxTTMoPSmVmYGDgBmImKIaAD/YrlAqnbpwS5ADjix+62fx3hyOUz+Awy+1r
-2V3LADgfVZ7DIclh1ouQFi84H1VewEG71vpy4V1XOB9VXsTB2qvK7tA7Jzgf
-VV7GYaLVXY+MMCc4H1VewaGJY6+D0H4XOB9VXskhnvXqhB37PeB8VHkVhxKj
-Qwmx6X5wPqq8msO/P5y9zt8C4XxUeQ2HgC1t1+dbBsP5MHkAeGdi1Q==
-         "],
-         VertexColors->None]}}}, 
-     {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
-      0.012833333333333334`], AbsoluteThickness[1.6], {}, 
-      PointBox[{{1., 74.32333885239007}, {2., 64.90414213135446}, {3., 
-       53.033841204946626`}, {4., 43.730036167189915`}, {5., 
-       37.865302858077904`}, {6., 35.4452366650841}, {7., 
-       36.675057514211524`}, {8., 41.49274453382624}, {9., 
-       49.49781999970832}, {10., 60.807537169287485`}, {11., 
-       71.84787298179069}, {12., 76.90038097529145}}], {}}},
-    AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
-    Axes->True,
-    AxesLabel->{
-      FormBox["\"Month\"", TraditionalForm], 
-      FormBox["\"Average of optimal angle\"", TraditionalForm]},
-    AxesOrigin->{1, 35.4452366650841},
-    FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
-    GridLinesStyle->Directive[
-      GrayLevel[0.5, 0.4]],
-    ImageSize->Large,
-    Method->{
-     "MessagesHead" -> DiscretePlot, "AxisPadding" -> Scaled[0.02], 
-      "DefaultBoundaryStyle" -> Automatic, "DefaultMeshStyle" -> 
-      AbsolutePointSize[6], "DefaultPlotStyle" -> {
-        Directive[
-         RGBColor[0.368417, 0.506779, 0.709798], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.880722, 0.611041, 0.142051], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.560181, 0.691569, 0.194885], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.922526, 0.385626, 0.209179], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.528488, 0.470624, 0.701351], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.772079, 0.431554, 0.102387], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.363898, 0.618501, 0.782349], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[1, 0.75, 0], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.647624, 0.37816, 0.614037], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.571589, 0.586483, 0.], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.915, 0.3325, 0.2125], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.40082222609352647`, 0.5220066643438841, 0.85], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.9728288904374106, 0.621644452187053, 0.07336199581899142], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.736782672705901, 0.358, 0.5030266573755369], 
-         AbsoluteThickness[1.6]], 
-        Directive[
-         RGBColor[0.28026441037696703`, 0.715, 0.4292089322474965], 
-         AbsoluteThickness[1.6]]}, "DomainPadding" -> Scaled[0.02], 
-      "PointSizeFunction" -> "SmallPointSize", "RangePadding" -> Scaled[0.05]},
-    PlotRange->{{1, 12}, {35.4452366650841, 76.90038097529145}},
-    PlotRangePadding->{{
-       Scaled[0.02], 
-       Scaled[0.02]}, {
-       Scaled[0.02], 
-       Scaled[0.02]}},
-    Ticks->{Automatic, Automatic}]}], "}"}]], "Output",
- CellChangeTimes->{3.679298028790655*^9, 3.6792986354830027`*^9}]
+Cell[BoxData["59.701781672513135`"], "Output",
+ CellChangeTimes->{
+  3.679298028790655*^9, 3.6792986354830027`*^9, {3.6793036060543356`*^9, 
+   3.679303617694751*^9}, {3.679303838574464*^9, 3.679303876428155*^9}, {
+   3.6793039931361904`*^9, 3.6793040096071067`*^9}}]
 }, Open  ]],
 
 Cell[BoxData[""], "Input",
@@ -1043,14 +962,14 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 16391, 374, 1172, "Input"],
-Cell[16974, 398, 3991, 94, 347, "Output"]
+Cell[580, 22, 16776, 383, 1192, "Input"],
+Cell[17359, 407, 267, 4, 64, "Output"]
 }, Open  ]],
-Cell[20980, 495, 147, 2, 31, "Input"],
-Cell[21130, 499, 143, 2, 31, "Input"],
-Cell[21276, 503, 171, 3, 31, "Input"],
-Cell[21450, 508, 22215, 515, 1787, "Input"],
-Cell[43668, 1025, 94, 1, 31, "Input"]
+Cell[17641, 414, 147, 2, 31, "Input"],
+Cell[17791, 418, 143, 2, 31, "Input"],
+Cell[17937, 422, 171, 3, 31, "Input"],
+Cell[18111, 427, 22215, 515, 1787, "Input"],
+Cell[40329, 944, 94, 1, 31, "Input"]
 }
 ]
 *)
