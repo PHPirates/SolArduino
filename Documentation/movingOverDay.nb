@@ -1,0 +1,1095 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.4' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     49552,       1087]
+NotebookOptionsPosition[     48151,       1044]
+NotebookOutlinePosition[     48492,       1059]
+CellTagsIndexPosition[     48449,       1056]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"year", " ", "=", " ", "2016"}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{"adapted", " ", "from", " ", "other", " ", "notebook"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"directPowerOptimal", "  ", ":=", " ", 
+   RowBox[{"Function", "[", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"param", ":", " ", 
+       RowBox[{"hour", " ", "of", " ", "day", "*", "100"}]}], ",", " ", 
+      RowBox[{
+       RowBox[{"date", ".", " ", "returns"}], " ", "power", " ", "when", " ", 
+       "panels", " ", "would", " ", "be", " ", "perpendicular", " ", "to", 
+       " ", "the", " ", 
+       RowBox[{"sun", " ", "[", 
+        RowBox[{"W", "/", 
+         SuperscriptBox["m", "2"]}], "]"}]}]}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Theta]", "z"], "=", "0"}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"solar", " ", "zenith", " ", 
+       RowBox[{"(", "misalignment", ")"}], " ", "in", " ", "radians"}], " ", 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"n", "=", " ", 
+      RowBox[{"QuantityMagnitude", "[", 
+       RowBox[{"Quantity", "[", 
+        RowBox[{"#1", " ", "-", " ", 
+         RowBox[{"DateObject", "[", 
+          RowBox[{"{", 
+           RowBox[{"year", ",", "1", ",", "1"}], "}"}], "]"}]}], "]"}], 
+       "]"}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"day", " ", "of", " ", "year"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["I", "0"], "=", " ", 
+      RowBox[{"1367", " ", 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         RowBox[{"0.034", " ", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"360", "*", 
+            RowBox[{"n", "/", "365.25"}]}], "]"}]}]}], ")"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["a", "0"], " ", "=", " ", 
+      RowBox[{"0.4237", " ", "-", " ", 
+       RowBox[{"0.00821", " ", "36"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      SubscriptBox["a", "1"], " ", "=", " ", 
+      RowBox[{"0.5055", " ", "+", " ", 
+       RowBox[{"0.00595", " ", 
+        RowBox[{"6.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"k", " ", "=", " ", 
+      RowBox[{"0.2711", " ", "+", " ", 
+       RowBox[{"0.01858", " ", 
+        RowBox[{"2.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Cos", "[", 
+         SubscriptBox["\[Theta]", "z"], "]"}], "<", "0"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        SubscriptBox["I", "direct"], "=", "0"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        SubscriptBox["I", "direct"], " ", "=", " ", 
+        RowBox[{
+         SubscriptBox["I", "0"], " ", 
+         RowBox[{"(", 
+          RowBox[{
+           SubscriptBox["a", "0"], " ", "+", " ", 
+           RowBox[{
+            SubscriptBox["a", "1"], " ", 
+            RowBox[{"E", "^", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"-", "k"}], "/", 
+               RowBox[{"Cos", "[", 
+                SubscriptBox["\[Theta]", "z"], "]"}]}], ")"}]}]}]}], 
+          ")"}]}]}]}], " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{
+        "If", " ", "the", " ", "sun", " ", "is", " ", "more", " ", "than", 
+         " ", "90", " ", "degrees", " ", "off"}], ",", " ", 
+        RowBox[{
+        "the", " ", "formula", " ", "is", " ", "not", " ", "correct"}], ",", 
+        " ", 
+        RowBox[{
+        "and", " ", "we", " ", "set", " ", "the", " ", "value", " ", "to", 
+         " ", "be", " ", "0"}]}], " ", "*)"}], "\[IndentingNewLine]", "]"}]}],
+     "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sumOverDay", ":=", 
+   RowBox[{"Function", "[", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"params", ":", " ", 
+       RowBox[{
+       "date", " ", "\[IndentingNewLine]", "returns", " ", "sum", " ", "of", 
+        " ", "solar", " ", "power", " ", "over", " ", "the", " ", "day", " ", 
+        "at", " ", "every", " ", "hour"}]}], ",", " ", 
+      RowBox[{
+      "given", " ", "that", " ", "the", " ", "panels", " ", "are", " ", 
+       "optimal", " ", "at", " ", "that", " ", "point"}]}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"position", " ", "=", " ", 
+      RowBox[{"GeoPosition", "[", 
+       RowBox[{"{", 
+        RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"sunrise", " ", "=", " ", 
+      RowBox[{"Sunrise", "[", 
+       RowBox[{"position", ",", "#1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"TimeZoneConvert", "[", 
+      RowBox[{"sunrise", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunriseHour", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunrise", ",", "\"\<Hour\>\""}], "]"}], "+", 
+       RowBox[{
+        RowBox[{"DateValue", "[", 
+         RowBox[{"sunrise", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+        "60"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunset", " ", "=", " ", 
+      RowBox[{"Sunset", "[", 
+       RowBox[{"position", ",", "#1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"TimeZoneConvert", "[", 
+      RowBox[{"sunset", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunsetHour", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
+       RowBox[{
+        RowBox[{"DateValue", "[", 
+         RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+        "60"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{
+       "Times", " ", "100", " ", "so", " ", "the", " ", "sum", " ", "starts", 
+        " ", "closer", " ", "to", " ", "the", " ", "real", " ", "sunUpHour"}],
+        ",", " ", 
+       RowBox[{
+       "and", " ", "not", " ", "floors", " ", "it", " ", "to", " ", "an", " ",
+         "integer", " ", "when", " ", "calculating", " ", "the", " ", 
+        RowBox[{"sum", ".", " ", "Otherwise"}], " ", "weird", " ", "jumps", 
+        " ", "in", " ", "graphs", " ", "appear", " ", "when", " ", "the", " ",
+         "sunUpHour", " ", "jumps", " ", "one", " ", "hour", " ", 
+        "\[IndentingNewLine]", "step", " ", 
+        RowBox[{"size", ":", " ", 
+         RowBox[{".1", " ", "hour"}]}]}]}], "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"Sum", "[", 
+      RowBox[{
+       RowBox[{"directPowerOptimal", "[", "#1", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"h", ",", 
+         RowBox[{"sunriseHour", "*", "100"}], ",", 
+         RowBox[{"sunsetHour", "*", "100"}], ",", "10"}], "}"}]}], "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Ideal", " ", "value", " ", "for", " ", "a", " ", "day"}], ",", 
+    " ", 
+    RowBox[{
+    "panels", " ", "adjusted", " ", "every", " ", "6", " ", "minutes"}]}], 
+   " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{" ", 
+  RowBox[{
+   RowBox[{"date", " ", "=", " ", 
+    RowBox[{"DateObject", "[", 
+     RowBox[{"{", 
+      RowBox[{"2016", ",", "7", ",", "18"}], "}"}], "]"}]}], 
+   ";"}]}], "\[IndentingNewLine]", 
+ RowBox[{"sumOverDay", "[", "date", "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.6795763555653124`*^9, 3.6795763658977537`*^9}, 
+   3.6796446323340807`*^9, 3.6796449520572944`*^9, {3.6796452380925083`*^9, 
+   3.679645256827208*^9}, {3.6796454458099003`*^9, 3.679645515763949*^9}, {
+   3.6796456435157275`*^9, 3.6796456515002165`*^9}, {3.6796456960946407`*^9, 
+   3.6796457001415224`*^9}, {3.6796459737547684`*^9, 
+   3.6796460555996623`*^9}, {3.679646159288557*^9, 3.6796461594916844`*^9}, {
+   3.679646191476506*^9, 3.679646210648662*^9}, {3.679648844562829*^9, 
+   3.6796488649537134`*^9}, {3.679651413821638*^9, 3.6796514536502743`*^9}}],
+
+Cell[BoxData["142301.30328035008`"], "Output",
+ CellChangeTimes->{{3.6795763403954244`*^9, 3.679576366868374*^9}, {
+  3.679576497211588*^9, 3.6795765134105062`*^9}, {3.6796428955600095`*^9, 
+  3.6796428989550056`*^9}, {3.6796459945518737`*^9, 3.6796460615997148`*^9}, {
+  3.679646168148055*^9, 3.679646196929699*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Adjusting", " ", "the", " ", "solar", " ", "panels", " ", "three", " ", 
+    "times", " ", "a", " ", "day", "\[IndentingNewLine]", "The", " ", "three",
+     " ", "times", " ", "are", " ", "evenly", " ", "spread", " ", "over", " ",
+     "the", " ", "time", " ", "the", " ", "sun", " ", "is", " ", "up"}], " ", 
+   "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"year", " ", "=", " ", "2016"}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"angle", ":=", " ", 
+    RowBox[{"Function", "[", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"params", ":", " ", 
+        RowBox[{"hour", " ", "of", " ", "day", "*", "100"}]}], ",", " ", 
+       RowBox[{
+       "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}], ",", 
+       " ", "date", ",", " ", 
+       RowBox[{
+       "returns", " ", "misalignment", " ", "with", " ", "the", " ", "sun", 
+        " ", "in", " ", "radians"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"sunPos", " ", "=", " ", 
+       RowBox[{"SunPosition", "[", 
+        RowBox[{
+         RowBox[{"GeoPosition", "[", 
+          RowBox[{"{", 
+           RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
+         RowBox[{"DateObject", "[", 
+          RowBox[{"#3", ",", 
+           RowBox[{"{", 
+            RowBox[{"#1", "/", "100"}], "}"}]}], "]"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{"remove", " ", "degree", " ", "unit"}], ",", " ", 
+        RowBox[{"then", " ", "convert", " ", "to", " ", "radians"}]}], " ", 
+       "*)"}], "\[IndentingNewLine]", 
+      RowBox[{
+       SubscriptBox["\[Gamma]", "s"], "=", " ", 
+       RowBox[{
+        RowBox[{"QuantityMagnitude", "[", 
+         RowBox[{"Quantity", "[", 
+          RowBox[{"sunPos", "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "*", 
+        RowBox[{"Pi", "/", "180"}]}]}], ";", "  ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{"Azimuth", " ", "of", " ", "sun", " ", "position"}], ",", " ", 
+        RowBox[{"0", " ", "due", " ", "South"}], ",", " ", 
+        RowBox[{"negative", " ", "to", " ", "the", " ", "east"}]}], " ", 
+       "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{
+        "Because", " ", "Mathematica", " ", "gives", " ", "azimuth", " ", 
+         "in", " ", "compass", " ", "angle"}], ",", " ", 
+        RowBox[{"we", " ", "subtract", " ", "180", " ", "degrees"}]}], " ", 
+       "*)"}], "\[IndentingNewLine]", 
+      RowBox[{
+       SubscriptBox["\[Gamma]", "s"], " ", "=", " ", 
+       RowBox[{
+        SubscriptBox["\[Gamma]", "s"], " ", "-", " ", "Pi"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       SubscriptBox["\[Theta]", "s"], "=", " ", 
+       RowBox[{
+        RowBox[{"QuantityMagnitude", "[", 
+         RowBox[{"Quantity", "[", 
+          RowBox[{"sunPos", "[", 
+           RowBox[{"[", "2", "]"}], "]"}], "]"}], "]"}], "*", 
+        RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{"Sun", " ", "altitude"}], " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{
+       SubscriptBox["\[Gamma]", "p"], " ", "=", " ", 
+       RowBox[{"0", " ", "*", " ", 
+        RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{"Solar", " ", "panels", " ", "azimuth"}], " ", "*)"}], 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       SubscriptBox["\[Theta]", "p"], " ", "=", " ", 
+       RowBox[{"#2", " ", "*", " ", 
+        RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "Solar", " ", "panels", " ", "angle", " ", "with", " ", "horizontal"}],
+        " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"a", "=", " ", 
+       RowBox[{"ArcCos", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Cos", "[", 
+           RowBox[{
+            SubscriptBox["\[Gamma]", "p"], "-", 
+            SubscriptBox["\[Gamma]", "s"]}], "]"}], " ", 
+          RowBox[{"Cos", "[", 
+           SubscriptBox["\[Theta]", "s"], "]"}], " ", 
+          RowBox[{"Sin", "[", 
+           SubscriptBox["\[Theta]", "p"], "]"}]}], "+", 
+         RowBox[{
+          RowBox[{"Cos", "[", 
+           SubscriptBox["\[Theta]", "p"], "]"}], " ", 
+          RowBox[{"Sin", "[", 
+           SubscriptBox["\[Theta]", "s"], "]"}]}]}], "]"}]}]}], 
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"directPower", "  ", ":=", " ", 
+    RowBox[{"Function", "[", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"param", ":", " ", 
+        RowBox[{"hour", " ", "of", " ", "day", "*", "100"}]}], ",", " ", 
+       RowBox[{
+       "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}], ",", 
+       " ", 
+       RowBox[{
+        RowBox[{"date", ".", " ", "returns"}], " ", 
+        RowBox[{"W", "/", 
+         SuperscriptBox["m", "2"]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       SubscriptBox["\[Theta]", "z"], "=", 
+       RowBox[{"angle", "[", 
+        RowBox[{"#1", ",", "#2", ",", "#3"}], "]"}]}], ";", " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{"solar", " ", "zenith", " ", 
+        RowBox[{"(", "misalignment", ")"}], " ", "in", " ", "radians"}], " ", 
+       "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"n", "=", " ", 
+       RowBox[{"QuantityMagnitude", "[", 
+        RowBox[{"Quantity", "[", 
+         RowBox[{"#3", " ", "-", " ", 
+          RowBox[{"DateObject", "[", 
+           RowBox[{"{", 
+            RowBox[{"year", ",", "1", ",", "1"}], "}"}], "]"}]}], "]"}], 
+        "]"}]}], ";", " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{"day", " ", "of", " ", "year"}], " ", "*)"}], 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       SubscriptBox["I", "0"], "=", " ", 
+       RowBox[{"1367", " ", 
+        RowBox[{"(", 
+         RowBox[{"1", "+", 
+          RowBox[{"0.034", " ", 
+           RowBox[{"Cos", "[", 
+            RowBox[{"360", "*", 
+             RowBox[{"n", "/", "365.25"}]}], "]"}]}]}], ")"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       SubscriptBox["a", "0"], " ", "=", " ", 
+       RowBox[{"0.4237", " ", "-", " ", 
+        RowBox[{"0.00821", " ", "36"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       SubscriptBox["a", "1"], " ", "=", " ", 
+       RowBox[{"0.5055", " ", "+", " ", 
+        RowBox[{"0.00595", " ", 
+         RowBox[{"6.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"k", " ", "=", " ", 
+       RowBox[{"0.2711", " ", "+", " ", 
+        RowBox[{"0.01858", " ", 
+         RowBox[{"2.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Cos", "[", 
+          SubscriptBox["\[Theta]", "z"], "]"}], "<", "0"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         SubscriptBox["I", "direct"], "=", "0"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         SubscriptBox["I", "direct"], " ", "=", " ", 
+         RowBox[{
+          SubscriptBox["I", "0"], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            SubscriptBox["a", "0"], " ", "+", " ", 
+            RowBox[{
+             SubscriptBox["a", "1"], " ", 
+             RowBox[{"E", "^", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"-", "k"}], "/", 
+                RowBox[{"Cos", "[", 
+                 SubscriptBox["\[Theta]", "z"], "]"}]}], ")"}]}]}]}], 
+           ")"}]}]}]}], " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+         RowBox[{
+         "If", " ", "the", " ", "sun", " ", "is", " ", "more", " ", "than", 
+          " ", "90", " ", "degrees", " ", "off"}], ",", " ", 
+         RowBox[{
+         "the", " ", "formula", " ", "is", " ", "not", " ", "correct"}], ",", 
+         " ", 
+         RowBox[{
+         "and", " ", "we", " ", "set", " ", "the", " ", "value", " ", "to", 
+          " ", "be", " ", "0"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+       "]"}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"sumOverInterval", ":=", 
+    RowBox[{"Function", "[", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"params", ":", " ", 
+        RowBox[{
+        "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}]}], 
+       ",", " ", "date", ",", " ", 
+       RowBox[{"start", " ", "hour"}], ",", " ", 
+       RowBox[{
+       "end", " ", "hour", "\[IndentingNewLine]", "returns", " ", "sum", " ", 
+        "of", " ", "solar", " ", "power", " ", "over", " ", "the", " ", "day",
+         " ", "at", " ", "every", " ", "hour", " ", "in", " ", "the", " ", 
+        "given", " ", "interval"}]}], "*)"}], "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{
+       "Times", " ", "100", " ", "so", " ", "the", " ", "sum", " ", "starts", 
+        " ", "closer", " ", "to", " ", "the", " ", "real", " ", "sunUpHour"}],
+        ",", " ", 
+       RowBox[{
+       "and", " ", "not", " ", "floors", " ", "it", " ", "to", " ", "an", " ",
+         "integer", " ", "when", " ", "calculating", " ", "the", " ", 
+        RowBox[{"sum", ".", " ", "Otherwise"}], " ", "weird", " ", "jumps", 
+        " ", "in", " ", "graphs", " ", "appear", " ", "when", " ", "the", " ",
+         "sunUpHour", " ", "jumps", " ", "one", " ", "hour"}]}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"Sum", "[", 
+      RowBox[{
+       RowBox[{"directPower", "[", 
+        RowBox[{"h", ",", "#1", ",", "#2"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"h", ",", "#3", ",", "#4", ",", "10"}], "}"}]}], "]"}], 
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"angleInterval", " ", ":=", " ", 
+    RowBox[{"Function", "[", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"params", ":", " ", "date"}], ",", " ", 
+       RowBox[{"start", " ", "hour"}], ",", " ", 
+       RowBox[{"end", " ", "hour"}], ",", " ", 
+       RowBox[{
+       "returns", " ", "optimal", " ", "angle", " ", "in", " ", "this", " ", 
+        "interval"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{
+       "Find", " ", "for", " ", "which", " ", "angle", " ", "of", " ", "the", 
+        " ", "solar", " ", "panels", " ", "this", " ", "value", " ", "is", 
+        " ", "maximal"}], ",", 
+       RowBox[{"starting", " ", "at", " ", "50"}]}], " ", "*)"}], 
+     "\[IndentingNewLine]", " ", 
+     RowBox[{"x", " ", "/.", " ", 
+      RowBox[{
+       RowBox[{"FindMaximum", "[", 
+        RowBox[{
+         RowBox[{"sumOverInterval", "[", 
+          RowBox[{"x", ",", "#1", ",", "#2", ",", "#3"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "50", ",", "0", ",", "90"}], "}"}], ",", " ", 
+         RowBox[{"AccuracyGoal", "\[Rule]", "5"}]}], "]"}], "[", 
+       RowBox[{"[", "2", "]"}], "]"}]}], "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"dayAngles", " ", ":=", " ", 
+    RowBox[{"Function", "[", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"params", ":", " ", "date"}], ",", " ", 
+       RowBox[{
+       "number", " ", "of", " ", "adjustment", " ", "times", " ", "per", " ", 
+        RowBox[{"day", ".", " ", "returns"}], " ", "List", " ", "with", " ", 
+        "optimal", " ", "angles", " ", "for", " ", "the", " ", "day"}]}], " ",
+       "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"position", " ", "=", " ", 
+       RowBox[{"GeoPosition", "[", 
+        RowBox[{"{", 
+         RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"sunrise", " ", "=", " ", 
+       RowBox[{"Sunrise", "[", 
+        RowBox[{"position", ",", "#1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"TimeZoneConvert", "[", 
+       RowBox[{"sunrise", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"sunriseHour", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"DateValue", "[", 
+         RowBox[{"sunrise", ",", "\"\<Hour\>\""}], "]"}], "+", 
+        RowBox[{
+         RowBox[{"DateValue", "[", 
+          RowBox[{"sunrise", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+         "60"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"sunset", " ", "=", " ", 
+       RowBox[{"Sunset", "[", 
+        RowBox[{"position", ",", "#1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"TimeZoneConvert", "[", 
+       RowBox[{"sunset", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"sunsetHour", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"DateValue", "[", 
+         RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
+        RowBox[{
+         RowBox[{"DateValue", "[", 
+          RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+         "60"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"supUpHours", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"sunriseHour", " ", "-", " ", "sunsetHour"}], ")"}], "*", 
+        "100"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Table", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"angleInterval", "[", 
+         RowBox[{"#1", ",", 
+          RowBox[{"sunriseHour", "*", "100"}], ",", 
+          RowBox[{"Round", "[", 
+           RowBox[{
+            RowBox[{"sunriseHour", " ", "*", "100"}], " ", "+", 
+            RowBox[{"i", "*", 
+             RowBox[{"sunUpHours", "/", 
+              RowBox[{"(", 
+               RowBox[{"#2", "+", "1"}], ")"}]}]}]}], "]"}]}], "]"}], 
+        "\[IndentingNewLine]", ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "0", ",", "#2"}], "}"}]}], "]"}]}], 
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "List", " ", "of", " ", "optimal", " ", "angles", " ", "for", " ", "this",
+      " ", "day"}], " ", "*)"}], " ", "\[IndentingNewLine]", 
+   RowBox[{"dayAngles", "[", 
+    RowBox[{
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{"2016", ",", "7", ",", "18"}], "}"}], "]"}], ",", "3"}], "]"}],
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Total", " ", "of", " ", 
+     RowBox[{"W", "/", 
+      SuperscriptBox["m", "1"]}], " ", "received", " ", "with", " ", "three", 
+     " ", "optimal", " ", "angles"}], " ", "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.6796462284301476`*^9, 3.67964624202411*^9}, 
+   3.679648031818811*^9, {3.6796485764653387`*^9, 3.6796485924499345`*^9}, {
+   3.6796487174673076`*^9, 3.679648718779778*^9}, {3.6796488346251354`*^9, 
+   3.6796488350314016`*^9}, {3.679649707374226*^9, 3.679649773156396*^9}, {
+   3.67964980693777*^9, 3.679649828429331*^9}, {3.679649880180044*^9, 
+   3.6796499050710707`*^9}, {3.6796503085297737`*^9, 
+   3.6796504084061646`*^9}, {3.6796504858447485`*^9, 3.6796505103607435`*^9}, 
+   3.679650680076991*^9, {3.6796507675313673`*^9, 3.679650801922429*^9}, {
+   3.6796508671420774`*^9, 3.679650917330303*^9}, {3.679651046128961*^9, 
+   3.679651076566885*^9}, {3.67965112980205*^9, 3.679651143380308*^9}, {
+   3.6796511749432487`*^9, 3.6796512004749136`*^9}, {3.6796513485394793`*^9, 
+   3.679651369414767*^9}, {3.6796516482311015`*^9, 3.679651654590625*^9}, {
+   3.6796517402011642`*^9, 3.6796517685297146`*^9}, {3.679651811952142*^9, 
+   3.679651838077563*^9}, {3.679651890343556*^9, 3.679651895656133*^9}, {
+   3.6796521525971637`*^9, 3.6796522059416847`*^9}, {3.6796524042412987`*^9, 
+   3.6796524138039293`*^9}, {3.6796525870407248`*^9, 
+   3.6796526351195183`*^9}, {3.67965276542651*^9, 3.679652799186963*^9}, {
+   3.679652890219451*^9, 3.679652921735545*^9}, {3.6796529807363715`*^9, 
+   3.679652982455146*^9}, {3.6796530250650826`*^9, 3.6796530465497904`*^9}, {
+   3.679653171957759*^9, 3.6796532283335447`*^9}, {3.679668889560587*^9, 
+   3.6796689609053345`*^9}, {3.6796691034385743`*^9, 3.679669139673457*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"FindMaximum", "::", "fmgz"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Encountered a gradient that is effectively zero. The \
+result returned may not be a maximum; it may be a minimum or a saddle point. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/FindMaximum/fmgz\\\", \
+ButtonNote -> \\\"FindMaximum::fmgz\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810542253236*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"DateList", "::", "arg"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Argument \[NoBreak]\\!\\(\\*RowBox[{\\\"DateObject\\\", \\\
+\"[\\\", RowBox[{TemplateBox[List[RowBox[List[\\\"\\\\\\\"Mon 18 Jul 2016\\\\\
+\\\"\\\"]], RowBox[List[\\\"DateObject\\\", \\\"[\\\", RowBox[List[\\\"{\\\", \
+RowBox[List[\\\"2016\\\", \\\",\\\", \\\"7\\\", \\\",\\\", \\\"18\\\"]], \
+\\\"}\\\"]], \\\"]\\\"]]], \\\"DateObject\\\", Rule[Editable, False]], \
+\\\",\\\", RowBox[{\\\"{\\\", FractionBox[\\\"h\\\", \\\"100\\\"], \
+\\\"}\\\"}]}], \\\"]\\\"}]\\)\[NoBreak] cannot be interpreted as a date or \
+time input. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/DateList\\\", ButtonNote -> \\\"DateList::arg\\\"]\
+\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105423157487`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"DateList", "::", "arg"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Argument \[NoBreak]\\!\\(\\*RowBox[{\\\"DateObject\\\", \\\
+\"[\\\", RowBox[{TemplateBox[List[RowBox[List[\\\"\\\\\\\"Mon 18 Jul 2016\\\\\
+\\\"\\\"]], RowBox[List[\\\"DateObject\\\", \\\"[\\\", RowBox[List[\\\"{\\\", \
+RowBox[List[\\\"2016\\\", \\\",\\\", \\\"7\\\", \\\",\\\", \\\"18\\\"]], \
+\\\"}\\\"]], \\\"]\\\"]]], \\\"DateObject\\\", Rule[Editable, False]], \
+\\\",\\\", RowBox[{\\\"{\\\", FractionBox[\\\"h\\\", \\\"100\\\"], \
+\\\"}\\\"}]}], \\\"]\\\"}]\\)\[NoBreak] cannot be interpreted as a date or \
+time input. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/DateList\\\", ButtonNote -> \\\"DateList::arg\\\"]\
+\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810542378249*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"DateList", "::", "arg"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Argument \[NoBreak]\\!\\(\\*RowBox[{\\\"DateObject\\\", \\\
+\"[\\\", RowBox[{TemplateBox[List[RowBox[List[\\\"\\\\\\\"Mon 18 Jul 2016\\\\\
+\\\"\\\"]], RowBox[List[\\\"DateObject\\\", \\\"[\\\", RowBox[List[\\\"{\\\", \
+RowBox[List[\\\"2016\\\", \\\",\\\", \\\"7\\\", \\\",\\\", \\\"18\\\"]], \
+\\\"}\\\"]], \\\"]\\\"]]], \\\"DateObject\\\", Rule[Editable, False]], \
+\\\",\\\", RowBox[{\\\"{\\\", FractionBox[\\\"h\\\", \\\"100\\\"], \
+\\\"}\\\"}]}], \\\"]\\\"}]\\)\[NoBreak] cannot be interpreted as a date or \
+time input. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/DateList\\\", ButtonNote -> \\\"DateList::arg\\\"]\
+\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810542440754*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"General", "::", "stop"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Further output of \
+\[NoBreak]\\!\\(\\*StyleBox[RowBox[{\\\"DateList\\\", \\\"::\\\", \
+\\\"arg\\\"}], \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during \
+this calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
+\\\"General::stop\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810542456381*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Quantity", "::", "unkunit"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Unable to interpret unit specification \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"GeoPosition\\\", \\\"[\\\", RowBox[{\\\"{\\\", \
+RowBox[{\\\"51.546545`\\\", \\\",\\\", \\\"4.411744`\\\"}], \\\"}\\\"}], \
+\\\"]\\\"}]\\)\[NoBreak]. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/Quantity\\\", ButtonNote -> \
+\\\"Quantity::unkunit\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810542518865*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Quantity", "::", "unkunit"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Unable to interpret unit specification \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"DateObject\\\", \\\"[\\\", \
+RowBox[{TemplateBox[List[RowBox[List[\\\"\\\\\\\"Mon 18 Jul \
+2016\\\\\\\"\\\"]], RowBox[List[\\\"DateObject\\\", \\\"[\\\", RowBox[List[\\\
+\"{\\\", RowBox[List[\\\"2016\\\", \\\",\\\", \\\"7\\\", \\\",\\\", \
+\\\"18\\\"]], \\\"}\\\"]], \\\"]\\\"]]], \\\"DateObject\\\", Rule[Editable, \
+False]], \\\",\\\", RowBox[{\\\"{\\\", FractionBox[\\\"h\\\", \\\"100\\\"], \
+\\\"}\\\"}]}], \\\"]\\\"}]\\)\[NoBreak]. \\!\\(\\*ButtonBox[\\\"\
+\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/Quantity\\\", ButtonNote -> \
+\\\"Quantity::unkunit\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810542581382*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Quantity", "::", "unkunit"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Unable to interpret unit specification \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"DateObject\\\", \\\"[\\\", \
+RowBox[{TemplateBox[List[RowBox[List[\\\"\\\\\\\"Mon 18 Jul \
+2016\\\\\\\"\\\"]], RowBox[List[\\\"DateObject\\\", \\\"[\\\", RowBox[List[\\\
+\"{\\\", RowBox[List[\\\"2016\\\", \\\",\\\", \\\"7\\\", \\\",\\\", \
+\\\"18\\\"]], \\\"}\\\"]], \\\"]\\\"]]], \\\"DateObject\\\", Rule[Editable, \
+False]], \\\",\\\", RowBox[{\\\"{\\\", FractionBox[\\\"h\\\", \\\"100\\\"], \
+\\\"}\\\"}]}], \\\"]\\\"}]\\)\[NoBreak]. \\!\\(\\*ButtonBox[\\\"\
+\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/Quantity\\\", ButtonNote -> \
+\\\"Quantity::unkunit\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105426438675`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"General", "::", "stop"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Further output of \
+\[NoBreak]\\!\\(\\*StyleBox[RowBox[{\\\"Quantity\\\", \\\"::\\\", \\\"unkunit\
+\\\"}], \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during this \
+calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
+\\\"General::stop\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810542675128*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"$RecursionLimit", "::", "reclim2"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Recursion depth of \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"1024\\\"}]\\)\[NoBreak] exceeded during \
+evaluation of \[NoBreak]\\!\\(\\*RowBox[{\\\"FreeQ\\\", \\\"[\\\", \
+RowBox[{RowBox[{\\\"If\\\", \\\"[\\\", \
+RowBox[{RowBox[{RowBox[{RowBox[{RowBox[{\\\"-\\\", RowBox[{\\\"Cos\\\", \\\"[\
+\\\", RowBox[{FractionBox[\\\"1\\\", \\\"180\\\"], \\\" \\\", \\\"\[Pi]\\\", \
+\\\" \\\", RowBox[{\\\"QuantityMagnitude\\\", \\\"[\\\", RowBox[{\\\"\
+\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]}], \\\
+\"]\\\"}]}], \\\" \\\", RowBox[{\\\"Cos\\\", \\\"[\\\", \
+RowBox[{FractionBox[\\\"1\\\", \\\"180\\\"], \\\" \\\", \\\"\[Pi]\\\", \\\" \
+\\\", RowBox[{\\\"QuantityMagnitude\\\", \\\"[\\\", RowBox[{\\\"\
+\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]}], \\\
+\"]\\\"}], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", \
+FractionBox[RowBox[{\\\"\[Pi]\\\", \\\" \\\", \\\"x\\\"}], \\\"180\\\"], \
+\\\"]\\\"}]}], \\\"+\\\", RowBox[{RowBox[{\\\"Cos\\\", \\\"[\\\", \
+FractionBox[RowBox[{\\\"\[Pi]\\\", \\\" \\\", \\\"x\\\"}], \\\"180\\\"], \
+\\\"]\\\"}], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", \
+RowBox[{FractionBox[\\\"1\\\", \\\"180\\\"], \\\" \\\", \\\"\[Pi]\\\", \\\" \
+\\\", RowBox[{\\\"QuantityMagnitude\\\", \\\"[\\\", RowBox[{\\\"\
+\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]}], \\\
+\"]\\\"}]}]}], \\\"<\\\", \\\"0\\\"}], \\\",\\\", RowBox[{SubscriptBox[\\\"\
+\[ImaginaryI]\\\", \\\"direct\\\"], \\\"=\\\", \\\"0\\\"}], \\\",\\\", \
+RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \\\"direct\\\"], \\\"=\\\", \
+RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \\\"0\\\"], \\\" \\\", RowBox[{\\\
+\"(\\\", RowBox[{SubscriptBox[\\\"a\\\", \\\"0\\\"], \\\"+\\\", \
+RowBox[{SubscriptBox[\\\"a\\\", \\\"1\\\"], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"Times\\\", \\\"[\\\", RowBox[{\\\"\
+\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]]}]}], \
+\\\")\\\"}]}]}]}], \\\"]\\\"}], \\\",\\\", \\\"h\\\"}], \\\"]\\\"}]\\)\
+\[NoBreak]. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/$RecursionLimit\\\", ButtonNote -> \
+\\\"$RecursionLimit::reclim2\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105429407616`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"$RecursionLimit", "::", "reclim2"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Recursion depth of \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"1024\\\"}]\\)\[NoBreak] exceeded during \
+evaluation of \[NoBreak]\\!\\(\\*RowBox[{\\\"If\\\", \\\"[\\\", \
+RowBox[{RowBox[{RowBox[{RowBox[{RowBox[{\\\"-\\\", RowBox[{\\\"Cos\\\", \\\"[\
+\\\", RowBox[{FractionBox[\\\"1\\\", \\\"180\\\"], \\\" \\\", \\\"\[Pi]\\\", \
+\\\" \\\", RowBox[{\\\"QuantityMagnitude\\\", \\\"[\\\", RowBox[{\\\"Quantity\
+\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\
+\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}]}], \\\" \\\", \
+RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{FractionBox[\\\"1\\\", \\\"180\\\"], \
+\\\" \\\", \\\"\[Pi]\\\", \\\" \\\", RowBox[{\\\"QuantityMagnitude\\\", \\\"[\
+\\\", RowBox[{\\\"Quantity\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \
+\\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \
+\\\"]\\\"}], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", \
+FractionBox[RowBox[{\\\"\[Pi]\\\", \\\" \\\", \\\"x\\\"}], \\\"180\\\"], \
+\\\"]\\\"}]}], \\\"+\\\", RowBox[{RowBox[{\\\"Cos\\\", \\\"[\\\", \
+FractionBox[RowBox[{\\\"\[Pi]\\\", \\\" \\\", \\\"x\\\"}], \\\"180\\\"], \
+\\\"]\\\"}], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", \
+RowBox[{FractionBox[\\\"1\\\", \\\"180\\\"], \\\" \\\", \\\"\[Pi]\\\", \\\" \
+\\\", RowBox[{\\\"QuantityMagnitude\\\", \\\"[\\\", RowBox[{\\\"Quantity\\\", \
+\\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\
+\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}]}]}], \\\"<\\\", \\\"0\\\"}], \\\
+\",\\\", RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \\\"direct\\\"], \\\"=\\\
+\", \\\"0\\\"}], \\\",\\\", RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \
+\\\"direct\\\"], \\\"=\\\", RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \\\"0\
+\\\"], \\\" \\\", RowBox[{\\\"(\\\", RowBox[{SubscriptBox[\\\"a\\\", \
+\\\"0\\\"], \\\"+\\\", RowBox[{SubscriptBox[\\\"a\\\", \\\"1\\\"], \\\" \\\", \
+SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\
+\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\" \\\", RowBox[{\\\"Power\\\", \
+\\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\
+\"}], \\\"]\\\"}]}]]}]}], \\\")\\\"}]}]}]}], \\\"]\\\"}]\\)\[NoBreak]. \\!\\(\
+\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/$RecursionLimit\\\", ButtonNote \
+-> \\\"$RecursionLimit::reclim2\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105430032463`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"$RecursionLimit", "::", "reclim2"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Recursion depth of \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"1024\\\"}]\\)\[NoBreak] exceeded during \
+evaluation of \[NoBreak]\\!\\(\\*RowBox[{\\\"Integrate`$Token\\\", \\\"[\\\", \
+RowBox[{RowBox[{\\\"Hold\\\", \\\"[\\\", RowBox[{\\\"If\\\", \\\"[\\\", \
+RowBox[{RowBox[{RowBox[{RowBox[{RowBox[{\\\"-\\\", RowBox[{\\\"Cos\\\", \\\"[\
+\\\", RowBox[{\\\"Times\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \
+\\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\" \\\", \
+RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"Times\\\", \\\"[\\\", \
+RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\
+\\\"}], \\\"]\\\"}], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", \
+RowBox[{\\\"Times\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \
+\\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"Times\\\", \\\"[\\\", \
+RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\
+\\\"}], \\\"]\\\"}], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", \
+RowBox[{\\\"Times\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \
+\\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}]}], \\\"<\\\", \
+\\\"0\\\"}], \\\",\\\", RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \
+\\\"direct\\\"], \\\"=\\\", \\\"0\\\"}], \\\",\\\", RowBox[{SubscriptBox[\\\"\
+\[ImaginaryI]\\\", \\\"direct\\\"], \\\"=\\\", RowBox[{SubscriptBox[\\\"\
+\[ImaginaryI]\\\", \\\"0\\\"], \\\" \\\", RowBox[{\\\"(\\\", \
+RowBox[{SubscriptBox[\\\"a\\\", \\\"0\\\"], \\\"+\\\", \
+RowBox[{RowBox[{\\\"Subscript\\\", \\\"[\\\", \
+RowBox[{\\\"\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\
+\\\"}], \\\" \\\", RowBox[{\\\"Power\\\", \\\"[\\\", RowBox[{\\\"\
+\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]}]}], \
+\\\")\\\"}]}]}]}], \\\"]\\\"}], \\\"]\\\"}], \\\",\\\", \\\"1\\\", \\\",\\\", \
+\\\"Blank\\\", \\\",\\\", \\\"Blank\\\"}], \\\"]\\\"}]\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/$RecursionLimit\\\", ButtonNote \
+-> \\\"$RecursionLimit::reclim2\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810543065747*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"General", "::", "stop"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Further output of \
+\[NoBreak]\\!\\(\\*StyleBox[RowBox[{\\\"$RecursionLimit\\\", \\\"::\\\", \
+\\\"reclim2\\\"}], \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed \
+during this calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
+\\\"General::stop\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105430813713`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"$IterationLimit", "::", "itlim"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Iteration limit of \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"4096\\\"}]\\)\[NoBreak] exceeded. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/$IterationLimit/itlim\\\
+\", ButtonNote -> \\\"$IterationLimit::itlim\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105433157663`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"$IterationLimit", "::", "itlim"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Iteration limit of \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"4096\\\"}]\\)\[NoBreak] exceeded. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/$IterationLimit/itlim\\\
+\", ButtonNote -> \\\"$IterationLimit::itlim\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.67981054355013*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"$IterationLimit", "::", "itlim"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Iteration limit of \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"4096\\\"}]\\)\[NoBreak] exceeded. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/$IterationLimit/itlim\\\
+\", ButtonNote -> \\\"$IterationLimit::itlim\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810544956414*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"General", "::", "stop"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Further output of \
+\[NoBreak]\\!\\(\\*StyleBox[RowBox[{\\\"$IterationLimit\\\", \\\"::\\\", \
+\\\"itlim\\\"}], \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during \
+this calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
+\\\"General::stop\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810544972041*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"NSum", "::", "nslim"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Limit of summation \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"Round\\\", \\\"[\\\", \
+RowBox[{RowBox[{\\\"680.`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"+\\\", \
+RowBox[{\\\"0.25`\\\", \\\" \\\", \\\"sunUpHours\\\"}]}], \\\"]\\\"}]\\)\
+\[NoBreak] is not a number. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/NSum/nslim\\\", ButtonNote -> \
+\\\"NSum::nslim\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810546128307*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"NSum", "::", "nslim"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Limit of summation \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"Round\\\", \\\"[\\\", \
+RowBox[{RowBox[{\\\"680.`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"+\\\", \
+RowBox[{\\\"0.25`\\\", \\\" \\\", \\\"sunUpHours\\\"}]}], \\\"]\\\"}]\\)\
+\[NoBreak] is not a number. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/NSum/nslim\\\", ButtonNote -> \
+\\\"NSum::nslim\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105461595573`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"NSum", "::", "nslim"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Limit of summation \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"Round\\\", \\\"[\\\", \
+RowBox[{RowBox[{\\\"680.`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"+\\\", \
+RowBox[{\\\"0.25`\\\", \\\" \\\", \\\"sunUpHours\\\"}]}], \\\"]\\\"}]\\)\
+\[NoBreak] is not a number. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/NSum/nslim\\\", ButtonNote -> \
+\\\"NSum::nslim\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105461751785`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"General", "::", "stop"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Further output of \
+\[NoBreak]\\!\\(\\*StyleBox[RowBox[{\\\"NSum\\\", \\\"::\\\", \
+\\\"nslim\\\"}], \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during \
+this calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
+\\\"General::stop\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810546206428*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"FindMaximum", "::", "nrnq"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"The function value \
+\[NoBreak]\\!\\(\\*RowBox[{RowBox[{\\\"-\\\", \\\"1.`\\\"}], \\\" \\\", \
+RowBox[{\\\"NSum\\\", \\\"[\\\", RowBox[{RowBox[{\\\"If\\\", \\\"[\\\", \
+RowBox[{RowBox[{RowBox[{RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.766044443118978`\\\"}], \\\" \\\", RowBox[{\\\"Cos\\\", \\\"[\\\", \
+RowBox[{\\\"Times\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \
+\\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}], \\\" \\\", \
+RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"Times\\\", \\\"[\\\", \
+RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\
+\\\"}], \\\"]\\\"}]}], \\\"+\\\", RowBox[{\\\"0.6427876096865394`\\\", \\\" \
+\\\", RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"Times\\\", \\\"[\\\", \
+RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\
+\\\"}], \\\"]\\\"}]}]}], \\\"<\\\", \\\"0\\\"}], \\\",\\\", \
+RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \\\"direct\\\"], \\\"=\\\", \\\"0\
+\\\"}], \\\",\\\", RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \
+\\\"direct\\\"], \\\"=\\\", RowBox[{SubscriptBox[\\\"\[ImaginaryI]\\\", \\\"0\
+\\\"], \\\" \\\", RowBox[{\\\"(\\\", RowBox[{SubscriptBox[\\\"a\\\", \
+\\\"0\\\"], \\\"+\\\", RowBox[{RowBox[{\\\"Subscript\\\", \\\"[\\\", RowBox[{\
+\\\"\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \
+\\\" \\\", RowBox[{\\\"Power\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \
+\\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]}]}], \\\")\\\"}]}]}]}], \\\
+\"]\\\"}], \\\",\\\", RowBox[{\\\"{\\\", RowBox[{\\\"h\\\", \\\",\\\", \
+\\\"680\\\", \\\",\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \
+RowBox[{\\\"680\\\", \\\"+\\\", FractionBox[\\\"sunUpHours\\\", \\\"4\\\"]}], \
+\\\"]\\\"}], \\\",\\\", \\\"10\\\"}], \\\"}\\\"}]}], \\\"]\\\"}]}]\\)\
+\[NoBreak] is not a real number or quantity at \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"{\\\", \\\"x\\\", \\\"}\\\"}]\\)\[NoBreak] = \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"{\\\", \\\"50.`\\\", \\\"}\\\"}]\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/FindMaximum\\\", ButtonNote -> \
+\\\"FindMaximum::nrnq\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.679810546268916*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"ReplaceAll", "::", "reps"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\*RowBox[{\\\"{\\\", RowBox[{\\\"x\\\", \
+\\\",\\\", \\\"50\\\", \\\",\\\", \\\"0\\\", \\\",\\\", \\\"90\\\"}], \\\"}\\\
+\"}]\\)\[NoBreak] is neither a list of replacement rules nor a valid dispatch \
+table, and so cannot be used for replacing. \\!\\(\\*ButtonBox[\\\"\
+\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/ReplaceAll/reps\\\", ButtonNote -> \
+\\\"ReplaceAll::reps\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6796532346304846`*^9, 3.6798105462845416`*^9}],
+
+Cell[BoxData["$Aborted"], "Output",
+ CellChangeTimes->{
+  3.6796528010463305`*^9, 3.679652925485546*^9, 3.679652983627005*^9, {
+   3.6796530401433897`*^9, 3.679653047565396*^9}, 3.6796532177552443`*^9, 
+   3.679653413458915*^9, 3.6798105464407997`*^9}]
+}, Open  ]]
+},
+WindowSize->{942, 960},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"10.4 for Microsoft Windows (64-bit) (April 11, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 8015, 193, 800, "Input"],
+Cell[8598, 217, 317, 4, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8952, 226, 16152, 372, 1463, "Input"],
+Cell[25107, 600, 547, 10, 21, "Message"],
+Cell[25657, 612, 918, 16, 40, "Message"],
+Cell[26578, 630, 916, 16, 40, "Message"],
+Cell[27497, 648, 916, 16, 40, "Message"],
+Cell[28416, 666, 586, 12, 21, "Message"],
+Cell[29005, 680, 621, 12, 21, "Message"],
+Cell[29629, 694, 908, 16, 40, "Message"],
+Cell[30540, 712, 910, 16, 40, "Message"],
+Cell[31453, 730, 590, 12, 21, "Message"],
+Cell[32046, 744, 2448, 38, 84, "Message"],
+Cell[34497, 784, 2612, 38, 84, "Message"],
+Cell[37112, 824, 2401, 36, 57, "Message"],
+Cell[39516, 862, 599, 12, 21, "Message"],
+Cell[40118, 876, 518, 10, 21, "Message"],
+Cell[40639, 888, 515, 10, 21, "Message"],
+Cell[41157, 900, 516, 10, 21, "Message"],
+Cell[41676, 912, 595, 12, 21, "Message"],
+Cell[42274, 926, 647, 13, 21, "Message"],
+Cell[42924, 941, 649, 13, 21, "Message"],
+Cell[43576, 956, 649, 13, 21, "Message"],
+Cell[44228, 971, 584, 12, 21, "Message"],
+Cell[44815, 985, 2386, 36, 82, "Message"],
+Cell[47204, 1023, 676, 12, 21, "Message"],
+Cell[47883, 1037, 252, 4, 64, "Output"]
+}, Open  ]]
+}
+]
+*)
+
