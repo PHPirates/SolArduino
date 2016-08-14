@@ -390,16 +390,21 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
-            toast = result; // set toast to be the latest result.
+            Log.w("result", result);
+            toast = result.substring(0, 2).trim();
+//            Log.w("result", toast);
+//            toast = result; // set toast to be the latest result.
 //            String color = "#" + String.valueOf(Integer.toHexString(defaultColor));
 //            currentAngle.setTextColor(Color.parseColor(color));
-            if(result.contains("Un") || result.contains("not")){
+            if(result.contains("Un") || result.contains("not be")){
                 Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
                 // set seekbar at current angle, so update requests aren't sent anymore.
                 seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
                         .substring(0, 2)
                         .trim()));
                 Log.w("internet", "not connected");
+            } else if(result.contains("Panel")){
+                Toast.makeText(getBaseContext(), result.trim(), Toast.LENGTH_SHORT).show();
             } else {
                 String message = urlString;
 //                String message = urlString.substring(20);
