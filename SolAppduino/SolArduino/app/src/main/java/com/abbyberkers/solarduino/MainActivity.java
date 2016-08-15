@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -287,8 +289,35 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         urlString = ipString + "?panel=" + direction;
 //        String urlString = "http://www.google.com";
 //        urlString = "http://pannenkoekenwagen.nl/pkw/test.html";
-        new SendRequest().execute(urlString);
+        startHttpRequest(); //urlString will be used here
 
+    }
+
+    /**
+     * First the Arduino is pinged, if it doesn't succeed within two seconds
+     * a toast will be shown, if it does, the http request is started.
+     * The ping happens in a seperated thread, because if the Arduino is not
+     * reachable, the code will hang there, and otherwise it would
+     * hang the UI thread and crash the app
+     */
+    public void startHttpRequest() {
+        final SendPingTask sendPing = new SendPingTask();
+        sendPing.execute(host);
+        //start a new handler that will cancel the AsyncTask after 2 seconds
+        //in case the Arduino can't be reached
+        Log.e("handler","starting up handler");
+        Handler handler = new Handler(Looper.getMainLooper()); //make sure to start from UI thread
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (sendPing.getStatus() == AsyncTask.Status.RUNNING) {
+                    sendPing.cancel(true);
+                    Toast.makeText(getBaseContext(),"The Arduino could not be reached",Toast.LENGTH_SHORT).show();
+                    toast = "Arduino not reachable"; //update http request return string
+                }
+
+            }
+        }, 2000);
     }
 
     /**
@@ -304,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             urlString = ipString + "?degrees=" + String.valueOf(angle);
         }
 //        urlString = "http://pannenkoekenwagen.nl/pkw/test.html";
-        new SendRequest().execute(urlString);
+        startHttpRequest();
     }
 
     /**
@@ -315,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public void sendUpdateRequest(View view) {
         Toast.makeText(getBaseContext(), "Updating...", Toast.LENGTH_SHORT).show();
         urlString = ipString + "?update";
-        new SendRequest().execute(urlString);
+        startHttpRequest();
     }
 
     /**
@@ -332,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             return;
         }
         urlString = ipString + "?update";
-        new SendRequest().execute(urlString);
+        startHttpRequest();
     }
 
     public void testButton(View view){
@@ -341,51 +370,61 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     /**
-     * class to do html stuff...
+     * Class to execute ping request to check the connection with the Arduino,
+     * before http request is sent
      */
-    private class SendRequest extends AsyncTask<String, Void, String> {
 
+    private class SendPingTask extends AsyncTask<String,Void,Void> {
         @Override
-        protected void onPreExecute() {
+        protected Void doInBackground(String... url){ //TODO why does this need varargs?
             try{
+                Log.e("sendreq","starting ping");
                 // try to ping the Arduino first to find out if it's reachable or not.
                 String s;
-                ProcessBuilder processbuilder = new ProcessBuilder("system/bin/ping", host);
+                ProcessBuilder processbuilder = new ProcessBuilder("system/bin/ping", url[0]);
                 Process process = processbuilder.start();
                 BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
+                Log.e("sr","before loop");
                 while ((s = stdInput.readLine()) != null)
                 {
                     Log.e("output", s);
                     if(s.contains("seq=1 ")){
                         Log.e("ping", "first");
                         if (s.contains("Host Unreachable")) {
-                            reachable = false;
-                        } else {
-                            reachable = true;
+                            Log.e("sendreq","ping failed"); //TODO is this ever reached?
                         }
-                        return;
+
                     }
                 }
+                Log.e("sr","after loop ");
 
 
             }catch (Exception e) {
                 e.printStackTrace();
             }
+            return null;
         }
 
         @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            new SendRequest().execute(urlString);
+        }
+    }
+
+    /**
+     * http requests happen here in a seperate thread
+     */
+    private class SendRequest extends AsyncTask<String, Void, String> {
+
+        @Override
         protected String doInBackground(String... url){
-            if (reachable) {
                 // try to send request when the Arduino is reachable.
                 try {
                     return sendRequest(url[0]);
                 } catch (Exception e) {
                     return "Arduino reachable, but unable to retrieve webpage.";
                 }
-            } else {
-                return "Arduino could not be reached.";
-            }
         }
 
         @Override
