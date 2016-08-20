@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //    String host = "192.168.2.107"; // host test
 
     String toast;           // String containing the result from the last http-request
+
+    Toast unreachableToast;
+    Toast updateToast;
 
     int delay = 900;        // delay for the Timer/TimerTask
 
@@ -314,7 +319,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void run() {
                 if (sendPing.getStatus() == AsyncTask.Status.RUNNING) {
                     sendPing.cancel(true);
-                    Toast.makeText(getBaseContext(),"The Arduino could not be reached.",Toast.LENGTH_SHORT).show();
+                    unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached.",Toast.LENGTH_SHORT);
+                    unreachableToast.show();
                     toast = "Arduino not reachable"; //update http request return string
                 }
 
@@ -344,7 +350,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * @param view
      */
     public void sendUpdateRequest(View view) {
-        Toast.makeText(getBaseContext(), "Updating...", Toast.LENGTH_SHORT).show();
+        if(updateToast == null) {
+            updateToast = Toast.makeText(getBaseContext(), "Updating...", Toast.LENGTH_SHORT);
+        }
+        updateToast.show();
         urlString = ipString + "?update";
         startHttpRequest();
     }
@@ -416,8 +425,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 super.onPostExecute(result);
                 new SendRequest().execute(urlString);
             } else {
-                Toast.makeText(getBaseContext(), "Arduino could not be reached.", Toast.LENGTH_SHORT).show();
+                if(unreachableToast != null) {
+                    unreachableToast.setText("Arduino could not be reached.");
+                } else {
+                    unreachableToast = Toast.makeText(getBaseContext(), "Arduino could not be reached.", Toast.LENGTH_SHORT);
+                }
+                unreachableToast.show();
             }
+
         }
     }
 
