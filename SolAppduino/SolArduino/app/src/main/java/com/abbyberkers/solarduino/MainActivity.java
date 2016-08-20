@@ -42,10 +42,12 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
     String urlString;
-//    String ipString = "http://192.168.2.10/"; // IP Thomas
-    String ipString = "http://192.168.0.23/"; // IP Abby
-//    String host = "192.168.2.10"; // host Thomas
-    String host = "192.168.0.23"; // host Abby
+    String ipString = "http://192.168.2.106/"; // IP Thomas
+//    String ipString = "http://192.168.0.23/"; // IP Abby
+    String host = "192.168.2.106"; // host Thomas
+//    String host = "192.168.0.23"; // host Abby
+//    String ipString = "http://192.168.2.107"; // IP test
+//    String host = "192.168.2.107"; // host test
 
     String toast;           // String containing the result from the last http-request
 
@@ -312,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void run() {
                 if (sendPing.getStatus() == AsyncTask.Status.RUNNING) {
                     sendPing.cancel(true);
-                    Toast.makeText(getBaseContext(),"The Arduino could not be reached",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(),"The Arduino could not be reached.",Toast.LENGTH_SHORT).show();
                     toast = "Arduino not reachable"; //update http request return string
                 }
 
@@ -381,10 +383,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 Log.e("sendreq","starting ping");
                 // try to ping the Arduino first to find out if it's reachable or not.
                 String s;
-                ProcessBuilder processbuilder = new ProcessBuilder("system/bin/ping", url[0]);
+                ProcessBuilder processbuilder = new ProcessBuilder("/system/bin/ping", url[0]);
                 Process process = processbuilder.start();
                 BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 Log.e("sr","before loop");
+                reachable = false;
                 while ((s = stdInput.readLine()) != null)
                 {
                     Log.e("output", s);
@@ -392,8 +395,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         Log.e("ping", "first");
                         if (s.contains("Host Unreachable")) {
                             Log.e("sendreq","ping failed"); //TODO is this ever reached?
+                        } else {
+                            reachable = true;
                         }
-
+                        break;
                     }
                 }
                 Log.e("sr","after loop ");
@@ -407,8 +412,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            new SendRequest().execute(urlString);
+            if(reachable) {
+                super.onPostExecute(result);
+                new SendRequest().execute(urlString);
+            } else {
+                Toast.makeText(getBaseContext(), "Arduino could not be reached.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -429,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
-            Log.w("result", result);
+            Log.e("result", result);
             toast = result.substring(0, 2).trim();
 //            Log.w("result", toast);
 //            toast = result; // set toast to be the latest result.
