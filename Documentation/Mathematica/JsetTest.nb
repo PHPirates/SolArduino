@@ -1,0 +1,539 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.4' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     21556,        531]
+NotebookOptionsPosition[     20805,        502]
+NotebookOutlinePosition[     21146,        517]
+CellTagsIndexPosition[     21103,        514]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"date", " ", "=", " ", 
+   RowBox[{"FromUnixTime", "[", "1469562079", "]"}]}], " ", 
+  RowBox[{"(*", " ", "js", " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"date", " ", "=", " ", 
+   RowBox[{"FromUnixTime", "[", "1467748947", "]"}]}], " ", 
+  RowBox[{"(*", " ", "ard", " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"mm", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"2457596320", "+", 
+        RowBox[{"0.5", "*", "1000"}], "-", 
+        RowBox[{"2440588", "*", "1000"}]}], ")"}], "*", "60", "*", "60", "*", 
+      "24"}], ")"}], "/", "1000"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"date", " ", "=", " ", 
+   RowBox[{"FromUnixTime", "[", "mm", "]"}]}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"mm", " ", "as", " ", "ard"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"position", " ", "=", " ", 
+   RowBox[{"GeoPosition", "[", 
+    RowBox[{"{", 
+     RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Sunrise", "[", 
+  RowBox[{"position", ",", 
+   RowBox[{"{", 
+    RowBox[{"2016", ",", "7", ",", "30"}], "}"}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.6785162577635*^9, 3.6785162775138345`*^9}, {
+  3.678516352061751*^9, 3.6785163649056764`*^9}, {3.6785165058920217`*^9, 
+  3.6785165641740527`*^9}, {3.6785166622222958`*^9, 3.678516675706892*^9}, {
+  3.678516942145005*^9, 3.678516943426257*^9}, {3.678516979145548*^9, 
+  3.6785169959582872`*^9}, {3.6785173730525074`*^9, 3.678517407325468*^9}, {
+  3.6785180072397995`*^9, 3.678518021893665*^9}, {3.678518089649412*^9, 
+  3.6785180978545156`*^9}, {3.6785184295781164`*^9, 3.678518446703356*^9}, {
+  3.6785185036729*^9, 3.678518505501046*^9}, {3.67851861447126*^9, 
+  3.6785187202227936`*^9}, {3.678518817817911*^9, 3.678518886646962*^9}, {
+  3.678534180823657*^9, 3.678534183386247*^9}, {3.6785380177466383`*^9, 
+  3.678538065824318*^9}, {3.67887699724229*^9, 3.678877003542808*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{RowBox[{"\"Tue 26 Jul 2016 22:41:19\"", 
+     StyleBox[
+      RowBox[{"\"GMT+\"", "\[InvisibleSpace]", "3.`"}], FontColor -> 
+      GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
+     RowBox[{
+       RowBox[{"{", 
+         RowBox[{"2016", ",", "7", ",", "26"}], "}"}], ",", 
+       RowBox[{"TimeObject", "[", 
+         RowBox[{
+           RowBox[{"{", 
+             RowBox[{"22", ",", "41", ",", "19.`"}], "}"}], ",", 
+           RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}], ",", 
+       RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}]},
+  "DateObject",
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.67851636582752*^9, {3.6785165471738*^9, 3.678516564861532*^9}, 
+   3.678516690644538*^9, 3.6785169976145105`*^9, {3.6785173973685813`*^9, 
+   3.678517408356725*^9}, 3.6785180258311644`*^9, 3.678518100276391*^9, 
+   3.6785185064228773`*^9, {3.6785186259401717`*^9, 3.67851865442497*^9}, {
+   3.678518693878646*^9, 3.6785187207696276`*^9}, {3.6785188197241254`*^9, 
+   3.678518887475099*^9}, 3.6785341854799995`*^9, {3.678538019340412*^9, 
+   3.678538034756395*^9}, 3.6785380664649315`*^9, {3.6788769994141445`*^9, 
+   3.6788770042615185`*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{RowBox[{"\"Tue 5 Jul 2016 23:02:27\"", 
+     StyleBox[
+      RowBox[{"\"GMT+\"", "\[InvisibleSpace]", "3.`"}], FontColor -> 
+      GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
+     RowBox[{
+       RowBox[{"{", 
+         RowBox[{"2016", ",", "7", ",", "5"}], "}"}], ",", 
+       RowBox[{"TimeObject", "[", 
+         RowBox[{
+           RowBox[{"{", 
+             RowBox[{"23", ",", "2", ",", "27.`"}], "}"}], ",", 
+           RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}], ",", 
+       RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}]},
+  "DateObject",
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.67851636582752*^9, {3.6785165471738*^9, 3.678516564861532*^9}, 
+   3.678516690644538*^9, 3.6785169976145105`*^9, {3.6785173973685813`*^9, 
+   3.678517408356725*^9}, 3.6785180258311644`*^9, 3.678518100276391*^9, 
+   3.6785185064228773`*^9, {3.6785186259401717`*^9, 3.67851865442497*^9}, {
+   3.678518693878646*^9, 3.6785187207696276`*^9}, {3.6785188197241254`*^9, 
+   3.678518887475099*^9}, 3.6785341854799995`*^9, {3.678538019340412*^9, 
+   3.678538034756395*^9}, 3.6785380664649315`*^9, {3.6788769994141445`*^9, 
+   3.6788770043240147`*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{RowBox[{"\"Tue 26 Jul 2016 22:40:48\"", 
+     StyleBox[
+      RowBox[{"\"GMT+\"", "\[InvisibleSpace]", "3.`"}], FontColor -> 
+      GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
+     RowBox[{
+       RowBox[{"{", 
+         RowBox[{"2016", ",", "7", ",", "26"}], "}"}], ",", 
+       RowBox[{"TimeObject", "[", 
+         RowBox[{
+           RowBox[{"{", 
+             RowBox[{"22", ",", "40", ",", "48.`"}], "}"}], ",", 
+           RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}], ",", 
+       RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}]},
+  "DateObject",
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.67851636582752*^9, {3.6785165471738*^9, 3.678516564861532*^9}, 
+   3.678516690644538*^9, 3.6785169976145105`*^9, {3.6785173973685813`*^9, 
+   3.678517408356725*^9}, 3.6785180258311644`*^9, 3.678518100276391*^9, 
+   3.6785185064228773`*^9, {3.6785186259401717`*^9, 3.67851865442497*^9}, {
+   3.678518693878646*^9, 3.6785187207696276`*^9}, {3.6785188197241254`*^9, 
+   3.678518887475099*^9}, 3.6785341854799995`*^9, {3.678538019340412*^9, 
+   3.678538034756395*^9}, 3.6785380664649315`*^9, {3.6788769994141445`*^9, 
+   3.6788770043396635`*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{RowBox[{"\"Sat 30 Jul 2016 07:05\"", 
+     StyleBox[
+      RowBox[{"\"GMT+\"", "\[InvisibleSpace]", "3.`"}], FontColor -> 
+      GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
+     RowBox[{
+       RowBox[{"{", 
+         RowBox[{"2016", ",", "7", ",", "30"}], "}"}], ",", 
+       RowBox[{"TimeObject", "[", 
+         RowBox[{
+           RowBox[{"{", 
+             RowBox[{"7", ",", "5"}], "}"}], ",", 
+           RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}], ",", 
+       RowBox[{"TimeZone", "\[Rule]", "3.`"}]}], "]"}]},
+  "DateObject",
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.67851636582752*^9, {3.6785165471738*^9, 3.678516564861532*^9}, 
+   3.678516690644538*^9, 3.6785169976145105`*^9, {3.6785173973685813`*^9, 
+   3.678517408356725*^9}, 3.6785180258311644`*^9, 3.678518100276391*^9, 
+   3.6785185064228773`*^9, {3.6785186259401717`*^9, 3.67851865442497*^9}, {
+   3.678518693878646*^9, 3.6785187207696276`*^9}, {3.6785188197241254`*^9, 
+   3.678518887475099*^9}, 3.6785341854799995`*^9, {3.678538019340412*^9, 
+   3.678538034756395*^9}, 3.6785380664649315`*^9, {3.6788769994141445`*^9, 
+   3.6788770043552885`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"powerLoss", ":=", " ", 
+  RowBox[{"Function", "[", " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{"params", ":", " ", 
+      RowBox[{"hour", " ", "of", " ", "day"}]}], ",", " ", 
+     RowBox[{"solar", " ", "panel", " ", "angle"}], ",", " ", "date", ",", 
+     " ", 
+     RowBox[{
+     "returns", " ", "power", " ", "loss", " ", "percentage", " ", "with", 
+      " ", "this", " ", "misalignment"}]}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"sunPos", " ", "=", " ", 
+     RowBox[{"SunPosition", "[", 
+      RowBox[{
+       RowBox[{"GeoPosition", "[", 
+        RowBox[{"{", 
+         RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
+       RowBox[{"DateObject", "[", 
+        RowBox[{"#3", ",", 
+         RowBox[{"{", 
+          RowBox[{"#1", "/", "100"}], "}"}]}], "]"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"remove", " ", "degree", " ", "unit"}], ",", " ", 
+      RowBox[{"then", " ", "convert", " ", "to", " ", "radians"}]}], " ", 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Gamma]", "s"], "=", " ", 
+     RowBox[{
+      RowBox[{"QuantityMagnitude", "[", 
+       RowBox[{"Quantity", "[", 
+        RowBox[{"sunPos", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "*", 
+      RowBox[{"Pi", "/", "180"}]}]}], ";", "  ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"Azimuth", " ", "of", " ", "sun", " ", "position"}], ",", " ", 
+      RowBox[{"0", " ", "due", " ", "South"}], ",", " ", 
+      RowBox[{"negative", " ", "to", " ", "the", " ", "east"}]}], " ", "*)"}],
+     "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{
+      "Because", " ", "Mathematica", " ", "gives", " ", "azimuth", " ", "in", 
+       " ", "compass", " ", "angle"}], ",", " ", 
+      RowBox[{"we", " ", "subtract", " ", "180", " ", "degrees"}]}], " ", 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Gamma]", "s"], " ", "=", " ", 
+     RowBox[{
+      SubscriptBox["\[Gamma]", "s"], " ", "-", " ", "Pi"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Theta]", "s"], "=", " ", 
+     RowBox[{
+      RowBox[{"QuantityMagnitude", "[", 
+       RowBox[{"Quantity", "[", 
+        RowBox[{"sunPos", "[", 
+         RowBox[{"[", "2", "]"}], "]"}], "]"}], "]"}], "*", 
+      RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Sun", " ", "altitude"}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Gamma]", "p"], " ", "=", " ", "0"}], ";", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Solar", " ", "panels", " ", "azimuth"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     SubscriptBox["\[Theta]", "p"], " ", "=", " ", 
+     RowBox[{"#2", " ", "*", " ", 
+      RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "Solar", " ", "panels", " ", "angle", " ", "with", " ", "horizontal"}], 
+     " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"a", "=", " ", 
+     RowBox[{"ArcCos", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Cos", "[", 
+         RowBox[{
+          SubscriptBox["\[Gamma]", "p"], "-", 
+          SubscriptBox["\[Gamma]", "s"]}], "]"}], " ", 
+        RowBox[{"Cos", "[", 
+         SubscriptBox["\[Theta]", "s"], "]"}], " ", 
+        RowBox[{"Sin", "[", 
+         SubscriptBox["\[Theta]", "p"], "]"}]}], "+", 
+       RowBox[{
+        RowBox[{"Cos", "[", 
+         SubscriptBox["\[Theta]", "p"], "]"}], " ", 
+        RowBox[{"Sin", "[", 
+         SubscriptBox["\[Theta]", "s"], "]"}]}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"IntegerPart", "[", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"1", "-", 
+        RowBox[{"Cos", "[", "a", "]"}]}], ")"}], "*", "100"}], "]"}]}], 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{"1", "-", 
+      RowBox[{
+       RowBox[{"Cos", "[", "i", "]"}], " ", "gives", " ", "power", " ", 
+       "loss", " ", "due", " ", "to", " ", "misalignment"}]}], ",", " ", 
+     RowBox[{"simulate", " ", "return", " ", "int"}]}], " ", "*)"}], 
+   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"date", " ", "=", " ", 
+   RowBox[{"FromUnixTime", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"6029.649", " ", "+", " ", "10957.5"}], ")"}], "*", "3600", "*",
+      "24"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dateHour", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"DateValue", "[", 
+     RowBox[{"date", ",", "\"\<Hour\>\""}], "]"}], "+", 
+    RowBox[{
+     RowBox[{"DateValue", "[", 
+      RowBox[{"date", ",", " ", "\"\<Minute\>\""}], "]"}], "/", "60"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"powerLoss", "[", 
+   RowBox[{"dateHour", ",", "30", ",", "date"}], "]"}], "\[IndentingNewLine]",
+   "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Define", " ", "a", " ", "function", " ", "that", " ", "sums", " ", "up", 
+    " ", "the", " ", "total", " ", "%", " ", "of", " ", "power", " ", "loss", 
+    " ", "at", " ", "each", " ", "hour"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"sumPowerLoss", ":=", 
+  RowBox[{"Function", "[", " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{"params", ":", " ", 
+      RowBox[{"solar", " ", "panel", " ", "angle"}]}], ",", " ", "date"}], 
+    " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"position", " ", "=", " ", 
+     RowBox[{"GeoPosition", "[", 
+      RowBox[{"{", 
+       RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"sunUp", " ", "=", " ", 
+     RowBox[{"Sunrise", "[", 
+      RowBox[{"position", ",", "#2"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"sunUpHour", " ", "=", " ", 
+     RowBox[{
+      RowBox[{"DateValue", "[", 
+       RowBox[{"sunUp", ",", "\"\<Hour\>\""}], "]"}], "+", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunUp", ",", " ", "\"\<Minute\>\""}], "]"}], "/", "60"}]}]}],
+     ";", "\[IndentingNewLine]", 
+    RowBox[{"sunset", " ", "=", " ", 
+     RowBox[{"Sunset", "[", 
+      RowBox[{"position", ",", "#2"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"sunsetHour", " ", "=", " ", 
+     RowBox[{
+      RowBox[{"DateValue", "[", 
+       RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+       "60"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{
+      "Times", " ", "100", " ", "so", " ", "the", " ", "sum", " ", "starts", 
+       " ", "closer", " ", "to", " ", "the", " ", "real", " ", "sunUpHour"}], 
+      ",", " ", 
+      RowBox[{
+      "and", " ", "not", " ", "floors", " ", "it", " ", "to", " ", "an", " ", 
+       "integer", " ", "when", " ", "calculating", " ", "the", " ", 
+       RowBox[{"sum", ".", " ", "Otherwise"}], " ", "weird", " ", "jumps", 
+       " ", "in", " ", "graphs", " ", "appear", " ", "when", " ", "the", " ", 
+       "sunUpHour", " ", "jumps", " ", "one", " ", "hour"}]}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"Sum", "[", 
+     RowBox[{
+      RowBox[{"powerLoss", "[", 
+       RowBox[{"h", ",", "#1", ",", "#2"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"h", ",", 
+        RowBox[{"sunUpHour", "*", "100"}], ",", 
+        RowBox[{"sunsetHour", "*", "100"}], ",", "10"}], "}"}]}], "]"}]}], 
+   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"sumPowerLoss", "[", 
+  RowBox[{"30", ",", 
+   RowBox[{"DateObject", "[", 
+    RowBox[{"{", 
+     RowBox[{"2016", ",", "7", ",", "5"}], "}"}], "]"}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.678862518057906*^9, 3.678862546745589*^9}, {
+   3.678862629603565*^9, 3.6788626818790956`*^9}, {3.6788628737496266`*^9, 
+   3.678862891240471*^9}, {3.6788629629142423`*^9, 3.6788629629454913`*^9}, {
+   3.679228846491622*^9, 3.679228847295163*^9}, {3.679238243588357*^9, 
+   3.6792382444569707`*^9}, 3.679238536781246*^9, {3.6792387278571672`*^9, 
+   3.6792387416970215`*^9}, {3.679238877458816*^9, 3.6792389377679768`*^9}, {
+   3.6792395258959436`*^9, 3.679239542285098*^9}, {3.6792397232858458`*^9, 
+   3.679239777225666*^9}, {3.6792398618036003`*^9, 3.6792399004703217`*^9}, {
+   3.6792406753589664`*^9, 3.6792407294765296`*^9}, {3.6792408330764318`*^9, 
+   3.679240852676673*^9}, {3.679240883786662*^9, 3.679240904798957*^9}, {
+   3.6792412997890606`*^9, 3.6792413146239505`*^9}, {3.6792937486475515`*^9, 
+   3.6792937624762783`*^9}, {3.6792938007622023`*^9, 3.679293807580739*^9}, {
+   3.679293981247451*^9, 3.6792939973831296`*^9}, {3.679295004660715*^9, 
+   3.6792950704590116`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "write"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Tag \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"Times\\\"}]\\)\[NoBreak] in \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"2.24704902657076881529841773272487719799`5.\
+109735180456635\\\", \\\" \\\", RowBox[{\\\"(\\\", \
+TemplateBox[List[RowBox[List[\\\"-\\\", \
+\\\"7.3859812898263630387418743339367210865`3.8684082031612297\\\"]], \
+RowBox[List[\\\"\\\\[InvisibleSpace]\\\", \
+\\\"\\\\\\\"\\\\[Degree]\\\\\\\"\\\"]], \\\"degrees\\\", \
+\\\"\\\\\\\"AngularDegrees\\\\\\\"\\\"], \\\"QuantityPostfix\\\", \
+Rule[SyntaxForm, Mod]], \\\")\\\"}], \\\" \\\", RowBox[{\\\"(\\\", \
+TemplateBox[List[\\\"322.25794399289179636980406939983367919922`5.\
+508203631967267\\\", RowBox[List[\\\"\\\\[InvisibleSpace]\\\", \\\"\\\\\\\"\\\
+\\[Degree]\\\\\\\"\\\"]], \\\"degrees\\\", \\\"\\\\\\\"AngularDegrees\\\\\\\"\
+\\\"], \\\"QuantityPostfix\\\", Rule[SyntaxForm, Mod]], \\\")\\\"}]}]\\)\
+\[NoBreak] is Protected. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/write\\\", ButtonNote -> \
+\\\"Set::write\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.679295019763923*^9}],
+
+Cell[BoxData["80"], "Output",
+ CellChangeTimes->{{3.6792398813449764`*^9, 3.6792398944218903`*^9}, 
+   3.6792407479641547`*^9, {3.6792408858677826`*^9, 3.6792409054864798`*^9}, {
+   3.679241301988722*^9, 3.679241315727131*^9}, 3.679293776654607*^9, 
+   3.679293822455326*^9, 3.67929400108736*^9, 3.679295019810792*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "write"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Tag \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"Times\\\"}]\\)\[NoBreak] in \
+\[NoBreak]\\!\\(\\*RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.89454362701902442316422565055462568621`4.709724158432286\\\"}], \\\" \\\
+\", RowBox[{\\\"(\\\", TemplateBox[List[RowBox[List[\\\"-\\\", \
+\\\"0.87042679658329225045321209108806215227`2.9397322525621936\\\"]], \
+RowBox[List[\\\"\\\\[InvisibleSpace]\\\", \
+\\\"\\\\\\\"\\\\[Degree]\\\\\\\"\\\"]], \\\"degrees\\\", \
+\\\"\\\\\\\"AngularDegrees\\\\\\\"\\\"], \\\"QuantityPostfix\\\", \
+Rule[SyntaxForm, Mod]], \\\")\\\"}], \\\" \\\", RowBox[{\\\"(\\\", \
+TemplateBox[List[\\\"50.14342996518982431553013157099485397339`4.\
+70021403771966\\\", RowBox[List[\\\"\\\\[InvisibleSpace]\\\", \
+\\\"\\\\\\\"\\\\[Degree]\\\\\\\"\\\"]], \\\"degrees\\\", \
+\\\"\\\\\\\"AngularDegrees\\\\\\\"\\\"], \\\"QuantityPostfix\\\", \
+Rule[SyntaxForm, Mod]], \\\")\\\"}]}]\\)\[NoBreak] is Protected. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/General/write\\\", \
+ButtonNote -> \\\"Set::write\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6792950200920734`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"powerLoss2", ":=", " ", 
+   RowBox[{"Function", "[", "\[IndentingNewLine]", 
+    RowBox[{"SunPosition", "[", 
+     RowBox[{
+      RowBox[{"GeoPosition", "[", 
+       RowBox[{"{", 
+        RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
+      RowBox[{"DateObject", "[", 
+       RowBox[{"#3", ",", 
+        RowBox[{"{", 
+         RowBox[{"#1", "/", "100"}], "}"}]}], "]"}]}], "]"}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"date", " ", "=", " ", 
+   RowBox[{"FromUnixTime", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"6029.649", " ", "+", " ", "10957.5"}], ")"}], "*", "3600", "*",
+      "24"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dateHour", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"DateValue", "[", 
+     RowBox[{"date", ",", "\"\<Hour\>\""}], "]"}], "+", 
+    RowBox[{
+     RowBox[{"DateValue", "[", 
+      RowBox[{"date", ",", " ", "\"\<Minute\>\""}], "]"}], "/", "60"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"powerLoss2", "[", 
+  RowBox[{"dateHour", ",", "30", ",", "date"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.679295116496292*^9, 3.6792951480444756`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TemplateBox[{
+    "322.25794399289179636980406939983367919922`5.508203631967267",
+     RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
+     "\"AngularDegrees\""},
+    "QuantityPostfix"], ",", 
+   TemplateBox[{
+    RowBox[{"-", 
+       "7.3859812898263630387418743339367210865`3.8684082031612297"}],
+     RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
+     "\"AngularDegrees\""},
+    "QuantityPostfix"]}], "}"}]], "Output",
+ CellChangeTimes->{3.679295148966308*^9}]
+}, Open  ]]
+},
+WindowSize->{942, 960},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"10.4 for Microsoft Windows (64-bit) (April 11, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 2058, 46, 152, "Input"],
+Cell[2641, 70, 1182, 24, 41, "Output"],
+Cell[3826, 96, 1179, 24, 41, "Output"],
+Cell[5008, 122, 1182, 24, 41, "Output"],
+Cell[6193, 148, 1164, 24, 41, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7394, 177, 8755, 212, 672, "Input"],
+Cell[16152, 391, 1249, 23, 31, "Message"],
+Cell[17404, 416, 318, 4, 31, "Output"],
+Cell[17725, 422, 1271, 23, 31, "Message"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19033, 450, 1225, 33, 152, "Input"],
+Cell[20261, 485, 528, 14, 40, "Output"]
+}, Open  ]]
+}
+]
+*)
+
