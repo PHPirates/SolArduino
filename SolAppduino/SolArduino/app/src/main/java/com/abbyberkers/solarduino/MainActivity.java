@@ -213,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
+                        view.setPressed(true);
 
                         Log.e("setAngle", "pressed");
                         int prog = seekbar.getProgress(); // get the value from the seekbar
@@ -220,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         break;
 
                     case MotionEvent.ACTION_UP:
+                        view.setPressed(false);
 
                         Log.e("setAngle", "released");
 
@@ -400,8 +402,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 while ((s = stdInput.readLine()) != null)
                 {
                     Log.e("output", s);
-                    if(s.contains("seq=1 ")){
-                        Log.e("ping", "first");
+                    if(s.contains("seq=")){
+//                        Log.e("ping", "first");
                         if (s.contains("Host Unreachable")) {
                             Log.e("sendreq","ping failed"); //TODO is this ever reached?
                         } else {

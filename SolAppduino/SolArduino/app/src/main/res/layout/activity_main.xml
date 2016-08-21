@@ -3,28 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="4dp"
+    android:paddingBottom="0dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin"
+    android:paddingTop="4dp"
     tools:context="com.abbyberkers.solarduino.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
     <TableLayout
         android:id="@+id/table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <!--<TableRow>-->
-            <!--<TextView-->
-                <!--android:id="@+id/textView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Hello World!"/>-->
-        <!--</TableRow>-->
 
         <TableRow>
             <TableLayout
@@ -71,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_gravity="center_vertical"
-                        android:textSize="100sp"
+                        android:textSize="80sp"
                         android:text="20 \u00b0"
                         android:textColor="@drawable/text_selector"
                         android:onClick="sendUpdateRequest"/>
@@ -83,10 +75,10 @@
                         android:layout_width="wrap_content"
                         android:text="@string/auto" />
 
-                    <Button
-                        android:id="@+id/testButton"
-                        android:text="test"
-                        android:onClick="testButton"/>
+                    <!--<Button-->
+                        <!--android:id="@+id/testButton"-->
+                        <!--android:text="test"-->
+                        <!--android:onClick="testButton"/>-->
                 </TableRow>
             </TableLayout>
         </TableRow>
@@ -128,13 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/frame"
-        android:text="set angle"
-        android:onClick="sendAngleRequest"/>
-    <TextView
-        android:id="@+id/seekbarTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/setAngle"/>
+        android:text="set angle"/>
 
     </RelativeLayout>
 </ScrollView>
