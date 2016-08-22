@@ -83,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     FrameLayout frameLayout;
 
     @Override
+    public void onResume(){
+        super.onResume();
+        urlString = ipString + "?update";
+        startHttpRequest();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
