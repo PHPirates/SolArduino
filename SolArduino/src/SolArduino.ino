@@ -6,8 +6,8 @@
 //choose a unique mac address
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
-// static byte myip[] = {192, 168, 2, 10};// ip Thomas
-static byte myip[] = {192, 168, 0, 23}; // ip Abby
+static byte myip[] = {192, 168, 2, 106};// ip Thomas
+//static byte myip[] = {192, 168, 0, 23}; // ip Abby
 
 byte Ethernet::buffer[500];
 
@@ -18,6 +18,8 @@ const char http_OK[] PROGMEM =
    "HTTP/1.0 200 OK\r\n"
    "Content-Type: text/html\r\n"
    "Pragma: no-cache\r\n\r\n";
+
+boolean autoMode;
 
 void setup () {
   Serial.begin(9600);
@@ -73,15 +75,23 @@ void loop () {
          }
          else if (strncmp("?panel=up ", data, 10) == 0) {
              acknowledge("Panels going up."); //send acknowledge http response
+             autoMode = false;
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
              acknowledge("Panels going down.");
+             autoMode = false;
          }
          else if (strncmp("?panel=stop ", data, 12) == 0) {
              acknowledge("Panels stopped/not moving.");
+             autoMode = false;
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
-             acknowledge("Panels going on auto.");
+             acknowledge("Auto mode switched on.");
+             autoMode = true;
+         }
+         else if (strncmp("?panel=manual ", data, 12) == 0){
+             acknowledge("Auto mode switched off.");
+             autoMode = false;
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
               //print digit that comes after
@@ -98,11 +108,19 @@ void loop () {
 
              //convert string to const char, easier than a modifiable char array
              acknowledge(stringDegrees.c_str());
+             autoMode = false;
          }
          else if (strncmp("?update", data, 7) == 0) {
            //update requested, sent back current angle
            int angle = getCurrentAngle();
-           acknowledge(String(angle).c_str()); //convert to string, then to const char
+           String update = String(angle);
+           if(autoMode) {
+              update = update + " auto";
+           } else {
+              update = update + " manual";
+           }
+
+           acknowledge(update.c_str()); //convert to string, then to const char
          }
          else {
              Serial.println("Page not found");
