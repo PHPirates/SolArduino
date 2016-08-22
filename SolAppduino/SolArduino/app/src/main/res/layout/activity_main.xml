@@ -33,7 +33,8 @@
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
                         android:src="@drawable/up_button"
-                        android:background="#00000000"/>
+                        android:background="#00000000"
+                        android:onClick="unCheck"/>
 
                 </TableRow>
                 <TableRow>
@@ -46,7 +47,8 @@
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
                         android:src="@drawable/down_button"
-                        android:background="#00000000"/>
+                        android:background="#00000000"
+                        android:onClick="unCheck"/>
                 </TableRow>
 
             </TableLayout>
@@ -73,7 +75,7 @@
                     <CheckBox
                         android:id="@+id/autoBox"
                         android:layout_width="wrap_content"
-                        android:text="@string/auto" />
+                        android:text="@string/auto"/>
 
                     <!--<Button-->
                         <!--android:id="@+id/testButton"-->
@@ -120,7 +122,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/frame"
-        android:text="set angle"/>
+        android:text="set angle"
+        android:onClick="unCheck"/>
 
     </RelativeLayout>
 </ScrollView>

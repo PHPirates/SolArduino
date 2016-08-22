@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //    String host = "192.168.2.107"; // host test
 
     String toast;           // String containing the result from the last http-request
+    String autoMode;        // String with auto if auto mode on, manual if auto mode off
 
     Toast unreachableToast;
     Toast updateToast;
@@ -72,8 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     SeekBar seekbar;        // seekbar to change angle of solar panels
 
     ImageButton upButton;   // button to make the solar panels move up
-    ImageButton downButton;      // button to make the solar panels move down
+    ImageButton downButton; // button to make the solar panels move down
     Button setAngle;        // button to set angle of solar panels
+
+    CheckBox autoBox;
 
     FrameLayout frameLayout;
 
@@ -116,6 +121,22 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         downButton = (ImageButton) findViewById(R.id.downButton);
         setAngle = (Button) findViewById(R.id.setAngle);
 
+        autoBox = (CheckBox) findViewById(R.id.autoBox);
+        autoBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b) {
+                    urlString = ipString + "?panel=auto";
+//                    Toast.makeText(getBaseContext(), "Auto mode switched on.", Toast.LENGTH_SHORT).show();
+                    startHttpRequest();
+                } else {
+                    urlString = ipString + "?panel=manual";
+                    startHttpRequest();
+//                    Toast.makeText(getBaseContext(), "Auto mode switched off.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         frameLayout = (FrameLayout) findViewById(R.id.frame);
 //        int height = frameLayout.getLayoutParams().height;
 //        Log.e("height", String.valueOf(height));
@@ -150,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-//                        textView.setText("Up button pressed.");
+
                         upButton.setPressed(true); // set pressed state true so colour changes
                         sendDirectionRequest("up");
 
@@ -164,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         // wait 1500ms with first task, then delay interval
                         upTimer.schedule(timerTask, 1500, delay);
+                        view.performClick();
                         break;
                     case MotionEvent.ACTION_UP:
 //                        textView.setText("Up button released.");
@@ -172,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         sendDirectionRequest("stop");
                         break;
                 }
-                return true;
+                return false;
             }
         });
 
@@ -182,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-//                        textView.setText("Down button pressed.");
+
                         downButton.setPressed(true); // set pressed state true to change colour
                         sendDirectionRequest("down");
 
@@ -195,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         };
                         // wait 1500ms with first task, then delay interval
                         downTimer.schedule(timerTask, 1500, delay);
+                        view.performClick();
                         break;
 
                     case MotionEvent.ACTION_UP:
@@ -204,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         sendDirectionRequest("stop");
                         break;
                 }
-                return true;
+                return false;
             }
         });
 
@@ -213,15 +236,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        view.setPressed(true);
+                        view.setPressed(true); // simulate onClick (pressed) event so colour changes
 
                         Log.e("setAngle", "pressed");
                         int prog = seekbar.getProgress(); // get the value from the seekbar
                         sendAngleRequest(prog); // set the panels at angle
+                        view.performClick();
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        view.setPressed(false);
+                        view.setPressed(false); // simulate onClick (release) event so colour changes back
 
                         Log.e("setAngle", "released");
 
@@ -241,13 +265,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             int seekBarProgress = seekbar.getProgress(); // value seekbar
                             @Override
                             public void run() {
-                                Log.e("angles", "current " + angleInt + " seekbar " + seekBarProgress);
+//                                Log.e("angles", "current " + angleInt + " seekbar " + seekBarProgress);
 
                                 if(angleInt == seekBarProgress) {
 //                                if(Math.abs(angleInt - seekBarProgress) == 1) {
 
                                     // cancel the timer when right angle is reached
-                                    Log.w("timer", "cancel");
+//                                    Log.w("timer", "cancel");
                                     timer.cancel();
                                 } else {
                                     // update the angle as long as the desired angle not reached
@@ -270,9 +294,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         // send first after 'delay' ms, then with 'delay' interval
                         break;
                 }
-                return true;
+                return false;
             }
         });
+    }
+
+    /**
+     * method to uncheck checkbox for automode, when any of the other buttons is pressed
+     * @param view
+     */
+    public void unCheck(View view){
+        if(autoBox.isChecked()){
+            autoBox.toggle();
+        }
     }
 
     // fatal exception when this is removed...
@@ -377,11 +411,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         startHttpRequest();
     }
 
-    public void testButton(View view){
-        urlString = ipString;
-
-    }
-
     /**
      * Class to execute ping request to check the connection with the Arduino,
      * before http request is sent
@@ -462,6 +491,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //            String color = "#" + String.valueOf(Integer.toHexString(defaultColor));
 //            currentAngle.setTextColor(Color.parseColor(color));
             if(result.contains("Un") || result.contains("not be")){
+                // Arduino could not be reached.
+
                 Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
                 // set seekbar at current angle, so update requests aren't sent anymore.
                 seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
@@ -472,33 +503,43 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 Toast.makeText(getBaseContext(), result.trim(), Toast.LENGTH_SHORT).show();
             } else {
                 String message = urlString;
-//                String message = urlString.substring(20);
-                Log.e("urlString", urlString);
-                Log.e("message", message);
                 if (message.equals(ipString)) {
-                   Log.e("message", "homepage");
                 } else if (message.contains("panel")) {
-//                    responseTV.setText(Html.fromHtml(result));
                     // Toast that the panels are going up or down so the user knows the Arduino
                     // received the request and knows what to do
                     Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
                 } else if (message.contains("degrees")) {
-                    Log.e("result", result);
+//                    Log.e("result", result);
                 } else if (message.contains("update")) {
-                    Log.e("result", result);
+                    String[] updateString = result.split(" ");
                     // string with current angle plus degree symbol
-                    String angle = Html.fromHtml(result) + "\u00b0";
+                    String angle = Html.fromHtml(updateString[0]) + "\u00b0";
                     currentAngle.setText(angle);
                     // get the current angle from the result, without spaces
                     result = result.substring(0, 2).trim();
                     // convert string to integer, then rotate the image
-                    rotate(Integer.valueOf(result));
+                    rotate(Integer.valueOf(updateString[0]));
+
+                    updateString[1].trim();
+                    Log.e("update", updateString[1]);
+                    Log.e("check", String.valueOf(autoBox.isChecked()));
+                    Log.e("update", String.valueOf(updateString[1].contains("manual")));
+
+                    if(updateString[1].contains("auto")) {
+                        if(!autoBox.isChecked()) {
+                            autoBox.toggle();
+                        }
+                    } else if(updateString[1].contains("manual")) {
+                        if(autoBox.isChecked()) {
+                            autoBox.toggle();
+                        }
+                    }
                 } else if (message.contains("Page")) {
                     Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
                 } else {
                     // Back up, don't know what happened when we arrive here, should never happen.
                     // But has happened in the past.
-                    Log.e("message", message);
+//                    Log.e("message", message);
                     Toast.makeText(getBaseContext(), "Something went wrong.", Toast.LENGTH_SHORT).show();
                 }
             }
