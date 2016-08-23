@@ -1,11 +1,5 @@
-*
-!.gitignore
-!*.tex
-!*.cls
-!documentation.pdf
-!*.nb
-!**/*.nb
-!**/*.csv
-!*.JPG
-!*.jpg
-!*.png
+*.aux
+*.log
+*.out
+*.pdf
+*.synctex.gz

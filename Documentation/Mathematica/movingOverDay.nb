@@ -10,782 +10,707 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     62804,       1445]
-NotebookOptionsPosition[     62356,       1426]
-NotebookOutlinePosition[     62696,       1441]
-CellTagsIndexPosition[     62653,       1438]
+NotebookDataLength[     65846,       1526]
+NotebookOptionsPosition[     65352,       1506]
+NotebookOutlinePosition[     65692,       1521]
+CellTagsIndexPosition[     65649,       1518]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
 
 Cell[CellGroupData[{
-Cell[BoxData[
+Cell[BoxData[{
  RowBox[{
+  RowBox[{"ClearAll", "[", "\"\<Global`*\>\"", "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"clear", " ", "variables"}], " ", "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
   RowBox[{"(*", " ", 
    RowBox[{
    "switch", " ", "off", " ", "message", " ", "that", " ", "solar", " ", 
     "panels", " ", "cannot", " ", "be", " ", "lower", " ", "than", " ", "0", 
-    " ", "degrees"}], " ", "*)"}], "\[IndentingNewLine]", 
+    " ", "degrees"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Off", "[", 
+   RowBox[{"FindMinimum", "::", "reged"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{
+   RowBox[{"Off", "[", 
+    RowBox[{"FindMaximum", "::", "reged"}], "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
    RowBox[{
-    RowBox[{"Off", "[", 
-     RowBox[{"FindMinimum", "::", "reged"}], "]"}], ";"}], 
-   "\[IndentingNewLine]", 
+   "Adjusting", " ", "the", " ", "solar", " ", "panels", " ", "x", " ", 
+    "times", " ", "a", " ", "day", "\[IndentingNewLine]", "The", " ", "times",
+     " ", "are", " ", "evenly", " ", "spread", " ", "over", " ", "the", " ", 
+    "time", " ", "the", " ", "sun", " ", "is", " ", "up"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"year", " ", "=", " ", "2016"}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
    RowBox[{
-    RowBox[{"Off", "[", 
-     RowBox[{"FindMaximum", "::", "reged"}], "]"}], ";"}], 
-   "\[IndentingNewLine]", "\[IndentingNewLine]", 
-   RowBox[{"(*", " ", 
+    RowBox[{"parameters", " ", "are", " ", "forced", " ", "numeric"}], ",", 
+    " ", 
     RowBox[{
-    "Adjusting", " ", "the", " ", "solar", " ", "panels", " ", "x", " ", 
-     "times", " ", "a", " ", "day", "\[IndentingNewLine]", "The", " ", 
-     "times", " ", "are", " ", "evenly", " ", "spread", " ", "over", " ", 
-     "the", " ", "time", " ", "the", " ", "sun", " ", "is", " ", "up"}], " ", 
-    "*)"}], "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"year", " ", "=", " ", "2016"}], ";"}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", 
-   RowBox[{"(*", " ", 
+    "so", " ", "findMaximum", " ", "in", " ", "dayangle", " ", "works", " ", 
+     "better"}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"angle", "[", 
     RowBox[{
-     RowBox[{"parameters", " ", "are", " ", "forced", " ", "numeric"}], ",", 
-     " ", 
+     RowBox[{"i_", "?", "NumericQ"}], ",", 
+     RowBox[{"a_", "?", "NumericQ"}], ",", "d_"}], "]"}], ":=", " ", 
+   RowBox[{"(", " ", 
+    RowBox[{"(*", " ", 
      RowBox[{
-     "so", " ", "findMaximum", " ", "in", " ", "dayangle", " ", "works", " ", 
-      "better"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"angle", "[", 
-     RowBox[{
-      RowBox[{"i_", "?", "NumericQ"}], ",", 
-      RowBox[{"a_", "?", "NumericQ"}], ",", "d_"}], "]"}], ":=", " ", 
-    RowBox[{"(", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{"params", ":", " ", 
-        RowBox[{"index", " ", "of", " ", "sunPositions", " ", "table"}]}], 
-       ",", " ", 
-       RowBox[{
-       "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}], ",", 
-       " ", "date", ",", " ", 
-       RowBox[{
-       "returns", " ", "misalignment", " ", "with", " ", "the", " ", "sun", 
-        " ", "in", " ", "radians"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"sunPos", " ", "=", " ", 
-       RowBox[{"sunPositions", "[", 
-        RowBox[{"[", "i", "]"}], "]"}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{"lookup", " ", "sun", " ", "position"}], " ", "*)"}], 
-      "\[IndentingNewLine]", "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{"remove", " ", "degree", " ", "unit"}], ",", " ", 
-        RowBox[{"then", " ", "convert", " ", "to", " ", "radians"}]}], " ", 
-       "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"gammaS", "=", " ", 
-       RowBox[{
-        RowBox[{"QuantityMagnitude", "[", 
-         RowBox[{"Quantity", "[", 
-          RowBox[{"sunPos", "[", 
-           RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "*", 
-        RowBox[{"Pi", "/", "180"}]}]}], ";", "  ", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{"Azimuth", " ", "of", " ", "sun", " ", "position"}], ",", " ", 
-        RowBox[{"0", " ", "due", " ", "South"}], ",", " ", 
-        RowBox[{"negative", " ", "to", " ", "the", " ", "east"}]}], " ", 
-       "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{
-        "Because", " ", "Mathematica", " ", "gives", " ", "azimuth", " ", 
-         "in", " ", "compass", " ", "angle"}], ",", " ", 
-        RowBox[{"we", " ", "subtract", " ", "180", " ", "degrees"}]}], " ", 
-       "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"gammaS", " ", "=", " ", 
-       RowBox[{"gammaS", " ", "-", " ", "Pi"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"thetaS", "=", " ", 
-       RowBox[{
-        RowBox[{"QuantityMagnitude", "[", 
-         RowBox[{"Quantity", "[", 
-          RowBox[{"sunPos", "[", 
-           RowBox[{"[", "2", "]"}], "]"}], "]"}], "]"}], "*", 
-        RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{"Sun", " ", "altitude"}], " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"gammaP", " ", "=", " ", 
-       RowBox[{
-        RowBox[{"-", "22"}], " ", "*", " ", 
-        RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{"Solar", " ", "panels", " ", "azimuth"}], " ", "*)"}], 
-      "\[IndentingNewLine]", 
-      RowBox[{"thetaP", " ", "=", " ", 
-       RowBox[{"a", " ", "*", " ", 
-        RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-       "Solar", " ", "panels", " ", "angle", " ", "with", " ", "horizontal"}],
-        " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"ArcCos", "[", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"Cos", "[", 
-          RowBox[{"gammaP", "-", "gammaS"}], "]"}], " ", 
-         RowBox[{"Cos", "[", "thetaS", "]"}], " ", 
-         RowBox[{"Sin", "[", "thetaP", "]"}]}], "+", 
-        RowBox[{
-         RowBox[{"Cos", "[", "thetaP", "]"}], " ", 
-         RowBox[{"Sin", "[", "thetaS", "]"}]}]}], "]"}]}], 
-     "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"directPower", "[", 
-     RowBox[{
-      RowBox[{"x_", "?", "NumericQ"}], ",", 
-      RowBox[{"a_", "?", "NumericQ"}], ",", "d_"}], "]"}], "  ", ":=", " ", 
-    RowBox[{"(", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{"param", ":", " ", "index"}], ",", " ", 
-       RowBox[{
-       "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}], ",", 
+      RowBox[{"params", ":", " ", 
+       RowBox[{"index", " ", "of", " ", "sunPositions", " ", "table"}]}], ",",
        " ", 
-       RowBox[{
-        RowBox[{"date", ".", " ", "returns"}], " ", 
-        RowBox[{"W", "/", 
-         SuperscriptBox["m", "2"]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"theta", "=", 
-       RowBox[{"angle", "[", 
-        RowBox[{"x", ",", "a", ",", "d"}], "]"}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{"solar", " ", "zenith", " ", 
-        RowBox[{"(", "misalignment", ")"}], " ", "in", " ", "radians"}], " ", 
-       "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{
-        "here", " ", "comes", " ", "the", " ", "magik", " ", "formula", " ", 
-         "from", " ", 
-         RowBox[{"http", ":"}]}], "//", 
-        RowBox[{
-         RowBox[{
-          RowBox[{
-           RowBox[{
-            RowBox[{"www", ".", "powerfromthesun", ".", "net"}], "/", 
-            "Book"}], "/", "chapter02"}], "/", 
-          RowBox[{"chapter02", ".", "html"}]}], "#ZEqnNum929295", " ", "for", 
-         " ", "a", " ", "clear", " ", "day"}]}], " ", "*)"}], 
-      "\[IndentingNewLine]", 
-      RowBox[{"n", "=", " ", 
+      RowBox[{
+      "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}], ",", 
+      " ", "date", ",", " ", 
+      RowBox[{
+      "returns", " ", "misalignment", " ", "with", " ", "the", " ", "sun", 
+       " ", "in", " ", "radians"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"sunPos", " ", "=", " ", 
+      RowBox[{"sunPositions", "[", 
+       RowBox[{"[", "i", "]"}], "]"}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"lookup", " ", "sun", " ", "position"}], " ", "*)"}], 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"remove", " ", "degree", " ", "unit"}], ",", " ", 
+       RowBox[{"then", " ", "convert", " ", "to", " ", "radians"}]}], " ", 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"gammaS", "=", " ", 
+      RowBox[{
        RowBox[{"QuantityMagnitude", "[", 
         RowBox[{"Quantity", "[", 
-         RowBox[{"d", " ", "-", " ", 
-          RowBox[{"DateObject", "[", 
-           RowBox[{"{", 
-            RowBox[{"2016", ",", "1", ",", "1"}], "}"}], "]"}]}], "]"}], 
-        "]"}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{"day", " ", "of", " ", "year"}], " ", "*)"}], 
-      "\[IndentingNewLine]", 
-      RowBox[{"i", "=", " ", 
-       RowBox[{"1367", " ", 
-        RowBox[{"(", 
-         RowBox[{"1", "+", 
-          RowBox[{"0.034", " ", 
-           RowBox[{"Cos", "[", 
-            RowBox[{"360", "*", 
-             RowBox[{"n", "/", "365.25"}]}], "]"}]}]}], ")"}]}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"aZero", " ", "=", " ", 
-       RowBox[{"0.4237", " ", "-", " ", 
-        RowBox[{"0.00821", " ", "36"}]}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"aOne", " ", "=", " ", 
-       RowBox[{"0.5055", " ", "+", " ", 
-        RowBox[{"0.00595", " ", 
-         RowBox[{"6.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"k", " ", "=", " ", 
-       RowBox[{"0.2711", " ", "+", " ", 
-        RowBox[{"0.01858", " ", 
-         RowBox[{"2.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"If", "[", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"Cos", "[", "theta", "]"}], "<", "0"}], ",", 
-        "\[IndentingNewLine]", "0", ",", "\[IndentingNewLine]", 
-        RowBox[{"i", " ", 
-         RowBox[{"(", 
-          RowBox[{"aZero", " ", "+", " ", 
-           RowBox[{"aOne", " ", 
-            RowBox[{"E", "^", 
-             RowBox[{"(", 
-              RowBox[{
-               RowBox[{"-", "k"}], "/", 
-               RowBox[{"Cos", "[", "theta", "]"}]}], ")"}]}]}]}], ")"}]}]}], 
-       " ", 
-       RowBox[{"(*", " ", 
-        RowBox[{
-         RowBox[{
-         "If", " ", "the", " ", "sun", " ", "is", " ", "more", " ", "than", 
-          " ", "90", " ", "degrees", " ", "off"}], ",", " ", 
-         RowBox[{
-         "the", " ", "formula", " ", "is", " ", "not", " ", "correct"}], ",", 
-         " ", 
-         RowBox[{
-         "and", " ", "we", " ", "set", " ", "the", " ", "value", " ", "to", 
-          " ", "be", " ", "0"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-       "]"}]}], " ", "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", 
-   RowBox[{"sumOverInterval", ":=", 
-    RowBox[{"Function", "[", " ", 
+         RowBox[{"sunPos", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "*", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", "  ", 
      RowBox[{"(*", " ", 
       RowBox[{
-       RowBox[{"params", ":", " ", 
-        RowBox[{
-        "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}]}], 
-       ",", " ", "date", ",", " ", 
-       RowBox[{"start", " ", "index"}], ",", " ", 
-       RowBox[{
-       "end", " ", "index", "\[IndentingNewLine]", "returns", " ", "sum", " ",
-         "of", " ", "solar", " ", "power", " ", "over", " ", "the", " ", 
-        "day", " ", "at", " ", "every", " ", "hour", " ", "in", " ", "the", 
-        " ", "given", " ", "interval"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{"take", " ", "sum", " ", "of", " ", "every", " ", "index"}], 
-       ",", " ", 
-       RowBox[{"hence", " ", "steps", " ", "of", " ", "one"}]}], " ", "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{"Sum", "[", 
-      RowBox[{
-       RowBox[{"directPower", "[", 
-        RowBox[{"i", ",", "#1", ",", "#2"}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "#3", ",", "#4", ",", "1"}], "}"}]}], "]"}], 
-     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", 
-   RowBox[{"angleInterval", " ", ":=", " ", 
-    RowBox[{"Function", "[", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{"params", ":", " ", "date"}], ",", " ", 
-       RowBox[{"start", " ", "index"}], ",", " ", 
-       RowBox[{"end", " ", "index"}], ",", " ", 
-       RowBox[{
-       "returns", " ", "optimal", " ", "angle", " ", "in", " ", "this", " ", 
-        "interval"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{
-       "Find", " ", "for", " ", "which", " ", "angle", " ", "of", " ", "the", 
-        " ", "solar", " ", "panels", " ", "this", " ", "value", " ", "is", 
-        " ", "maximal"}], ",", 
-       RowBox[{"starting", " ", "at", " ", "0"}]}], " ", "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"res", " ", "=", " ", 
-       RowBox[{"FindMaximum", "[", 
-        RowBox[{
-         RowBox[{"sumOverInterval", "[", 
-          RowBox[{"x", ",", "#1", ",", "#2", ",", "#3"}], "]"}], ",", 
-         RowBox[{"{", 
-          RowBox[{"x", ",", "0", ",", "0", ",", "90"}], "}"}], ",", " ", 
-         RowBox[{"AccuracyGoal", "\[Rule]", "5"}]}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"{", 
-       RowBox[{
-        RowBox[{"res", "[", 
-         RowBox[{"[", "1", "]"}], "]"}], ",", 
-        RowBox[{"x", " ", "/.", " ", 
-         RowBox[{"res", "[", 
-          RowBox[{"[", "2", "]"}], "]"}]}]}], "}"}]}], "\[IndentingNewLine]", 
-     "]"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-   RowBox[{"dayAngles", " ", ":=", " ", 
-    RowBox[{"Function", "[", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{"params", ":", " ", "date"}], ",", " ", 
-       RowBox[{
-        RowBox[{
-        "number", " ", "of", " ", "adjustment", " ", "times", " ", "per", " ",
-          "day"}], " ", "\[GreaterEqual]", " ", 
-        RowBox[{
-        "1.", " ", "returns", " ", "List", " ", "with", " ", "optimal", " ", 
-         "angles", " ", "and", " ", "power", " ", "received", " ", "with", 
-         " ", "that", " ", "angle", " ", "over", " ", "that", " ", 
-         "interval"}]}], ",", " ", 
-       RowBox[{
-       "for", " ", "how", " ", "many", " ", "adjustment", " ", "times", " ", 
-        "were", " ", "specified"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"position", " ", "=", " ", 
-       RowBox[{"GeoPosition", "[", 
-        RowBox[{"{", 
-         RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"sunrise", " ", "=", " ", 
-       RowBox[{"Sunrise", "[", 
-        RowBox[{"position", ",", "#1"}], "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"TimeZoneConvert", "[", 
-       RowBox[{"sunrise", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
-      RowBox[{"sunriseHour", " ", "=", " ", 
-       RowBox[{
-        RowBox[{"DateValue", "[", 
-         RowBox[{"sunrise", ",", "\"\<Hour\>\""}], "]"}], "+", 
-        RowBox[{
-         RowBox[{"DateValue", "[", 
-          RowBox[{"sunrise", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
-         "60"}]}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"sunset", " ", "=", " ", 
-       RowBox[{"Sunset", "[", 
-        RowBox[{"position", ",", "#1"}], "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"TimeZoneConvert", "[", 
-       RowBox[{"sunset", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
-      RowBox[{"sunsetHour", " ", "=", " ", 
-       RowBox[{
-        RowBox[{"DateValue", "[", 
-         RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
-        RowBox[{
-         RowBox[{"DateValue", "[", 
-          RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
-         "60"}]}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{"generate", " ", "sun", " ", "position", " ", "table"}], ",", 
-        " ", 
-        RowBox[{"so", " ", 
-         RowBox[{"angle", "[", "]"}], " ", "can", " ", "access", " ", "it", 
-         " ", "every", " ", "time"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"sunPositions", " ", "=", " ", 
-       RowBox[{"Table", "[", "\[IndentingNewLine]", " ", 
-        RowBox[{
-         RowBox[{"SunPosition", "[", 
-          RowBox[{
-           RowBox[{"GeoPosition", "[", 
-            RowBox[{"{", 
-             RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
-           RowBox[{"DateObject", "[", 
-            RowBox[{"#1", ",", 
-             RowBox[{"{", 
-              RowBox[{"h", "/", "100"}], "}"}]}], "]"}]}], "]"}], ",", 
-         "\[IndentingNewLine]", 
-         RowBox[{"{", 
-          RowBox[{"h", ",", 
-           RowBox[{"sunriseHour", "*", "100"}], ",", 
-           RowBox[{"sunsetHour", "*", "100"}], ",", "10"}], "}"}]}], " ", 
-        RowBox[{"(*", " ", 
-         RowBox[{
-          RowBox[{"steps", " ", "of", " ", ".1", " ", "hours"}], ",", " ", 
-          RowBox[{".02", " ", 
-           RowBox[{"doesn", "'"}], "t", " ", "help"}]}], " ", "*)"}], 
-        "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
-      "\[IndentingNewLine]", 
-      RowBox[{"l", " ", "=", " ", 
-       RowBox[{"Length", "[", "sunPositions", "]"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"Table", "[", " ", 
-       RowBox[{"(*", " ", 
-        RowBox[{
-        "calculates", " ", "indices", " ", "of", " ", "start", " ", "and", 
-         " ", "end", " ", "of", " ", "the", " ", "interval"}], " ", "*)"}], 
-       "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"angleInterval", "[", 
-         RowBox[{"#1", ",", 
-          RowBox[{"1", "+", 
-           RowBox[{"Round", "[", 
-            RowBox[{"l", "*", 
-             RowBox[{"i", "/", "#2"}]}], "]"}]}], ",", 
-          RowBox[{"Round", "[", 
-           RowBox[{"l", "*", 
-            RowBox[{
-             RowBox[{"(", 
-              RowBox[{"i", "+", "1"}], ")"}], "/", "#2"}]}], "]"}]}], "]"}], 
-        "\[IndentingNewLine]", ",", 
-        RowBox[{"{", 
-         RowBox[{"i", ",", "0", ",", 
-          RowBox[{"#2", "-", "1"}]}], "}"}]}], "]"}]}], "\[IndentingNewLine]",
-      "]"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-   RowBox[{"(*", 
-    RowBox[{
-     RowBox[{"twoAnglesOptimal", "[", "]"}], " ", ":=", " ", 
-     RowBox[{"(", "\[IndentingNewLine]", "\[IndentingNewLine]", ")"}]}], 
-    "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"dayPower", "[", "t_", "]"}], " ", ":=", " ", 
-    RowBox[{"(", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{"total", " ", "of", " ", "power"}], " ", "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"sum", " ", "=", " ", "0"}], ";", "\[IndentingNewLine]", 
-      RowBox[{"For", "[", 
-       RowBox[{
-        RowBox[{"i", "=", "1"}], ",", 
-        RowBox[{"i", "<", 
-         RowBox[{
-          RowBox[{"Length", "[", "t", "]"}], "+", "1"}]}], ",", 
-        RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{"sum", " ", "+=", " ", 
-          RowBox[{
-           RowBox[{"t", "[", 
-            RowBox[{"[", "i", "]"}], "]"}], "[", 
-           RowBox[{"[", "1", "]"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
-       "]"}], ";", "\[IndentingNewLine]", "sum"}], " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{"Total", " ", "of", " ", 
-       RowBox[{"W", "/", 
-        SuperscriptBox["m", "1"]}], " ", "received"}], " ", "*)"}], 
-     "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"dayPowerTable", "[", "t_", "]"}], " ", ":=", " ", 
-    RowBox[{"(", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{
-       "list", " ", "of", " ", "power", " ", "received", " ", "for", " ", 
-        "each", " ", "angle"}], "-", "period"}], " ", "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{"Table", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{
-        RowBox[{"t", "[", 
-         RowBox[{"[", "i", "]"}], "]"}], "[", 
-        RowBox[{"[", "1", "]"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", 
-         RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
-      "]"}], "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"dayAnglesTable", "[", "t_", "]"}], " ", ":=", " ", 
-    RowBox[{"(", "\[IndentingNewLine]", 
-     RowBox[{"(*", " ", 
-      RowBox[{"make", " ", "list", " ", "of", " ", "angles"}], " ", "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{"Table", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{
-        RowBox[{"t", "[", 
-         RowBox[{"[", "i", "]"}], "]"}], "[", 
-        RowBox[{"[", "2", "]"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", 
-         RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
-      "]"}], "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"dayAngles", "[", 
-     RowBox[{
-      RowBox[{"DateObject", "[", 
-       RowBox[{"{", 
-        RowBox[{"2016", ",", "7", ",", "18"}], "}"}], "]"}], ",", "1"}], 
-     "]"}], ";"}], " ", 
-   RowBox[{"(*", " ", 
-    RowBox[{
-    "make", " ", "sure", " ", "to", " ", "initialize", " ", "sunPositions", 
-     " ", "table"}], " ", "*)"}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", 
-   RowBox[{"(*", 
-    RowBox[{
-     RowBox[{
-     "**", "**", "**", "**", "**", "**", "**", "**", "**", "**", "**", "**", "**",
-       "**", "**", " ", "END"}], " ", "OF", " ", 
-     RowBox[{
-     "FUNCTIONS", " ", "**", "**", "**", "**", "**", "**", "**", "**", "**", 
-      "**"}], "*"}], "******)"}], "\[IndentingNewLine]", 
-   RowBox[{"(*", " ", 
-    RowBox[{"optimizing", " ", "by", " ", "angle", " ", 
-     RowBox[{"only", "!"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-   RowBox[{"(*", 
-    RowBox[{
-     RowBox[{"dayAngles", "[", 
-      RowBox[{
-       RowBox[{"DateObject", "[", 
-        RowBox[{"{", 
-         RowBox[{"2016", ",", "8", ",", "17"}], "}"}], "]"}], ",", "2"}], 
-      "]"}], " ", "//", "Timing"}], "*)"}], "\[IndentingNewLine]", 
-   RowBox[{"(*", 
-    RowBox[{"res", " ", "=", " ", 
-     RowBox[{
-      RowBox[{"dayAngles", "[", 
-       RowBox[{
-        RowBox[{"DateObject", "[", 
-         RowBox[{"{", 
-          RowBox[{"2016", ",", "8", ",", "19"}], "}"}], "]"}], ",", "14"}], 
-       "]"}], "\[IndentingNewLine]", 
-      RowBox[{"ListPlot", "[", 
-       RowBox[{"Table", "[", 
-        RowBox[{
-         RowBox[{
-          RowBox[{"res", "[", 
-           RowBox[{"[", "i", "]"}], "]"}], "[", 
-          RowBox[{"[", "2", "]"}], "]"}], " ", ",", 
-         RowBox[{"{", 
-          RowBox[{"i", ",", "1", ",", 
-           RowBox[{"Length", "[", "res", "]"}]}], "}"}]}], "]"}], "]"}]}]}], 
-    "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-   RowBox[{"(*", " ", "percentages", " ", "*)"}], "\[IndentingNewLine]", 
-   RowBox[{"(*", 
-    RowBox[{"t", " ", "=", " ", 
-     RowBox[{
-      RowBox[{"Table", "[", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"dayPower", "[", 
-         RowBox[{"dayAngles", "[", 
-          RowBox[{
-           RowBox[{"DateObject", "[", 
-            RowBox[{"{", 
-             RowBox[{"2016", ",", "8", ",", "17"}], "}"}], "]"}], ",", "x"}], 
-          "]"}], "]"}], ",", "\[IndentingNewLine]", 
-        RowBox[{"{", 
-         RowBox[{"x", ",", "1", ",", "10"}], "}"}]}], "\[IndentingNewLine]", 
-       "]"}], "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{"relative", " ", "to", " ", "first"}], " ", "*)"}], 
-      "\[IndentingNewLine]", 
-      RowBox[{"Table", "[", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           RowBox[{"t", "[", 
-            RowBox[{"[", "i", "]"}], "]"}], "-", 
-           RowBox[{"t", "[", 
-            RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "/", 
-         RowBox[{"t", "[", 
-          RowBox[{"[", "1", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
-        RowBox[{"{", 
-         RowBox[{"i", ",", "2", ",", 
-          RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]",
-        "]"}], "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{"relative", " ", "to", " ", "previous"}], " ", "*)"}], 
-      "\[IndentingNewLine]", 
-      RowBox[{"Table", "[", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           RowBox[{"t", "[", 
-            RowBox[{"[", "i", "]"}], "]"}], "-", 
-           RowBox[{"t", "[", 
-            RowBox[{"[", 
-             RowBox[{"i", "-", "1"}], "]"}], "]"}]}], ")"}], "/", 
-         RowBox[{"t", "[", 
-          RowBox[{"[", 
-           RowBox[{"i", "-", "1"}], "]"}], "]"}]}], ",", 
-        "\[IndentingNewLine]", 
-        RowBox[{"{", 
-         RowBox[{"i", ",", "2", ",", 
-          RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]",
-        "]"}]}]}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-   RowBox[{"(*", 
-    RowBox[{
-     RowBox[{"DiscretePlot", "[", " ", 
-      RowBox[{
-       RowBox[{"dayPower", "[", 
-        RowBox[{"dayAngles", "[", 
-         RowBox[{
-          RowBox[{"DateObject", "[", 
-           RowBox[{"{", 
-            RowBox[{"2016", ",", "7", ",", "18"}], "}"}], "]"}], ",", "x"}], 
-         "]"}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"x", ",", "1", ",", "20", ",", "1"}], "}"}]}], "]"}], " ", "//",
-      "Timing"}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-   RowBox[{"(*", " ", 
-    RowBox[{"find", " ", "div", 
-     RowBox[{"(", "ision", ")"}], " ", "where", " ", "total", " ", 
-     RowBox[{"W", "/", 
-      SuperscriptBox["m", "m"]}], " ", "is", " ", "biggest"}], " ", "*)"}], 
-   "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"totalPower", "[", 
-     RowBox[{"d_", ",", "v_"}], "]"}], " ", ":=", " ", 
-    RowBox[{"(", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{"params", ":", " ", "date"}], ",", " ", 
-       RowBox[{
-       "division", " ", "as", " ", "index", " ", "of", " ", 
-        "sunPositions"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"first", " ", "=", " ", 
-       RowBox[{"angleInterval", "[", 
-        RowBox[{"d", ",", "1", ",", "v"}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"second", " ", "=", " ", 
-       RowBox[{"angleInterval", "[", 
-        RowBox[{"d", ",", 
-         RowBox[{"v", "+", "1"}], ",", "l"}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"total", " ", "=", " ", 
-       RowBox[{
-        RowBox[{"first", "[", 
-         RowBox[{"[", "1", "]"}], "]"}], " ", "+", " ", 
-        RowBox[{"second", "[", 
-         RowBox[{"[", "1", "]"}], "]"}]}]}]}], "\[IndentingNewLine]", 
-     RowBox[{"(*", 
-      RowBox[{"angles", " ", "=", " ", 
-       RowBox[{"{", 
-        RowBox[{
-         RowBox[{"first", "[", 
-          RowBox[{"[", "2", "]"}], "]"}], ",", 
-         RowBox[{"second", "[", 
-          RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "*)"}], 
-     "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", " ", 
-   RowBox[{
-    RowBox[{"twoAnglesOptimal", "[", "d_", "]"}], " ", ":=", " ", 
-    RowBox[{"(", "  ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-       RowBox[{
-        RowBox[{"params", ":", " ", "date"}], ";", " ", 
-        RowBox[{"returns", " ", "in", " ", "a", " ", "list", " ", "the", " ", 
-         RowBox[{"date", "/", "time"}], " ", "at", " ", "which", " ", "to", 
-         " ", "change", " ", "the", " ", "angle", " ", "of", " ", "solar", 
-         " ", "panels", " ", 
-         RowBox[{"(", 
-          RowBox[{"besides", " ", "before", " ", "sunrise"}], ")"}], " ", 
-         "to", " ", "get", " ", "optimal", " ", "power"}]}], ",", " ", 
-       RowBox[{
-       "then", " ", "the", " ", "percent", " ", "increase", " ", "of", " ", 
-        "power", " ", "compared", " ", "to", " ", "one", " ", "setting", " ", 
-        "for", " ", "the", " ", "whole", " ", "day"}], ",", " ", 
-       RowBox[{
-       "then", " ", "the", " ", "percent", " ", "increase", " ", "compared", 
-        " ", "to", " ", "one", " ", "setting", " ", "if", " ", "you", " ", 
-        "would", " ", "adjust", " ", "fourteen", " ", "times", " ", "a", " ", 
-        "day"}], ",", " ", 
-       RowBox[{
-       "spread", " ", "evenly", " ", "over", " ", "the", " ", "day"}]}], " ", 
+       RowBox[{"Azimuth", " ", "of", " ", "sun", " ", "position"}], ",", " ", 
+       RowBox[{"0", " ", "due", " ", "South"}], ",", " ", 
+       RowBox[{"negative", " ", "to", " ", "the", " ", "east"}]}], " ", 
       "*)"}], "\[IndentingNewLine]", 
      RowBox[{"(*", " ", 
       RowBox[{
-       RowBox[{"for", " ", "two", " ", "angles", " ", "per", " ", "day"}], 
-       ",", " ", 
        RowBox[{
-       "find", " ", "optimal", " ", "time", " ", "of", " ", "angle", " ", 
-        "change"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", 
+       "Because", " ", "Mathematica", " ", "gives", " ", "azimuth", " ", "in",
+         " ", "compass", " ", "angle"}], ",", " ", 
+       RowBox[{"we", " ", "subtract", " ", "180", " ", "degrees"}]}], " ", 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"gammaS", " ", "=", " ", 
+      RowBox[{"gammaS", " ", "-", " ", "Pi"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"thetaS", "=", " ", 
+      RowBox[{
+       RowBox[{"QuantityMagnitude", "[", 
+        RowBox[{"Quantity", "[", 
+         RowBox[{"sunPos", "[", 
+          RowBox[{"[", "2", "]"}], "]"}], "]"}], "]"}], "*", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
      RowBox[{"(*", " ", 
-      RowBox[{"some", " ", "initialisation"}], " ", "*)"}], 
+      RowBox[{"Sun", " ", "altitude"}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"gammaP", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"-", "22"}], " ", "*", " ", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"Solar", " ", "panels", " ", "azimuth"}], " ", "*)"}], 
      "\[IndentingNewLine]", 
+     RowBox[{"thetaP", " ", "=", " ", 
+      RowBox[{"a", " ", "*", " ", 
+       RowBox[{"Pi", "/", "180"}]}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "Solar", " ", "panels", " ", "angle", " ", "with", " ", "horizontal"}], 
+      " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"ArcCos", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Cos", "[", 
+         RowBox[{"gammaP", "-", "gammaS"}], "]"}], " ", 
+        RowBox[{"Cos", "[", "thetaS", "]"}], " ", 
+        RowBox[{"Sin", "[", "thetaP", "]"}]}], "+", 
+       RowBox[{
+        RowBox[{"Cos", "[", "thetaP", "]"}], " ", 
+        RowBox[{"Sin", "[", "thetaS", "]"}]}]}], "]"}]}], 
+    "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "parameters", " ", "from", " ", "urban", " ", "visibility", " ", "haze", 
+    " ", "model"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"directPower", "[", 
+    RowBox[{
+     RowBox[{"x_", "?", "NumericQ"}], ",", 
+     RowBox[{"a_", "?", "NumericQ"}], ",", "d_"}], "]"}], "  ", ":=", " ", 
+   RowBox[{"(", " ", 
+    RowBox[{"(*", " ", 
      RowBox[{
-      RowBox[{"position", " ", "=", " ", 
-       RowBox[{"GeoPosition", "[", 
-        RowBox[{"{", 
-         RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"sunrise", " ", "=", " ", 
-       RowBox[{"Sunrise", "[", 
-        RowBox[{"position", ",", "d"}], "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"TimeZoneConvert", "[", 
-       RowBox[{"sunrise", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
-      RowBox[{"sunriseHour", " ", "=", " ", 
+      RowBox[{"param", ":", " ", "index"}], ",", " ", 
+      RowBox[{
+      "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}], ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"date", ".", " ", "returns"}], " ", 
+       RowBox[{"W", "/", 
+        SuperscriptBox["m", "2"]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"theta", "=", 
+      RowBox[{"angle", "[", 
+       RowBox[{"x", ",", "a", ",", "d"}], "]"}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"solar", " ", "zenith", " ", 
+       RowBox[{"(", "misalignment", ")"}], " ", "in", " ", "radians"}], " ", 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
        RowBox[{
-        RowBox[{"DateValue", "[", 
-         RowBox[{"sunrise", ",", "\"\<Hour\>\""}], "]"}], "+", 
-        RowBox[{
-         RowBox[{"DateValue", "[", 
-          RowBox[{"sunrise", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
-         "60"}]}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"sunset", " ", "=", " ", 
-       RowBox[{"Sunset", "[", 
-        RowBox[{"position", ",", "d"}], "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"TimeZoneConvert", "[", 
-       RowBox[{"sunset", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
-      RowBox[{"sunsetHour", " ", "=", " ", 
+       "here", " ", "comes", " ", "the", " ", "magik", " ", "formula", " ", 
+        "from", " ", 
+        RowBox[{"http", ":"}]}], "//", 
        RowBox[{
-        RowBox[{"DateValue", "[", 
-         RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
         RowBox[{
-         RowBox[{"DateValue", "[", 
-          RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
-         "60"}]}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{"generate", " ", "sun", " ", "position", " ", "table"}], ",", 
-        " ", 
-        RowBox[{"so", " ", 
-         RowBox[{"angle", "[", "]"}], " ", "can", " ", "access", " ", "it", 
-         " ", "every", " ", "time"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"sunPositions", " ", "=", " ", 
-       RowBox[{"Table", "[", "\[IndentingNewLine]", " ", 
-        RowBox[{
-         RowBox[{"SunPosition", "[", 
+         RowBox[{
           RowBox[{
-           RowBox[{"GeoPosition", "[", 
-            RowBox[{"{", 
-             RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
-           RowBox[{"DateObject", "[", 
-            RowBox[{"d", ",", 
-             RowBox[{"{", 
-              RowBox[{"h", "/", "100"}], "}"}]}], "]"}]}], "]"}], ",", 
-         "\[IndentingNewLine]", 
-         RowBox[{"{", 
-          RowBox[{"h", ",", 
-           RowBox[{"sunriseHour", "*", "100"}], ",", 
-           RowBox[{"sunsetHour", "*", "100"}], ",", "10"}], "}"}]}], " ", 
-        RowBox[{"(*", " ", 
-         RowBox[{
-          RowBox[{"steps", " ", "of", " ", ".1", " ", "hours"}], ",", " ", 
-          RowBox[{".02", " ", 
-           RowBox[{"doesn", "'"}], "t", " ", "help"}]}], " ", "*)"}], 
-        "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"l", " ", "=", " ", 
-       RowBox[{"Length", "[", "sunPositions", "]"}]}], ";", 
-      "\[IndentingNewLine]", 
+           RowBox[{"www", ".", "powerfromthesun", ".", "net"}], "/", "Book"}],
+           "/", "chapter02"}], "/", 
+         RowBox[{"chapter02", ".", "html"}]}], "#ZEqnNum929295", " ", "for", 
+        " ", "a", " ", "clear", " ", "day"}]}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"n", "=", " ", 
+      RowBox[{"QuantityMagnitude", "[", 
+       RowBox[{"Quantity", "[", 
+        RowBox[{"d", " ", "-", " ", 
+         RowBox[{"DateObject", "[", 
+          RowBox[{"{", 
+           RowBox[{"2016", ",", "1", ",", "1"}], "}"}], "]"}]}], "]"}], 
+       "]"}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"day", " ", "of", " ", "year"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"i", "=", " ", 
+      RowBox[{"1367", " ", 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         RowBox[{"0.034", " ", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"360", "*", 
+            RowBox[{"n", "/", "365.25"}]}], "]"}]}]}], ")"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"aZero", " ", "=", " ", 
+      RowBox[{"0.2538", " ", "-", " ", 
+       RowBox[{"0.0063", " ", "36"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"aOne", " ", "=", " ", 
+      RowBox[{"0.7678", " ", "+", " ", 
+       RowBox[{"0.001", " ", 
+        RowBox[{"6.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"k", " ", "=", " ", 
+      RowBox[{"0.249", " ", "+", " ", 
+       RowBox[{"0.081", " ", 
+        RowBox[{"2.5", "^", "2"}]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Cos", "[", "theta", "]"}], "<", "0"}], ",", 
+       "\[IndentingNewLine]", "0", ",", "\[IndentingNewLine]", 
+       RowBox[{"i", " ", 
+        RowBox[{"(", 
+         RowBox[{"aZero", " ", "+", " ", 
+          RowBox[{"aOne", " ", 
+           RowBox[{"E", "^", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"-", "k"}], "/", 
+              RowBox[{"Cos", "[", "theta", "]"}]}], ")"}]}]}]}], ")"}]}]}], 
+      " ", 
       RowBox[{"(*", " ", 
        RowBox[{
-       "steps", " ", "of", " ", "about", " ", "one", " ", "per", " ", "hour", 
-        " ", "is", " ", 
-        RowBox[{"l", "/", 
-         RowBox[{"12", "?"}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"(*", 
-       RowBox[{"DiscretePlot", "[", 
         RowBox[{
-         RowBox[{"totalPower", "[", 
-          RowBox[{"d", ",", "v"}], "]"}], ",", 
-         RowBox[{"{", 
-          RowBox[{"v", ",", 
-           RowBox[{"Round", "[", 
-            RowBox[{"l", "/", "2"}], "]"}], ",", "l", ",", 
-           RowBox[{"Round", "[", 
-            RowBox[{"l", "/", "12"}], "]"}]}], "}"}], ",", 
-         RowBox[{"ImageSize", " ", "\[Rule]", " ", "Large"}]}], "]"}], "*)"}],
-       "\[IndentingNewLine]", 
-      RowBox[{"t", " ", "=", " ", 
+        "If", " ", "the", " ", "sun", " ", "is", " ", "more", " ", "than", 
+         " ", "90", " ", "degrees", " ", "off"}], ",", " ", 
+        RowBox[{
+        "the", " ", "formula", " ", "is", " ", "not", " ", "correct"}], ",", 
+        " ", 
+        RowBox[{
+        "and", " ", "we", " ", "set", " ", "the", " ", "value", " ", "to", 
+         " ", "be", " ", "0"}]}], " ", "*)"}], "\[IndentingNewLine]", "]"}]}],
+     " ", "\[IndentingNewLine]", ")"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sumOverInterval", ":=", 
+   RowBox[{"Function", "[", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"params", ":", " ", 
        RowBox[{
-        RowBox[{"Table", "[", 
+       "solar", " ", "panel", " ", "angle", " ", "in", " ", "degrees"}]}], 
+      ",", " ", "date", ",", " ", 
+      RowBox[{"start", " ", "index"}], ",", " ", 
+      RowBox[{
+      "end", " ", "index", "\[IndentingNewLine]", "returns", " ", "sum", " ", 
+       "of", " ", "solar", " ", "power", " ", "over", " ", "the", " ", "day", 
+       " ", "at", " ", "every", " ", "hour", " ", "in", " ", "the", " ", 
+       "given", " ", "interval"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"take", " ", "sum", " ", "of", " ", "every", " ", "index"}], 
+      ",", " ", 
+      RowBox[{"hence", " ", "steps", " ", "of", " ", "one"}]}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"Sum", "[", 
+     RowBox[{
+      RowBox[{"directPower", "[", 
+       RowBox[{"i", ",", "#1", ",", "#2"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "#3", ",", "#4", ",", "1"}], "}"}]}], "]"}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"angleInterval", " ", ":=", " ", 
+   RowBox[{"Function", "[", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"params", ":", " ", "date"}], ",", " ", 
+      RowBox[{"start", " ", "index"}], ",", " ", 
+      RowBox[{"end", " ", "index"}], ",", " ", 
+      RowBox[{
+      "returns", " ", "optimal", " ", "angle", " ", "in", " ", "this", " ", 
+       "interval"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{
+      "Find", " ", "for", " ", "which", " ", "angle", " ", "of", " ", "the", 
+       " ", "solar", " ", "panels", " ", "this", " ", "value", " ", "is", " ",
+        "maximal"}], ",", 
+      RowBox[{"starting", " ", "at", " ", "0"}]}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"res", " ", "=", " ", 
+      RowBox[{"FindMaximum", "[", 
+       RowBox[{
+        RowBox[{"sumOverInterval", "[", 
+         RowBox[{"x", ",", "#1", ",", "#2", ",", "#3"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"x", ",", "0", ",", "0", ",", "90"}], "}"}], ",", " ", 
+        RowBox[{"AccuracyGoal", "\[Rule]", "5"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"res", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", 
+       RowBox[{"x", " ", "/.", " ", 
+        RowBox[{"res", "[", 
+         RowBox[{"[", "2", "]"}], "]"}]}]}], "}"}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dayAngles", " ", ":=", " ", 
+   RowBox[{"Function", "[", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"params", ":", " ", "date"}], ",", " ", 
+      RowBox[{
+       RowBox[{
+       "number", " ", "of", " ", "adjustment", " ", "times", " ", "per", " ", 
+        "day"}], " ", "\[GreaterEqual]", " ", 
+       RowBox[{
+       "1.", " ", "returns", " ", "List", " ", "with", " ", "optimal", " ", 
+        "angles", " ", "and", " ", "power", " ", "received", " ", "with", " ",
+         "that", " ", "angle", " ", "over", " ", "that", " ", "interval"}]}], 
+      ",", " ", 
+      RowBox[{
+      "for", " ", "how", " ", "many", " ", "adjustment", " ", "times", " ", 
+       "were", " ", "specified"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"position", " ", "=", " ", 
+      RowBox[{"GeoPosition", "[", 
+       RowBox[{"{", 
+        RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"sunrise", " ", "=", " ", 
+      RowBox[{"Sunrise", "[", 
+       RowBox[{"position", ",", "#1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"TimeZoneConvert", "[", 
+      RowBox[{"sunrise", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunriseHour", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunrise", ",", "\"\<Hour\>\""}], "]"}], "+", 
+       RowBox[{
+        RowBox[{"DateValue", "[", 
+         RowBox[{"sunrise", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+        "60"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunset", " ", "=", " ", 
+      RowBox[{"Sunset", "[", 
+       RowBox[{"position", ",", "#1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"TimeZoneConvert", "[", 
+      RowBox[{"sunset", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunsetHour", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
+       RowBox[{
+        RowBox[{"DateValue", "[", 
+         RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+        "60"}]}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"generate", " ", "sun", " ", "position", " ", "table"}], ",", 
+       " ", 
+       RowBox[{"so", " ", 
+        RowBox[{"angle", "[", "]"}], " ", "can", " ", "access", " ", "it", 
+        " ", "every", " ", "time"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"sunPositions", " ", "=", " ", 
+      RowBox[{"Table", "[", "\[IndentingNewLine]", " ", 
+       RowBox[{
+        RowBox[{"SunPosition", "[", 
          RowBox[{
-          RowBox[{"{", 
-           RowBox[{"v", ",", 
-            RowBox[{"totalPower", "[", 
-             RowBox[{"d", ",", "v"}], "]"}]}], "}"}], ",", 
-          RowBox[{"{", 
-           RowBox[{"v", ",", 
-            RowBox[{"Round", "[", 
-             RowBox[{"l", "/", "2"}], "]"}], ",", 
-            RowBox[{"Round", "[", 
-             RowBox[{"4", " ", 
-              RowBox[{"l", "/", "5"}]}], "]"}], ",", 
-            RowBox[{"Round", "[", 
-             RowBox[{"l", "/", "12"}], "]"}]}], "}"}]}], "]"}], 
+          RowBox[{"GeoPosition", "[", 
+           RowBox[{"{", 
+            RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
+          RowBox[{"DateObject", "[", 
+           RowBox[{"#1", ",", 
+            RowBox[{"{", 
+             RowBox[{"h", "/", "100"}], "}"}]}], "]"}]}], "]"}], ",", 
         "\[IndentingNewLine]", 
-        RowBox[{"max", " ", "=", " ", 
-         RowBox[{"Max", "[", "t", "]"}]}]}]}], ";", " ", 
+        RowBox[{"{", 
+         RowBox[{"h", ",", 
+          RowBox[{"sunriseHour", "*", "100"}], ",", 
+          RowBox[{"sunsetHour", "*", "100"}], ",", "10"}], "}"}]}], " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+         RowBox[{"steps", " ", "of", " ", ".1", " ", "hours"}], ",", " ", 
+         RowBox[{".02", " ", 
+          RowBox[{"doesn", "'"}], "t", " ", "help"}]}], " ", "*)"}], 
+       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"l", " ", "=", " ", 
+      RowBox[{"Length", "[", "sunPositions", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Table", "[", " ", 
       RowBox[{"(*", " ", 
        RowBox[{
-       "total", " ", "power", " ", "over", " ", "the", " ", "day", " ", 
-        "with", " ", "this", " ", "setting"}], " ", "*)"}], 
+       "calculates", " ", "indices", " ", "of", " ", "start", " ", "and", " ",
+         "end", " ", "of", " ", "the", " ", "interval"}], " ", "*)"}], 
       "\[IndentingNewLine]", 
-      RowBox[{"index", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"angleInterval", "[", 
+        RowBox[{"#1", ",", 
+         RowBox[{"1", "+", 
+          RowBox[{"Round", "[", 
+           RowBox[{"l", "*", 
+            RowBox[{"i", "/", "#2"}]}], "]"}]}], ",", 
+         RowBox[{"Round", "[", 
+          RowBox[{"l", "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"i", "+", "1"}], ")"}], "/", "#2"}]}], "]"}]}], "]"}], 
+       "\[IndentingNewLine]", ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "0", ",", 
+         RowBox[{"#2", "-", "1"}]}], "}"}]}], "]"}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"twoAnglesOptimal", "[", "]"}], " ", ":=", " ", 
+    RowBox[{"(", "\[IndentingNewLine]", "\[IndentingNewLine]", ")"}]}], 
+   "*)"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"dayPower", "[", "t_", "]"}], " ", ":=", " ", 
+   RowBox[{"(", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"total", " ", "of", " ", "power"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"sum", " ", "=", " ", "0"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"i", "=", "1"}], ",", 
+       RowBox[{"i", "<", 
+        RowBox[{
+         RowBox[{"Length", "[", "t", "]"}], "+", "1"}]}], ",", 
+       RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"sum", " ", "+=", " ", 
+         RowBox[{
+          RowBox[{"t", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
+      "]"}], ";", "\[IndentingNewLine]", "sum"}], " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Total", " ", "of", " ", 
+      RowBox[{"W", "/", 
+       SuperscriptBox["m", "1"]}], " ", "received"}], " ", "*)"}], 
+    "\[IndentingNewLine]", ")"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"dayPowerTable", "[", "t_", "]"}], " ", ":=", " ", 
+   RowBox[{"(", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{
+      "list", " ", "of", " ", "power", " ", "received", " ", "for", " ", 
+       "each", " ", "angle"}], "-", "period"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"t", "[", 
+        RowBox[{"[", "i", "]"}], "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
+     "]"}], "\[IndentingNewLine]", ")"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"dayAnglesTable", "[", "t_", "]"}], " ", ":=", " ", 
+   RowBox[{"(", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"make", " ", "list", " ", "of", " ", "angles"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"t", "[", 
+        RowBox[{"[", "i", "]"}], "]"}], "[", 
+       RowBox[{"[", "2", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
+     "]"}], "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{"find", " ", "div", 
+    RowBox[{"(", "ision", ")"}], " ", "where", " ", "total", " ", 
+    RowBox[{"W", "/", 
+     SuperscriptBox["m", "m"]}], " ", "is", " ", "biggest"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"totalPower", "[", 
+    RowBox[{"d_", ",", "v_"}], "]"}], " ", ":=", " ", 
+   RowBox[{"(", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"params", ":", " ", "date"}], ",", " ", 
+      RowBox[{"division", " ", "as", " ", "index", " ", "of", " ", 
+       RowBox[{"sunPositions", ".", " ", "returns"}], " ", "total", " ", 
+       "power", " ", "of", " ", "day"}], ",", " ", 
+      RowBox[{"and", " ", "list", " ", "with", " ", "two", " ", "angles"}]}], 
+     " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"first", " ", "=", " ", 
+      RowBox[{"angleInterval", "[", 
+       RowBox[{"d", ",", "1", ",", "v"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"second", " ", "=", " ", 
+      RowBox[{"angleInterval", "[", 
+       RowBox[{"d", ",", 
+        RowBox[{"v", "+", "1"}], ",", "l"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"total", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"first", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], " ", "+", " ", 
+       RowBox[{"second", "[", 
+        RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"angles", " ", "=", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"first", "[", 
+         RowBox[{"[", "2", "]"}], "]"}], ",", 
+        RowBox[{"second", "[", 
+         RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"total", ",", "angles"}], "}"}]}], "\[IndentingNewLine]", 
+    ")"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", " ", 
+  RowBox[{"(*", "  ", 
+   RowBox[{
+    RowBox[{
+    "NOTE", " ", "for", " ", "a", " ", "preciser", " ", "adjustment", " ", 
+     "time"}], ",", " ", 
+    RowBox[{"change", " ", "step", " ", "size", " ", "where", " ", 
+     RowBox[{"noted", ".", " ", "will"}], " ", "increase", " ", "running", 
+     " ", "time", " ", "by", " ", "as", " ", "much", " ", "steps", " ", "are",
+      " ", "added", " ", "times", " ", "around", " ", "three", " ", 
+     "seconds"}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"twoAnglesOptimal", "[", "d_", "]"}], " ", ":=", " ", 
+   RowBox[{"(", "  ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"params", ":", " ", "date"}], ";", " ", 
+       RowBox[{"returns", " ", "in", " ", "a", " ", "list", " ", "the", " ", 
+        RowBox[{"date", "/", "time"}], " ", "at", " ", "which", " ", "to", 
+        " ", "change", " ", "the", " ", "angle", " ", "of", " ", "solar", " ",
+         "panels", " ", 
+        RowBox[{"(", 
+         RowBox[{"besides", " ", "before", " ", "sunrise"}], ")"}], " ", "to",
+         " ", "get", " ", "optimal", " ", "power"}]}], ",", " ", 
+      RowBox[{
+      "then", " ", "the", " ", "two", " ", "angles", " ", "of", " ", "the", 
+       " ", "day"}], ",", " ", 
+      RowBox[{
+      "then", " ", "the", " ", "percent", " ", "increase", " ", "of", " ", 
+       "power", " ", "compared", " ", "to", " ", "one", " ", "setting", " ", 
+       "for", " ", "the", " ", "whole", " ", "day"}], ",", " ", 
+      RowBox[{
+      "then", " ", "the", " ", "percent", " ", "increase", " ", "compared", 
+       " ", "to", " ", "one", " ", "setting", " ", "if", " ", "you", " ", 
+       "would", " ", "adjust", " ", "fourteen", " ", "times", " ", "a", " ", 
+       "day"}], ",", " ", 
+      RowBox[{
+      "spread", " ", "evenly", " ", "over", " ", "the", " ", "day"}]}], " ", 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+      RowBox[{"for", " ", "two", " ", "angles", " ", "per", " ", "day"}], ",",
+       " ", 
+      RowBox[{
+      "find", " ", "optimal", " ", "time", " ", "of", " ", "angle", " ", 
+       "change"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "some", " ", "initialisation", " ", "of", " ", "the", " ", "sunposition",
+       " ", "table"}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"position", " ", "=", " ", 
+      RowBox[{"GeoPosition", "[", 
+       RowBox[{"{", 
+        RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"sunrise", " ", "=", " ", 
+      RowBox[{"Sunrise", "[", 
+       RowBox[{"position", ",", "d"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"TimeZoneConvert", "[", 
+      RowBox[{"sunrise", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunriseHour", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunrise", ",", "\"\<Hour\>\""}], "]"}], "+", 
+       RowBox[{
+        RowBox[{"DateValue", "[", 
+         RowBox[{"sunrise", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+        "60"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunset", " ", "=", " ", 
+      RowBox[{"Sunset", "[", 
+       RowBox[{"position", ",", "d"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"TimeZoneConvert", "[", 
+      RowBox[{"sunset", ",", "2"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"sunsetHour", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"DateValue", "[", 
+        RowBox[{"sunset", ",", "\"\<Hour\>\""}], "]"}], " ", "+", " ", 
+       RowBox[{
+        RowBox[{"DateValue", "[", 
+         RowBox[{"sunset", ",", " ", "\"\<Minute\>\""}], "]"}], "/", 
+        "60"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"generate", " ", "sun", " ", "position", " ", "table"}], ",", 
+       " ", 
+       RowBox[{"so", " ", 
+        RowBox[{"angle", "[", "]"}], " ", "can", " ", "access", " ", "it", 
+        " ", "every", " ", "time"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"sunPositions", " ", "=", " ", 
+      RowBox[{"Table", "[", "\[IndentingNewLine]", " ", 
+       RowBox[{
+        RowBox[{"SunPosition", "[", 
+         RowBox[{
+          RowBox[{"GeoPosition", "[", 
+           RowBox[{"{", 
+            RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}], ",", 
+          RowBox[{"DateObject", "[", 
+           RowBox[{"d", ",", 
+            RowBox[{"{", 
+             RowBox[{"h", "/", "100"}], "}"}]}], "]"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"h", ",", 
+          RowBox[{"sunriseHour", "*", "100"}], ",", 
+          RowBox[{"sunsetHour", "*", "100"}], ",", "10"}], "}"}]}], " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+         RowBox[{"steps", " ", "of", " ", ".1", " ", "hours"}], ",", " ", 
+         RowBox[{".02", " ", 
+          RowBox[{"doesn", "'"}], "t", " ", "help"}]}], " ", "*)"}], 
+       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"l", " ", "=", " ", 
+      RowBox[{"Length", "[", "sunPositions", "]"}]}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "steps", " ", "of", " ", "about", " ", "one", " ", "per", " ", "hour", 
+       " ", "is", " ", 
+       RowBox[{"l", "/", "14"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"DiscretePlot", "[", 
+       RowBox[{
+        RowBox[{"totalPower", "[", 
+         RowBox[{"d", ",", "v"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"v", ",", 
+          RowBox[{"Round", "[", 
+           RowBox[{"l", "/", "2"}], "]"}], ",", "l", ",", 
+          RowBox[{"Round", "[", 
+           RowBox[{"l", "/", "12"}], "]"}]}], "}"}], ",", 
+        RowBox[{"ImageSize", " ", "\[Rule]", " ", "Large"}]}], "]"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"t", " ", "=", " ", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"v", ",", 
+          RowBox[{"totalPower", "[", 
+           RowBox[{"d", ",", "v"}], "]"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"v", ",", 
+          RowBox[{"Round", "[", 
+           RowBox[{"l", "/", "2"}], "]"}], ",", 
+          RowBox[{"Round", "[", 
+           RowBox[{"4", " ", 
+            RowBox[{"l", "/", "5"}]}], "]"}], ",", 
+          RowBox[{"Round", "[", 
+           RowBox[{"l", "/", "14"}], "]"}]}], "}"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"max", " ", "=", " ", 
+      RowBox[{"Max", "[", "t", "]"}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "total", " ", "power", " ", "over", " ", "the", " ", "day", " ", "with",
+        " ", "this", " ", "setting"}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"index", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"t", "[", 
+        RowBox[{"[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Position", "[", 
+            RowBox[{"t", ",", 
+             RowBox[{"Max", "[", "t", "]"}]}], "]"}], "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}], " ", ";", "\[IndentingNewLine]", 
+     RowBox[{"angles", " ", "=", " ", 
+      RowBox[{
        RowBox[{
         RowBox[{"t", "[", 
          RowBox[{"[", 
@@ -796,86 +721,206 @@ Cell[BoxData[
               RowBox[{"Max", "[", "t", "]"}]}], "]"}], "[", 
             RowBox[{"[", "1", "]"}], "]"}], "[", 
            RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}], "[", 
-        RowBox[{"[", "1", "]"}], "]"}]}], " ", ";", 
-      RowBox[{"(*", " ", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", "2", "]"}], "]"}]}], " ", ";", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"brackets", "!"}], " ", "gives", " ", "index", " ", "around", 
+       " ", "which", " ", "the", " ", "highest", " ", "total", " ", 
+       "resides"}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{"index", " ", "back", " ", "to", " ", "time"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"hour", " ", "=", 
+      RowBox[{
        RowBox[{
-        RowBox[{"brackets", "!"}], " ", "gives", " ", "index", " ", "around", 
-        " ", "which", " ", "the", " ", "highest", " ", "total", " ", 
-        "resides"}], " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{"index", " ", "back", " ", "to", " ", "time"}], " ", "*)"}], 
-      "\[IndentingNewLine]", 
-      RowBox[{"hour", " ", "=", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{"index", "/", "l"}], ")"}], "*", 
-         RowBox[{"(", 
-          RowBox[{"sunsetHour", " ", "-", " ", "sunriseHour"}], ")"}]}], "+", 
-        "sunriseHour"}]}], " ", ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-       "the", " ", "hour", " ", "at", " ", "which", " ", "to", " ", "set", 
-        " ", "the", " ", "solar", " ", "panels", " ", "second", " ", "time"}],
-        " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-       "find", " ", "percentage", " ", "increase", " ", "in", " ", "power"}], 
-       " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"onePower", " ", "=", " ", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"dayAngles", "[", 
-          RowBox[{"d", ",", "1"}], "]"}], "[", 
-         RowBox[{"[", "1", "]"}], "]"}], "[", 
-        RowBox[{"[", "1", "]"}], "]"}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{"find", " ", "power", " ", "for", " ", "one", " ", "time"}], 
-       " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-       "compare", " ", "with", " ", "percent", " ", "increase", " ", "in", 
-        " ", "power", " ", "if", " ", 
-        RowBox[{"you", "'"}], "d", " ", "adjust", " ", "10", " ", "times", 
-        " ", "a", " ", "day", " ", 
         RowBox[{"(", 
-         RowBox[{"not", " ", "optimised"}], ")"}]}], " ", "*)"}], 
-      "\[IndentingNewLine]", 
-      RowBox[{"tenPower", "=", " ", 
+         RowBox[{"index", "/", "l"}], ")"}], "*", 
+        RowBox[{"(", 
+         RowBox[{"sunsetHour", " ", "-", " ", "sunriseHour"}], ")"}]}], "+", 
+       "sunriseHour"}]}], " ", ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "the", " ", "hour", " ", "at", " ", "which", " ", "to", " ", "set", " ",
+        "the", " ", "solar", " ", "panels", " ", "second", " ", "time"}], " ",
+       "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "find", " ", "percentage", " ", "increase", " ", "in", " ", "power"}], 
+      " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"onePower", " ", "=", " ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"dayAngles", "[", 
+         RowBox[{"d", ",", "1"}], "]"}], "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}], ";", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"find", " ", "power", " ", "for", " ", "one", " ", "time"}], 
+      " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "compare", " ", "with", " ", "percent", " ", "increase", " ", "in", " ",
+        "power", " ", "if", " ", 
+       RowBox[{"you", "'"}], "d", " ", "adjust", " ", "10", " ", "times", " ",
+        "a", " ", "day", " ", 
+       RowBox[{"(", 
+        RowBox[{"not", " ", "optimised"}], ")"}]}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"tenPower", "=", " ", 
+      RowBox[{"dayPower", "[", 
+       RowBox[{"dayAngles", "[", 
+        RowBox[{"d", ",", "14"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{"return", " ", "values"}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"DateObject", "[", 
+        RowBox[{"d", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"IntegerPart", "[", "hour", "]"}], ",", 
+           RowBox[{"Round", "[", 
+            RowBox[{
+             RowBox[{"FractionalPart", "[", "hour", "]"}], "*", "60"}], 
+            "]"}]}], "}"}]}], "]"}], ",", "angles", ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"max", " ", "-", " ", "onePower"}], ")"}], "/", 
+         "onePower"}], " ", "*", " ", "100"}], ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"tenPower", " ", "-", " ", "onePower"}], ")"}], "/", 
+         "onePower"}], " ", "*", " ", "100"}]}], "}"}]}], 
+    "\[IndentingNewLine]", ")"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dayAngles", "[", 
+   RowBox[{
+    RowBox[{"DateObject", "[", 
+     RowBox[{"{", 
+      RowBox[{"2016", ",", "7", ",", "18"}], "}"}], "]"}], ",", "1"}], "]"}], 
+  ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "make", " ", "sure", " ", "to", " ", "initialize", " ", "sunPositions", 
+    " ", "table"}], " ", "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "**", "**", "**", "**", "**", "**", "**", "**", "**", "**", "**", "**", "**",
+      "**", "**", " ", "END"}], " ", "OF", " ", 
+    RowBox[{
+    "FUNCTIONS", " ", "**", "**", "**", "**", "**", "**", "**", "**", "**", 
+     "**"}], "*"}], "******)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{"optimizing", " ", "by", " ", "angle", " ", 
+    RowBox[{"only", "!"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"dayAngles", "[", 
+     RowBox[{
+      RowBox[{"DateObject", "[", 
+       RowBox[{"{", 
+        RowBox[{"2016", ",", "8", ",", "17"}], "}"}], "]"}], ",", "2"}], 
+     "]"}], " ", "//", "Timing"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"res", " ", "=", " ", 
+    RowBox[{
+     RowBox[{"dayAngles", "[", 
+      RowBox[{
+       RowBox[{"DateObject", "[", 
+        RowBox[{"{", 
+         RowBox[{"2016", ",", "8", ",", "19"}], "}"}], "]"}], ",", "14"}], 
+      "]"}], "\[IndentingNewLine]", 
+     RowBox[{"ListPlot", "[", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"res", "[", 
+          RowBox[{"[", "i", "]"}], "]"}], "[", 
+         RowBox[{"[", "2", "]"}], "]"}], " ", ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", "res", "]"}]}], "}"}]}], "]"}], "]"}]}]}], 
+   "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", "percentages", " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"t", " ", "=", " ", 
+    RowBox[{
+     RowBox[{"Table", "[", "\[IndentingNewLine]", 
+      RowBox[{
        RowBox[{"dayPower", "[", 
         RowBox[{"dayAngles", "[", 
-         RowBox[{"d", ",", "14"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{"return", " ", "values"}], " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"{", 
+         RowBox[{
+          RowBox[{"DateObject", "[", 
+           RowBox[{"{", 
+            RowBox[{"2016", ",", "8", ",", "17"}], "}"}], "]"}], ",", "x"}], 
+         "]"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "1", ",", "10"}], "}"}]}], "\[IndentingNewLine]", 
+      "]"}], "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{"relative", " ", "to", " ", "first"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"Table", "[", "\[IndentingNewLine]", 
+      RowBox[{
        RowBox[{
-        RowBox[{"DateObject", "[", 
-         RowBox[{"d", ",", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{"IntegerPart", "[", "hour", "]"}], ",", " ", 
-            RowBox[{"IntegerPart", "[", 
-             RowBox[{
-              RowBox[{"FractionalPart", "[", "hour", "]"}], "*", "60"}], 
-             "]"}]}], "}"}]}], "]"}], ",", 
-        RowBox[{
+        RowBox[{"(", 
          RowBox[{
-          RowBox[{"(", 
-           RowBox[{"max", " ", "-", " ", "onePower"}], ")"}], "/", 
-          "onePower"}], " ", "*", " ", "100"}], ",", 
-        RowBox[{
+          RowBox[{"t", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], "-", 
+          RowBox[{"t", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "/", 
+        RowBox[{"t", "[", 
+         RowBox[{"[", "1", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "2", ",", 
+         RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
+      "]"}], "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{"relative", " ", "to", " ", "previous"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"Table", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"(", 
          RowBox[{
-          RowBox[{"(", 
-           RowBox[{"tenPower", " ", "-", " ", "onePower"}], ")"}], "/", 
-          "onePower"}], " ", "*", " ", "100"}]}], "}"}]}], 
-     "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
-   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"t", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], "-", 
+          RowBox[{"t", "[", 
+           RowBox[{"[", 
+            RowBox[{"i", "-", "1"}], "]"}], "]"}]}], ")"}], "/", 
+        RowBox[{"t", "[", 
+         RowBox[{"[", 
+          RowBox[{"i", "-", "1"}], "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "2", ",", 
+         RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
+      "]"}]}]}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
    RowBox[{
-    RowBox[{"twoAnglesOptimal", "[", 
-     RowBox[{"DateObject", "[", 
+    RowBox[{"DiscretePlot", "[", " ", 
+     RowBox[{
+      RowBox[{"dayPower", "[", 
+       RowBox[{"dayAngles", "[", 
+        RowBox[{
+         RowBox[{"DateObject", "[", 
+          RowBox[{"{", 
+           RowBox[{"2016", ",", "7", ",", "18"}], "}"}], "]"}], ",", "x"}], 
+        "]"}], "]"}], ",", 
       RowBox[{"{", 
-       RowBox[{"2016", ",", "8", ",", "17"}], "}"}], "]"}], "]"}], " ", "//", 
-    "Timing"}]}]}]], "Input",
+       RowBox[{"x", ",", "1", ",", "20", ",", "1"}], "}"}]}], "]"}], " ", "//",
+     "Timing"}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"twoAnglesOptimal", "[", 
+    RowBox[{"DateObject", "[", 
+     RowBox[{"{", 
+      RowBox[{"2016", ",", "8", ",", "17"}], "}"}], "]"}], "]"}], " ", "//", 
+   "Timing"}]}]}], "Input",
  CellChangeTimes->{{3.6796462284301476`*^9, 3.67964624202411*^9}, 
    3.679648031818811*^9, {3.6796485764653387`*^9, 3.6796485924499345`*^9}, {
    3.6796487174673076`*^9, 3.679648718779778*^9}, {3.6796488346251354`*^9, 
@@ -978,7 +1023,13 @@ Cell[BoxData[
    3.680679044047581*^9}, {3.680679205323029*^9, 3.680679206057573*^9}, {
    3.680679315725416*^9, 3.6806793929586997`*^9}, 3.680679462814588*^9, {
    3.680679499462304*^9, 3.680679676088127*^9}, {3.680680739780647*^9, 
-   3.6806807875475163`*^9}}],
+   3.6806807875475163`*^9}, {3.6807834142300315`*^9, 
+   3.6807834215563145`*^9}, {3.680783640612631*^9, 3.680783647194748*^9}, 
+   3.6807947206549664`*^9, 3.6807949241115026`*^9, {3.680795477245068*^9, 
+   3.680795494676687*^9}, {3.680795645286069*^9, 3.6807956729451275`*^9}, {
+   3.680795931813179*^9, 3.6807959321164756`*^9}, {3.680796531252915*^9, 
+   3.6807966567329874`*^9}, {3.6807968323270345`*^9, 
+   3.6807968331260204`*^9}, {3.6807969392736826`*^9, 3.6807970421078343`*^9}}],
 
 Cell[BoxData[
  TemplateBox[{
@@ -987,17 +1038,35 @@ Cell[BoxData[
 specified by AccuracyGoal and PrecisionGoal but was unable to find a \
 sufficient increase in the function. You may need more than \\!\\(\\*RowBox[{\
 \\\"MachinePrecision\\\"}]\\) digits of working precision to meet these \
-tolerances.\"",2,724,90,16276102909212866015,"Local"},
+tolerances.\"",2,90,12,16277374779430917615,"Local"},
   "MessageTemplate"]], "Message", "MSG",
  CellChangeTimes->{3.680679136602742*^9, 3.680679229267778*^9, 
-  3.6806795583592033`*^9, 3.680679703355469*^9, 3.6806808367734337`*^9}],
+  3.6806795583592033`*^9, 3.680679703355469*^9, 3.6806808367734337`*^9, 
+  3.6807843906333094`*^9, 3.6807844457415047`*^9, 3.6807937220465784`*^9, 
+  3.6807947892990246`*^9, 3.680794949189703*^9, 3.6807966819290357`*^9, 
+  3.6807968575720587`*^9, 3.6807970697144923`*^9}],
+
+Cell[BoxData[
+ TemplateBox[{
+  "FindMaximum","lstol",
+   "\"The line search decreased the step size to within the tolerance \
+specified by AccuracyGoal and PrecisionGoal but was unable to find a \
+sufficient increase in the function. You may need more than \\!\\(\\*RowBox[{\
+\\\"MachinePrecision\\\"}]\\) digits of working precision to meet these \
+tolerances.\"",2,90,13,16277374779430917615,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.680679136602742*^9, 3.680679229267778*^9, 
+  3.6806795583592033`*^9, 3.680679703355469*^9, 3.6806808367734337`*^9, 
+  3.6807843906333094`*^9, 3.6807844457415047`*^9, 3.6807937220465784`*^9, 
+  3.6807947892990246`*^9, 3.680794949189703*^9, 3.6807966819290357`*^9, 
+  3.6807968575720587`*^9, 3.680797111114234*^9}],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"31.859375`", ",", 
+  RowBox[{"60.46875`", ",", 
    RowBox[{"{", 
     RowBox[{
-     TemplateBox[{RowBox[{"\"Wed 17 Aug 2016 13:06\"", 
+     TemplateBox[{RowBox[{"\"Wed 17 Aug 2016 15:44\"", 
          StyleBox[
           RowBox[{"\"GMT+\"", "\[InvisibleSpace]", "2.`"}], FontColor -> 
           GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
@@ -1007,15 +1076,21 @@ Cell[BoxData[
            RowBox[{"TimeObject", "[", 
              RowBox[{
                RowBox[{"{", 
-                 RowBox[{"13", ",", "6"}], "}"}], ",", 
+                 RowBox[{"15", ",", "44"}], "}"}], ",", 
                RowBox[{"TimeZone", "\[Rule]", "2.`"}]}], "]"}], ",", 
            RowBox[{"TimeZone", "\[Rule]", "2.`"}]}], "]"}]},
       "DateObject",
-      Editable->False], ",", "8.646768136982207`", ",", "9.13301211915577`"}],
-     "}"}]}], "}"}]], "Output",
+      Editable->False], ",", 
+     RowBox[{"{", 
+      RowBox[{"41.808821465920914`", ",", "0.`"}], "}"}], ",", 
+     "7.5091145939317965`", ",", "8.61506338158852`"}], "}"}]}], 
+  "}"}]], "Output",
  CellChangeTimes->{3.6806128602025075`*^9, 3.680612907750631*^9, 
   3.680612940900737*^9, 3.6806791366047416`*^9, 3.680679229281803*^9, 
-  3.6806795620909214`*^9, 3.680679707085114*^9, 3.6806808405761385`*^9}]
+  3.6806795620909214`*^9, 3.680679707085114*^9, 3.6806808405761385`*^9, 
+  3.6807844123640947`*^9, 3.6807844675778637`*^9, 3.680793743276913*^9, 
+  3.6807947929790044`*^9, 3.680794992452159*^9, 3.6807967277921357`*^9, 
+  3.6807969030275106`*^9, 3.680797114901863*^9}]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1026,7 +1101,7 @@ Cell[BoxData[
   RowBox[{
    RowBox[{"{", 
     RowBox[{
-     TemplateBox[{RowBox[{"\"Wed 17 Aug 2016 13:06\"", 
+     TemplateBox[{RowBox[{"\"Wed 17 Aug 2016 15:44\"", 
          StyleBox[
           RowBox[{"\"GMT+\"", "\[InvisibleSpace]", "2.`"}], FontColor -> 
           GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
@@ -1036,12 +1111,14 @@ Cell[BoxData[
            RowBox[{"TimeObject", "[", 
              RowBox[{
                RowBox[{"{", 
-                 RowBox[{"13", ",", "6"}], "}"}], ",", 
+                 RowBox[{"15", ",", "44"}], "}"}], ",", 
                RowBox[{"TimeZone", "\[Rule]", "2.`"}]}], "]"}], ",", 
            RowBox[{"TimeZone", "\[Rule]", "2.`"}]}], "]"}]},
       "DateObject",
-      Editable->False], ",", "8.7", ",", "9.1"}], "}"}], 
-   "\[IndentingNewLine]", "\n", 
+      Editable->False], ",", 
+     RowBox[{"{", 
+      RowBox[{"41.80", ",", "0"}], "}"}], ",", "7.5", ",", "8.6"}], "}"}], 
+   "\n", "\[IndentingNewLine]", 
    RowBox[{"(*", " ", 
     RowBox[{
      RowBox[{"percentages", " ", "change"}], ",", " ", 
@@ -1316,7 +1393,10 @@ g8NacP3ODm/9TzwyhMu7OBzc/OOlNpAPAN7MM60=
    3.6801025561476855`*^9, 3.680102565069644*^9}, {3.68059921134046*^9, 
    3.6805992438753347`*^9}, 3.6805992823884163`*^9, 3.680599397610957*^9, {
    3.680680810784999*^9, 3.6806808407382584`*^9}, {3.680680873770692*^9, 
-   3.6806809429077187`*^9}, {3.6806931325268345`*^9, 3.6806931393157053`*^9}}],
+   3.6806809429077187`*^9}, {3.6806931325268345`*^9, 
+   3.6806931393157053`*^9}, {3.680795125785715*^9, 3.680795159541295*^9}, {
+   3.680796801239833*^9, 3.6807968260575495`*^9}, {3.680797417695859*^9, 
+   3.6807974784499416`*^9}}],
 
 Cell[BoxData[
  RowBox[{"old", " ", 
@@ -1441,12 +1521,13 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 42545, 958, 3500, "Input"],
-Cell[43128, 982, 582, 10, 39, "Message"],
-Cell[43713, 994, 1019, 23, 41, "Output"]
+Cell[580, 22, 44057, 1009, 3652, "Input"],
+Cell[44640, 1033, 780, 13, 39, "Message"],
+Cell[45423, 1048, 778, 13, 39, "Message"],
+Cell[46204, 1063, 1302, 29, 41, "Output"]
 }, Open  ]],
-Cell[44747, 1020, 13087, 298, 1683, "Input"],
-Cell[57837, 1320, 4515, 104, 505, "Input"]
+Cell[47521, 1095, 13309, 303, 1683, "Input"],
+Cell[60833, 1400, 4515, 104, 505, "Input"]
 }
 ]
 *)
