@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     48591,       1029]
-NotebookOptionsPosition[     48147,       1010]
-NotebookOutlinePosition[     48487,       1025]
-CellTagsIndexPosition[     48444,       1022]
+NotebookDataLength[     48634,       1031]
+NotebookOptionsPosition[     48188,       1012]
+NotebookOutlinePosition[     48530,       1027]
+CellTagsIndexPosition[     48487,       1024]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -262,14 +262,15 @@ DzfXQrZkj2x6aJ9syR7ZHKV9siV7ZNO76T9PwPUy
          RGBColor[0.560181, 0.691569, 0.194885], 
          AbsoluteThickness[1.6]], 
         LineBox[CompressedData["
-1:eJxdzT0oxHEcx/FvJpMMJwYKSZLO8/PT79x5OHee7hxnkyKbyUb9JIvJIJ1S
-nm+41aLU+RsoE4vFwmS+TEb0+1L3/tX16dW77/2rltZiywUisvjz+133coOS
-/0w+C+Fi2AeXweVwJVwN18C1cB1cDzfAfrgJboZb4Fa4DW6HO+BOuAvuhnvg
-XrjPZO9Ka+Mvf9/tN2u5ncfZkqR6wK1ZVQ+6fV9XG7fXm26tMZ+Bp5VExZb2
-gFvfrvaAKco2HWZSe9qHnJP72tWvB9qD7v9uUtqDrj8caQ+59R9rD5ntxmg6
-83aifdhsPl8tJD5OtQ+7vT3TPuL2/ly7euNC+6i7D19qV3+pZcxtJK1d/f/C
-+bawjKPDEkGHJYoOywQ6LJPosEyhwzKdbwNb2INlBvewhT1YYriHLezBEsc9
-bGEPllncwxb2YEngHrawB8sc7mELe7DM4x62sAdL8t/fgI+COQ==
+1:eJxdzT0oxHEcx/FvJpMMxEAhXZI4z8/8zjmc54c7ziZFNpON/CSLQQaJUp5v
+ODaLUvwNFAuLxcJklsmIft9T9/7X9el17/v+r3B6fnQmTUSmfj9/657Pdkl9
+TCrT4Uw4C86F8+ACuAguhn1wCVwKl8HlsB+uhKvgargGroXr4Hq4AW6Em+Bm
+uMVc3+b4xl6S/9tq5j/XHiLZMXWbWzOnbnf7vqA2bi+X3FpjvgJPs9H8Fe0B
+t1nr2gMm49q/m9jZ1N7hHNvSrn7d1h5077va0R50/X5Pe6fb8n3tnWa1oj+e
+eDvQHjJLzxeT0Y9D7SG3N0fau9zeHWtXL55o73b34VPt6m+19LjdiGtXP55p
+D7vfL59rD+v3yac31RaWPnRY+tFhGUCHZRAdliF0WIZTbWALe7CM4B62sAfL
+KO5hC3uwjOEetrAHSwT3sIU9WKK4hy3swTKOe9jCHiwTuIct7MES+/cPLtqI
+Sg==
          "]]}}}, {}, {}, {{}, {}}}, {
     DisplayFunction -> Identity, PlotRangePadding -> {{
         Scaled[0.02], 
@@ -620,7 +621,8 @@ bGEPllncwxb2YEngHrawB8sc7mELe7DM4x62sAdL8t/fgI+COQ==
    3.6805835000343733`*^9, 3.6805835335122943`*^9, 3.6805835906572695`*^9, 
    3.680583676015376*^9, 3.680583736847559*^9, 3.6805838098134108`*^9, 
    3.6805839251211615`*^9, {3.6805895003680706`*^9, 3.680589516193618*^9}, 
-   3.6805898762683077`*^9, 3.68059341816064*^9, 3.6809352397996964`*^9}]
+   3.6805898762683077`*^9, 3.68059341816064*^9, 3.6809352397996964`*^9, 
+   3.6809370898214664`*^9}]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1009,7 +1011,7 @@ fg535XGfxJNI7fcvU6V8L1j23JFRbLqyWRRbxRnF5qjqK7aKM4pN93/+C7wd
  CellChangeTimes->{{3.6805934469706964`*^9, 3.6805934663920503`*^9}}]
 },
 WindowSize->{942, 960},
-WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+WindowMargins->{{Automatic, 206}, {Automatic, 1}},
 FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (July 28, 2016)",
 StyleDefinitions->"Default.nb"
 ]
@@ -1026,11 +1028,11 @@ CellTagsIndex->{}
 Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 9281, 194, 867, "Input"],
-Cell[9864, 218, 20221, 404, 475, "Output"]
+Cell[9864, 218, 20262, 406, 570, "Output"]
 }, Open  ]],
-Cell[30100, 625, 4401, 88, 798, "Input"],
-Cell[34504, 715, 10048, 222, 696, "Input"],
-Cell[44555, 939, 3588, 69, 196, "Input"]
+Cell[30141, 627, 4401, 88, 798, "Input"],
+Cell[34545, 717, 10048, 222, 696, "Input"],
+Cell[44596, 941, 3588, 69, 196, "Input"]
 }
 ]
 *)
