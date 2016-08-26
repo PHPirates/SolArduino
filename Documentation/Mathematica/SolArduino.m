@@ -2,11 +2,76 @@
 
 BeginPackage[ "SolArduino`"]
 
-  dayAngles::usage = 
-	"angle[] computes a simple function."
+	angle::usage = 
+		"params: index of sunPositions table, solar panel angle in degrees, date, 
+			returns misalignment with the sun in radians"
+		
+	directPower::usage = 
+		"param: index, solar panel angle in degrees, date. 
+			returns W/m^2"
+			
+	calculatesunPos::usage = 
+		"params: date, 
+			initializes sunPositions table with positions of the sun for this day"
+			
+	sumOverInterval::usage = 
+		"params: solar panel angle in degrees, date, start index, end index
+			returns sum of solar power over the day at every time of index in the given interval"
+	
+	angleInterval::usage = 
+		"params: date, start index, end index, r
+			eturns optimal angle in this interval"
+			
+	dayAngles::usage = 
+		"params: date, number of adjustment times per day \[GreaterEqual] 1. 
+			returns List with optimal angles and power received with that angle over that interval, 
+			for how many adjustment times were specified"
+			
+	dayPower::usage = 
+		"total of power"
+		
+	dayPowerTable::usage = 
+		"list of power received for each angle-period"
+		
+	dayAnglesTable::usage = 
+		"make list of angles"
+		
+	totalPower::usage = 
+		"params: date, division as index of sunPositions. 
+			returns total power of day, and list with two angles"
+			
+	dayAngle::usage = 
+		"params: day of month, month, year, 
+			returns optimal angle for this day"
+	
+	monthAngle::usage = 
+		"params: month, 
+			returns optimal angle for a specific month by taking the average"
+			
+	twoAnglesOptimal::usage = 
+		"params: date; 
+			returns in a list the date/time at which to change the angle of solar panels (besides before sunrise) 
+			to get optimal power, then the two angles of the day, then the percent increase of power compared to 
+			one setting for the whole day, then the percent increase compared to one setting if you would adjust 
+			fourteen times a day, spread evenly over the day"
+			
+	powerOverDay::usage = 
+		"param: list of angles of a day, 
+			returns a list with power outputs by index of sunPositions"
+
+	directPowerPercent::usage = 
+		"percent difference by angle"
+		
+	solarPanelTilt::usage = 
+		"TODO"
+		
+	f::usage = 
+		"params: date, 
+			returns list of values for that date"
 	
 	anglesPeriod::usage = 
-	"creates list/table of optimal angles per day over given interval."
+		"params: DateObject begin date, DateObject end date,
+			creates list/table of optimal angles per day over given interval."
 	
 
   Begin[ "Private`"]
