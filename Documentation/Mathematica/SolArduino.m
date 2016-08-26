@@ -4,6 +4,10 @@ BeginPackage[ "SolArduino`"]
 
   dayAngles::usage = 
 	"angle[] computes a simple function."
+	
+	anglesPeriod::usage = 
+	"creates list/table of optimal angles per day over given interval."
+	
 
   Begin[ "Private`"]
 (* formula in directPower from http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295 *)
@@ -128,9 +132,9 @@ angles = {first[[2]],second[[2]]};
 {total,angles}
 )
 
-dayAngle := Function[ (* params: day of month, month, returns optimal angle for this day *)
+dayAngle := Function[ (* params: day of month, month, year, returns optimal angle for this day *)
 
-date = DateObject[{year,#2,#1}];
+date = DateObject[{#3,#2,#1}];
 
 position = GeoPosition[{51.546545,4.411744}];
 sunrise = Sunrise[position,date];
@@ -207,6 +211,15 @@ Round[Length[sunPositions] * (j/Length[d])]}
 table
 ]
 
+(* creates list/table of optimal angles per day over given interval *)
+anglesPeriod = Function[{b, c}, (* Params are DateObjects, begin date, end date *)
+numberOfDays = DayCount[b,c]+1;
+dateByDay = Function[x, b+Quantity[(x-1), "Days"]];
+
+t=Table[{dateByDay[d],Quiet[dayAngle[DateValue[dateByDay[d],"Day"],DateValue[dateByDay[d],"Month"],DateValue[dateByDay[d],"Year"]]]},{d,1,numberOfDays}]
+
+];
+
 (******************************* END OF FUNCTIONS ***************************)
 
 (* Graph for a day *)
@@ -266,7 +279,7 @@ Quiet[dayAngle[d,m]]
 (* Full graph of year *)
 (*year = 2016;
 numberOfDays = DayCount[DateObject[{year,1,1}],DateObject[{year+1,1,1}]];
-dateByDay=Function[x,DateObjgit ect[{year,1,1}]+Quantity[(x-1),"Days"]];
+dateByDay=Function[x,DateObject[{year,1,1}]+Quantity[(x-1),"Days"]];
 
 t = Table[{dateByDay[d],Quiet[dayAngle[DateValue[dateByDay[d],"Day"],DateValue[dateByDay[d],"Month"]]]},{d,1,numberOfDays}]
 DateListPlot[t,AxesLabel \[Rule] {"Degrees","2016"}]*)
