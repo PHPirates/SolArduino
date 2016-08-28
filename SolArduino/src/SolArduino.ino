@@ -108,8 +108,8 @@ void loop () {
          }
          else if (strncmp("?update", data, 7) == 0) {
            //update requested, sent back current angle
-          //  int angle = getCurrentAngle();
-          int angle = 42;
+           int angle = getCurrentAngle();
+          // int angle = 42;
            acknowledge(String(angle).c_str()); //convert to string, then to const char
          }
          else {
@@ -152,68 +152,18 @@ void setSolarPanel(byte degrees) {
   }
 }
 
-//solar panel movements
-void solarPanelDown() {
-  digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
-  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
-  digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
-}
-
-void solarPanelUp() {
-  digitalWrite(POWER_LOW, LOW);
-  digitalWrite(POWER_HIGH, HIGH);
-  digitalWrite(DIRECTION_PIN, LOW);
-}
-
-void solarPanelStop() {
-  digitalWrite(POWER_LOW, LOW);
-  digitalWrite(POWER_HIGH, LOW);
-  digitalWrite(DIRECTION_PIN, LOW);
-}
-
 void sendErrorMessage(char* message) {
   //dispatch error message to all phones?
 }
 
 int getCurrentAngle() {
   int potMeterValue = analogRead(POTMETERPIN);
+  Serial.println(potMeterValue);
   //fraction of potmetervalue from the low end. Times hundred
   //to maintain accuracy with integer division
   int fraction = ( ( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
   / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
   return ( fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
-}
-
-void setSolarPanel(byte degrees) {
-  //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
-  //times hundred to avoid integer division just possible without integer overflow
-  int expectedVoltage = POTMETER_LOWEND +
-  ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
-  * (POTMETER_HIGHEND - POTMETER_LOWEND) / 100 ;
-  if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND) || expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
-    // sendErrorMessage("Degrees Out Of Range");
-    Serial.println("Degrees Out Of Range");
-  } else {
-    int potMeterValue = analogRead(POTMETERPIN);
-    while (abs (potMeterValue - expectedVoltage) > 3) { //3 is about half a degree accuracy
-      if (POTMETER_LOWEND > POTMETER_HIGHEND) {
-        if (potMeterValue > expectedVoltage) {
-          solarPanelUp;
-        } else {
-          solarPanelDown;
-        }
-      } else {
-        if (potMeterValue < expectedVoltage) {
-          solarPanelUp;
-        } else {
-          solarPanelDown;
-        }
-      }
-      potMeterValue = analogRead(POTMETERPIN);
-
-    }
-    solarPanelStop(); //stop movement when close enough
-  }
 }
 
 //solar panel movements
