@@ -3,91 +3,80 @@
 BeginPackage[ "SolArduino`"]
 
 	angle::usage = 
-		"params: index of sunPositions table, solar panel angle in degrees, date, 
-			returns misalignment with the sun in radians"
+		"angle[index of sunPositions table, solar panel angle in degrees, date (date object)] returns misalignment with the sun in radians"
 		
 	directPower::usage = 
-		"param: index, solar panel angle in degrees, date. 
-			returns W/m^2"
+		"directPower[index of sunPositions table, solar panel angle in degrees, date (date object)] returns power that the solar panels receive from the sun in  W/m^2 "
 			
 	calculatesunPos::usage = 
-		"params: date, 
-			initializes sunPositions table with positions of the sun for this day"
+		"calculatesunPos[date] initializes sunPositions table with positions of the sun for this day"
+		
+	initialiseSunPositionByPrecision::usage =
+		"initialiseSunPositionByPrecision[date,precision (hours*100)] initializes sunPositions table with positions of the sun for this day "
+		
+	calculatesunPosPerHour::usage = 
+		"calculatesunPosPerHour[date] initializes sunPositions table with positions of the sun for this day, at every whole hour"
 			
 	sumOverInterval::usage = 
-		"params: solar panel angle in degrees, date, start index, end index
-			returns sum of solar power over the day at every time of index in the given interval"
+		"sumOverInterval[solar panel angle in degrees, date, start index, end index]returns the sum of solar power over the day at every time corresponding to the index of sunPositions, in the given interval"
 	
 	angleInterval::usage = 
-		"params: date, start index, end index, r
-			eturns optimal angle in this interval"
+		"angleInterval[date, start index, end index] returns optimal angle in this interval of indices"
+
+	angleMoment::usage = 
+	"angleMoment[date, index] returns a list with optimal angle and power at that moment"
 			
 	dayAngles::usage = 
-		"params: date, number of adjustment times per day \[GreaterEqual] 1. 
-			returns List with optimal angles and power received with that angle over that interval, 
-			for how many adjustment times were specified"
+		"dayAngles[date, number of adjustment times per day \[GreaterEqual] 1] returns List with optimal angles and power received with that angle over each interval (spread evenly over the day) after an angle adjustment"
+			
+	dayAnglesHour::usage = "dayAnglesHour[date] returns a list of {power output, optimal angle} at each whole hour of the time the sun is up"
 			
 	dayPower::usage = 
-		"total of power"
+		"dayPower[list of {power,angle}] returns total of power received by the sun"
 		
 	dayPowerTable::usage = 
-		"list of power received for each angle-period"
+		"dayPowerTable[list of {power, angle}] returns list of power received for each angle-period"
 		
 	dayAnglesTable::usage = 
-		"make list of angles"
+		"dayAnglesTable[list of {power, angle}] returns list of angles"
 		
 	totalPower::usage = 
-		"params: date, division as index of sunPositions. 
-			returns total power of day, and list with two angles"
+		"totalPower[date, division as index of sunPositions] returns total power of the day, and list with two optimal angles with this division, to get that total power"
 			
 	dayAngle::usage = 
-		"params: day of month, month, year, 
-			returns optimal angle for this day"
+		"dayAngle[day of month, month, year] returns optimal angle for this day"
 	
 	monthAngle::usage = 
-		"params: month, 
-			returns optimal angle for a specific month by taking the average"
+		"monthAngle[month, year] returns optimal angle for a specific month by taking the average of the optimal angle each day"
 			
 	twoAnglesOptimal::usage = 
-		"params: date; 
-			returns in a list the date/time at which to change the angle of solar panels (besides before sunrise) 
-			to get optimal power, then the two angles of the day, then the percent increase of power compared to 
-			one setting for the whole day, then the percent increase compared to one setting if you would adjust 
-			fourteen times a day, spread evenly over the day"
+		"twoAnglesOptimal[date] returns in a list the date/time at which to change the angle of solar panels (besides before sunrise) 			to get optimal power, then the two angles of the day, then the percent increase of power compared to 			one setting for the whole day, then the percent increase compared to one setting if you would adjust 			fourteen times a day, spread evenly over the day"
 			
 	powerOverDay::usage = 
-		"param: list of angles of a day, 
-			returns a list with power outputs by index of sunPositions"
-
-	directPowerPercent::usage = 
-		"percent difference by angle"
+		"powerOverDay[list of angles of a day, date] returns a list with power received for each angle-period"
 		
-	solarPanelTilt::usage = 
-		"TODO"
-		
-	f::usage = 
-		"params: date, 
-			returns list of values for that date"
-	
 	anglesPeriod::usage = 
-		"params: DateObject begin date, DateObject end date,
-			creates list/table of optimal angles per day over given interval."
+		"anglesPeriod[begin date, end date] creates list of optimal angles per day over given interval"
+	
+	csvToList::usage =
+		"csvToList[date,data] returns list of values for that date that exist in data"
+	
+	getSunPositionsLength::usage = "returns sunPositions table length"
 	
 
   Begin[ "Private`"]
-(* formula in directPower from http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295 *)
 
-(* clear days at ~25 angle: 13/5, 19/7, 17/8 *)
+(* switch off message that solar panels cannot be lower than 0 degrees *)
+Off[FindMinimum::reged];
+Off[FindMaximum::reged];
 
-(* Adjusting the solar panels x times a day
-The times are evenly spread over the time the sun is up *)
-year = 2016;
+sunPosPrecision = 50; (* Used in calculatesunPos; 50 is steps of half an hour (hour*100) for the sun positions table, 
+smaller steps is slower but more precise *)
 
-sunPosPrecision = 50; (* 50 is steps of half an our for the sun positions table, hopefully precise enough, at least it's fast *)
-
-(* parameters are forced numeric, so findMaximum in dayangle works better *)
-angle[i_?NumericQ,a_?NumericQ,d_]:= ( (* params: index of sunPositions table, solar panel angle in degrees, date, returns misalignment with the sun in radians *)
-sunPos = sunPositions[[i]]; (* lookup sun position *)
+(* parameters are forced numeric, so findMaximum in dayAngle works better *)
+angle[i_?NumericQ,a_?NumericQ,d_]:= ( (* angle[index of sunPositions table, solar panel angle in degrees, 
+datespec] returns misalignment with the sun (zenith) in radians *)
+sunPos = sunPositions[[i]]; (* lookup sun position in the pre-initialised sunPositions list *)
 
 (* remove degree unit, then convert to radians *)
 gammaS= QuantityMagnitude[Quantity[sunPos[[1]]]]*Pi/180;  (* Azimuth of sun position, 0 due South, negative to the east *)
@@ -96,31 +85,32 @@ gammaS = gammaS - Pi;
 thetaS= QuantityMagnitude[Quantity[sunPos[[2]]]]*Pi/180; (* Sun altitude *)
 gammaP = -22 * Pi/180; (* Solar panels azimuth *)
 thetaP = a * Pi/180; (* Solar panels angle with horizontal *)
-ArcCos[Cos[gammaP-gammaS] Cos[thetaS] Sin[thetaP]+Cos[thetaP] Sin[thetaS]]
+ArcCos[Cos[gammaP-gammaS] Cos[thetaS] Sin[thetaP]+Cos[thetaP] Sin[thetaS]] (* The formula to find the zenith, see docs *)
 )
 
 
-(* parameters from urban visibility haze model *)
-directPower[x_?NumericQ,a_?NumericQ,d_]  := ( (* param: index, solar panel angle in degrees, date. returns W/m^2 *)
+directPower[x_?NumericQ,a_?NumericQ,d_]  := ( (* directPower[index, solar panel angle in degrees, datespec] 
+returns power that the solar panels receive from the sun in  W/m^2 *)
 theta=angle[x,a,d]; (* solar zenith (misalignment) in radians *)
-(* here comes the magik formula from http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295 for a clear day *)
+(* here comes the magik formula from http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295 *)
 n= QuantityMagnitude[Quantity[d - DateObject[{2016,1,1}]]]; (* day of year *)
 (* clear day parameters *)
 (*i= 1367 (1+0.034 Cos[360*n/365.25]);
 aZero = 0.4237 - 0.00821 36;
 aOne = 0.5055 + 0.00595 6.5^2;
 k = 0.2711 + 0.01858 2.5^2;*)
+(* parameters from urban visibility haze model *)
 i= 1367 (1+0.034 Cos[360*n/365.25]);
 aZero = 0.2538 - 0.0063 36;
 aOne = 0.7678 + 0.001 6.5^2;
 k = 0.249 + 0.081 2.5^2;
 If[Cos[theta]<0,
-0,
-i (aZero + aOne E^(-k/Cos[theta])) (* If the sun is more than 90 degrees off, the formula is not correct, and we set the value to be 0 *)
+0, (* If the sun is more than 90 degrees off, the formula is not correct, and we set the insolation to 0 *)
+i (aZero + aOne E^(-k/Cos[theta])) 
 ] 
 )
 
-(* another function which seems similar, from http://www.solarpaneltilt.com/ *)
+(* Another power function which seems similar, from http://www.solarpaneltilt.com/ *)
 (*directPowerWeb[x_?NumericQ,a_?NumericQ,d_]  := ( (* param: index, solar panel angle in degrees, date. returns W/m^2 *)
 theta=angle[x,a,d]; (* solar zenith (misalignment) in radians *)
 If[theta>Pi/2,
@@ -129,51 +119,98 @@ If[theta>Pi/2,
 ]
 )*)
 
-calculatesunPos[d_] := ( (* params: date, initializes sunPositions table with positions of the sun for this day *)
-position = GeoPosition[{51.546545,4.411744}];
-sunrise = Sunrise[position,d];
-TimeZoneConvert[sunrise,2];
+calculatesunPos[date_] := ( (* calculatesunPos[date] initializes sunPositions table with positions of the sun for this day *)
+position = GeoPosition[{51.546545,4.411744}]; (* position of solar panels *)
+sunrise = Sunrise[position,date];
+(*TimeZoneConvert[sunrise,2];*) (* can be used if using this package in a different timezone *)
 sunriseHour = DateValue[sunrise,"Hour"]+DateValue[sunrise, "Minute"]/60;
-sunset = Sunset[position,d];
-TimeZoneConvert[sunset,2];
+sunset = Sunset[position,date];
+(*TimeZoneConvert[sunset,2];*)
 sunsetHour = DateValue[sunset,"Hour"] + DateValue[sunset, "Minute"]/60;
-(* generate sun position table, so angle[] can access it every time, steps of 30 mins *)
+(* generate sun position table, so angle[] can access it every time. In this way the table is only generated once per day *)
 sunPositions = Table[
- SunPosition[GeoPosition[{51.546545,4.411744}],DateObject[d,{h/100}]],
-{h,sunriseHour*100,sunsetHour*100,sunPosPrecision} 
+ SunPosition[GeoPosition[{51.546545,4.411744}],DateObject[date,{h/100}]],
+{h,sunriseHour*100,sunsetHour*100,sunPosPrecision} (* values are times hundred so we can iterate over the hour *)
 ];
 )
 
-sumOverInterval:=Function[ (* params: solar panel angle in degrees, date, start index, end index
-returns sum of solar power over the day at every time of index in the given interval *)
+initialiseSunPositionByPrecision[date_,p_] := ( (* initialiseSunPositionByPrecision[date,precision (hours*100)] 
+initializes sunPositions table with positions of the sun for this day *)
+position = GeoPosition[{51.546545,4.411744}]; (* position of solar panels *)
+sunrise = Sunrise[position,date];
+(*TimeZoneConvert[sunrise,2];*) (* can be used if using this package in a different timezone *)
+sunriseHour = DateValue[sunrise,"Hour"]+DateValue[sunrise, "Minute"]/60;
+sunset = Sunset[position,date];
+(*TimeZoneConvert[sunset,2];*)
+sunsetHour = DateValue[sunset,"Hour"] + DateValue[sunset, "Minute"]/60;
+(* generate sun position table, so angle[] can access it every time. In this way the table is only generated once per day *)
+sunPositions = Table[
+ SunPosition[GeoPosition[{51.546545,4.411744}],DateObject[date,{h/100}]],
+{h,sunriseHour*100,sunsetHour*100,p} (* values are times hundred so we can iterate over the hour *)
+];
+)
+
+calculatesunPosPerHour[d_] := ( (* calculatesunPosPerHour[date] initializes sunPositions table with positions of the sun for this
+ day, at every whole hour *)
+position = GeoPosition[{51.546545,4.411744}];
+sunrise = Sunrise[position,d];
+sunriseHour = DateValue[sunrise,"Hour"]+1; (* first whole hour with sun *)
+sunset = Sunset[position,d];
+sunsetHour = DateValue[sunset,"Hour"];
+(* generate sun position table, so angle[] can access it every time, steps of an hour, at the whole hour *)
+sunPositions = Table[
+ SunPosition[GeoPosition[{51.546545,4.411744}],DateObject[d,{h/100}]],
+{h,sunriseHour*100,sunsetHour*100,100} (* values are times hundred so we can iterate over the hour *)
+];
+)
+
+
+sumOverInterval[a_,d_,s_,e_] := ( (* sumOverInterval[solar panel angle in degrees, date, start index, end index]
+returns the sum of solar power over the day at every time corresponding to the index of sunPositions, in the given interval *)
 (* take sum of every index, hence steps of one *)
-Sum[directPower[i,#1,#2],{i,#3,#4,1}]
-]
+Sum[directPower[i,a,d],{i,s,e,1}]
+)
 
-angleInterval := Function[ (* params: date, start index, end index, returns optimal angle in this interval *)
+angleInterval[d_,s_,e_] := ( (* angleInterval[date, start index, end index] 
+returns optimal angle in this interval of indices *)
 (* Find for which angle of the solar panels this value is maximal,starting at 0 *)
-res = FindMaximum[sumOverInterval[x,#1,#2,#3],{x,0,0,90}, AccuracyGoal->5];
+res = FindMaximum[sumOverInterval[x,d,s,e],{x,0,0,90}, AccuracyGoal->5];
 {res[[1]],x /. res[[2]]}
-]
+)
 
-dayAngles := Function[ (* params: date, number of adjustment times per day \[GreaterEqual] 1. returns List with optimal angles and power received with that angle over that interval, for how many adjustment times were specified *)
-calculatesunPos[#1];
+angleMoment[d_,i_] := ( (* angleMoment[date, index] returns a list with optimal angle and power at that moment *)
+res = FindMaximum[directPower[i,x,d],{x,0,0,90}, AccuracyGoal->5];
+{res[[1]],x /. res[[2]]}
+)
+
+dayAngles[d_,n_] :=( (* dayAngles[date, number of adjustment times per day \[GreaterEqual] 1] returns List with optimal angles 
+and power received with that angle over each interval (spread evenly over the day) after an angle adjustment *)
+calculatesunPos[d]; 
 
 l = Length[sunPositions];
 Table[ (* calculates indices of start and end of the interval *)
-angleInterval[#1,1+Round[l*i/#2],Round[l*(i+1)/#2]]
-,{i,0,#2-1}]
-]
-
-dayPower[t_] := ( (* total of power *)
-sum = 0;
-For[i=1,i<Length[t]+1,i++,
-sum += t[[i]][[1]];
-];
-sum (* Total of W/m^1 received *)
+angleInterval[d,1+Round[l*i/n],Round[l*(i+1)/n]]
+,{i,0,n-1}]
 )
 
-dayPowerTable[t_] := ( (* list of power received for each angle-period *)
+dayAnglesHour[d_] := ( (* dayAnglesHour[date] returns a list of {power output, optimal angle} at each whole 
+hour of the time the sun is up *)
+calculatesunPosPerHour[d];
+l = Length[sunPositions];
+Table[
+angleMoment[d,i],
+{i,1,l}
+]
+)
+
+dayPower[t_] := ( (* dayPower[list of {power, angle}] returns total of power received by the sun *)
+Sum[
+t[[i]][[1]],
+{i,1,Length[t]}
+] 
+)
+
+dayPowerTable[t_] := ( (* dayPowerTable[list of {power, angle}] returns list of power received for each angle-period *)
 Table[
 t[[i]][[1]],
 {i,1,Length[t]}
@@ -181,15 +218,16 @@ t[[i]][[1]],
 )
 
 dayAnglesTable[t_] := (
-(* make list of angles *)
+(* dayAnglesTable[list of {power, angle}] returns list of angles*)
 Table[
 t[[i]][[2]],
 {i,1,Length[t]}
 ]
 )
 
-(* find div(ision) where total W/m^m is biggest *)
-totalPower[d_,v_] := ( (* params: date, division as index of sunPositions. returns total power of day, and list with two angles *)
+(* used to determine best time for a second adjustment *)
+totalPower[d_,v_] := ( (* totalPower[date, division as index of sunPositions] returns total power of the day, 
+and list with two optimal angles with this division, to get that total power *)
 first = angleInterval[d,1,v];
 second = angleInterval[d,v+1,l];
 total = first[[1]] + second[[1]];
@@ -197,39 +235,30 @@ angles = {first[[2]],second[[2]]};
 {total,angles}
 )
 
-dayAngle := Function[ (* params: day of month, month, year, returns optimal angle for this day *)
+dayAngle[d_,m_,y_] := ( (* dayAngle[day of month, month, year] returns optimal angle for this day *)
 
-date = DateObject[{#3,#2,#1}];
-
-position = GeoPosition[{51.546545,4.411744}];
-sunrise = Sunrise[position,date];
-TimeZoneConvert[sunrise,2];
-sunriseHour = DateValue[sunrise,"Hour"]+DateValue[sunrise, "Minute"]/60;
-sunset = Sunset[position,date];
-TimeZoneConvert[sunset,2];
-sunsetHour = DateValue[sunset,"Hour"] + DateValue[sunset, "Minute"]/60;
-(* generate sun position table, so angle[] can access it every time *)
-sunPositions = Table[
- SunPosition[GeoPosition[{51.546545,4.411744}],DateObject[date,{h/100}]],
-{h,sunriseHour*100,sunsetHour*100,50}
-];
-(* Times 100 so the sum starts closer to the real sunUpHour, and not floors it to an integer when calculating the sum. Otherwise weird jumps in graphs appear when the sunUpHour jumps one hour *)
+date = DateObject[{y,m,d}];
+calculatesunPos[date];
 
 (* Find for which angle of the solar panels this value is maximal,starting at 50 *)
-
 a/. FindMaximum[
 Sum[directPower[h,a,date],{h,1,Length[sunPositions],1}]
 ,{a,50,0,90}, AccuracyGoal->5][[2]]
-]
+)
 
-monthAngle := Function [ (* params: month, returns optimal angle for a specific month by taking the average  *)
+monthAngle[m_,y_] := ( (* monthAngle[month, year] returns optimal angle for a specific month by taking
+ the average of the optimal angle each day  *)
 (* Count how many days are in this month *)
-days = With[{first=DateObject[{year,#1,1}]},DayCount[first,DatePlus[first,{{1,"Month"}}]]] ;
-Sum[dayAngle[x,#1],{x,1,days}]/days
-]
+days = With[{first=DateObject[{y,m,1}]},DayCount[first,DatePlus[first,{{1,"Month"}}]]] ;
+Sum[dayAngle[x,m,y],{x,1,days}]/days
+)
 
- (*  NOTE for a preciser adjustment time, change step size where noted. will increase running time by as much steps are added times around three seconds *)
-twoAnglesOptimal[d_] := (  (* params: date; returns in a list the date/time at which to change the angle of solar panels (besides before sunrise) to get optimal power, then the two angles of the day, then the percent increase of power compared to one setting for the whole day, then the percent increase compared to one setting if you would adjust fourteen times a day, spread evenly over the day *)
+ (*  NOTE for a preciser adjustment time, change step size where noted. 
+ will increase running time by as much steps are added times around three seconds *)
+twoAnglesOptimal[d_] := (  (* twoAnglesOptimal[date] returns in a list the date/time at which to change the 
+angle of solar panels (besides before sunrise) to get optimal power, then the two angles of the day, then the 
+percent increase of power compared to one setting for the whole day, then the percent increase compared to one 
+setting if you would adjust fourteen times a day, spread evenly over the day *)
 (* for two angles per day, find optimal time of angle change *)
 
 (* some initialisation of the sunposition table *)
@@ -250,292 +279,45 @@ onePower = dayAngles[d,1][[1]][[1]]; (* find power for one time *)
 (* compare with percent increase in power if you'd adjust 10 times a day (not optimised) *)
 tenPower= dayPower[dayAngles[d,14]];
 (* return values *)
-{DateObject[d,{IntegerPart[hour],Round[FractionalPart[hour]*60]}],angles,(max - onePower)/onePower * 100,(tenPower - onePower)/onePower * 100}
+{DateObject[d,{IntegerPart[hour],Round[FractionalPart[hour]*60]}],
+angles,(max - onePower)/onePower * 100,
+(tenPower - onePower)/onePower * 100}
 )
 
-powerOverDay :=Function[d, (* param: list of angles of a day, returns a list with power outputs by index of sunPositions *)
-
-legend=StringForm["Adjusting `` times", Length[d]];
-
+powerOverDay[l_,date_] := ( (* powerOverDay[list of angles of a day, date] returns a list with power received for each angle-period *)
 calculatesunPos[date];
-
 table={};
 
-For[j=1,j< Length[d] + 1,j++,
-table = Join[
-table,
-Table[
-directPower[i,d[[j]],date]*factor,
-{i,
-Round[Length[sunPositions] * ((j-1)/Length[d])+1],
-Round[Length[sunPositions] * (j/Length[d])]}
-]
+For[j=1,j< Length[l] + 1,j++, (* for each angle, *)
+	table = Join[
+		table,
+		Table[
+			directPower[i,l[[j]],date], (* make a list with power corresponding to the angles *)
+			{i,
+			Round[Length[sunPositions] * ((j-1)/Length[l])+1], (* times (indices) are spread evenly over the day *)
+			Round[Length[sunPositions] * (j/Length[l])]}
+		]
+	];
 ];
-];
-
 table
-]
+)
 
-(* creates list/table of optimal angles per day over given interval *)
-anglesPeriod = Function[{b, c}, (* Params are DateObjects, begin date, end date *)
+anglesPeriod[b_,c_] := ( (* anglesPeriod[begin date, end date] creates list of optimal 
+angles per day over given interval  *)
 numberOfDays = DayCount[b,c]+1;
 dateByDay = Function[x, b+Quantity[(x-1), "Days"]];
 
-t=Table[{dateByDay[d],Quiet[dayAngle[DateValue[dateByDay[d],"Day"],DateValue[dateByDay[d],"Month"],DateValue[dateByDay[d],"Year"]]]},{d,1,numberOfDays}]
-
-];
-
-(******************************* END OF FUNCTIONS ***************************)
-
-(* Graph for a day *)
-(* date = DateObject[{2016,7,18}];
- AbsoluteTiming[DiscretePlot[sumOverDay[x,date],{x,0,90,10},ImageSize\[Rule]Large,AxesLabel \[Rule] {"Solar panel angle", "Total of sun power, W/m^2"}] ] *)
-
-(* Graph for a month *)
- (* month = 9;
-days = With[{first=DateObject[{year,month,1}]},DayCount[first,DatePlus[first,{{1,"Month"}}]]];
-AbsoluteTiming[DiscretePlot[dayAngle[a,month],{a,1,days},ImageSize\[Rule]Large,AxesLabel \[Rule] {"Day", "Optimal angle"}]] *)
-
-(* Graph for this year, month average *)
-(* AbsoluteTiming[DiscretePlot[monthAngle[x],{x,1,12},ImageSize\[Rule]Large,AxesLabel \[Rule] {"Month", "Average of optimal angle"}] ] *) (* ten minutes *)
-
-(* Comparison with perpendicular to sun at noon, per month, http://www.gogreensolar.com/pages/solar-panel-tilt-calculator *)
-(*greenList = {68,60,52,44,36,28,36,44,52,60,68,76};
-list = Table[monthAngle[x],{x,1,12}];
-ListPlot[{greenList,list},Filling\[Rule] Axis,PlotLegends\[Rule] {gogreensolar,calculations},ImageSize\[Rule]Large,AxesLabel \[Rule] {"Month", "Average of optimal angle"}]
-*)
-
-(* season values *)
-
-(*monthSum[m_,i_,j_] := ( (* month, begin day, end day *)
-Sum[
-Quiet[dayAngle[x,m]],
-{x,i,j}]
-)
-(* takes winter of [year] only. dates according to solarpaneltilt.com, summer april 18, autumn august 24, winter oct 7, spring march 5 *)
- summerSum = Quiet[monthSum[4,18,30] + monthSum[5,1,31] + monthSum[6,1,30] + monthSum[7,1,31]+ monthSum[8,1,23]];
-summerDays = QuantityMagnitude[Quantity[DateDifference[{year,4,18},{year,8,23}]]]+1;
-summerSum/summerDays (* 21 degrees *)
-
-autumnSum = monthSum[8,24,31]+ monthSum[9,1,30] + monthSum[10,1,6];
-autumnDays = DayCount[{year,8,24},{year,10,6}]+1;
-autumnSum/autumnDays (* 49 degrees *)
-
- winterSum = Quiet[monthSum[10,7,31] + monthSum[11,1,30] +monthSum[12,1,31] + monthSum[1,1,31] + monthSum[2,1,29] + monthSum[3,1,4]];
-winterDays = DayCount[{year,10,7},{year+1,3,4}]+1;
-winterSum/winterDays  (* 73 degrees *)
-
-springSum = Quiet[monthSum[3,5,31] + monthSum[4,1,17]];
-springDays = DayCount[{year,3,5},{year,4,17}]+1;
-springSum/springDays (* 49 degrees *)*)
-
-(* Year average *)
-(*(winterSum + summerSum + springSum + autumnSum)/366 (* 49 degrees *)*)
-(* standalone *)
-(*Sum[
-days = With[{first=DateObject[{year,m,1}]},DayCount[first,DatePlus[first,{{1,"Month"}}]]];
-Sum[
-Quiet[dayAngle[d,m]]
-,{d,1,days}]
-,{m,1,12}]/ QuantityMagnitude[Quantity[DateDifference[{year,1,1},{year,12,31}]]]+1 (* 50 degrees *)
-*)
-
-
-(* Full graph of year *)
-(*year = 2016;
-numberOfDays = DayCount[DateObject[{year,1,1}],DateObject[{year+1,1,1}]];
-dateByDay=Function[x,DateObject[{year,1,1}]+Quantity[(x-1),"Days"]];
-
-t = Table[{dateByDay[d],Quiet[dayAngle[DateValue[dateByDay[d],"Day"],DateValue[dateByDay[d],"Month"]]]},{d,1,numberOfDays}]
-DateListPlot[t,AxesLabel \[Rule] {"Degrees","2016"}]*)
-
-
-
-
-(*dayAngles[DateObject[{2016,8,17}],14]*)
-(*res = dayAngles[DateObject[{2016,8,19}],14]
-ListPlot[Table[res[[i]][[2]] ,{i,1,Length[res]}]]*)
-
-(* percentages *)
-(*t = Table[
-dayPower[dayAngles[DateObject[{2016,8,17}],x]],
-{x,1,10}
-]
-(* relative to first *)
-Table[
-(t[[i]]-t[[1]])/t[[1]],
-{i,2,Length[t]}
-]
-(* relative to previous *)
-Table[
-(t[[i]]-t[[i-1]])/t[[i-1]],
-{i,2,Length[t]}
-]*)
-
-(*DiscretePlot[ dayPower[dayAngles[DateObject[{2016,7,18}],x]],{x,1,20,1}] //Timing*)
-
-(*twoAnglesOptimal[DateObject[{2016,8,17}]] //Timing*)
-
-(* list of angles for a day *)
-(*dayAngles[DateObject[{2016,8,17}],14][[All,2]]*)
-
-(* misalignment over day *)
-(*ListPlot[Table[
-angle[i,25,DateObject[{2016,8,17}]]
-,{i,1,Length[sunPositions]}
-]]*)
-
-(* sun insolation over day, 26.4 m2 panels *)
-(*ListPlot[Table[
-directPower[i,25,DateObject[{2016,8,17}]]*26.4
-,{i,1,Length[sunPositions]}
-]]*)
-(* data adapted to from sunrise, 6:33, to sunset, 21:00. Length of sunPositions and data are both 58 *)
-(* day = DateObject[{2016,8,17}]; *)
-dataAugust = {0,47.5,128.167,247.833,398.167,574.333,789,1053.83,1304.83,1584.33,1846.17,2144,2348.33,2555.83,2712,2908.67,3055.33,3176.33,3310.33,3419.17,3519.17,3580.67,3659.33,3707.17,3753.17,3775.17,3781,3759.5,3746.17,3728.5,3675,3599.67,3504.67,3411.83,3302.83,3197.33,3046.5,2912.83,2761.17,2574.83,2324.33,2062.5,1862.17,1688.83,1465,1254,1041.5,853.167,666,463,291.833,160.667,124.333,106.833,86,62.8333,33.3333,2};
-(* day = DateObject[{2016,5,13}]; *)
-dataMay = {0,19.5,57,118.667,200.833,278,301.333,497.667,691.5,995.667,1323.5,1663,1857.33,2262.67,2571,2789.83,3003,3177.5,3324.5,3483.17,3597,3719.33,3813.67,3888,3929.83,3997.83,4012.33,4036,4080.5,4067.67,4034,3957.67,3954.33,3889.17,3837,3746.83,3641.67,3453.33,3423.67,3215.5,3121.83,2954.5,2762.67,2541,2298.83,2055.33,1692,1540.17,1253,1027.17,782,579,419.5,295,226.833,185.833,158.667,115,84.5,70.1667,58.1667,20.1667,0};
-
-(* just checking if length is about equal *)
-(*Length[sunPositions]
-Length[dataAugust]*)
-
-(* calculations graph scaled to top be the same, possible because it's just about the form of the graph. otherwise, panels are 26 m2 *)
-(* now shown together, but not really accurate because of length difference, better keep days in seperate graphs *)
-(*ListLinePlot[{
-calculatesunPos[DateObject[{2016,8,17}]];
-Table[
-directPower[i,25,DateObject[{2016,8,17}]]*4.22
-,{i,1,Length[sunPositions]}
-],
-calculatesunPos[DateObject[{2016,5,13}]];
-Table[
-directPower[i,25,DateObject[{2016,5,13}]]*4.22
-,{i,1,Length[sunPositions]}
-]
-,dataAugust,
-dataMay},PlotLegends \[Rule] {"calculations 17/8","calculations 13/5","real data 17/8","real data 13/5"},ImageSize \[Rule] Large]*)
-
-
-
-(* efficiency over the day *)
-
-(*ListLinePlot[
-calculatesunPos[DateObject[{2016,8,17}]];
-Table[
-dataAugust[[i]]*100/(directPowerUrban[i,25,DateObject[{2016,8,17}]]*26.4)
-,{i,1,Length[sunPositions]}
-]
-]*)
-
-
-(* now for adjusting panels three times a day! *)
-(* for 17/8, optimal angles and times are: 50,34,0 at 6.5, 11.3, 16.2, but directPower takes indices of sunPosition  *)
-(*factor = 6.7;
-date = DateObject[{2016,8,23}];
-(* three plots *)
-ListLinePlot[ {
-
-calculatesunPos[date];
-Table[
-directPower[i,25,date]*factor
-,{i,1,Length[sunPositions]}
-],
-
-dataAugust,
-
-Join[
-Table[
-directPower[i,49,date]*factor
-,{i,1,Round[Length[sunPositions]/3]}
-],
-Table[
-directPower[i,34,date]*factor
-,{i,Round[Length[sunPositions]/3]+1,Round[Length[sunPositions]*2/3]}
-],
-Table[
-directPower[i,0,date]*factor
-,{i,Round[Length[sunPositions]*2/3]+1,Length[sunPositions]}
-]
-],
-
-Join[
-Table[
-directPower[i,41,date]*factor
-,{i,1,Round[Length[sunPositions]9/14]} (*16:00 is around 9/14  *)
-],
-Table[
-directPower[i,0,date]*factor
-,{i,Round[Length[sunPositions] 9/14]+1,Length[sunPositions]}
-]
-]
-
-},PlotLegends \[Rule] {"calculations 23/8","real data 17/8","calculations adjusting three times", "adjusting two times"},ImageSize \[Rule] Large
-]*)
-
-(* plot for one day, times 6.7 to compare form of graph *)
-(*ListLinePlot[{
-(*calculatesunPos[DateObject[{2016,8,17}]];*)
-Table[
-directPowerUrban[i,25,DateObject[{2016,8,17}]]*6.7
-,{i,1,Length[sunPositions]}
-]
-,dataAugust},PlotLegends \[Rule] {"calculations 17/8","real data 17/8"},ImageSize \[Rule] Large]*)
-
-(* plot to compare 14 times with 2 times optimised *)
-(*date = DateObject[{2016,8,17}];
-dayAngles[date,14][[All,2]]
-factor = 6.7;
-angles14 =dayAngles[DateObject[{2016,8,17}],14][[All,2]];
-ListLinePlot[{powerOverDay[angles14],
-
-Join[
-Table[
-directPower[i,41,date]*factor
-,{i,1,Round[Length[sunPositions]9/14]} (* 16:00 is around 9/14  *)
-],
-Table[
-directPower[i,0,date]*factor
-,{i,Round[Length[sunPositions] 9/14]+1,Length[sunPositions]}
-]
-]
-
-}, ImageSize\[Rule]Large, PlotLegends\[Rule]{legend,"Adjusting 2 times"}]*)
-
-
-(* percent difference by angle ******************************)
-
-directPowerPercent := Function[
-(1-directPower[#1]/860)*100
-]
-
-solarPanelTilt[z_] := (
-If[z>90,
-100,
-i =1.35*(1/1.35)^(Sec[z*Pi/180]);
-(1-i)*100
+t=Table[
+	{dateByDay[d],
+		Quiet[
+			dayAngle[DateValue[dateByDay[d],"Day"],DateValue[dateByDay[d],"Month"],DateValue[dateByDay[d],"Year"]]
+		]
+	},{d,1,numberOfDays}
 ]
 )
 
-(* DiscretePlot[1-Cos[x*Pi/180],{x,0,90,2},ImageSize\[Rule]Large] *)
-
-(*Show[DiscretePlot[directPowerPercent[x*Pi/180],{x,0,90,2},ImageSize\[Rule]Large],
-DiscretePlot[100*(1-Cos[x*Pi/180]),{x,0,90,2},ImageSize\[Rule]Large],DiscretePlot[solarPanelTilt[x],{x,0,90,2},ImageSize\[Rule]Large]
-]*)
-
-(*ListLinePlot[{Table[directPowerPercent[x*Pi/180],{x,0,100}],
-Table[100*(1-Cos[x*Pi/180]),{x,0,100}],
-Table[solarPanelTilt[x],{x,0,100}]},Filling \[Rule] Axis,PlotLegends \[Rule] {calculations,simple cos,solarpaneltilt.com},ImageSize \[Rule] Large,AxesLabel\[Rule] {"Angle misalignment","Percent of power loss"}]*)
-
-(************ real data ***********************)
-
-(* change name of imported csv, change dates in ListLinePlot to dates exisiting in data *)
-
-(*data = Import["C:\\Users\\s156757\\OneDrive\\SolArduino\\solarduino\\Documentation\\Mathematica\\data17_23.csv"];
-data = Delete[data,1];*)
-
-f[d_] := ( (* params: date, returns list of values for that date *)
-dayData = Select[data,
+csvToList[d_,c_] := ( (* csvToList[date,data] returns list of values for that date that exist in data *)
+dayData = Select[c,
 DayCount[
 DateObject[DateObject[
 DateString[#[[1]],{"Day","-","Month","-","Year"," ","Hour",":","Minute"}]
@@ -546,40 +328,8 @@ d
 Table[dayData[[i]][[2]] ,{i,1,Length[dayData]}]
 )
 
-(*ListLinePlot[
-f[DateObject[{2016,5,13,0,0}]]
-]*)
-(*
-ListLinePlot[
-{
-f[DateObject[{2016,8,16,0,0}]],
-f[DateObject[{2016,8,17,0,0}]],
-f[DateObject[{2016,8,18,0,0}]],
-f[DateObject[{2016,8,19,0,0}]]
-},PlotLegends \[Rule] {"24","24","40","5"}
-]*)
+getSunPositionsLength[] := Length[sunPositions]
 
-(*ListLinePlot[
-{
-f[DateObject[{2016,8,17,0,0}]],
-f[DateObject[{2016,8,22,0,0}]],
-f[DateObject[{2016,8,23,0,0}]],
-},
-PlotLegends \[Rule] {"17/8","22/8","23/8"}
-]*)
-(*Select[data,DateDifference[DateObject[ #[[1]]],{2016,8,18,0,0} ]\[LessEqual] 0 &,1 ]*)
-
-(************************)
-
-(* exporting *)
-(* Convert all the DateObjects to YYYY-MM-DD *)
-(*Do[
-t[[i,1]] = 
-DateString[t[[i,1]],{"Year","-","Month","-","Day"}],
-{i,Length[t]}
-];
-(* Export the table to csv, format YYYY-MM-DD, angle *)
-Export["C:\\Users\\s152337\\OneDrive\\Documenten\\SolArduino\\Documentation\\Mathematica\\data2016.csv", t];*)
 
   End[]
 
