@@ -129,6 +129,21 @@
 							to (8.75,-5.25)
 				;
 			\end{circuitikz}\end{center}
+			
+			\begin{tabular}{l|l|l|l}
+				circuit & terminal (connection to) & to meter cupboard & Arduino \\
+				\hline
+				Low end stop & no & white/green & 5 \\
+				Ground & 4 & red & GND \\
+				E4 & 5 & blue & 4 \\
+				High end stop & 6 & green & 3 \\
+				\hline
+				To potmeter: \\
+				\hline
+				blue (GND) & 7 \\
+				yellow/green (signal) & 8 & black & A7 \\
+				brown (+5V) & 9 & yellow & 5V
+			\end{tabular}
 		\subsubsection{Potentiometer}
 		The yellow-green wire from the potentiometer to the main control box is the signal wire, on connection 8 in that box. With the Arduino we measured 74 (analog in so scale 0-1024) in the highest position and 360 in the lowest position, with connection 9 to ground on the Arduino.
 		\subsubsection{Motor control}
