@@ -52,28 +52,7 @@ void setup () {
   ether.printIp("Address: http://", ether.myip);
 }
 
-int angle = 5;
-int counter = 0;
-boolean up = true;
 void loop () {
-  //DEBUG
-  counter++;
-  if (counter > 100) {
-    counter = 0;
-    if (angle<50 && up) {
-      angle++;
-    } else if (angle>5 && !up) {
-      angle--;
-    } else if (angle >= 50) {
-      up = false;
-      angle--;
-    } else if (angle <= 5) {
-      up = true;
-      angle++;
-    }
-  }
-  delay(10);
-
   //receive the http request
  word len = ether.packetReceive();
  word pos = ether.packetLoop(len);
