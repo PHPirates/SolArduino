@@ -3,7 +3,20 @@
 
 #include <EtherCard.h>
 
-//choose a unique mac address
+//pin declarations
+const byte POWER_HIGH = 3;
+const byte DIRECTION_PIN = 4;
+const byte POWER_LOW = 5;
+
+const byte POTMETERPIN = A7;
+
+//experimentally determined values
+const int POTMETER_LOWEND = 641;
+const int POTMETER_HIGHEND = 1022;
+const byte DEGREES_HIGHEND = 57;
+const byte DEGREES_LOWEND = 5;
+
+
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
 static byte myip[] = {192, 168, 2, 106};// ip Thomas
@@ -22,6 +35,12 @@ const char http_OK[] PROGMEM =
 boolean autoMode;
 
 void setup () {
+  pinMode(POWER_HIGH,OUTPUT);
+  pinMode(DIRECTION_PIN,OUTPUT);
+  pinMode(POWER_LOW,OUTPUT);
+
+  solarPanelStop();
+
   Serial.begin(9600);
 
   //do not forget to add the extra '10' argument because of this ethernet shield
@@ -74,18 +93,22 @@ void loop () {
              homePage();
          }
          else if (strncmp("?panel=up ", data, 10) == 0) {
+           solarPanelUp();
              acknowledge("Panels going up."); //send acknowledge http response
              autoMode = false;
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
+           solarPanelDown();
              acknowledge("Panels going down.");
              autoMode = false;
          }
          else if (strncmp("?panel=stop ", data, 12) == 0) {
+           solarPanelStop();
              acknowledge("Panels stopped/not moving.");
              autoMode = false;
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
+             //solarPanelAuto(); //to be implemented
              acknowledge("Auto mode switched on.");
              autoMode = true;
          }
@@ -130,7 +153,72 @@ void loop () {
  }
 }
 
-void homePage() {
+
+void setSolarPanel(byte degrees) {
+  //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
+  //times hundred to avoid integer division just possible without integer overflow
+  int expectedVoltage = POTMETER_LOWEND +
+  ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
+  * (POTMETER_HIGHEND - POTMETER_LOWEND) / 100 ;
+  if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND) || expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
+    sendErrorMessage("Degrees Out Of Range");
+  } else {
+    int potMeterValue = analogRead(POTMETERPIN);
+    while (abs (potMeterValue - expectedVoltage) > 3) { //3 is about half a degree accuracy
+      if (POTMETER_LOWEND > POTMETER_HIGHEND) {
+        if (potMeterValue > expectedVoltage) {
+          solarPanelUp;
+        } else {
+          solarPanelDown;
+        }
+      } else {
+        if (potMeterValue < expectedVoltage) {
+          solarPanelUp;
+        } else {
+          solarPanelDown;
+        }
+      }
+      potMeterValue = analogRead(POTMETERPIN);
+
+    }
+    solarPanelStop(); //stop movement when close enough
+  }
+}
+
+void sendErrorMessage(char* message) {
+  //dispatch error message to all phones?
+}
+
+int getCurrentAngle() {
+  int potMeterValue = analogRead(POTMETERPIN);
+  Serial.println(potMeterValue);
+  //fraction of potmetervalue from the low end. Times hundred
+  //to maintain accuracy with integer division
+  int fraction = ( ( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
+  / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
+  return ( fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
+}
+
+//solar panel movements
+void solarPanelDown() {
+  digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
+  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
+  digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
+}
+
+void solarPanelUp() {
+  digitalWrite(POWER_LOW, LOW);
+  digitalWrite(POWER_HIGH, HIGH);
+  digitalWrite(DIRECTION_PIN, LOW);
+}
+
+void solarPanelStop() {
+  digitalWrite(POWER_LOW, LOW);
+  digitalWrite(POWER_HIGH, LOW);
+  digitalWrite(DIRECTION_PIN, LOW);
+}
+
+  void homePage() {
  long t = millis() / 1000;
  word h = t / 3600;
  byte m = (t / 60) % 60;
