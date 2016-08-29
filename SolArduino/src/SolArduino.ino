@@ -220,8 +220,3 @@ void solarPanelStop() {
       "$S"), //$S for a c string
     http_OK,message); //parameters to be replaced go here
   }
-
-    //in branch setSolarPanel
-  int getCurrentAngle() {
-    return angle;
-  }
