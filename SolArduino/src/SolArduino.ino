@@ -4,9 +4,9 @@
 #include <EtherCard.h>
 
 //pin declarations
-const byte POWER_HIGH = 2;
-const byte DIRECTION_PIN = 3;
-const byte POWER_LOW = 4;
+const byte POWER_HIGH = 3;
+const byte DIRECTION_PIN = 4;
+const byte POWER_LOW = 5;
 
 const byte POTMETERPIN = A7;
 
