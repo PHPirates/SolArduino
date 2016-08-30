@@ -1,6 +1,8 @@
 -IC:\Users\s156757\.platformio\packages\framework-arduinoavr\cores\arduino
 -IC:\Users\s156757\.platformio\packages\framework-arduinoavr\variants\eightanaloginputs
 -IC:\Users\s156757\OneDrive\SolArduino\solarduino\SolArduino\lib\EtherCard_c237eff661_425
+-IC:\Users\s156757\OneDrive\SolArduino\solarduino\SolArduino\lib\Time-master
+-IC:\Users\s156757\OneDrive\SolArduino\solarduino\SolArduino\lib\Timezone-master
 -IC:\Users\s156757\OneDrive\SolArduino\solarduino\SolArduino\src
 -IC:\Users\s156757\.platformio\packages\framework-arduinoavr\libraries\Bridge\src
 -IC:\Users\s156757\.platformio\packages\framework-arduinoavr\libraries\EEPROM\src

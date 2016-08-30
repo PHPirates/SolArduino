@@ -11,7 +11,7 @@ const byte POWER_LOW = 5;
 const byte POTMETERPIN = A7;
 
 //experimentally determined values
-const int POTMETER_LOWEND = 641;
+const int POTMETER_LOWEND = 650;
 const int POTMETER_HIGHEND = 1015;
 const byte DEGREES_HIGHEND = 57;
 const byte DEGREES_LOWEND = 5;
