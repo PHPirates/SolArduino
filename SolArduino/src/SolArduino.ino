@@ -12,7 +12,7 @@ const byte POTMETERPIN = A7;
 
 //experimentally determined values
 const int POTMETER_LOWEND = 641;
-const int POTMETER_HIGHEND = 1022;
+const int POTMETER_HIGHEND = 1015;
 const byte DEGREES_HIGHEND = 57;
 const byte DEGREES_LOWEND = 5;
 
@@ -137,8 +137,10 @@ void setSolarPanel(byte degrees) {
   //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
   //times hundred to avoid integer division just possible without integer overflow
   int expectedVoltage = POTMETER_LOWEND +
-  ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
-  * (POTMETER_HIGHEND - POTMETER_LOWEND) / 100 ;
+  ( (long) ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
+  * (POTMETER_HIGHEND - POTMETER_LOWEND) ) / 100 ;
+  Serial.print("expected: ");
+  Serial.println(expectedVoltage);
   if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND) || expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
     sendErrorMessage("Degrees Out Of Range");
   } else {
@@ -173,7 +175,7 @@ int getCurrentAngle() {
   Serial.println(potMeterValue);
   //fraction of potmetervalue from the low end. Times hundred
   //to maintain accuracy with integer division
-  int fraction = ( ( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
+  int fraction = ( (long)( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
   / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
   return ( fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
 }
