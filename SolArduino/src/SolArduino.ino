@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 //code adapted from //http://forum.arduino.cc/index.php?topic=90269.msg1991068#msg1991068
 
 
