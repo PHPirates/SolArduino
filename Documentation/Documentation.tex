@@ -233,18 +233,11 @@ N[360 + ( (x - 5) * 100 / (50 - 5) ) * (74 - 360) /100]
 			   
 			   \subsection{Mathematica calculations}
 			   
-			   The Mathematica notebook can calculate the optimal angle for a given day. To do that, it calculates for each angle between $0$ and $90$ the total of the percentages of power loss at each $1/10$ hour of that day (function \verb|g|). Then it finds the angle for which that value is minimal. (function \verb|day|).  To find a percentage of power loss for a given hour, function \verb|f| calculates the misalignment with the sun using the formula from the previous subsection, and then calculates the percentage of loss of power using a formula from \href{https://en.wikipedia.org/wiki/Solar_tracker#/media/File:SolarPanel_alignment.png}{Wikipedia}.
+			   The Mathematica package (imported with \verb|<< SolArduino`|, be sure to place it in your
+			    \url{\%AppData\%\\Mathematica\\Applications} folder) can calculate the optimal angle for a given day. To do that, it calculates for each angle between $0$ and $90$ the total of the insolation (power received by the sun) at each half hour of that day. Then it finds the angle for which that value is minimal. To find the insolation at a given hour, the function \verb|angle| calculates the misalignment with the sun using the formula from the previous subsection, and then calculates the insolation using a formula from \href{http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295 }{www.powerfromthesun.net}, where parameters for urban haze compared a lot better with real life values (17/8) than clear day parameters.
 			   
-			   It can therefore make graphs for optimal angles for a month, and averaging the values for a month, also for a year, as seen below.
-			   \begin{figure}[h]
-			   	\centering
-			   	\includegraphics[width=0.8\textwidth]{graph_dec.JPG}
-			   	\label{fig:graph_dec}
-			   \end{figure}
-			   \begin{figure}[h]
-			   	\centering
-			   	\includegraphics[width=0.8\textwidth]{graph_2016.JPG}
-			   	\label{fig:graph_dec}
-			   \end{figure}
+			   It can therefore make graphs for optimal angles for a month, and averaging the values for a month, also for a year, and lots more as seen in the demonstration notebook. When plotting real data, for example days like  13/5, 19/7 and 17/8 are all cloudless days with the solar panels at around 25 degrees.
+			   
+			   It is important to note that the functions \verb|angle|, \verb|directPower| and more do not take the hour of the day as input, but the index of the \verb|sunPositions| table which contains the azimuth and altitude of the sun over the day. Therefore, \textit{before you call functions which take an index as parameter you need to make sure you have }\verb|sunPositions| \textit{initialised} at the right day, done by calling \verb|calculatesunPos[DateObject[{2016,7,18}]]| with whatever day you want in the table.
 			   	
 \end{document}
