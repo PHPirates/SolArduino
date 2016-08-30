@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     ImageView imageView;    // image of solar panels
 
     SeekBar seekbar;        // seekbar to change angle of solar panels
+    int seekbarProgress = 5;
 
     ImageButton upButton;   // button to make the solar panels move up
     ImageButton downButton; // button to make the solar panels move down
@@ -154,7 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
                 // do something when the progress of the seekbar is changing ("live")
-                String angle = "Set angle at " + i + " \u00b0";
+                String angle = "Set angle at " + (i+5) + " \u00b0";
+                seekbarProgress = seekbar.getProgress() + 5;
                 setAngle.setText(angle); // set the text "Set angle at xx" on the button
 
             }
@@ -247,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         Log.e("setAngle", "pressed");
                         int prog = seekbar.getProgress(); // get the value from the seekbar
-                        sendAngleRequest(prog); // set the panels at angle
+                        sendAngleRequest(seekbarProgress); // set the panels at angle
                         view.performClick();
                         break;
 
@@ -274,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             public void run() {
 //                                Log.e("angles", "current " + angleInt + " seekbar " + seekBarProgress);
 
-                                if(angleInt == seekBarProgress) {
+                                if(angleInt == seekbarProgress) {
 //                                if(Math.abs(angleInt - seekBarProgress) == 1) {
 
                                     // cancel the timer when right angle is reached
@@ -289,7 +291,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                             .trim(); // trim spaces off
 
                                     angleInt = Integer.valueOf(angleString);
-                                    seekBarProgress = seekbar.getProgress();
+                                    seekbarProgress = seekbar.getProgress() + 5;
+
 
                                     sendUpdateRequest();
                                 }

@@ -103,7 +103,7 @@
                 android:id="@+id/seekBar"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:max="55"
+                android:max="52"
                 android:translationX="-100dp"
                 android:translationY="125dp"
                 android:rotation="270"/>
