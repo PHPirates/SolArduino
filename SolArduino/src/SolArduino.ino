@@ -1,9 +1,7 @@
 #include <Arduino.h>
-
-//code adapted from //http://forum.arduino.cc/index.php?topic=90269.msg1991068#msg1991068
-
-
-#include <EtherCard.h>
+#include <EtherCard.h>      // https://github.com/jcw/ethercard
+#include <Time.h>           // http://www.arduino.cc/playground/Code/Time
+#include <Timezone.h>       // https://github.com/JChristensen/Timezone
 
 //pin declarations
 const byte POWER_HIGH = 3;
@@ -23,6 +21,14 @@ static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
 static byte myip[] = {192, 168, 2, 106};// ip Thomas
 //static byte myip[] = {192, 168, 0, 23}; // ip Abby
+
+// NTP globals
+const char poolNTP[] PROGMEM = "0.pool.ntp.org"; //pool to get time server from
+uint8_t ntpMyPort = 123; //port for the time server, TODO why is this needed?
+// TimeZone : GMT+1. Helpful for getting correct current time
+TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +120};
+TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, +60};
+Timezone timeZone(summerTime, winterTime);
 
 byte Ethernet::buffer[500];
 
@@ -52,6 +58,15 @@ void setup () {
   ether.staticSetup(myip);
   //no serial print because ether.myip is a char[] array
   ether.printIp("Address: http://", ether.myip);
+
+  //NTP syncing
+  //Find ip address of a time server from the pool
+  if (!ether.dnsLookup(poolNTP)) {
+    Serial.println("DNS failed");
+  }
+  ether.printIp("Lookup IP   : ", ether.hisip);
+  //sync arduino clock, current time in seconds can be found with now();
+  setTime(getNtpTime());
 }
 
 void loop () {
@@ -224,3 +239,19 @@ void solarPanelStop() {
       "$S"), //$S for a c string
     http_OK,message); //parameters to be replaced go here
   }
+
+  unsigned long getNtpTime() {
+  unsigned long timeFromNTP;
+  const unsigned long seventy_years = 2208988800UL;
+  ether.ntpRequest(ether.hisip, ntpMyPort);
+  while(true) {
+    word length = ether.packetReceive();
+    ether.packetLoop(length);
+    if(length > 0 && ether.ntpProcessAnswer(&timeFromNTP, ntpMyPort)) {
+      // Serial.print("Time from NTP: ");
+      // Serial.println(timeFromNTP);
+      return timeZone.toLocal(timeFromNTP - seventy_years);
+    }
+  }
+  return 0;
+}
