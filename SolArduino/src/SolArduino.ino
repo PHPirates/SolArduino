@@ -4,23 +4,23 @@
 #include <EtherCard.h>
 
 //pin declarations
-const byte POWER_HIGH = 2;
-const byte DIRECTION_PIN = 3;
-const byte POWER_LOW = 4;
+const byte POWER_HIGH = 3;
+const byte DIRECTION_PIN = 4;
+const byte POWER_LOW = 5;
 
 const byte POTMETERPIN = A7;
 
 //experimentally determined values
 const int POTMETER_LOWEND = 641;
-const int POTMETER_HIGHEND = 1022;
-const byte DEGREES_HIGHEND = 50;
+const int POTMETER_HIGHEND = 1015;
+const byte DEGREES_HIGHEND = 57;
 const byte DEGREES_LOWEND = 5;
 
 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
-static byte myip[] = {192, 168, 2, 10};// ip Thomas
-// static byte myip[] = {192, 168, 0, 23}; // ip Abby
+static byte myip[] = {192, 168, 2, 106};// ip Thomas
+//static byte myip[] = {192, 168, 0, 23}; // ip Abby
 
 byte Ethernet::buffer[500];
 
@@ -32,6 +32,8 @@ const char http_OK[] PROGMEM =
    "Content-Type: text/html\r\n"
    "Pragma: no-cache\r\n\r\n";
 
+boolean autoMode;
+
 void setup () {
   pinMode(POWER_HIGH,OUTPUT);
   pinMode(DIRECTION_PIN,OUTPUT);
@@ -40,7 +42,6 @@ void setup () {
   solarPanelStop();
 
   Serial.begin(9600);
-
 
   //do not forget to add the extra '10' argument because of this ethernet shield
   if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) {
@@ -52,10 +53,6 @@ void setup () {
 }
 
 void loop () {
-  //testprint potmeter
-  int sensorValue = analogRead(A7);
-  // Serial.println(sensorValue);
-
   //receive the http request
  word len = ether.packetReceive();
  word pos = ether.packetLoop(len);
@@ -77,18 +74,26 @@ void loop () {
          else if (strncmp("?panel=up ", data, 10) == 0) {
            solarPanelUp();
              acknowledge("Panels going up."); //send acknowledge http response
+             autoMode = false;
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
            solarPanelDown();
              acknowledge("Panels going down.");
+             autoMode = false;
          }
          else if (strncmp("?panel=stop ", data, 12) == 0) {
            solarPanelStop();
              acknowledge("Panels stopped/not moving.");
+             autoMode = false;
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
-           //solarPanelAuto(); //to be implemented
-             acknowledge("Panels going on auto.");
+             //solarPanelAuto(); //to be implemented
+             acknowledge("Auto mode switched on.");
+             autoMode = true;
+         }
+         else if (strncmp("?panel=manual ", data, 12) == 0){
+             acknowledge("Auto mode switched off.");
+             autoMode = false;
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
               //print digit that comes after
@@ -105,12 +110,19 @@ void loop () {
 
              //convert string to const char, easier than a modifiable char array
              acknowledge(stringDegrees.c_str());
+             autoMode = false;
          }
          else if (strncmp("?update", data, 7) == 0) {
            //update requested, sent back current angle
-          //  int angle = getCurrentAngle();
-          int angle = 42;
-           acknowledge(String(angle).c_str()); //convert to string, then to const char
+           int angle = getCurrentAngle();
+           String update = String(angle);
+           if(autoMode) {
+              update = update + " auto";
+           } else {
+              update = update + " manual";
+           }
+
+           acknowledge(update.c_str()); //convert to string, then to const char
          }
          else {
              Serial.println("Page not found");
@@ -125,11 +137,12 @@ void setSolarPanel(byte degrees) {
   //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
   //times hundred to avoid integer division just possible without integer overflow
   int expectedVoltage = POTMETER_LOWEND +
-  ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
-  * (POTMETER_HIGHEND - POTMETER_LOWEND) / 100 ;
+  ( (long) ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
+  * (POTMETER_HIGHEND - POTMETER_LOWEND) ) / 100 ;
+  Serial.print("expected: ");
+  Serial.println(expectedVoltage);
   if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND) || expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
-    // sendErrorMessage("Degrees Out Of Range");
-    Serial.println("Degrees Out Of Range");
+    sendErrorMessage("Degrees Out Of Range");
   } else {
     int potMeterValue = analogRead(POTMETERPIN);
     while (abs (potMeterValue - expectedVoltage) > 3) { //3 is about half a degree accuracy
@@ -151,6 +164,20 @@ void setSolarPanel(byte degrees) {
     }
     solarPanelStop(); //stop movement when close enough
   }
+}
+
+void sendErrorMessage(char* message) {
+  //dispatch error message to all phones?
+}
+
+int getCurrentAngle() {
+  int potMeterValue = analogRead(POTMETERPIN);
+  Serial.println(potMeterValue);
+  //fraction of potmetervalue from the low end. Times hundred
+  //to maintain accuracy with integer division
+  int fraction = ( (long)( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
+  / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
+  return ( fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
 }
 
 //solar panel movements
@@ -188,7 +215,6 @@ void solarPanelStop() {
   }
 
   void acknowledge(const char* message) {
-    Serial.println(message);
     //send a http response
     bfill = ether.tcpOffset();
     bfill.emit_p(PSTR(
