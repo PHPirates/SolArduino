@@ -2,6 +2,8 @@
 \usepackage{hyperref} % used for links
 \usepackage{listings}
 \usepackage{circuitikz}
+\usepackage{tikz}
+\usepackage{xstring}
 \usepackage{amsmath}
 \usepackage{graphicx}
 
@@ -127,6 +129,92 @@
 							to (9,-4.75)
 							to (9,-5.25)
 							to (8.75,-5.25)
+				;
+			\end{circuitikz}\end{center}
+			
+		\subsubsection{Arduino circuit}
+			\begin{center}\begin{circuitikz}
+				\draw[dashed] 
+					(2,10) to (5,10)
+						to (5,14)
+						to (2,14)
+						to (2,10)
+					(3.5,13) node[align=left] {Lenze\\ frequency\\ inverter}
+				;
+				\draw
+				%E4 and its components (Arduino I/O, transistors)
+					(10,0) node {E4}
+					(1,1.225) node[align=center] {Arduino\\ I/O}
+					(10,2) node [pnp] (pnpE4) {}
+						(pnpE4.B) node[right=8mm, align=left] {Q6\\ BC557}
+					(5,1.225) node [npn] (npnE4) {}
+						(npnE4.B) node[right=8mm, align=left] {Q5\\ BC547}
+						
+				%Low end stop and its components
+					(0.5,7.225) node[align=center] {Arduino\\ I/O}
+					(10,8) node [pnp] (pnpLow) {}
+						(pnpLow.B) node[right=8mm, align=left] {Q4\\ BC557}
+					(4, 7.225) node [npn] (npnLow) {}
+						(npnLow.B) node[right=8mm, align=left] {Q3\\ BC547}
+						
+				%High end stop and its components
+					(0.5, 15.725) node[align=center] {Arduino\\ I/O}
+					(10,16.5) node[pnp] (pnpHigh) {}
+						(pnpHigh.B) node[right=8mm, align=left] {Q2\\ BC557}
+					(4, 15.725) node[npn] (npnHigh) {}
+						(npnHigh.B) node[right=8mm, align=left] {Q1\\ BC547}
+				
+				%Frequency Invertor and components (including line to GNDs)
+					(3.5,11) node[sground] {}
+						to (2,11)
+					(1.2,11.5) node[align=left] {39 \\(GND)}
+						(2,11) to[short,-*] (-1,11)
+					(5.7,12) node[align=left] {28 \\ enable}
+						(5,11.5) to (10,11.5)
+						
+				%Arduino GND
+					(-3,11) node[align=left] {Arduino\\ GND}
+						(-2,11) to (-1,11)
+ 						
+ 					(-1,0) to (-1,14.955) % line on the left that connects GND
+ 					(12,4) to (12,18.5) % line on the right that connects 20
+
+				%circuit around E4
+					(10,0.25) to (pnpE4.C)
+					(pnpE4.B) to[R=R8 1k$\Omega$] (npnE4.C) 
+					(npnE4.E) to (5,0)
+						to (-1,0)
+					(npnE4.B) to[R, l=R7 4.8k$\Omega$] (2.1, 1.225)
+					(9,2) node[circ] {}
+						to[R,align=left, l=R9\\ 10k$\Omega$] (9,4)
+						to (12,4)
+					(10,4) node[circ] {} 
+						to (pnpE4.E)
+						
+				%circuit around low end stop
+					(pnpLow.B) to[R=R5 1k$\Omega$] (7,8) 
+						to (npnLow.C)
+					(9,8) node[circ] {} 
+						to[R, align=left, l=R6\\ 10k$\Omega$] (9,10)
+						to[short, -*] (12,10)
+						(pnpLow.E) to (10,10) node[circ] {}
+					(pnpLow.C) to[switch, align=left, l=low\\ end stop] (10,6)
+						to (6.5,6)
+						to[short, -*] (6.5,11.5)
+					(npnLow.B) to[R=R4 4.7k$\Omega$] (1.2, 7.225) 
+					(npnLow.E) to (4,6)
+						to[short, -*] (-1,6)
+						
+				%circuit around high end stop
+					(pnpHigh.B) to[R=R2 1k$\Omega$] (7,16.5)
+						to (npnHigh.C)
+					(9,16.5) to[R, align=left, l=R3\\ 10k$\Omega$, *-] (9,18.5)
+						to (12,18.5)
+					(pnpHigh.E) to[short, -*] (10,18.5)
+					(pnpHigh.C) to[switch, align=left, l=high\\ end stop] (10,14.5)
+						to (10,11.5)
+					(npnHigh.E) to (-1,14.955)
+					(npnHigh.B) to[R=R1 4.7k$\Omega$] (1.2, 15.725)
 				;
 			\end{circuitikz}\end{center}
 			
