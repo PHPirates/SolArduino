@@ -50,7 +50,7 @@ BeginPackage[ "SolArduino`"]
 		"monthAngle[month, year] returns optimal angle for a specific month by taking the average of the optimal angle each day"
 			
 	twoAnglesOptimal::usage = 
-		"twoAnglesOptimal[date] returns in a list the date/time at which to change the angle of solar panels (besides before sunrise) 			to get optimal power, then the two angles of the day, then the percent increase of power compared to 			one setting for the whole day, then the percent increase compared to one setting if you would adjust 			fourteen times a day, spread evenly over the day"
+		"twoAnglesOptimal[date] returns in a list the date/time at which to change the angle of solar panels (besides before sunrise) to get optimal power, then the two angles of the day, then the percent increase of power compared to 			one setting for the whole day, then the percent increase compared to one setting if you would adjust 			fourteen times a day, spread evenly over the day"
 			
 	powerOverDay::usage = 
 		"powerOverDay[list of angles of a day, date] returns a list with power received for each angle-period"
@@ -63,6 +63,8 @@ BeginPackage[ "SolArduino`"]
 	
 	getSunPositionsLength::usage = "returns sunPositions table length"
 	
+	exportPeriod::usage = 
+	"exportPeriod[begin date, end date, number of adjustments per day], exports two csv files. One with the Unix Times over the given period, another with the angles."
 
   Begin[ "Private`"]
 
@@ -190,7 +192,7 @@ calculatesunPos[d];
 l = Length[sunPositions];
 Table[ (* calculates indices of start and end of the interval *)
 angleInterval[d,1+Round[l*i/n],Round[l*(i+1)/n]]
-,{i,0,n-1}]
+,{i,0,n-1}] 
 )
 
 dayAnglesHour[d_] := ( (* dayAnglesHour[date] returns a list of {power output, optimal angle} at each whole 
@@ -329,6 +331,40 @@ Table[dayData[[i]][[2]] ,{i,1,Length[dayData]}]
 )
 
 getSunPositionsLength[] := Length[sunPositions]
+
+exportTimesPeriod[b_,c_,n_] := ( (*begin date, end date, number of adjustments per day, 
+	returns list with UnixTimes of the period*)
+	numberOfDays = DayCount[b,c]+1;
+	dateByDay = Function[x, b+Quantity[(x-1), "Days"]];
+	times = Flatten[Table[
+			position = GeoPosition[{51.546545,4.411744}]; (* position of solar panels *)
+	sunrise = UnixTime[Sunrise[position,dateByDay[d]]];
+	sunset = UnixTime[Sunset[position,dateByDay[d]]];
+	dayLight = sunset - sunrise;
+	interval = dayLight / n;
+	t = Table[sunrise+i*interval,{i,1,n}]
+	,{d,1,numberOfDays}
+]]
+)
+
+exportAnglesPeriod[b_,c_,n_] := ((*begin date, end date, number of adjustments per day, 
+	returns list with angles of the period*)
+	numberOfDays = DayCount[b,c] +1;
+	dateByDay = Function[x, b+Quantity[(x-1), "Days"]];
+	angles = Flatten[Table[
+	dayAngles[dateByDay[d],n][[All,2]]
+,{d,1,numberOfDays}
+]]
+)
+
+exportPeriod[b_,c_,n_] := ( (* exportPeriod[begin date, end date, number of adjustments per day], exports two csv files. 
+One with the Unix Times over the given period, another with the angles. *)
+	angles = exportAnglesPeriod[b,c,n];
+	Export["C:\\Users\\s152337\\OneDrive\\Documenten\\SolArduino\\Documentation\\Mathematica\\angles.csv", {angles}];
+	times = exportTimesPeriod[b,c,n];
+	Export["C:\\Users\\s152337\\OneDrive\\Documenten\\SolArduino\\Documentation\\Mathematica\\times.csv", {times}];
+Length[angles]
+)
 
 
   End[]
