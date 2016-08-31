@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         view.setPressed(true); // simulate onClick (pressed) event so colour changes
 
                         Log.e("setAngle", "pressed");
-                        int prog = seekbar.getProgress(); // get the value from the seekbar
+//                        int prog = seekbar.getProgress(); // get the value from the seekbar
                         sendAngleRequest(seekbarProgress); // set the panels at angle
                         view.performClick();
                         break;
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     .trim();
 
                             int angleInt = Integer.valueOf(angleString);
-                            int seekBarProgress = seekbar.getProgress(); // value seekbar
+//                            int seekBarProgress = seekbar.getProgress(); // value seekbar
                             @Override
                             public void run() {
 //                                Log.e("angles", "current " + angleInt + " seekbar " + seekBarProgress);
@@ -292,7 +292,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                                     angleInt = Integer.valueOf(angleString);
                                     seekbarProgress = seekbar.getProgress() + 5;
-
 
                                     sendUpdateRequest();
                                 }
