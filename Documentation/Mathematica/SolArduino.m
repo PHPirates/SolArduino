@@ -342,7 +342,7 @@ exportTimesPeriod[b_,c_,n_] := ( (*begin date, end date, number of adjustments p
 	sunset = UnixTime[Sunset[position,dateByDay[d]]];
 	dayLight = sunset - sunrise;
 	interval = dayLight / n;
-	t = Table[sunrise+i*interval,{i,1,n}]
+	t = Table[sunrise+i*interval,{i,0,n-1}]
 	,{d,1,numberOfDays}
 ]]
 )
