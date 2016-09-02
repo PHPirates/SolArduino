@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     Toast unreachableToast;
     Toast updateToast;
+    Toast updatedToast;
 
     int delay = 900;        // delay for the Timer/TimerTask
 
@@ -396,6 +397,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      */
     public void sendUpdateRequest(View view) {
         if(updateToast == null) {
+            if(updatedToast != null) {
+                updatedToast.cancel();
+            }
             updateToast = Toast.makeText(getBaseContext(), "Updating...", Toast.LENGTH_SHORT);
         }
         updateToast.show();
@@ -524,6 +528,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     // string with current angle plus degree symbol
                     String angle = Html.fromHtml(updateString[0]) + "\u00b0";
                     currentAngle.setText(angle);
+                    if(updateToast != null) {
+                        if(updatedToast != null) {
+                            updatedToast.cancel();
+                        }
+                        updateToast.cancel();
+                        updatedToast = Toast.makeText(getBaseContext(), "Updated.", Toast.LENGTH_SHORT);
+                        updatedToast.show();
+                    }
+
                     // get the current angle from the result, without spaces
                     result = result.substring(0, 2).trim();
                     // convert string to integer, then rotate the image
