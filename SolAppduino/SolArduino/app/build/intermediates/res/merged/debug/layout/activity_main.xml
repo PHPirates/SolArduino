@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="0dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="4dp"
+    tools:context="com.abbyberkers.solarduino.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TableLayout
+        android:id="@+id/table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow>
+            <TableLayout
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TableRow>
+                    <ImageButton
+                        android:id="@+id/upButton"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/up_button"
+                        android:background="#00000000"
+                        android:onClick="unCheck"/>
+
+                </TableRow>
+                <TableRow>
+                    <ImageButton
+                        android:id="@+id/downButton"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/down_button"
+                        android:background="#00000000"
+                        android:onClick="unCheck"/>
+                </TableRow>
+
+            </TableLayout>
+
+            <TableLayout
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:orientation="vertical">
+                <TableRow>
+                    <TextView
+                        android:id="@+id/currentAngle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="80sp"
+                        android:text="20 \u00b0"
+                        android:textColor="@drawable/text_selector"
+                        android:onClick="sendUpdateRequest"/>
+                </TableRow>
+                <TableRow
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/autoBox"
+                        android:layout_width="wrap_content"
+                        android:text="@string/auto"/>
+
+                    <!--<Button-->
+                        <!--android:id="@+id/testButton"-->
+                        <!--android:text="test"-->
+                        <!--android:onClick="testButton"/>-->
+                </TableRow>
+            </TableLayout>
+        </TableRow>
+        <!--<TableRow>-->
+            <!--<TextView-->
+                <!--android:id="@+id/response"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/response"/>-->
+
+        <!--</TableRow>-->
+    </TableLayout>
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:layout_below="@+id/table"
+            android:orientation="horizontal">
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:max="52"
+                android:translationX="-100dp"
+                android:translationY="125dp"
+                android:rotation="270"/>
+            <ImageView
+                android:id="@+id/linePanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:scaleType="fitXY"
+                android:src="@drawable/panel"/>
+
+        </FrameLayout>
+
+    <Button
+        android:id="@+id/setAngle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/frame"
+        android:text="set angle"
+        android:onClick="unCheck"/>
+
+    </RelativeLayout>
+</ScrollView>
