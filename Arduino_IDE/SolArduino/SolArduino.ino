@@ -180,9 +180,12 @@ void setSolarPanel(float degrees) {
   ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
   Serial.print("expected: ");
   Serial.println(expectedVoltage);
-  if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND) || expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
-    sendErrorMessage("Degrees Out Of Range");
-  } else {
+  if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND)) {
+    degrees = 57;
+    //sendErrorMessage("Degrees Out Of Range");
+  } else if(expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
+    degrees = 5;
+  }
     int total = 0;
     for (int i=0; i<sampleRate; i++) {
       total += analogRead(POTMETERPIN);
@@ -217,7 +220,7 @@ void setSolarPanel(float degrees) {
 
     }
     solarPanelStop(); //stop movement when close enough
-  }
+  
 }
 
 void solarPanelAuto() {
