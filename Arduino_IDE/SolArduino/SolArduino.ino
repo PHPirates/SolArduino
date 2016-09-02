@@ -2,8 +2,9 @@
 #include <EtherCard.h>      // https://github.com/jcw/ethercard
 #include <Time.h>           // http://www.arduino.cc/playground/Code/Time
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
+#include <avr/pgmspace.h>   // To use PROGMEM
 #include "numbers.h"        // The file which contains the data with angles and unix times
-const int TABLE_LENGTH = 3; // It's easiest to declare the length here
+const int TABLE_LENGTH = 7; // It's easiest to declare the length here
 
 int tableIndex; // The current index in the table when in auto mode
 
@@ -13,6 +14,7 @@ const byte DIRECTION_PIN = 4;
 const byte POWER_LOW = 5;
 
 const byte POTMETERPIN = A7;
+byte sampleRate = 5; //amount of readings to take the average of when reading the potmeter
 
 //experimentally determined values
 const int POTMETER_LOWEND = 650;
@@ -56,10 +58,6 @@ void setup () {
   pinMode(DIRECTION_PIN,OUTPUT);
   pinMode(POWER_LOW,OUTPUT);
 
-  solarPanelStop();
-  autoMode = true;
-  solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
-
   //do not forget to add the extra '10' argument because of this ethernet shield
   if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) {
     Serial.println(F("Failed to access Ethernet controller"));
@@ -70,15 +68,17 @@ void setup () {
 
   //NTP syncing
 //    Find ip address of a time server from the pool
-  Serial.println("starting sync");
    if (!ether.dnsLookup(poolNTP)) {
      Serial.println("DNS failed");
    }
-   Serial.println("DNS worked");
    ether.printIp("Lookup IP   : ", ether.hisip);
    //sync arduino clock, current time in seconds can be found with now();
    setTime(getNtpTime());
    Serial.println(now());
+
+   solarPanelStop();
+   autoMode = true;
+   solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
@@ -127,7 +127,7 @@ void receiveHttpRequests() {
              autoMode = false;
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
-             //solarPanelAuto(); //to be implemented
+             solarPanelAuto(); //to be implemented
              acknowledge("Auto mode switched on.");
              autoMode = true;
          }
@@ -172,19 +172,25 @@ void receiveHttpRequests() {
  }
 }
 
-
-void setSolarPanel(byte degrees) {
+void setSolarPanel(float degrees) {
   //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
   //times hundred to avoid integer division just possible without integer overflow
+  float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
   int expectedVoltage = POTMETER_LOWEND +
-  ( (long) ( (degrees - DEGREES_LOWEND) * 100 / (DEGREES_HIGHEND - DEGREES_LOWEND) )
-  * (POTMETER_HIGHEND - POTMETER_LOWEND) ) / 100 ;
+  ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
   Serial.print("expected: ");
   Serial.println(expectedVoltage);
   if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND) || expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
     sendErrorMessage("Degrees Out Of Range");
   } else {
-    int potMeterValue = analogRead(POTMETERPIN);
+    int total = 0;
+    for (int i=0; i<sampleRate; i++) {
+      total += analogRead(POTMETERPIN);
+    }
+    int potMeterValue = total/sampleRate;
+    Serial.print("potmeter: ");
+    Serial.println(potMeterValue);
+    Serial.println(abs (potMeterValue - expectedVoltage));
     while (abs (potMeterValue - expectedVoltage) > 3) { //3 is about half a degree accuracy
       receiveHttpRequests(); //keep responsive
       if (POTMETER_LOWEND > POTMETER_HIGHEND) {
@@ -200,7 +206,14 @@ void setSolarPanel(byte degrees) {
           solarPanelDown();
         }
       }
-      potMeterValue = analogRead(POTMETERPIN);
+      int total = 0;
+      for (int i=0; i<sampleRate; i++) {
+        total += analogRead(POTMETERPIN);
+      }
+      potMeterValue = total/sampleRate;
+      Serial.print("potmeter: ");
+      Serial.println(potMeterValue);
+      Serial.println(abs (potMeterValue - expectedVoltage));
 
     }
     solarPanelStop(); //stop movement when close enough
@@ -213,13 +226,16 @@ void solarPanelAuto() {
     i++;
   }
   tableIndex = i-1; //correct for i being one too much after searching to get corresponding angle
+//  Serial.print("i=");
+//  Serial.println(i);
   Serial.print("set on auto, going to degrees: ");
-  Serial.println(angles[i-1]);
-  setSolarPanel(angles[i]);
+  Serial.println(angles[tableIndex]);
+  setSolarPanel(angles[tableIndex]);
 }
 
 void sendErrorMessage(char* message) {
   //dispatch error message to all phones?
+  Serial.println(message);
 }
 
 int getCurrentAngle() {

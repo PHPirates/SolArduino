@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      8111,        207]
-NotebookOptionsPosition[      7524,        182]
-NotebookOutlinePosition[      8024,        203]
-CellTagsIndexPosition[      7938,        198]
+NotebookDataLength[      4035,         92]
+NotebookOptionsPosition[      3727,         76]
+NotebookOutlinePosition[      4067,         91]
+CellTagsIndexPosition[      4024,         88]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -25,104 +25,15 @@ Cell[BoxData[
   RowBox[{"(*", " ", "exporting", " ", "*)"}], "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{"<<", " ", "SolArduino`"}], "\[IndentingNewLine]", 
-   RowBox[{"?", "anglesPeriod"}], "\[IndentingNewLine]", 
-   RowBox[{"(*", 
-    RowBox[{"t", " ", "=", " ", 
-     RowBox[{"anglesPeriod", "[", 
-      RowBox[{
-       RowBox[{"DateObject", "[", 
-        RowBox[{"{", 
-         RowBox[{"2016", ",", "8", ",", "21"}], "}"}], "]"}], ",", 
-       RowBox[{"DateObject", "[", 
-        RowBox[{"{", 
-         RowBox[{"2016", ",", "8", ",", "23"}], "}"}], "]"}]}], "]"}]}], 
-    "*)"}], "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"t", " ", "=", " ", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{
-         RowBox[{"DateObject", "[", 
-          RowBox[{"{", 
-           RowBox[{"2016", ",", "8", ",", "21"}], "}"}], "]"}], ",", 
-         "34.2879"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{
-         RowBox[{"DateObject", "[", 
-          RowBox[{"{", 
-           RowBox[{"2016", ",", "8", ",", "22"}], "}"}], "]"}], ",", 
-         "34.8863"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{
-         RowBox[{"DateObject", "[", 
-          RowBox[{"{", 
-           RowBox[{"2016", ",", "8", ",", "23"}], "}"}], "]"}], ",", 
-         "35.4718"}], "}"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
-   RowBox[{"(*", " ", 
+   RowBox[{"exportPeriod", "[", 
     RowBox[{
-     RowBox[{
-     "Convert", " ", "all", " ", "the", " ", "DateObjects", " ", "to", " ", 
-      "YYYY"}], "-", "MM", "-", "DD"}], " ", "*)"}], "\[IndentingNewLine]", 
-   RowBox[{"(*", 
-    RowBox[{
-     RowBox[{"Do", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{
-        RowBox[{"t", "[", 
-         RowBox[{"[", 
-          RowBox[{"i", ",", "1"}], "]"}], "]"}], " ", "=", " ", 
-        "\[IndentingNewLine]", 
-        RowBox[{"DateString", "[", 
-         RowBox[{
-          RowBox[{"t", "[", 
-           RowBox[{"[", 
-            RowBox[{"i", ",", "1"}], "]"}], "]"}], ",", 
-          RowBox[{"{", 
-           RowBox[{
-           "\"\<Year\>\"", ",", "\"\<-\>\"", ",", "\"\<Month\>\"", ",", 
-            "\"\<-\>\"", ",", "\"\<Day\>\""}], "}"}]}], "]"}]}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", 
-         RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
-      "]"}], ";"}], "*)"}], "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"Do", "[", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{
-       RowBox[{
-        RowBox[{"t", "[", 
-         RowBox[{"[", 
-          RowBox[{"i", ",", "1"}], "]"}], "]"}], " ", "=", "  ", 
-        RowBox[{"UnixTime", "[", 
-         RowBox[{"t", "[", 
-          RowBox[{"[", 
-           RowBox[{"i", ",", "1"}], "]"}], "]"}], "]"}]}], ";"}], 
-      "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{"DateObject", "[", 
       RowBox[{"{", 
-       RowBox[{"i", ",", 
-        RowBox[{"Length", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
-     "]"}], ";"}], "\[IndentingNewLine]", 
-   RowBox[{"t", "[", 
-    RowBox[{"[", 
-     RowBox[{"All", ",", "1"}], "]"}], "]"}], "\[IndentingNewLine]", 
-   RowBox[{"t", "[", 
-    RowBox[{"[", 
-     RowBox[{"All", ",", "2"}], "]"}], "]"}], "\[IndentingNewLine]", 
-   RowBox[{"(*", " ", 
-    RowBox[{
-     RowBox[{"Export", " ", "the", " ", "table", " ", "to", " ", "csv"}], ",",
-      " ", 
-     RowBox[{
-      RowBox[{"format", " ", "YYYY"}], "-", "MM", "-", "DD"}], ",", " ", 
-     "angle"}], " ", "*)"}], "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"Export", "[", 
-     RowBox[{
-     "\"\<C:\\\\Users\\\\s156757\\\\OneDrive\\\\SolArduino\\\\solarduino\\\\\
-Documentation\\\\Mathematica\\\\export.csv\>\"", ",", " ", "t"}], "]"}], 
-    ";"}], "\[IndentingNewLine]"}]}]], "Input",
+       RowBox[{"2016", ",", "9", ",", "1"}], "}"}], "]"}], ",", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{"2016", ",", "9", ",", "1"}], "}"}], "]"}], ",", "7"}], "]"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
  CellChangeTimes->{{3.681194264573511*^9, 3.6811942718188705`*^9}, 
    3.6811945946975813`*^9, {3.681194911087222*^9, 3.681194965402317*^9}, {
    3.6811951065070815`*^9, 3.6811951337416863`*^9}, {3.6811954267814116`*^9, 
@@ -152,36 +63,19 @@ Documentation\\\\Mathematica\\\\export.csv\>\"", ",", " ", "t"}], "]"}],
    3.6813620731280727`*^9, 3.681362142223016*^9}, {3.681552716473124*^9, 
    3.681552758471284*^9}, {3.6815528646371756`*^9, 3.6815528649589343`*^9}, {
    3.681555303698233*^9, 3.6815553291602516`*^9}, {3.681555614120225*^9, 
-   3.6815556931299458`*^9}}],
+   3.6815556931299458`*^9}, {3.6817083464708233`*^9, 3.681708389863686*^9}}],
 
-Cell[BoxData[
- StyleBox["\<\"anglesPeriod[begin date, end date] creates list of optimal \
-angles per day over given interval\"\>", "MSG"]], "Print", "PrintUsage",
- CellChangeTimes->{3.6815556942632294`*^9},
- CellTags->"Info253681562893-6838463"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"1471730400", ",", "1471816800", ",", "1471903200"}], 
-  "}"}]], "Output",
+Cell[BoxData["7"], "Output",
  CellChangeTimes->{
   3.6813617974252605`*^9, {3.6813618595788927`*^9, 3.6813619022198715`*^9}, 
    3.6813622617283297`*^9, 3.681362291983436*^9, 3.681362376771387*^9, {
    3.6815528508607683`*^9, 3.681552877291461*^9}, {3.6815556585318203`*^9, 
-   3.68155569436075*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"34.2879`", ",", "34.8863`", ",", "35.4718`"}], "}"}]], "Output",
- CellChangeTimes->{
-  3.6813617974252605`*^9, {3.6813618595788927`*^9, 3.6813619022198715`*^9}, 
-   3.6813622617283297`*^9, 3.681362291983436*^9, 3.681362376771387*^9, {
-   3.6815528508607683`*^9, 3.681552877291461*^9}, {3.6815556585318203`*^9, 
-   3.68155569436075*^9}}]
+   3.68155569436075*^9}, 3.6817083918300858`*^9, 3.68170844379408*^9, 
+   3.6817085414205294`*^9}]
 }, Open  ]]
 },
 WindowSize->{942, 960},
-WindowMargins->{{Automatic, -800}, {Automatic, 0}},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
 FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (July 28, 2016)",
 StyleDefinitions->"Default.nb"
 ]
@@ -189,25 +83,16 @@ StyleDefinitions->"Default.nb"
 
 (* Internal cache information *)
 (*CellTagsOutline
-CellTagsIndex->{
- "Info253681562893-6838463"->{
-  Cell[6496, 156, 245, 4, 40, "Print",
-   CellTags->"Info253681562893-6838463"]}
- }
+CellTagsIndex->{}
 *)
 (*CellTagsIndex
-CellTagsIndex->{
- {"Info253681562893-6838463", 7833, 192}
- }
+CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 5913, 132, 430, "Input"],
-Cell[6496, 156, 245, 4, 40, "Print",
- CellTags->"Info253681562893-6838463"],
-Cell[6744, 162, 385, 8, 63, "Output"],
-Cell[7132, 172, 376, 7, 30, "Output"]
+Cell[580, 22, 2755, 43, 88, "Input"],
+Cell[3338, 67, 373, 6, 63, "Output"]
 }, Open  ]]
 }
 ]
