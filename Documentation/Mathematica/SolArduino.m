@@ -342,7 +342,7 @@ exportTimesPeriod[b_,c_,n_] := ( (*begin date, end date, number of adjustments p
 	sunset = UnixTime[Sunset[position,dateByDay[d]]];
 	dayLight = sunset - sunrise;
 	interval = dayLight / n;
-	t = Table[sunrise+i*interval,{i,1,n}]
+	t = Table[sunrise+i*interval,{i,0,n-1}]
 	,{d,1,numberOfDays}
 ]]
 )
@@ -360,9 +360,12 @@ exportAnglesPeriod[b_,c_,n_] := ((*begin date, end date, number of adjustments p
 exportPeriod[b_,c_,n_] := ( (* exportPeriod[begin date, end date, number of adjustments per day], exports two csv files. 
 One with the Unix Times over the given period, another with the angles. *)
 	angles = exportAnglesPeriod[b,c,n];
-	Export["C:\\Users\\s152337\\OneDrive\\Documenten\\SolArduino\\Documentation\\Mathematica\\angles.csv", {angles}];
+	anglesPath = NotebookDirectory[]<>"angles.csv";
+	Export[anglesPath, {angles}];
+	
 	times = exportTimesPeriod[b,c,n];
-	Export["C:\\Users\\s152337\\OneDrive\\Documenten\\SolArduino\\Documentation\\Mathematica\\times.csv", {times}];
+	timesPath = NotebookDirectory[]<>"times.csv";
+	Export[timesPath, {times}];
 Length[angles]
 )
 
