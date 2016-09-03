@@ -36,8 +36,8 @@ const static uint8_t mask[] = {255,255,255,0};
 const char poolNTP[] PROGMEM = "europe.pool.ntp.org"; //pool to get time server from
 uint8_t ntpMyPort = 123; //port for the time server, TODO why is this needed?
 // TimeZone : GMT+1. Helpful for getting correct current time
-TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +120};
-TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, +60};
+TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +0};
+TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, -60};
 Timezone timeZone(summerTime, winterTime);
 
 byte Ethernet::buffer[500];
@@ -74,6 +74,7 @@ void setup () {
    ether.printIp("Lookup IP   : ", ether.hisip);
    //sync arduino clock, current time in seconds can be found with now();
    setTime(getNtpTime());
+   Serial.print("time: ");
    Serial.println(now());
 
    solarPanelStop();
@@ -178,6 +179,7 @@ void setSolarPanel(float degrees) {
   float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
   int expectedVoltage = POTMETER_LOWEND +
   ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
+  Serial.println(degrees);
   Serial.print("expected: ");
   Serial.println(expectedVoltage);
   if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND)) {
@@ -191,9 +193,9 @@ void setSolarPanel(float degrees) {
       total += analogRead(POTMETERPIN);
     }
     int potMeterValue = total/sampleRate;
-    Serial.print("potmeter: ");
-    Serial.println(potMeterValue);
-    Serial.println(abs (potMeterValue - expectedVoltage));
+//    Serial.print("potmeter: ");
+//    Serial.println(potMeterValue);
+//    Serial.println(abs (potMeterValue - expectedVoltage));
     while (abs (potMeterValue - expectedVoltage) > 3) { //3 is about half a degree accuracy
       receiveHttpRequests(); //keep responsive
       if (POTMETER_LOWEND > POTMETER_HIGHEND) {
@@ -214,9 +216,9 @@ void setSolarPanel(float degrees) {
         total += analogRead(POTMETERPIN);
       }
       potMeterValue = total/sampleRate;
-      Serial.print("potmeter: ");
-      Serial.println(potMeterValue);
-      Serial.println(abs (potMeterValue - expectedVoltage));
+//      Serial.print("potmeter: ");
+//      Serial.println(potMeterValue);
+//      Serial.println(abs (potMeterValue - expectedVoltage));
 
     }
     solarPanelStop(); //stop movement when close enough
@@ -225,15 +227,23 @@ void setSolarPanel(float degrees) {
 
 void solarPanelAuto() {
   int i = 0;
+//  Serial.print("time: ");
+//  Serial.println(now());
   while(dates[i]<now()){ //find the index for the angle we need by time
     i++;
+    Serial.println(dates[i]);
   }
   tableIndex = i-1; //correct for i being one too much after searching to get corresponding angle
-//  Serial.print("i=");
-//  Serial.println(i);
+//  Serial.print("index=");
+//  Serial.println(tableIndex);
   Serial.print("set on auto, going to degrees: ");
   Serial.println(angles[tableIndex]);
+  if (tableIndex >= TABLE_LENGTH) {
+    Serial.print("index too large: ");
+    Serial.println(tableIndex);
+  } else {
   setSolarPanel(angles[tableIndex]);
+  }
 }
 
 void sendErrorMessage(char* message) {
