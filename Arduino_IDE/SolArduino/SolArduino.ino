@@ -2,9 +2,9 @@
 #include <EtherCard.h>      // https://github.com/jcw/ethercard
 #include <Time.h>           // http://www.arduino.cc/playground/Code/Time
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
-#include <avr/pgmspace.h>   // To use PROGMEM
+//#include <avr/pgmspace.h>   // To use PROGMEM
 #include "numbers.h"        // The file which contains the data with angles and unix times
-const int TABLE_LENGTH = 7; // It's easiest to declare the length here
+int TABLE_LENGTH = 3; // It's easiest to declare the length here
 
 int tableIndex; // The current index in the table when in auto mode
 
@@ -29,7 +29,8 @@ static byte myip[] = {192, 168, 2, 106};// ip Thomas
 //static byte myip[] = {192, 168, 0, 23}; // ip Abby
 //hard coded for a static setup:
 const static uint8_t gw[] = {192,168,2,254}; 
-const static uint8_t dns[] = {195,121,1,34};  
+//const static uint8_t dns[] = {195,121,1,34};  
+const static uint8_t dns[] = {195,121,2,254};  //address from dhcp setup 
 const static uint8_t mask[] = {255,255,255,0}; 
 
 // NTP globals
@@ -40,9 +41,10 @@ TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +0};
 TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, -60};
 Timezone timeZone(summerTime, winterTime);
 
-byte Ethernet::buffer[500];
-
+byte Ethernet::buffer[480]; //minimum for requesting 10 angles, this seems pre-allocated
 BufferFiller bfill;   //used in every http response sent
+
+const char website[] PROGMEM = "www.google.com"; //website to get angles data from
 
 //to be reused in every http response sent
 const char http_OK[] PROGMEM =
@@ -76,6 +78,19 @@ void setup () {
    setTime(getNtpTime());
    Serial.print("time: ");
    Serial.println(now());
+   
+//  if (!ether.dnsLookup(website))
+//    Serial.println("DNS failed");
+  //instead of dns lookup, set hisip manually to be used by browseURL
+  ether.hisip[0]=192;
+  ether.hisip[1]=168;
+  ether.hisip[2]=2;
+  ether.hisip[3]=7;
+//
+//    ether.printIp("IP:  ", ether.myip);
+//  ether.printIp("GW:  ", ether.gwip);  
+//  ether.printIp("DNS: ", ether.dnsip); 
+//  ether.printIp("SRV: ", ether.hisip);
 
    solarPanelStop();
    autoMode = true;
@@ -83,13 +98,17 @@ void setup () {
 }
 
 void loop () {
+  ether.packetLoop(ether.packetReceive()); //something to do with http request?
   receiveHttpRequests();
-  if (autoMode && tableIndex+1 < TABLE_LENGTH) { //also make sure not to run off the table
-    if (dates[tableIndex+1]<now()) { //if time walked into next part
-      tableIndex++;
-      Serial.println(angles[tableIndex]);
-      setSolarPanel(angles[tableIndex]);
-    }
+  long noww = 1471903201; //TODO change back to now()
+  if (tableIndex+1 >= TABLE_LENGTH) {
+    requestNewTable();
+    delay(1000); //make sure the table is here before continuing
+  } else if (autoMode && dates[tableIndex+1]<noww) { //if time walked into next part
+    tableIndex++;
+    Serial.println(angles[tableIndex]);
+    setSolarPanel(angles[tableIndex]);
+
   }
 }
 
@@ -226,22 +245,23 @@ void setSolarPanel(float degrees) {
 }
 
 void solarPanelAuto() {
+long noww = 1471903201;
   int i = 0;
-//  Serial.print("time: ");
-//  Serial.println(now());
-  while(dates[i]<now()){ //find the index for the angle we need by time
+  while(dates[i]<noww && i<TABLE_LENGTH){
+    Serial.println(i);
     i++;
-    Serial.println(dates[i]);
   }
-  tableIndex = i-1; //correct for i being one too much after searching to get corresponding angle
-//  Serial.print("index=");
-//  Serial.println(tableIndex);
-  Serial.print("set on auto, going to degrees: ");
-  Serial.println(angles[tableIndex]);
-  if (tableIndex >= TABLE_LENGTH) {
+
+  if (i >= TABLE_LENGTH) { //in the case we ran out of angles 
     Serial.print("index too large: ");
-    Serial.println(tableIndex);
+    Serial.println(i);
+    tableIndex = i;
+    requestNewTable();
+    delay(1000); //make sure the table is here before continuing
   } else {
+      tableIndex = i-1; //correct for i being one too much after searching to get corresponding angle
+      Serial.print("set on auto, going to degrees: ");
+  Serial.println(angles[tableIndex]);
   setSolarPanel(angles[tableIndex]);
   }
 }
@@ -262,22 +282,22 @@ int getCurrentAngle() {
 }
 
 //solar panel movements
-void solarPanelDown() {
-  digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
-  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
-  digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
+void solarPanelDown() { //TODO uncomment
+//  digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
+//  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
+//  digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
 }
 
 void solarPanelUp() {
-  digitalWrite(POWER_LOW, LOW);
-  digitalWrite(POWER_HIGH, HIGH);
-  digitalWrite(DIRECTION_PIN, LOW);
+//  digitalWrite(POWER_LOW, LOW);
+//  digitalWrite(POWER_HIGH, HIGH);
+//  digitalWrite(DIRECTION_PIN, LOW);
 }
 
 void solarPanelStop() {
-  digitalWrite(POWER_LOW, LOW);
-  digitalWrite(POWER_HIGH, LOW);
-  digitalWrite(DIRECTION_PIN, LOW);
+//  digitalWrite(POWER_LOW, LOW);
+//  digitalWrite(POWER_HIGH, LOW);
+//  digitalWrite(DIRECTION_PIN, LOW);
 }
 
   void homePage() {
@@ -319,4 +339,33 @@ void solarPanelStop() {
   }
   return 0;
 }
+
+void requestNewTable() {
+  Serial.println("requesting new data");
+  dates[0] = 1471903200;
+  dates[1] = 1471903210;
+  Serial.print("<<< REQ ");
+    ether.browseUrl(PSTR("/index.php"), "", NULL, my_callback);
+    
+  tableIndex = 0; //reset global index
+}
+
+// called when the client request is complete
+static void my_callback (byte status, word off, word len) {
+  Serial.println(">>>");
+  Ethernet::buffer[off+480] = 0; //480 chars needed for 10 angles
+  const char* result = (const char*) Ethernet::buffer + off;
+  Serial.print(result);
+  Serial.println(freeRam());
+//  parse(result);
+  
+}
+
+// returns how much free ram there is
+int freeRam () {
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+
 
