@@ -28,10 +28,10 @@ static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 static byte myip[] = {192, 168, 2, 106};// ip Thomas
 //static byte myip[] = {192, 168, 0, 23}; // ip Abby
 //hard coded for a static setup:
-const static uint8_t gw[] = {192,168,2,254}; 
-//const static uint8_t dns[] = {195,121,1,34};  
-const static uint8_t dns[] = {195,121,2,254};  //address from dhcp setup 
-const static uint8_t mask[] = {255,255,255,0}; 
+const static uint8_t gw[] = {192,168,2,254};
+static uint8_t dns[] = {195,121,1,34};
+// const static uint8_t dns[] = {195,168,2,254};  //address from latest dhcp setup but doens't work for NTP
+const static uint8_t mask[] = {255,255,255,0};
 
 // NTP globals
 const char poolNTP[] PROGMEM = "europe.pool.ntp.org"; //pool to get time server from
@@ -43,8 +43,6 @@ Timezone timeZone(summerTime, winterTime);
 
 byte Ethernet::buffer[480]; //minimum for requesting 10 angles, this seems pre-allocated
 BufferFiller bfill;   //used in every http response sent
-
-const char website[] PROGMEM = "www.google.com"; //website to get angles data from
 
 //to be reused in every http response sent
 const char http_OK[] PROGMEM =
@@ -78,7 +76,7 @@ void setup () {
    setTime(getNtpTime());
    Serial.print("time: ");
    Serial.println(now());
-   
+
 //  if (!ether.dnsLookup(website))
 //    Serial.println("DNS failed");
   //instead of dns lookup, set hisip manually to be used by browseURL
@@ -86,10 +84,17 @@ void setup () {
   ether.hisip[1]=168;
   ether.hisip[2]=2;
   ether.hisip[3]=7;
+  // the http request needs a different dns, so we set that here and do setup again
+  dns[0] = 192;
+  dns[1] = 168;
+  // dns[1] = 121; //other possibility with seemingly same result
+  dns[2] = 2;
+  dns[3] = 254;
+  ether.staticSetup(myip,gw,dns,mask);
 //
 //    ether.printIp("IP:  ", ether.myip);
-//  ether.printIp("GW:  ", ether.gwip);  
-//  ether.printIp("DNS: ", ether.dnsip); 
+//  ether.printIp("GW:  ", ether.gwip);
+//  ether.printIp("DNS: ", ether.dnsip);
 //  ether.printIp("SRV: ", ether.hisip);
 
    solarPanelStop();
@@ -241,7 +246,7 @@ void setSolarPanel(float degrees) {
 
     }
     solarPanelStop(); //stop movement when close enough
-  
+
 }
 
 void solarPanelAuto() {
@@ -252,7 +257,7 @@ long noww = 1471903201;
     i++;
   }
 
-  if (i >= TABLE_LENGTH) { //in the case we ran out of angles 
+  if (i >= TABLE_LENGTH) { //in the case we ran out of angles
     Serial.print("index too large: ");
     Serial.println(i);
     tableIndex = i;
@@ -346,7 +351,7 @@ void requestNewTable() {
   dates[1] = 1471903210;
   Serial.print("<<< REQ ");
     ether.browseUrl(PSTR("/index.php"), "", NULL, my_callback);
-    
+
   tableIndex = 0; //reset global index
 }
 
@@ -358,14 +363,13 @@ static void my_callback (byte status, word off, word len) {
   Serial.print(result);
   Serial.println(freeRam());
 //  parse(result);
-  
+
 }
 
 // returns how much free ram there is
 int freeRam () {
-  extern int __heap_start, *__brkval; 
-  int v; 
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
-
 
