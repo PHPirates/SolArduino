@@ -352,7 +352,7 @@ exportAnglesPeriod[b_,c_,n_] := ((*begin date, end date, number of adjustments p
 	numberOfDays = DayCount[b,c] +1;
 	dateByDay = Function[x, b+Quantity[(x-1), "Days"]];
 	angles = Flatten[Table[
-	dayAngles[dateByDay[d],n][[All,2]]
+		Ceiling[dayAngles[dateByDay[d],n][[All,2]]]
 ,{d,1,numberOfDays}
 ]]
 )
