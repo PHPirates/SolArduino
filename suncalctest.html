@@ -65,7 +65,7 @@
 
 			function siderealTime(d, lw) { return rad * (280.16 + 360.9856235 * d) - lw; }
 
-			function azimuth(H, phi, dec)  { return atan(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi)); }
+			function azimuth(H, phi, dec)  { return PI + atan(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi)); }
 
 			function altitude(H, phi, dec) { return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H)); }
 
