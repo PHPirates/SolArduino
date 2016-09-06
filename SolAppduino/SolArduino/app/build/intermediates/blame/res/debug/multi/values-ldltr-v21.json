@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Users\\s152337\\OneDrive\\Documenten\\SolArduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\values-ldltr-v21\\values-ldltr-v21.xml",
+        "outputFile": "C:\\Users\\s156757\\OneDrive\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\values-ldltr-v21\\values-ldltr-v21.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 163
                 },
                 "from": {
-                    "file": "C:\\Users\\s152337\\OneDrive\\Documenten\\SolArduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.0.0\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
+                    "file": "C:\\Users\\s156757\\OneDrive\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.0.0\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,

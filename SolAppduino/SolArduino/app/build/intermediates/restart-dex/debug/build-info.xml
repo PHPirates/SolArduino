@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <instant-run
-    abi="armeabi-v7a,armeabi"
-    api-level="21"
-    density="hdpi"
+    abi="x86"
+    api-level="23"
+    density="xxhdpi"
     format="7"
-    timestamp="513789492405484"
-    token="-3972885822435115139" >
+    timestamp="620891047915"
+    token="-6257287793977288624" >
 
     <task
         name="javac"
-        duration="1051" />
+        duration="7741" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="290" />
+        duration="764" />
     <task
         name="verifier"
-        duration="74" />
+        duration="207" />
 
     <artifact
-        location="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\outputs\apk\app-debug.apk"
+        location="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\outputs\apk\app-debug.apk"
         type="MAIN" />
 
-    <build timestamp="513789492405484" >
+    <build timestamp="620891047915" >
         <artifact
-            location="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\outputs\apk\app-debug.apk"
+            location="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
     </build>
 

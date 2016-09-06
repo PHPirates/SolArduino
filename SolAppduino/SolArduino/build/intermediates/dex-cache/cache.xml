@@ -2,67 +2,67 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.0.0\jars\classes.jar"
-        jumboMode="true"
-        revision="23.0.2"
-        sha1="2f7e6e2dad1bccaf68a8820820adc6c0d5b96d37">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-24.0.0_517866878cc8b982f82503bef142bcc82675f050\classes.dex" />
-    </item>
-    <item
-        jar="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\libs\wheel-menu-library.jar"
-        jumboMode="true"
-        revision="23.0.2"
-        sha1="b74cc31b191ca8420b9b8b20ce90952ee6ee606c">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\2\wheel-menu-library_9d408de26a1ae3652821d70827e0e34294bc4cbf\classes.dex" />
-    </item>
-    <item
-        jar="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
-        jumboMode="true"
-        revision="23.0.2"
-        sha1="b8210e9b8df6b67652a3cb48a167599382dffce9">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_f467380de036bbd805da31ecce896c40bf9cb243\classes.dex" />
-    </item>
-    <item
-        jar="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        revision="23.0.2"
-        sha1="eaa394e60c3e416046d886ed382cdc18f08da23e">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_428d9b7e280b2bef0f911eb5ff8ef32ba18a41ac\classes.dex" />
-    </item>
-    <item
-        jar="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.0.0\jars\libs\internal_impl-24.0.0.jar"
-        jumboMode="true"
-        revision="23.0.2"
-        sha1="fcaf463e10e69c1923ccf1edeba3b4196d239e00">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.0.0_ce66208f49e892ef1c0ebd07c9f250150d50ea3b\classes.dex" />
-    </item>
-    <item
-        jar="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\24.0.0\jars\classes.jar"
+        jar="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\24.0.0\jars\classes.jar"
         jumboMode="true"
         revision="23.0.2"
         sha1="e70f608219ed6b974644c333249ab2bb7b71de98">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-24.0.0_2d4b713e62e69949440211bbe6bf308a9b9857de\classes.dex" />
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-24.0.0_a3b95138383133d3dd33d8018db559a85bbf0b8e\classes.dex" />
     </item>
     <item
-        jar="C:\Users\s152337\.gradle\caches\modules-2\files-2.1\com.android.support\support-annotations\24.0.0\2943c74db6d4346ab8c6531adac91fa05c137c40\support-annotations-24.0.0.jar"
-        jumboMode="true"
-        revision="23.0.2"
-        sha1="2943c74db6d4346ab8c6531adac91fa05c137c40">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-24.0.0_3e6d9a05b3cc2e01641057be6e5b3f98e0a7d777\classes.dex" />
-    </item>
-    <item
-        jar="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.0.0\jars\classes.jar"
-        jumboMode="true"
-        revision="23.0.2"
-        sha1="0874286cc2fd88d54fdf130e9d5372730da6de97">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-24.0.0_9abb7527fb094ce1f9450f14356907e2377b9223\classes.dex" />
-    </item>
-    <item
-        jar="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.0.0\jars\classes.jar"
+        jar="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.0.0\jars\classes.jar"
         jumboMode="true"
         revision="23.0.2"
         sha1="3bd97cfefd783e9de1dd1c30574a6adb44b4409b">
-        <dex dex="C:\Users\s152337\OneDrive\Documenten\SolArduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-24.0.0_0b1b8d7aeb8d0faad3f96a3c9e318c491cd826e4\classes.dex" />
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-24.0.0_56b44f15496b69201141c2609d85149e9ecb8044\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="050c00f628d0a529eb57652d84bad950e63c3a87">
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_e7cc7ac1617bbc1c02016dc1ccc079aeeeddcb0b\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.0.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="0874286cc2fd88d54fdf130e9d5372730da6de97">
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-24.0.0_7843525a03ca01bdf2d951d6be90e03a32b99bcd\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\s156757\.gradle\caches\modules-2\files-2.1\com.android.support\support-annotations\24.0.0\2943c74db6d4346ab8c6531adac91fa05c137c40\support-annotations-24.0.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="2943c74db6d4346ab8c6531adac91fa05c137c40">
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-24.0.0_58b7f633e4b0f62d2e81996e3b18cce1aff45b56\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="72e5949fe128e283b6ad2b750c8c98ce83b2557c">
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_41cb22eab87516eea8d792aba43e14f626ad24f8\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\libs\wheel-menu-library.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b74cc31b191ca8420b9b8b20ce90952ee6ee606c">
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\2\wheel-menu-library_e4d506be661085485a677f69651d9af8eb61d6f2\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.0.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="2f7e6e2dad1bccaf68a8820820adc6c0d5b96d37">
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-24.0.0_df0b6425b8afe7f8f26b11c4964f15b121ca22bb\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.0.0\jars\libs\internal_impl-24.0.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="fcaf463e10e69c1923ccf1edeba3b4196d239e00">
+        <dex dex="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.0.0_ff0a0a163e6e213a76c275220818ca7ea6fd27a3\classes.dex" />
     </item>
 
 </items>
