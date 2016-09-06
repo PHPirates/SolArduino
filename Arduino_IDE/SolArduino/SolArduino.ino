@@ -124,7 +124,7 @@ void receiveHttpRequests() {
    bfill = ether.tcpOffset();
    char *data = (char *) Ethernet::buffer + pos;
    if (strncmp("GET /", data, 5) != 0) {
-          Serial.println("no valid GET request");
+          Serial.println(F("no valid GET request"));
      }
      else {
          data += 5;
@@ -167,7 +167,7 @@ void receiveHttpRequests() {
              int degrees = stringDegrees.toInt(); //convert string to integer
              stringDegrees = String(degrees);
              stringDegrees += " &#176;";
-             Serial.print("panels to degrees: ");
+             Serial.print(F("panels to degrees: "));
              Serial.println(degrees);
              setSolarPanel(degrees);
 
@@ -188,21 +188,21 @@ void receiveHttpRequests() {
            acknowledge(update.c_str()); //convert to string, then to const char
          }
          else {
-             Serial.println("Page not found");
+             Serial.println(F("Page not found"));
          }
      }
    ether.httpServerReply(bfill.position()); //send the reply, if there was one
  }
 }
 
-void setSolarPanel(float degrees) {
+void setSolarPanel(int degrees) {
   //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
   //times hundred to avoid integer division just possible without integer overflow
   float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
   int expectedVoltage = POTMETER_LOWEND +
   ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
   Serial.println(degrees);
-  Serial.print("expected: ");
+  Serial.print(F("expected: "));
   Serial.println(expectedVoltage);
   if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND)) {
     degrees = 57;
@@ -343,12 +343,12 @@ void solarPanelStop() {
 }
 
 void requestNewTable() {
-  Serial.println("requesting new data");
+  Serial.println(F("requesting new data"));
   dates[0] = 1471903200;
   dates[1] = 1471903210;
   Serial.print("<<< REQ ");
     ether.browseUrl(PSTR("/index.php"), "", NULL, my_callback);
-  Serial.print("free ram after browseurl: ");
+  Serial.print(F("free ram after browseurl: "));
   Serial.println(freeRam());
   delay(1000); //make sure the request can finish before continuing
   tableIndex = 0; //reset global index
@@ -357,10 +357,11 @@ void requestNewTable() {
 // called when the client request is complete
 static void my_callback (byte status, word off, word len) {
   Serial.println(">>>");
-  Serial.print("free ram: ");
+  Serial.print(F("free ram: "));
   Serial.println(freeRam());
   Ethernet::buffer[off+tableSize] = 0; //480 chars needed for 10 angles
-  const char* result = (const char*) Ethernet::buffer + off;
+  char* result = (char*) Ethernet::buffer + off;
+  delay(42); // Make sure the request is sent and received properly, no delay results in a 400
   Serial.print(result);
   Serial.println(freeRam());
   parseString(result);
@@ -374,15 +375,18 @@ int freeRam () {
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
-void parseString(const char *everything) {
+void parseString(char *from) {
   
-  char from [tableSize]; // 480 bytes should be enough for 10 angles, see top of code
-  strcpy(from, everything); //because we can't modify a constant char we need to copy it
+//  char from [tableSize]; // 480 bytes should be enough for 10 angles, see top of code
+//  strcpy(from, everything); //because we can't modify a constant char we need to copy it
   char *found;
   int leng;
   char *times;  
   char dateString[120]; //these may need some tuning
   char angleString[30];
+
+  Serial.print(F("free ram after assignments: "));
+  Serial.println(freeRam());
 
   found = strtok(from, "_");
   int i = 0;
@@ -424,12 +428,12 @@ void parseString(const char *everything) {
     i++;
   }
 
-  Serial.println("strings parsed: ");
+  Serial.println(F("strings parsed: "));
   Serial.println("dates: ");
   for(int i = 0; i<tableLength; i++) {
     Serial.println(dates[i]);
   }
-    Serial.println("angles: ");
+    Serial.println(F("angles: "));
   for(int i = 0; i<tableLength; i++) {
     Serial.println(angles[i]);
   }

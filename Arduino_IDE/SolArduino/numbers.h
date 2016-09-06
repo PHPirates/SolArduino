@@ -1,5 +1,5 @@
 
 //header file for numbers
 
-extern float angles[];
+extern int angles[];
 extern long dates[];
