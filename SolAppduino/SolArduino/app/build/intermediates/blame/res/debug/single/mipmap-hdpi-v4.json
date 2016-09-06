@@ -4,7 +4,15 @@
         "source": "C:\\Users\\s156757\\OneDrive\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
     },
     {
+        "merged": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\ic_solarduino.png",
+        "source": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\src\\main\\res\\mipmap-hdpi\\ic_solarduino.png"
+    },
+    {
         "merged": "C:\\Users\\s156757\\OneDrive\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\ic_solarduino.png",
         "source": "C:\\Users\\s156757\\OneDrive\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\src\\main\\res\\mipmap-hdpi\\ic_solarduino.png"
+    },
+    {
+        "merged": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\ic_launcher.png",
+        "source": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
     }
 ]
