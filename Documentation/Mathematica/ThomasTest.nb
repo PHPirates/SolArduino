@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      5115,        123]
-NotebookOptionsPosition[      4695,        103]
-NotebookOutlinePosition[      5038,        118]
-CellTagsIndexPosition[      4995,        115]
+NotebookDataLength[      5597,        132]
+NotebookOptionsPosition[      5180,        112]
+NotebookOutlinePosition[      5520,        127]
+CellTagsIndexPosition[      5477,        124]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -29,11 +29,15 @@ Cell[BoxData[
     RowBox[{
      RowBox[{"DateObject", "[", 
       RowBox[{"{", 
-       RowBox[{"2016", ",", "9", ",", "2"}], "}"}], "]"}], ",", 
+       RowBox[{"2016", ",", "9", ",", "4"}], "}"}], "]"}], ",", 
      RowBox[{"DateObject", "[", 
       RowBox[{"{", 
-       RowBox[{"2016", ",", "9", ",", "2"}], "}"}], "]"}], ",", "7"}], "]"}], 
-   "\[IndentingNewLine]"}]}]], "Input",
+       RowBox[{"2016", ",", "9", ",", "9"}], "}"}], "]"}], ",", "10"}], "]"}],
+    " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "up", " ", "to", " ", "AND", " ", "EXCLUDING", " ", "the", " ", "second", 
+     " ", "date"}], " ", "*)"}], "\[IndentingNewLine]"}]}]], "Input",
  CellChangeTimes->{{3.681194264573511*^9, 3.6811942718188705`*^9}, 
    3.6811945946975813`*^9, {3.681194911087222*^9, 3.681194965402317*^9}, {
    3.6811951065070815`*^9, 3.6811951337416863`*^9}, {3.6811954267814116`*^9, 
@@ -64,45 +68,50 @@ Cell[BoxData[
    3.681552758471284*^9}, {3.6815528646371756`*^9, 3.6815528649589343`*^9}, {
    3.681555303698233*^9, 3.6815553291602516`*^9}, {3.681555614120225*^9, 
    3.6815556931299458`*^9}, {3.6817083464708233`*^9, 3.681708389863686*^9}, {
-   3.681805175758289*^9, 3.6818051917235174`*^9}}],
+   3.681805175758289*^9, 3.6818051917235174`*^9}, {3.6820801044147234`*^9, 
+   3.6820801105631304`*^9}, {3.682080317006448*^9, 3.6820803467700205`*^9}, {
+   3.682080635688386*^9, 3.682080640935215*^9}, {3.6820807597306437`*^9, 
+   3.682080770580552*^9}}],
 
-Cell[BoxData["7"], "Output",
+Cell[BoxData["60"], "Output",
  CellChangeTimes->{
   3.6813617974252605`*^9, {3.6813618595788927`*^9, 3.6813619022198715`*^9}, 
    3.6813622617283297`*^9, 3.681362291983436*^9, 3.681362376771387*^9, {
    3.6815528508607683`*^9, 3.681552877291461*^9}, {3.6815556585318203`*^9, 
    3.68155569436075*^9}, 3.6817083918300858`*^9, 3.68170844379408*^9, 
-   3.6817085414205294`*^9, 3.681805221637822*^9, 3.6818054550322723`*^9}]
+   3.6817085414205294`*^9, 3.681805221637822*^9, 3.6818054550322723`*^9, 
+   3.6820801224767094`*^9, {3.6820803353847933`*^9, 3.682080362533465*^9}, 
+   3.682080803546303*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"DateObject", "[", 
-  RowBox[{"{", 
-   RowBox[{"2016", ",", "6", ",", "2", ",", "0"}], "}"}], "]"}]], "Input",
- CellChangeTimes->{{3.681806264390131*^9, 3.681806296972093*^9}}],
+ RowBox[{"FromUnixTime", "[", "1473362316", "]"}]], "Input",
+ CellChangeTimes->{{3.6820806193455725`*^9, 3.6820806228070526`*^9}, 
+   3.6820806585328074`*^9}],
 
 Cell[BoxData[
- TemplateBox[{RowBox[{"\"Thu 2 Jun 2016 00:00\"", 
+ TemplateBox[{RowBox[{"\"Thu 8 Sep 2016 21:18:36\"", 
      StyleBox[
       RowBox[{"\"GMT+\"", "\[InvisibleSpace]", "2.`"}], FontColor -> 
       GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
      RowBox[{
        RowBox[{"{", 
-         RowBox[{"2016", ",", "6", ",", "2"}], "}"}], ",", 
+         RowBox[{"2016", ",", "9", ",", "8"}], "}"}], ",", 
        RowBox[{"TimeObject", "[", 
          RowBox[{
-           RowBox[{"{", "0", "}"}], ",", 
+           RowBox[{"{", 
+             RowBox[{"21", ",", "18", ",", "36.`"}], "}"}], ",", 
            RowBox[{"TimeZone", "\[Rule]", "2.`"}]}], "]"}], ",", 
        RowBox[{"TimeZone", "\[Rule]", "2.`"}]}], "]"}]},
   "DateObject",
   Editable->False]], "Output",
- CellChangeTimes->{{3.6818062728853188`*^9, 3.6818062973805804`*^9}}]
+ CellChangeTimes->{3.6820806241330166`*^9, 3.6820806610659175`*^9}]
 }, Open  ]]
 },
 WindowSize->{942, 960},
-WindowMargins->{{Automatic, -800}, {Automatic, 0}},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
 FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (July 28, 2016)",
 StyleDefinitions->"Default.nb"
 ]
@@ -118,12 +127,12 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 2807, 44, 88, "Input"],
-Cell[3390, 68, 419, 6, 30, "Output"]
+Cell[580, 22, 3166, 51, 88, "Input"],
+Cell[3749, 75, 522, 8, 63, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[3846, 79, 199, 4, 30, "Input"],
-Cell[4048, 85, 631, 15, 74, "Output"]
+Cell[4308, 88, 172, 3, 30, "Input"],
+Cell[4483, 93, 681, 16, 41, "Output"]
 }, Open  ]]
 }
 ]

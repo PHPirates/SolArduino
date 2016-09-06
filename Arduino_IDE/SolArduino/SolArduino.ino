@@ -4,8 +4,8 @@
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
 //#include <avr/pgmspace.h>   // To use PROGMEM
 #include "numbers.h"        // The file which contains the data with angles and unix times
-int TABLE_LENGTH = 3; // It's easiest to declare the length here
-
+int tableLength = 10; // It's easiest to declare the length here. Changing it on the webserver may break the app because of initialisation of arrays with length 10, although it shouldn't. Change the tableSize to corresponding amount of bytes anyway
+const int tableSize = 480; //480 bytes for 10 angles will do, used in ethernet buffer and when parsing
 int tableIndex; // The current index in the table when in auto mode
 
 //pin declarations
@@ -29,8 +29,8 @@ static byte myip[] = {192, 168, 2, 106};// ip Thomas
 //static byte myip[] = {192, 168, 0, 23}; // ip Abby
 //hard coded for a static setup:
 const static uint8_t gw[] = {192,168,2,254};
-static uint8_t dns[] = {195,121,1,34};
-// const static uint8_t dns[] = {195,168,2,254};  //address from latest dhcp setup but doens't work for NTP
+static uint8_t dns[] = {195,121,1,34}; //address that works for NTP, we change it later in the code
+// const static uint8_t dns[] = {195,168,2,254};  //address from latest dhcp setup but doesn't work for NTP
 const static uint8_t mask[] = {255,255,255,0};
 
 // NTP globals
@@ -41,7 +41,7 @@ TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +0};
 TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, -60};
 Timezone timeZone(summerTime, winterTime);
 
-byte Ethernet::buffer[480]; //minimum for requesting 10 angles, this seems pre-allocated
+byte Ethernet::buffer[tableSize]; //minimum for requesting 10 angles, this seems pre-allocated
 BufferFiller bfill;   //used in every http response sent
 
 //to be reused in every http response sent
@@ -87,7 +87,6 @@ void setup () {
   // the http request needs a different dns, so we set that here and do setup again
   dns[0] = 192;
   dns[1] = 168;
-  // dns[1] = 121; //other possibility with seemingly same result
   dns[2] = 2;
   dns[3] = 254;
   ether.staticSetup(myip,gw,dns,mask);
@@ -106,9 +105,8 @@ void loop () {
   ether.packetLoop(ether.packetReceive()); //something to do with http request?
   receiveHttpRequests();
   long noww = 1471903201; //TODO change back to now()
-  if (tableIndex+1 >= TABLE_LENGTH) {
+  if (tableIndex+1 >= tableLength) {
     requestNewTable();
-    delay(1000); //make sure the table is here before continuing
   } else if (autoMode && dates[tableIndex+1]<noww) { //if time walked into next part
     tableIndex++;
     Serial.println(angles[tableIndex]);
@@ -252,17 +250,16 @@ void setSolarPanel(float degrees) {
 void solarPanelAuto() {
 long noww = 1471903201;
   int i = 0;
-  while(dates[i]<noww && i<TABLE_LENGTH){
+  while(dates[i]<noww && i<tableLength){
     Serial.println(i);
     i++;
   }
 
-  if (i >= TABLE_LENGTH) { //in the case we ran out of angles
-    Serial.print("index too large: ");
+  if (i >= tableLength) { //in the case we ran out of angles
+    Serial.print("I ran out of angles, i= ");
     Serial.println(i);
     tableIndex = i;
     requestNewTable();
-    delay(1000); //make sure the table is here before continuing
   } else {
       tableIndex = i-1; //correct for i being one too much after searching to get corresponding angle
       Serial.print("set on auto, going to degrees: ");
@@ -351,18 +348,22 @@ void requestNewTable() {
   dates[1] = 1471903210;
   Serial.print("<<< REQ ");
     ether.browseUrl(PSTR("/index.php"), "", NULL, my_callback);
-
+  Serial.print("free ram after browseurl: ");
+  Serial.println(freeRam());
+  delay(1000); //make sure the request can finish before continuing
   tableIndex = 0; //reset global index
 }
 
 // called when the client request is complete
 static void my_callback (byte status, word off, word len) {
   Serial.println(">>>");
-  Ethernet::buffer[off+480] = 0; //480 chars needed for 10 angles
+  Serial.print("free ram: ");
+  Serial.println(freeRam());
+  Ethernet::buffer[off+tableSize] = 0; //480 chars needed for 10 angles
   const char* result = (const char*) Ethernet::buffer + off;
   Serial.print(result);
   Serial.println(freeRam());
-//  parse(result);
+  parseString(result);
 
 }
 
@@ -371,5 +372,67 @@ int freeRam () {
   extern int __heap_start, *__brkval;
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
+void parseString(const char *everything) {
+  
+  char from [tableSize]; // 480 bytes should be enough for 10 angles, see top of code
+  strcpy(from, everything); //because we can't modify a constant char we need to copy it
+  char *found;
+  int leng;
+  char *times;  
+  char dateString[120]; //these may need some tuning
+  char angleString[30];
+
+  found = strtok(from, "_");
+  int i = 0;
+  while(found != NULL){
+
+    if(i==1){
+      tableLength = atoi(found);
+//      Serial.println(leng);
+    } else if(i==2) {
+      strcpy(dateString,found);
+      Serial.println(found);
+//      Serial.println(dateString);
+    } else if(i==3) {
+      Serial.println(found);
+      strcpy(angleString,found);
+    }
+    found = strtok(NULL, "_"); //extract next token
+    i++;
+  }
+
+  // now the same splitting up again but for the substrings with dates and angles
+  found = strtok(dateString,",");
+  i = 0;
+  while (found != NULL) {
+    //convert char* 'found' to long
+    dates[i] = atol(found);
+    found = strtok(NULL, ","); //extract next token
+//    Serial.println(dates[i]);
+    i++;
+  }
+
+  //Now again for the angles
+    found = strtok(angleString,",");
+  i = 0;
+  while (found != NULL) {
+    //convert char* 'found' to int
+    angles[i] = atoi(found);
+    found = strtok(NULL, ","); //extract next token
+    i++;
+  }
+
+  Serial.println("strings parsed: ");
+  Serial.println("dates: ");
+  for(int i = 0; i<tableLength; i++) {
+    Serial.println(dates[i]);
+  }
+    Serial.println("angles: ");
+  for(int i = 0; i<tableLength; i++) {
+    Serial.println(angles[i]);
+  }
+
 }
 
