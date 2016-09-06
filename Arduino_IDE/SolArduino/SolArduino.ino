@@ -78,8 +78,9 @@ void setup () {
    Serial.println(now());
 
    solarPanelStop();
-   autoMode = true;
-   solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
+   autoMode = false;
+//   autoMode = true;
+//   solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
