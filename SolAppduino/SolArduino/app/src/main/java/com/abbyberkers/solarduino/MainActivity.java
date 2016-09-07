@@ -528,6 +528,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     // string with current angle plus degree symbol
                     String angle = Html.fromHtml(updateString[0]) + "\u00b0";
                     currentAngle.setText(angle);
+                    // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
                     if(updateToast != null) {
                         if(updatedToast != null) {
                             updatedToast.cancel();
@@ -537,10 +538,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         updatedToast.show();
                     }
 
-                    // get the current angle from the result, without spaces
-                    result = result.substring(0, 2).trim();
                     // convert string to integer, then rotate the image
-                    rotate(Integer.valueOf(updateString[0]));
+                    int newAngle = Integer.valueOf(updateString[0]);
+                    rotate(newAngle);
+
+                    if(newAngle == 5) {
+                        Toast.makeText(getBaseContext(), "Low end stop reached.", Toast.LENGTH_SHORT).show();
+                    } else if(newAngle == 57) {
+                        Toast.makeText(getBaseContext(), "High end stop reached.", Toast.LENGTH_SHORT).show();
+                    }
 
                     updateString[1].trim();
                     Log.e("update", updateString[1]);
