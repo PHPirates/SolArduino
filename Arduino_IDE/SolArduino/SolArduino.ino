@@ -18,7 +18,7 @@ byte sampleRate = 5; //amount of readings to take the average of when reading th
 
 //experimentally determined values
 const int POTMETER_LOWEND = 650;
-const int POTMETER_HIGHEND = 1015;
+const int POTMETER_HIGHEND = 1007;
 const byte DEGREES_HIGHEND = 57;
 const byte DEGREES_LOWEND = 5;
 
@@ -176,7 +176,6 @@ void setSolarPanel(int degrees) {
 
 }
 
-//should not call setSolarPanel because that will hang the sending of a response in receiveHttpRequests()
 void solarPanelAuto() {
   Serial.println(F("solarPanelAuto() called"));
   int i = 0;
@@ -231,6 +230,8 @@ static void my_callback (byte status, word off, word len) {
 }
 
 void receiveHttpRequests() {
+  int degrees = -1;
+  
   //receive the http request
  word len = ether.packetReceive();
  word pos = ether.packetLoop(len);
@@ -267,7 +268,7 @@ void receiveHttpRequests() {
          else if (strncmp("?panel=auto ", data, 12) == 0) {
 //              Serial.println(F("calling Auto() by app request"));
              Serial.println(F("Auto mode switched on."));
-             autoMode = true;            
+             autoMode = true; //solarPanelAuto() is called later, first we handle off the request
              acknowledge("Auto mode switched on.");             
          }
          else if (strncmp("?panel=manual ", data, 12) == 0){
@@ -280,18 +281,18 @@ void receiveHttpRequests() {
               stringDegrees += (char)data[9]; //convert to char and add to string
               stringDegrees += (char)data[10];
 
-             int degrees = stringDegrees.toInt(); //convert string to integer
-             stringDegrees = String(degrees);
+             degrees = stringDegrees.toInt(); //convert string to integer
+//             stringDegrees = String(degrees);
              stringDegrees += " &#176;";
              Serial.print(F("panels to degrees: "));
              Serial.println(degrees);
-             setSolarPanel(degrees);
+            
 
              //convert string to const char, easier than a modifiable char array
              acknowledge(stringDegrees.c_str());
              autoMode = false;
          }
-         else if (strncmp("?update", data, 7) == 0) {
+         else if (strncmp("?update", data, 7) == 0) { 
            //update requested, sent back current angle
            Serial.println(F("Update requested."));
            int angle = getCurrentAngle();
@@ -309,9 +310,14 @@ void receiveHttpRequests() {
          }
      }
    ether.httpServerReply(bfill.position()); //send the reply, if there was one
-   if(autoMode) { //then it is switched on, or was on
+   delay(100);
+   if(autoMode) { //then it is switched on, or was on for example with update requested
       solarPanelAuto(); 
     }
+
+   if(degrees != -1) { // if degrees were changed by a manual request, set solar panels
+     setSolarPanel(degrees);
+   }
  }
 }
 
