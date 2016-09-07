@@ -176,6 +176,7 @@ void setSolarPanel(int degrees) {
 
 }
 
+//should not call setSolarPanel because that will hang the sending of a response in receiveHttpRequests()
 void solarPanelAuto() {
   Serial.println(F("solarPanelAuto() called"));
   int i = 0;
@@ -266,10 +267,8 @@ void receiveHttpRequests() {
          else if (strncmp("?panel=auto ", data, 12) == 0) {
 //              Serial.println(F("calling Auto() by app request"));
              Serial.println(F("Auto mode switched on."));
-             solarPanelAuto(); 
-             
-             acknowledge("Auto mode switched on.");
-             autoMode = true;
+             autoMode = true;            
+             acknowledge("Auto mode switched on.");             
          }
          else if (strncmp("?panel=manual ", data, 12) == 0){
              acknowledge("Auto mode switched off.");
@@ -310,6 +309,9 @@ void receiveHttpRequests() {
          }
      }
    ether.httpServerReply(bfill.position()); //send the reply, if there was one
+   if(autoMode) { //then it is switched on, or was on
+      solarPanelAuto(); 
+    }
  }
 }
 
