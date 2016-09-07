@@ -4,7 +4,7 @@
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
 //#include <avr/pgmspace.h>   // To use PROGMEM
 #include "numbers.h"        // The file which contains the data with angles and unix times
-int tableLength = 10; // It's easiest to declare the length here. Changing it on the webserver may break the app because of initialisation of arrays with length 10, although it shouldn't. Change the tableSize to corresponding amount of bytes anyway
+int tableLength = 10; // It's easiest to declare the length here. Changing it on the webserver may break the app because of initialisation of arrays with length 10, although it shouldn't. Change the tableSize to corresponding amount of bytes anyway, and initialise both arrays with the correct length
 const int tableSize = 480; //480 bytes for 10 angles will do, used in ethernet buffer and when parsing
 int tableIndex; // The current index in the table when in auto mode
 
@@ -52,6 +52,8 @@ const char http_OK[] PROGMEM =
 
 boolean autoMode;
 
+boolean responseReceived = true;; // a check for knowing whether the response from the NAS was received or not, because we need to wait on that
+
 void setup () {
   Serial.begin(9600);
   pinMode(POWER_HIGH,OUTPUT);
@@ -98,118 +100,45 @@ void setup () {
 
    solarPanelStop();
    autoMode = true;
+   Serial.println(F("calling Auto() from setup")); //too much serial prints results in bad request?
    solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
   ether.packetLoop(ether.packetReceive()); //something to do with http request?
   receiveHttpRequests();
-  long noww = 1471903201; //TODO change back to now()
-  if (tableIndex+1 >= tableLength) {
-    requestNewTable();
-  } else if (autoMode && dates[tableIndex+1]<noww) { //if time walked into next part
-    tableIndex++;
-    Serial.println(angles[tableIndex]);
-    setSolarPanel(angles[tableIndex]);
-
+  if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
+    if (tableIndex+1 >= tableLength) {
+      requestNewTable();
+    } else if (autoMode && dates[tableIndex+1]<now()) { //if time walked into next part
+      Serial.println(F("Advancing to next angle"));
+      tableIndex++;
+      Serial.println(angles[tableIndex]);
+      setSolarPanel(angles[tableIndex]);
+  
+    }
   }
 }
 
-void receiveHttpRequests() {
-  //receive the http request
- word len = ether.packetReceive();
- word pos = ether.packetLoop(len);
- if (pos) { // check if valid tcp data is received
-   delay(1); //just to be sure
-   bfill = ether.tcpOffset();
-   char *data = (char *) Ethernet::buffer + pos;
-   if (strncmp("GET /", data, 5) != 0) {
-          Serial.println(F("no valid GET request"));
-     }
-     else {
-         data += 5;
-         //start parsing data
-        //  Serial.println(data);
-         if (data[0] == ' ') {
-             // No parameters given (http://192.168.2.10), return home page
-             homePage();
-         }
-         else if (strncmp("?panel=up ", data, 10) == 0) {
-           solarPanelUp();
-             acknowledge("Panels going up."); //send acknowledge http response
-             autoMode = false;
-         }
-         else if (strncmp("?panel=down ", data, 12) == 0) {
-           solarPanelDown();
-             acknowledge("Panels going down.");
-             autoMode = false;
-         }
-         else if (strncmp("?panel=stop ", data, 12) == 0) {
-           solarPanelStop();
-             acknowledge("Panels stopped/not moving.");
-             autoMode = false;
-         }
-         else if (strncmp("?panel=auto ", data, 12) == 0) {
-             solarPanelAuto(); //to be implemented
-             acknowledge("Auto mode switched on.");
-             autoMode = true;
-         }
-         else if (strncmp("?panel=manual ", data, 12) == 0){
-             acknowledge("Auto mode switched off.");
-             autoMode = false;
-         }
-         else if (strncmp("?degrees=", data, 9) == 0) {
-              //print digit that comes after
-              String stringDegrees;
-              stringDegrees += (char)data[9]; //convert to char and add to string
-              stringDegrees += (char)data[10];
-
-             int degrees = stringDegrees.toInt(); //convert string to integer
-             stringDegrees = String(degrees);
-             stringDegrees += " &#176;";
-             Serial.print(F("panels to degrees: "));
-             Serial.println(degrees);
-             setSolarPanel(degrees);
-
-             //convert string to const char, easier than a modifiable char array
-             acknowledge(stringDegrees.c_str());
-             autoMode = false;
-         }
-         else if (strncmp("?update", data, 7) == 0) {
-           //update requested, sent back current angle
-           int angle = getCurrentAngle();
-           String update = String(angle);
-           if(autoMode) {
-              update = update + " auto";
-           } else {
-              update = update + " manual";
-           }
-
-           acknowledge(update.c_str()); //convert to string, then to const char
-         }
-         else {
-             Serial.println(F("Page not found"));
-         }
-     }
-   ether.httpServerReply(bfill.position()); //send the reply, if there was one
- }
-}
-
 void setSolarPanel(int degrees) {
+  //upper and lower bounds
+  if (degrees > max (DEGREES_HIGHEND,DEGREES_LOWEND)) {
+    degrees = 57;
+    //sendErrorMessage("Degrees Out Of Range");
+  } else if(degrees < min (DEGREES_HIGHEND,DEGREES_LOWEND)) {
+    degrees = 5;
+  }
+  
   //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
   //times hundred to avoid integer division just possible without integer overflow
   float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
   int expectedVoltage = POTMETER_LOWEND +
   ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
+  Serial.print(F("degrees passed: "));
   Serial.println(degrees);
   Serial.print(F("expected: "));
   Serial.println(expectedVoltage);
-  if (expectedVoltage > max (POTMETER_LOWEND,POTMETER_HIGHEND)) {
-    degrees = 57;
-    //sendErrorMessage("Degrees Out Of Range");
-  } else if(expectedVoltage < min (POTMETER_LOWEND,POTMETER_HIGHEND)) {
-    degrees = 5;
-  }
+  
     int total = 0;
     for (int i=0; i<sampleRate; i++) {
       total += analogRead(POTMETERPIN);
@@ -248,10 +177,10 @@ void setSolarPanel(int degrees) {
 }
 
 void solarPanelAuto() {
-long noww = 1471903201;
+  Serial.println(F("solarPanelAuto() called"));
   int i = 0;
-  while(dates[i]<noww && i<tableLength){
-    Serial.println(i);
+  while(dates[i]<now() && i<tableLength){
+//    Serial.println(i);
     i++;
   }
 
@@ -268,104 +197,120 @@ long noww = 1471903201;
   }
 }
 
-void sendErrorMessage(char* message) {
-  //dispatch error message to all phones?
-  Serial.println(message);
-}
-
-int getCurrentAngle() {
-  int potMeterValue = analogRead(POTMETERPIN);
-  Serial.println(potMeterValue);
-  //fraction of potmetervalue from the low end. Times hundred
-  //to maintain accuracy with integer division
-  int fraction = ( (long)( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
-  / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
-  return ( fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
-}
-
-//solar panel movements
-void solarPanelDown() { //TODO uncomment
-//  digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
-//  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
-//  digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
-}
-
-void solarPanelUp() {
-//  digitalWrite(POWER_LOW, LOW);
-//  digitalWrite(POWER_HIGH, HIGH);
-//  digitalWrite(DIRECTION_PIN, LOW);
-}
-
-void solarPanelStop() {
-//  digitalWrite(POWER_LOW, LOW);
-//  digitalWrite(POWER_HIGH, LOW);
-//  digitalWrite(DIRECTION_PIN, LOW);
-}
-
-  void homePage() {
- long t = millis() / 1000;
- word h = t / 3600;
- byte m = (t / 60) % 60;
- byte s = t % 60;
- bfill = ether.tcpOffset();
- bfill.emit_p(PSTR(
-   "$F"
-  //  "<meta http-equiv='refresh' content='1'/>"
-   "<title>SolArduino</title>"
-   "<h1>$D$D:$D$D:$D$D</h1>"),
-   http_OK,
-     h/10, h%10, m/10, m%10, s/10, s%10);
-  }
-
-  void acknowledge(const char* message) {
-    //send a http response
-    bfill = ether.tcpOffset();
-    bfill.emit_p(PSTR(
-      "$F" //$F is for a progmem string,
-      "$S"), //$S for a c string
-    http_OK,message); //parameters to be replaced go here
-  }
-
-  unsigned long getNtpTime() {
-  unsigned long timeFromNTP;
-  const unsigned long seventy_years = 2208988800UL;
-  ether.ntpRequest(ether.hisip, ntpMyPort);
-  while(true) {
-    word length = ether.packetReceive();
-    ether.packetLoop(length);
-    if(length > 0 && ether.ntpProcessAnswer(&timeFromNTP, ntpMyPort)) {
-      // Serial.print("Time from NTP: ");
-      // Serial.println(timeFromNTP);
-      return timeZone.toLocal(timeFromNTP - seventy_years);
-    }
-  }
-  return 0;
-}
-
 void requestNewTable() {
   Serial.println(F("requesting new data"));
   dates[0] = 1471903200;
   dates[1] = 1471903210;
+  responseReceived = false; // set boolean to 'wait for request'
   Serial.print("<<< REQ ");
     ether.browseUrl(PSTR("/index.php"), "", NULL, my_callback);
   Serial.print(F("free ram after browseurl: "));
   Serial.println(freeRam());
-  delay(1000); //make sure the request can finish before continuing
   tableIndex = 0; //reset global index
 }
 
 // called when the client request is complete
 static void my_callback (byte status, word off, word len) {
-  Serial.println(">>>");
-  Serial.print(F("free ram: "));
-  Serial.println(freeRam());
-  Ethernet::buffer[off+tableSize] = 0; //480 chars needed for 10 angles
-  char* result = (char*) Ethernet::buffer + off;
-  delay(42); // Make sure the request is sent and received properly, no delay results in a 400
-  Serial.print(result);
-  Serial.println(freeRam());
-  parseString(result);
+  if (!responseReceived) { // for some reason responses keep coming although the url is only requested once
+    Serial.println(">>>");
+    Serial.print(F("free ram: "));
+    Serial.println(freeRam());
+    Ethernet::buffer[off+tableSize] = 0; //480 chars needed for 10 angles
+    char* result = (char*) Ethernet::buffer + off;
+    delay(42); // Make sure the request is sent and received properly, no delay results in a 400
+    Serial.print(result);
+    Serial.println(freeRam());
+    parseString(result); // fill the arrays with the data
+    Serial.print(F("received: "));
+    Serial.println(responseReceived);
+    responseReceived = true;
+    Serial.println(F("calling Auto() from my_callback"));
+    solarPanelAuto(); // set the solar panels to the right angle
+  }
+}
 
+void receiveHttpRequests() {
+  //receive the http request
+ word len = ether.packetReceive();
+ word pos = ether.packetLoop(len);
+ if (pos) { // check if valid tcp data is received
+   delay(1); //just to be sure
+   bfill = ether.tcpOffset();
+   char *data = (char *) Ethernet::buffer + pos;
+   if (strncmp("GET /", data, 5) != 0) {
+          Serial.println(F("no valid GET request"));
+     }
+     else {
+         data += 5;
+         //start parsing data
+        //  Serial.println(data);
+         if (data[0] == ' ') {
+             // No parameters given (http://192.168.2.10), return home page
+             homePage();
+         }
+         else if (strncmp("?panel=up ", data, 10) == 0) {
+           solarPanelUp();
+             acknowledge("Panels going up."); //send acknowledge http response
+             autoMode = false;
+         }
+         else if (strncmp("?panel=down ", data, 12) == 0) {
+           solarPanelDown();
+             acknowledge("Panels going down.");
+             autoMode = false;
+         }
+         else if (strncmp("?panel=stop ", data, 12) == 0) {
+           solarPanelStop();
+             acknowledge("Panels stopped/not moving.");
+             autoMode = false;
+         }
+         else if (strncmp("?panel=auto ", data, 12) == 0) {
+//              Serial.println(F("calling Auto() by app request"));
+             Serial.println(F("Auto mode switched on."));
+             solarPanelAuto(); 
+             
+             acknowledge("Auto mode switched on.");
+             autoMode = true;
+         }
+         else if (strncmp("?panel=manual ", data, 12) == 0){
+             acknowledge("Auto mode switched off.");
+             autoMode = false;
+         }
+         else if (strncmp("?degrees=", data, 9) == 0) {
+              //print digit that comes after
+              String stringDegrees;
+              stringDegrees += (char)data[9]; //convert to char and add to string
+              stringDegrees += (char)data[10];
+
+             int degrees = stringDegrees.toInt(); //convert string to integer
+             stringDegrees = String(degrees);
+             stringDegrees += " &#176;";
+             Serial.print(F("panels to degrees: "));
+             Serial.println(degrees);
+             setSolarPanel(degrees);
+
+             //convert string to const char, easier than a modifiable char array
+             acknowledge(stringDegrees.c_str());
+             autoMode = false;
+         }
+         else if (strncmp("?update", data, 7) == 0) {
+           //update requested, sent back current angle
+           Serial.println(F("Update requested."));
+           int angle = getCurrentAngle();
+           String update = String(angle);
+           if(autoMode) {
+              update = update + " auto";
+           } else {
+              update = update + " manual";
+           }
+
+           acknowledge(update.c_str()); //convert to string, then to const char
+         }
+         else {
+             Serial.println(F("Page not found"));
+         }
+     }
+   ether.httpServerReply(bfill.position()); //send the reply, if there was one
+ }
 }
 
 // returns how much free ram there is
@@ -429,7 +374,7 @@ void parseString(char *from) {
   }
 
   Serial.println(F("strings parsed: "));
-  Serial.println("dates: ");
+  Serial.println(F("dates: "));
   for(int i = 0; i<tableLength; i++) {
     Serial.println(dates[i]);
   }
@@ -438,5 +383,74 @@ void parseString(char *from) {
     Serial.println(angles[i]);
   }
 
+}
+
+int getCurrentAngle() {
+  int potMeterValue = analogRead(POTMETERPIN);
+  Serial.println(potMeterValue);
+  //fraction of potmetervalue from the low end. Times hundred
+  //to maintain accuracy with integer division
+  int fraction = ( (long)( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
+  / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
+  return ( fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
+}
+
+//solar panel movements
+void solarPanelDown() {
+  digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
+  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
+  digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
+}
+
+void solarPanelUp() {
+  digitalWrite(POWER_LOW, LOW);
+  digitalWrite(POWER_HIGH, HIGH);
+  digitalWrite(DIRECTION_PIN, LOW);
+}
+
+void solarPanelStop() {
+  digitalWrite(POWER_LOW, LOW);
+  digitalWrite(POWER_HIGH, LOW);
+  digitalWrite(DIRECTION_PIN, LOW);
+}
+
+  void homePage() {
+ long t = millis() / 1000;
+ word h = t / 3600;
+ byte m = (t / 60) % 60;
+ byte s = t % 60;
+ bfill = ether.tcpOffset();
+ bfill.emit_p(PSTR(
+   "$F"
+  //  "<meta http-equiv='refresh' content='1'/>"
+   "<title>SolArduino</title>"
+   "<h1>$D$D:$D$D:$D$D</h1>"),
+   http_OK,
+     h/10, h%10, m/10, m%10, s/10, s%10);
+  }
+
+  void acknowledge(const char* message) {
+    //send a http response
+    bfill = ether.tcpOffset();
+    bfill.emit_p(PSTR(
+      "$F" //$F is for a progmem string,
+      "$S"), //$S for a c string
+    http_OK,message); //parameters to be replaced go here
+  }
+
+  unsigned long getNtpTime() {
+  unsigned long timeFromNTP;
+  const unsigned long seventy_years = 2208988800UL;
+  ether.ntpRequest(ether.hisip, ntpMyPort);
+  while(true) {
+    word length = ether.packetReceive();
+    ether.packetLoop(length);
+    if(length > 0 && ether.ntpProcessAnswer(&timeFromNTP, ntpMyPort)) {
+      // Serial.print("Time from NTP: ");
+      // Serial.println(timeFromNTP);
+      return timeZone.toLocal(timeFromNTP - seventy_years);
+    }
+  }
+  return 0;
 }
 
