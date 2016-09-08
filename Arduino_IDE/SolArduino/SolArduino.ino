@@ -310,7 +310,7 @@ void receiveHttpRequests() {
          }
      }
    ether.httpServerReply(bfill.position()); //send the reply, if there was one
-   delay(100);
+   delay(42); // no delay here causes a bad request for requesting angles from the NAS
    if(autoMode) { //then it is switched on, or was on for example with update requested
       solarPanelAuto(); 
     }
