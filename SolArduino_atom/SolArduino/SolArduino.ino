@@ -147,7 +147,8 @@ void setSolarPanel(int degrees) {
 //    Serial.print("potmeter: ");
 //    Serial.println(potMeterValue);
 //    Serial.println(abs (potMeterValue - expectedVoltage));
-    while (abs (potMeterValue - expectedVoltage) > 3) { //3 is about half a degree accuracy
+    while (potMeterValue != expectedVoltage) { 
+      //if the potmeter happens to skip the value, the panels will go back towards the value
       receiveHttpRequests(); //keep responsive
       if (POTMETER_LOWEND > POTMETER_HIGHEND) {
         if (potMeterValue > expectedVoltage) {
