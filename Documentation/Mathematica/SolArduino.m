@@ -352,7 +352,7 @@ exportAnglesPeriod[b_,c_,n_] := ((*begin date, end date, number of adjustments p
 	numberOfDays = DayCount[b,c] +1;
 	dateByDay = Function[x, b+Quantity[(x-1), "Days"]];
 	angles = Flatten[Table[
-		Ceiling[dayAngles[dateByDay[d],n][[All,2]]]
+		Round[dayAngles[dateByDay[d],n][[All,2]]*10] (* angles * 10 for more precision on Arduino *)
 ,{d,1,numberOfDays}
 ]]
 )

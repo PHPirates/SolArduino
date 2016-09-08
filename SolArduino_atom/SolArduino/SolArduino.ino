@@ -19,8 +19,8 @@ byte sampleRate = 5; //amount of readings to take the average of when reading th
 //experimentally determined values
 const int POTMETER_LOWEND = 650;
 const int POTMETER_HIGHEND = 1007;
-const byte DEGREES_HIGHEND = 57;
-const byte DEGREES_LOWEND = 5;
+const byte DEGREES_HIGHEND = 570; //angle * 10 for more precision
+const byte DEGREES_LOWEND = 50;
 
 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
@@ -123,18 +123,17 @@ void loop () {
 void setSolarPanel(int degrees) {
   //upper and lower bounds
   if (degrees > max (DEGREES_HIGHEND,DEGREES_LOWEND)) {
-    degrees = 57;
-    //sendErrorMessage("Degrees Out Of Range");
+    degrees = max (DEGREES_HIGHEND,DEGREES_LOWEND);
   } else if(degrees < min (DEGREES_HIGHEND,DEGREES_LOWEND)) {
-    degrees = 5;
+    degrees = min (DEGREES_HIGHEND,DEGREES_LOWEND);
   }
 
-  //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
+  //?: calculation is because of integer division at most 3 'voltage points' off, so only half a degree
   //times hundred to avoid integer division just possible without integer overflow
   float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
   int expectedVoltage = POTMETER_LOWEND +
   ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
-  Serial.print(F("degrees passed: "));
+  Serial.print(F("Going to degrees: "));
   Serial.println(degrees);
   Serial.print(F("expected: "));
   Serial.println(expectedVoltage);
