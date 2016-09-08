@@ -115,7 +115,7 @@ void loop () {
       tableIndex++;
       Serial.println(angles[tableIndex]);
       setSolarPanel(angles[tableIndex]);
-  
+
     }
   }
 }
@@ -128,7 +128,7 @@ void setSolarPanel(int degrees) {
   } else if(degrees < min (DEGREES_HIGHEND,DEGREES_LOWEND)) {
     degrees = 5;
   }
-  
+
   //calculation is because of integer division at most 3 'voltage points' off, so only half a degree
   //times hundred to avoid integer division just possible without integer overflow
   float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
@@ -138,7 +138,7 @@ void setSolarPanel(int degrees) {
   Serial.println(degrees);
   Serial.print(F("expected: "));
   Serial.println(expectedVoltage);
-  
+
     int total = 0;
     for (int i=0; i<sampleRate; i++) {
       total += analogRead(POTMETERPIN);
@@ -231,7 +231,7 @@ static void my_callback (byte status, word off, word len) {
 
 void receiveHttpRequests() {
   int degrees = -1;
-  
+
   //receive the http request
  word len = ether.packetReceive();
  word pos = ether.packetLoop(len);
@@ -269,7 +269,7 @@ void receiveHttpRequests() {
 //              Serial.println(F("calling Auto() by app request"));
              Serial.println(F("Auto mode switched on."));
              autoMode = true; //solarPanelAuto() is called later, first we handle off the request
-             acknowledge("Auto mode switched on.");             
+             acknowledge("Auto mode switched on.");
          }
          else if (strncmp("?panel=manual ", data, 12) == 0){
              acknowledge("Auto mode switched off.");
@@ -286,13 +286,13 @@ void receiveHttpRequests() {
              stringDegrees += " &#176;";
              Serial.print(F("panels to degrees: "));
              Serial.println(degrees);
-            
+
 
              //convert string to const char, easier than a modifiable char array
              acknowledge(stringDegrees.c_str());
              autoMode = false;
          }
-         else if (strncmp("?update", data, 7) == 0) { 
+         else if (strncmp("?update", data, 7) == 0) {
            //update requested, sent back current angle
            Serial.println(F("Update requested."));
            int angle = getCurrentAngle();
@@ -312,7 +312,7 @@ void receiveHttpRequests() {
    ether.httpServerReply(bfill.position()); //send the reply, if there was one
    delay(42); // no delay here causes a bad request for requesting angles from the NAS
    if(autoMode) { //then it is switched on, or was on for example with update requested
-      solarPanelAuto(); 
+      solarPanelAuto();
     }
 
    if(degrees != -1) { // if degrees were changed by a manual request, set solar panels
@@ -329,12 +329,12 @@ int freeRam () {
 }
 
 void parseString(char *from) {
-  
+
 //  char from [tableSize]; // 480 bytes should be enough for 10 angles, see top of code
 //  strcpy(from, everything); //because we can't modify a constant char we need to copy it
   char *found;
   int leng;
-  char *times;  
+  char *times;
   char dateString[120]; //these may need some tuning
   char angleString[30];
 
@@ -422,7 +422,7 @@ void solarPanelStop() {
   digitalWrite(DIRECTION_PIN, LOW);
 }
 
-  void homePage() {
+void homePage() {
  long t = millis() / 1000;
  word h = t / 3600;
  byte m = (t / 60) % 60;
@@ -437,16 +437,16 @@ void solarPanelStop() {
      h/10, h%10, m/10, m%10, s/10, s%10);
   }
 
-  void acknowledge(const char* message) {
-    //send a http response
-    bfill = ether.tcpOffset();
-    bfill.emit_p(PSTR(
-      "$F" //$F is for a progmem string,
-      "$S"), //$S for a c string
-    http_OK,message); //parameters to be replaced go here
-  }
+void acknowledge(const char* message) {
+  //send a http response
+  bfill = ether.tcpOffset();
+  bfill.emit_p(PSTR(
+    "$F" //$F is for a progmem string,
+    "$S"), //$S for a c string
+  http_OK,message); //parameters to be replaced go here
+}
 
-  unsigned long getNtpTime() {
+unsigned long getNtpTime() {
   unsigned long timeFromNTP;
   const unsigned long seventy_years = 2208988800UL;
   ether.ntpRequest(ether.hisip, ntpMyPort);
@@ -461,4 +461,3 @@ void solarPanelStop() {
   }
   return 0;
 }
-
