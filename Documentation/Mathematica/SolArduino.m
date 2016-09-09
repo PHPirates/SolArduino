@@ -322,7 +322,7 @@ csvToList[d_,c_] := ( (* csvToList[date,data] returns list of values for that da
 dayData = Select[c,
 DayCount[
 DateObject[DateObject[
-DateString[#[[1]],{"Day","-","Month","-","Year"," ","Hour",":","Minute"}]
+DateString[#[[1]],{"Month","/","Day","/","Year"," ","Hour",":","Minute"}]
 ],{0,0}] (* change hour to 0 to compare *) ,
 d
 ] == 0 &
@@ -352,7 +352,7 @@ exportAnglesPeriod[b_,c_,n_] := ((*begin date, end date, number of adjustments p
 	numberOfDays = DayCount[b,c] +1;
 	dateByDay = Function[x, b+Quantity[(x-1), "Days"]];
 	angles = Flatten[Table[
-		Ceiling[dayAngles[dateByDay[d],n][[All,2]]]
+		Round[dayAngles[dateByDay[d],n][[All,2]]*10] (* angles * 10 for more precision on Arduino *)
 ,{d,1,numberOfDays}
 ]]
 )
