@@ -4,30 +4,43 @@
     api-level="23"
     density="xxhdpi"
     format="7"
-    timestamp="620891047915"
-    token="-6257287793977288624" >
+    timestamp="138333128925555"
+    token="5643924985375730595"
+    verifier="COMPATIBLE" >
 
     <task
         name="javac"
-        duration="7741" />
+        duration="265" />
     <task
         name="instant-run-dex"
-        duration="0" />
+        duration="645" />
     <task
         name="instant-run-transform"
-        duration="764" />
+        duration="51" />
     <task
         name="verifier"
-        duration="207" />
+        duration="4" />
 
     <artifact
-        location="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\outputs\apk\app-debug.apk"
-        type="MAIN" />
+        location="C:\Users\s156757\gitRepos\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\reload-dex\debug\classes.dex"
+        type="RELOAD_DEX" />
 
-    <build timestamp="620891047915" >
+    <build timestamp="138134781832849" >
         <artifact
-            location="C:\Users\s156757\OneDrive\SolArduino\solarduino\SolAppduino\SolArduino\app\build\outputs\apk\app-debug.apk"
+            location="C:\Users\s156757\gitRepos\SolArduino\solarduino\SolAppduino\SolArduino\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
+    </build>
+    <build timestamp="138305459887427" >
+        <artifact
+            location="C:\Users\s156757\gitRepos\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_5\classes.dex"
+            type="DEX" />
+    </build>
+    <build
+        timestamp="138333128925555"
+        verifier="COMPATIBLE" >
+        <artifact
+            location="C:\Users\s156757\gitRepos\SolArduino\solarduino\SolAppduino\SolArduino\app\build\intermediates\reload-dex\debug\classes.dex"
+            type="RELOAD_DEX" />
     </build>
 
 </instant-run>
