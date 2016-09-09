@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    235069,       5355]
-NotebookOptionsPosition[    228620,       5169]
-NotebookOutlinePosition[    230902,       5234]
-CellTagsIndexPosition[    230311,       5218]
+NotebookDataLength[    235119,       5353]
+NotebookOptionsPosition[    228670,       5167]
+NotebookOutlinePosition[    230952,       5232]
+CellTagsIndexPosition[    230361,       5216]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1872,11 +1872,10 @@ Cell[BoxData[
    RowBox[{"(*", 
     RowBox[{
      RowBox[{"data", " ", "=", " ", 
-      RowBox[{
-      "Import", "[", 
-       "\"\<C:\\\\Users\\\\s156757\\\\OneDrive\\\\SolArduino\\\\solarduino\\\\\
-Documentation\\\\Mathematica\\\\data24_30.csv\>\"", "]"}]}], ";", 
-     "\[IndentingNewLine]", 
+      RowBox[{"Import", "[", " ", 
+       RowBox[{
+        RowBox[{"NotebookDirectory", "[", "]"}], "<>", 
+        "\"\<data24_30.csv\>\""}], "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"data", " ", "=", " ", 
       RowBox[{"Delete", "[", 
        RowBox[{"data", ",", "1"}], "]"}]}], ";", "\[IndentingNewLine]", 
@@ -1948,7 +1947,7 @@ Documentation\\\\Mathematica\\\\data24_30.csv\>\"", "]"}]}], ";",
   3.6815640439321394`*^9, 3.681564073765397*^9}, {3.681564105166937*^9, 
   3.681564247214671*^9}, {3.681564325574628*^9, 3.681564326542696*^9}, {
   3.681571964413537*^9, 3.681571971485854*^9}, {3.6815720313466997`*^9, 
-  3.6815720970728965`*^9}}],
+  3.6815720970728965`*^9}, {3.682348967632162*^9, 3.6823489686328735`*^9}}],
 
 Cell[BoxData[
  StyleBox["\<\"initialiseSunPositionByPrecision[date,precision (hours*100)] \
@@ -4173,16 +4172,16 @@ Cell[BoxData[
       RowBox[{"format", " ", "YYYY"}], "-", "MM", "-", "DD"}], ",", " ", 
      "angle"}], " ", "*)"}], "\[IndentingNewLine]", 
    RowBox[{
-    RowBox[{"Export", "[", 
+    RowBox[{"Export", "[", " ", 
      RowBox[{
-     "\"\<C:\\\\Users\\\\s156757\\\\OneDrive\\\\SolArduino\\\\solarduino\\\\\
-Documentation\\\\Mathematica\\\\export.csv\>\"", ",", " ", "t"}], "]"}], 
-    ";"}]}]}]], "Input",
+      RowBox[{
+       RowBox[{"NotebookDirectory", "[", "]"}], "<>", "\"\<export.csv\>\""}], 
+      ",", " ", "t"}], "]"}], ";"}]}]}]], "Input",
  CellChangeTimes->{{3.6813800325954456`*^9, 3.681380046590518*^9}, {
   3.6813801810770483`*^9, 3.6813801905888796`*^9}, {3.6813802422419634`*^9, 
   3.6813802458615623`*^9}, {3.6813803285058966`*^9, 3.681380398337031*^9}, {
   3.681381255321306*^9, 3.6813812596103816`*^9}, {3.6813849120063534`*^9, 
-  3.681384912318802*^9}}],
+  3.681384912318802*^9}, {3.682348980388217*^9, 3.682348981824238*^9}}],
 
 Cell[BoxData[
  StyleBox["\<\"anglesPeriod[begin date, end date] creates list of optimal \
@@ -5014,11 +5013,10 @@ Cell[BoxData[
    "\[IndentingNewLine]", "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{"data", " ", "=", " ", 
-     RowBox[{
-     "Import", "[", 
-      "\"\<C:\\\\Users\\\\s156757\\\\OneDrive\\\\SolArduino\\\\solarduino\\\\\
-Documentation\\\\Mathematica\\\\data19_25.csv\>\"", "]"}]}], ";"}], 
-   "\[IndentingNewLine]", 
+     RowBox[{"Import", "[", " ", 
+      RowBox[{
+       RowBox[{"NotebookDirectory", "[", "]"}], "<>", 
+       "\"\<data19_25.csv\>\""}], "]"}]}], ";"}], "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{"data", " ", "=", " ", 
      RowBox[{"Delete", "[", 
@@ -5105,7 +5103,7 @@ Documentation\\\\Mathematica\\\\data19_25.csv\>\"", "]"}]}], ";"}],
       "]"}], "*)"}]}]}]], "Input",
  CellChangeTimes->{{3.681376406139206*^9, 3.6813764138467455`*^9}, {
   3.6813772656909833`*^9, 3.681377281601406*^9}, {3.6813793151003237`*^9, 
-  3.6813793247362423`*^9}}],
+  3.6813793247362423`*^9}, {3.6823489906565046`*^9, 3.682348991549138*^9}}],
 
 Cell[BoxData[
  StyleBox["\<\"csvToList[date,data] returns list of values for that date that \
@@ -5196,39 +5194,39 @@ CellTagsIndex->{
   Cell[73294, 1775, 313, 5, 40, "Print",
    CellTags->"Info1473681395411-5245577"]},
  "Info1573681579871-6838463"->{
-  Cell[81028, 1952, 284, 5, 40, "Print",
+  Cell[81043, 1951, 284, 5, 40, "Print",
    CellTags->"Info1573681579871-6838463"]},
  "Info23681405737-7601311"->{
-  Cell[114203, 2670, 552, 8, 75, "Print",
+  Cell[114218, 2669, 552, 8, 75, "Print",
    CellTags->"Info23681405737-7601311"]},
  "Info503681407027-7601311"->{
-  Cell[147304, 3378, 252, 4, 40, "Print",
+  Cell[147319, 3377, 252, 4, 40, "Print",
    CellTags->"Info503681407027-7601311"]},
  "Info1733681392117-1686219"->{
-  Cell[185436, 4186, 244, 4, 40, "Print",
+  Cell[185470, 4185, 244, 4, 40, "Print",
    CellTags->"Info1733681392117-1686219"]},
  "Info1223681572402-6838463"->{
-  Cell[192840, 4380, 267, 5, 40, "Print",
+  Cell[192874, 4379, 267, 5, 40, "Print",
    CellTags->"Info1223681572402-6838463"]},
  "Info323681386527-1686219"->{
-  Cell[226081, 5109, 228, 4, 40, "Print",
+  Cell[226131, 5107, 228, 4, 40, "Print",
    CellTags->"Info323681386527-1686219"]}
  }
 *)
 (*CellTagsIndex
 CellTagsIndex->{
- {"Info3103681405458-5827772", 228927, 5179},
- {"Info633681407230-7601311", 229040, 5182},
- {"Info2483681399296-5827772", 229154, 5185},
- {"Info1393681395401-5245577", 229270, 5188},
- {"Info1433681395405-5245577", 229387, 5191},
- {"Info1473681395411-5245577", 229504, 5194},
- {"Info1573681579871-6838463", 229621, 5197},
- {"Info23681405737-7601311", 229736, 5200},
- {"Info503681407027-7601311", 229851, 5203},
- {"Info1733681392117-1686219", 229968, 5206},
- {"Info1223681572402-6838463", 230086, 5209},
- {"Info323681386527-1686219", 230203, 5212}
+ {"Info3103681405458-5827772", 228977, 5177},
+ {"Info633681407230-7601311", 229090, 5180},
+ {"Info2483681399296-5827772", 229204, 5183},
+ {"Info1393681395401-5245577", 229320, 5186},
+ {"Info1433681395405-5245577", 229437, 5189},
+ {"Info1473681395411-5245577", 229554, 5192},
+ {"Info1573681579871-6838463", 229671, 5195},
+ {"Info23681405737-7601311", 229786, 5198},
+ {"Info503681407027-7601311", 229901, 5201},
+ {"Info1733681392117-1686219", 230018, 5204},
+ {"Info1223681572402-6838463", 230136, 5207},
+ {"Info323681386527-1686219", 230253, 5210}
  }
 *)
 (*NotebookFileOutline
@@ -5296,66 +5294,66 @@ Cell[73294, 1775, 313, 5, 40, "Print",
 Cell[73610, 1782, 1907, 43, 232, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[75554, 1830, 5471, 120, 658, "Input"],
-Cell[81028, 1952, 284, 5, 40, "Print",
+Cell[75554, 1830, 5486, 119, 658, "Input"],
+Cell[81043, 1951, 284, 5, 40, "Print",
  CellTags->"Info1573681579871-6838463"],
-Cell[81315, 1959, 285, 6, 40, "Message"],
-Cell[81603, 1967, 283, 6, 40, "Message"],
-Cell[81889, 1975, 283, 6, 40, "Message"],
-Cell[82175, 1983, 363, 7, 21, "Message"],
-Cell[82541, 1992, 2117, 46, 241, "Output"]
+Cell[81330, 1958, 285, 6, 40, "Message"],
+Cell[81618, 1966, 283, 6, 40, "Message"],
+Cell[81904, 1974, 283, 6, 40, "Message"],
+Cell[82190, 1982, 363, 7, 21, "Message"],
+Cell[82556, 1991, 2117, 46, 241, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[84695, 2043, 6328, 147, 924, "Input"],
-Cell[91026, 2192, 22341, 451, 377, "Output"]
+Cell[84710, 2042, 6328, 147, 924, "Input"],
+Cell[91041, 2191, 22341, 451, 377, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[113404, 2648, 796, 20, 107, "Input"],
-Cell[114203, 2670, 552, 8, 75, "Print",
+Cell[113419, 2647, 796, 20, 107, "Input"],
+Cell[114218, 2669, 552, 8, 75, "Print",
  CellTags->"Info23681405737-7601311"],
-Cell[114758, 2680, 533, 10, 39, "Message"],
-Cell[115294, 2692, 532, 10, 39, "Message"],
-Cell[115829, 2704, 918, 22, 41, "Output"],
-Cell[116750, 2728, 366, 8, 21, "Message"],
-Cell[117119, 2738, 368, 8, 21, "Message"],
-Cell[117490, 2748, 956, 23, 41, "Output"]
+Cell[114773, 2679, 533, 10, 39, "Message"],
+Cell[115309, 2691, 532, 10, 39, "Message"],
+Cell[115844, 2703, 918, 22, 41, "Output"],
+Cell[116765, 2727, 366, 8, 21, "Message"],
+Cell[117134, 2737, 368, 8, 21, "Message"],
+Cell[117505, 2747, 956, 23, 41, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[118483, 2776, 6899, 139, 620, "Input"],
-Cell[125385, 2917, 17723, 358, 412, "Output"]
+Cell[118498, 2775, 6899, 139, 620, "Input"],
+Cell[125400, 2916, 17723, 358, 412, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[143145, 3280, 4156, 96, 468, "Input"],
-Cell[147304, 3378, 252, 4, 40, "Print",
+Cell[143160, 3279, 4156, 96, 468, "Input"],
+Cell[147319, 3377, 252, 4, 40, "Print",
  CellTags->"Info503681407027-7601311"],
-Cell[147559, 3384, 13107, 268, 375, "Output"]
+Cell[147574, 3383, 13107, 268, 375, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[160703, 3657, 4109, 103, 392, "Input"],
-Cell[164815, 3762, 676, 13, 24, "Message"],
-Cell[165494, 3777, 17520, 342, 314, "Output"]
+Cell[160718, 3656, 4109, 103, 392, "Input"],
+Cell[164830, 3761, 676, 13, 24, "Message"],
+Cell[165509, 3776, 17520, 342, 314, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[183051, 4124, 2382, 60, 240, "Input"],
-Cell[185436, 4186, 244, 4, 40, "Print",
+Cell[183066, 4123, 2401, 60, 240, "Input"],
+Cell[185470, 4185, 244, 4, 40, "Print",
  CellTags->"Info1733681392117-1686219"],
-Cell[185683, 4192, 1014, 25, 41, "Output"]
+Cell[185717, 4191, 1014, 25, 41, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[186734, 4222, 6103, 156, 525, "Input"],
-Cell[192840, 4380, 267, 5, 40, "Print",
+Cell[186768, 4221, 6103, 156, 525, "Input"],
+Cell[192874, 4379, 267, 5, 40, "Print",
  CellTags->"Info1223681572402-6838463"],
-Cell[193110, 4387, 495, 10, 21, "Message"],
-Cell[193608, 4399, 1514, 34, 69, "Output"],
-Cell[195125, 4435, 1211, 34, 50, "Output"],
-Cell[196339, 4471, 12404, 253, 356, "Output"],
-Cell[208746, 4726, 12561, 257, 346, "Output"]
+Cell[193144, 4386, 495, 10, 21, "Message"],
+Cell[193642, 4398, 1514, 34, 69, "Output"],
+Cell[195159, 4434, 1211, 34, 50, "Output"],
+Cell[196373, 4470, 12404, 253, 356, "Output"],
+Cell[208780, 4725, 12561, 257, 346, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[221344, 4988, 4734, 119, 563, "Input"],
-Cell[226081, 5109, 228, 4, 40, "Print",
+Cell[221378, 4987, 4750, 118, 563, "Input"],
+Cell[226131, 5107, 228, 4, 40, "Print",
  CellTags->"Info323681386527-1686219"],
-Cell[226312, 5115, 2292, 51, 237, "Output"]
+Cell[226362, 5113, 2292, 51, 237, "Output"]
 }, Open  ]]
 }
 ]
