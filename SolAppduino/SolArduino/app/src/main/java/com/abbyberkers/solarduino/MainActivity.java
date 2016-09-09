@@ -1,16 +1,10 @@
 package com.abbyberkers.solarduino;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.ExpandedMenuView;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -23,8 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,13 +25,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.AbstractSequentialList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,14 +40,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //    String ipString = "http://192.168.2.107"; // IP test
 //    String host = "192.168.2.107"; // host test
 
-    String toast;           // String containing the result from the last http-request
+    String lastResult;           // String containing the result from the last http-request
     String autoMode;        // String with auto if auto mode on, manual if auto mode off
 
     Toast unreachableToast;
     Toast updateToast;
     Toast updatedToast;
 
-    int delay = 900;        // delay for the Timer/TimerTask
+    int delay = 3365;        // delay for the Timer/TimerTask which asks for an update every (delay) millisecs
+                            // 175 secs for 52 degrees -> 3.37 secs per degree, asking every fifth of a degree
 
     boolean reachable;      // boolean to know whether the Arduino is reachable or not
 
@@ -367,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     sendPing.cancel(true);
                     unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached.",Toast.LENGTH_SHORT);
                     unreachableToast.show();
-                    toast = "Arduino not reachable"; //update http request return string
+                    lastResult = "Arduino not reachable"; //update http request return string
                 }
 
             }
@@ -415,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * Send an update http-request to the Arduino.
      */
     public void sendUpdateRequest() {
-        if(toast.contains("Un") || toast.contains("not")) {
+        if(lastResult.contains("Un") || lastResult.contains("not")) {
             // if the previous request returns that the Arduino is not available or unreachable,
             // don't send another request
             return;
@@ -498,87 +486,79 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         @Override
         protected void onPostExecute(String result) {
             Log.e("result", result);
-            if (result.length() < 2) { //catch results being too short to be anything useful
-                Log.e("http response","Bad result: too short");
-//                toast = "bad response received (too short)";
-                Toast.makeText(getBaseContext(), "Bad response received (too short)", Toast.LENGTH_SHORT).show();
-            } else {
-                toast = result.substring(0, 2).trim(); //TODO if toast contains the result of the
-                // last http request, what is the difference with result, and what does this line?
+                lastResult = result; //set result global as well
 
-//            Log.w("result", toast);
-//            toast = result; // set toast to be the latest result.
+//            Log.w("result", lastResult);
+//            lastResult = result; // set lastResult to be the latest result.
 //            String color = "#" + String.valueOf(Integer.toHexString(defaultColor));
 //            currentAngle.setTextColor(Color.parseColor(color));
-                if (result.contains("Un") || result.contains("not be")) {
-                    // Arduino could not be reached.
+            if (result.contains("Un") || result.contains("not be")) {
+                // Arduino could not be reached.
 
-                    Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
-                    // set seekbar at current angle, so update requests aren't sent anymore.
-                    seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
-                            .substring(0, 2)
-                            .trim()));
-                    Log.w("internet", "not connected");
-                } else if (result.contains("Panel")) {
-                    Toast.makeText(getBaseContext(), result.trim(), Toast.LENGTH_SHORT).show();
-                } else {
-                    String message = urlString;
-                    if (message.equals(ipString)) {
-                    } else if (message.contains("panel")) {
-                        // Toast that the panels are going up or down so the user knows the Arduino
-                        // received the request and knows what to do
-                        Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
-                    } else if (message.contains("degrees")) {
+                Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
+                // set seekbar at current angle, so update requests aren't sent anymore.
+                seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
+                        .substring(0, 2)
+                        .trim()));
+                Log.w("internet", "not connected");
+            } else if (result.contains("Panel")) {
+                Toast.makeText(getBaseContext(), result.trim(), Toast.LENGTH_SHORT).show();
+            } else {
+                String message = urlString;
+                if (message.equals(ipString)) {
+                } else if (message.contains("panel")) {
+                    // Toast that the panels are going up or down so the user knows the Arduino
+                    // received the request and knows what to do
+                    Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
+                } else if (message.contains("degrees")) {
 //                    Log.e("result", result);
-                    } else if (message.contains("update")) {
-                        String[] updateString = result.split(" ");
-                        // string with current angle plus degree symbol
-                        String angle = Html.fromHtml(updateString[0]) + "\u00b0";
-                        currentAngle.setText(angle);
-                        // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
-                        if (updateToast != null) {
-                            if (updatedToast != null) {
-                                updatedToast.cancel();
-                            }
-                            updateToast.cancel();
-                            updatedToast = Toast.makeText(getBaseContext(), "Updated.", Toast.LENGTH_SHORT);
-                            updatedToast.show();
+                } else if (message.contains("update")) {
+                    String[] updateString = result.split(" ");
+                    // string with current angle plus degree symbol
+                    String angle = Html.fromHtml(updateString[0]) + "\u00b0";
+                    currentAngle.setText(angle);
+                    // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
+                    if (updateToast != null) {
+                        if (updatedToast != null) {
+                            updatedToast.cancel();
                         }
-
-                        // convert string to integer, then rotate the image
-                        int newAngle = Integer.valueOf(updateString[0]);
-                        rotate(newAngle);
-
-                        if (newAngle == 5) {
-                            Toast.makeText(getBaseContext(), "Low end stop reached.", Toast.LENGTH_SHORT).show();
-                        } else if (newAngle == 57) {
-                            Toast.makeText(getBaseContext(), "High end stop reached.", Toast.LENGTH_SHORT).show();
-                        }
-
-                        updateString[1].trim();
-                        Log.e("update", updateString[1]);
-                        Log.e("check", String.valueOf(autoBox.isChecked()));
-                        Log.e("update", String.valueOf(updateString[1].contains("manual")));
-
-                        if (updateString[1].contains("auto")) {
-                            if (!autoBox.isChecked()) {
-                                autoBox.toggle();
-                            }
-                        } else if (updateString[1].contains("manual")) {
-                            if (autoBox.isChecked()) {
-                                autoBox.toggle();
-                            }
-                        }
-                    } else if (message.contains("Page")) {
-                        Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // Back up, don't know what happened when we arrive here, should never happen.
-                        // But has happened in the past.
-//                    Log.e("message", message);
-                        Toast.makeText(getBaseContext(), "Bad response received", Toast.LENGTH_SHORT).show();
+                        updateToast.cancel();
+                        updatedToast = Toast.makeText(getBaseContext(), "Updated.", Toast.LENGTH_SHORT);
+                        updatedToast.show();
                     }
+
+                    // convert string to integer, then rotate the image
+                    int newAngle = Integer.valueOf(updateString[0]);
+                    rotate(newAngle);
+
+                    if (newAngle == 5) {
+                        Toast.makeText(getBaseContext(), "Low end stop reached.", Toast.LENGTH_SHORT).show();
+                    } else if (newAngle == 57) {
+                        Toast.makeText(getBaseContext(), "High end stop reached.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    updateString[1] = updateString[1].trim();
+                    Log.e("update", updateString[1]);
+                    Log.e("check", String.valueOf(autoBox.isChecked()));
+                    Log.e("update", String.valueOf(updateString[1].contains("manual")));
+
+                    if (updateString[1].contains("auto")) {
+                        if (!autoBox.isChecked()) {
+                            autoBox.toggle();
+                        }
+                    } else if (updateString[1].contains("manual")) {
+                        if (autoBox.isChecked()) {
+                            autoBox.toggle();
+                        }
+                    }
+                } else if (message.contains("Page")) {
+                    Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
+                } else {
+//                    Log.e("message", message);
+                    Toast.makeText(getBaseContext(), "Bad response received", Toast.LENGTH_SHORT).show();
                 }
             }
+
         }
 
         private String sendRequest(String myURL) {
