@@ -5,7 +5,7 @@
 //#include <avr/pgmspace.h>   // To use PROGMEM
 #include "numbers.h"        // The file which contains the data with angles and unix times
 int tableLength = 10; // It's easiest to declare the length here. Changing it on the webserver may break the app because of initialisation of arrays with length 10, although it shouldn't. Change the tableSize to corresponding amount of bytes anyway, and initialise both arrays with the correct length
-const int tableSize = 480; //480 bytes for 10 angles will do, used in ethernet buffer and when parsing
+const int tableSize = 680; //480 bytes for 10 angles will do, used in ethernet buffer and when parsing
 int tableIndex; // The current index in the table when in auto mode
 
 //pin declarations
@@ -19,8 +19,8 @@ byte sampleRate = 5; //amount of readings to take the average of when reading th
 //experimentally determined values
 const int POTMETER_LOWEND = 650;
 const int POTMETER_HIGHEND = 1007;
-const byte DEGREES_HIGHEND = 570; //angle * 10 for more precision
-const byte DEGREES_LOWEND = 50;
+const int DEGREES_HIGHEND = 570; //angle * 10 for more precision
+const int DEGREES_LOWEND = 50;
 
 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
@@ -190,7 +190,7 @@ void solarPanelAuto() {
     requestNewTable();
   } else {
       tableIndex = i-1; //correct for i being one too much after searching to get corresponding angle
-      Serial.print("set on auto, going to degrees: ");
+      Serial.print("set on auto, degrees passed: ");
   Serial.println(angles[tableIndex]);
   setSolarPanel(angles[tableIndex]);
   }
@@ -294,7 +294,7 @@ void receiveHttpRequests() {
          else if (strncmp("?update", data, 7) == 0) {
            //update requested, sent back current angle
            Serial.println(F("Update requested."));
-           int angle = getCurrentAngle();
+           int angle = (getCurrentAngle()+5)/10; //round to int
            String update = String(angle);
            if(autoMode) {
               update = update + " auto";
@@ -315,7 +315,7 @@ void receiveHttpRequests() {
     }
 
    if(degrees != -1) { // if degrees were changed by a manual request, set solar panels
-     setSolarPanel(degrees);
+     setSolarPanel(degrees*10); //degrees go in times ten for more precision
    }
  }
 }
@@ -335,7 +335,7 @@ void parseString(char *from) {
   int leng;
   char *times;
   char dateString[120]; //these may need some tuning
-  char angleString[30];
+  char angleString[60];
 
   Serial.print(F("free ram after assignments: "));
   Serial.println(freeRam());
@@ -399,7 +399,7 @@ int getCurrentAngle() {
   //to maintain accuracy with integer division
   int fraction = ( (long)( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
   / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
-  return ( fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
+  return ( (long) fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
 }
 
 //solar panel movements
