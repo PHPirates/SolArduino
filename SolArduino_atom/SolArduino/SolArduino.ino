@@ -5,6 +5,8 @@
 //#include <avr/pgmspace.h>   // To use PROGMEM
 #include "numbers.h"        // The file which contains the data with angles and unix times
 const int TABLE_LENGTH = 10; // declare length here is easier
+int angles[TABLE_LENGTH];
+long dates[TABLE_LENGTH];
 const int TABLE_SIZE = 680; //680 bytes for 10 angles will do, used in ethernet buffer and when parsing
 int tableIndex; // The current index in the table when in auto mode
 
@@ -100,12 +102,17 @@ void setup () {
 
    solarPanelStop();
    autoMode = true;
-   Serial.println(F("calling Auto() from setup")); //too much serial prints results in bad request?
+   requestNewTable(); //fill the angles and dates arrays
+   while(!responseReceived) {
+     ether.packetLoop(ether.packetReceive()); //keep receiving response
+   }
+   Serial.println(F("calling Auto() from setup"));
    solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
-  ether.packetLoop(ether.packetReceive()); //something to do with http request?
+  //especially if the response is not received yet, keep receiving the response
+  ether.packetLoop(ether.packetReceive());
   receiveHttpRequests();
   if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) {
