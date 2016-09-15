@@ -3,7 +3,8 @@
 #include <Time.h>           // http://www.arduino.cc/playground/Code/Time
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
 //#include <avr/pgmspace.h>   // To use PROGMEM
-#include "numbers.h"        // The file which contains the data with angles and unix times
+int angles[10];
+long dates[10];
 int tableLength = 10; // It's easiest to declare the length here. Changing it on the webserver may break the app because of initialisation of arrays with length 10, although it shouldn't. Change the tableSize to corresponding amount of bytes anyway, and initialise both arrays with the correct length
 const int tableSize = 680; //480 bytes for 10 angles will do, used in ethernet buffer and when parsing
 int tableIndex; // The current index in the table when in auto mode
@@ -100,12 +101,17 @@ void setup () {
 
    solarPanelStop();
    autoMode = true;
-   Serial.println(F("calling Auto() from setup")); //too much serial prints results in bad request?
+   requestNewTable(); //fill the angles and dates arrays
+   while(!responseReceived) {
+     ether.packetLoop(ether.packetReceive()); //keep receiving response
+   } 
+   Serial.println(F("calling Auto() from setup"));
    solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
-  ether.packetLoop(ether.packetReceive()); //something to do with http request?
+  //especially if the response is not received yet, keep receiving the response
+  ether.packetLoop(ether.packetReceive());
   receiveHttpRequests();
   if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= tableLength) {
@@ -146,7 +152,7 @@ void setSolarPanel(int degrees) {
 //    Serial.print("potmeter: ");
 //    Serial.println(potMeterValue);
 //    Serial.println(abs (potMeterValue - expectedVoltage));
-    while (potMeterValue != expectedVoltage) { 
+    while (potMeterValue != expectedVoltage) {
       //if the potmeter happens to skip the value, the panels will go back towards the value
       receiveHttpRequests(); //keep responsive
       if (POTMETER_LOWEND > POTMETER_HIGHEND) {
