@@ -1,11 +1,11 @@
-#include <Arduino.h>
+// #include <Arduino.h>     // only used when making libraries
 #include <EtherCard.h>      // https://github.com/jcw/ethercard
 #include <Time.h>           // http://www.arduino.cc/playground/Code/Time
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
 //#include <avr/pgmspace.h>   // To use PROGMEM
 #include "numbers.h"        // The file which contains the data with angles and unix times
-int tableLength = 10; // It's easiest to declare the length here. Changing it on the webserver may break the app because of initialisation of arrays with length 10, although it shouldn't. Change the tableSize to corresponding amount of bytes anyway, and initialise both arrays with the correct length
-const int tableSize = 680; //480 bytes for 10 angles will do, used in ethernet buffer and when parsing
+const int TABLE_LENGTH = 10; // declare length here is easier
+const int TABLE_SIZE = 680; //680 bytes for 10 angles will do, used in ethernet buffer and when parsing
 int tableIndex; // The current index in the table when in auto mode
 
 //pin declarations
@@ -14,7 +14,7 @@ const byte DIRECTION_PIN = 4;
 const byte POWER_LOW = 5;
 
 const byte POTMETERPIN = A7;
-byte sampleRate = 5; //amount of readings to take the average of when reading the potmeter
+const byte SAMPLE_RATE = 5; //amount of readings to take the average of when reading the potmeter
 
 //experimentally determined values
 const int POTMETER_LOWEND = 650;
@@ -41,7 +41,7 @@ TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +0};
 TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, -60};
 Timezone timeZone(summerTime, winterTime);
 
-byte Ethernet::buffer[tableSize]; //minimum for requesting 10 angles, this seems pre-allocated
+byte Ethernet::buffer[TABLE_SIZE]; //minimum for requesting 10 angles, this seems pre-allocated
 BufferFiller bfill;   //used in every http response sent
 
 //to be reused in every http response sent
@@ -108,7 +108,7 @@ void loop () {
   ether.packetLoop(ether.packetReceive()); //something to do with http request?
   receiveHttpRequests();
   if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
-    if (tableIndex+1 >= tableLength) {
+    if (tableIndex+1 >= TABLE_LENGTH) {
       requestNewTable();
     } else if (autoMode && dates[tableIndex+1]<now()) { //if time walked into next part
       Serial.println(F("Advancing to next angle"));
@@ -139,14 +139,14 @@ void setSolarPanel(int degrees) {
   Serial.println(expectedVoltage);
 
     int total = 0;
-    for (int i=0; i<sampleRate; i++) {
+    for (int i=0; i<SAMPLE_RATE; i++) {
       total += analogRead(POTMETERPIN);
     }
-    int potMeterValue = total/sampleRate;
+    int potMeterValue = total/SAMPLE_RATE;
 //    Serial.print("potmeter: ");
 //    Serial.println(potMeterValue);
 //    Serial.println(abs (potMeterValue - expectedVoltage));
-    while (potMeterValue != expectedVoltage) { 
+    while (potMeterValue != expectedVoltage) {
       //if the potmeter happens to skip the value, the panels will go back towards the value
       receiveHttpRequests(); //keep responsive
       if (POTMETER_LOWEND > POTMETER_HIGHEND) {
@@ -163,10 +163,10 @@ void setSolarPanel(int degrees) {
         }
       }
       int total = 0;
-      for (int i=0; i<sampleRate; i++) {
+      for (int i=0; i<SAMPLE_RATE; i++) {
         total += analogRead(POTMETERPIN);
       }
-      potMeterValue = total/sampleRate;
+      potMeterValue = total/SAMPLE_RATE;
 //      Serial.print("potmeter: ");
 //      Serial.println(potMeterValue);
 //      Serial.println(abs (potMeterValue - expectedVoltage));
@@ -179,12 +179,12 @@ void setSolarPanel(int degrees) {
 void solarPanelAuto() {
   Serial.println(F("solarPanelAuto() called"));
   int i = 0;
-  while(dates[i]<now() && i<tableLength){
+  while(dates[i]<now() && i<TABLE_LENGTH){
 //    Serial.println(i);
     i++;
   }
 
-  if (i >= tableLength) { //in the case we ran out of angles
+  if (i >= TABLE_LENGTH) { //in the case we ran out of angles
     Serial.print("I ran out of angles, i= ");
     Serial.println(i);
     tableIndex = i;
@@ -215,10 +215,13 @@ static void my_callback (byte status, word off, word len) {
     Serial.println(">>>");
     Serial.print(F("free ram: "));
     Serial.println(freeRam());
-    Ethernet::buffer[off+tableSize] = 0; //480 chars needed for 10 angles
+    Ethernet::buffer[off+TABLE_SIZE] = 0; //480 chars needed for 10 angles
     char* result = (char*) Ethernet::buffer + off;
     delay(42); // Make sure the request is sent and received properly, no delay results in a 400
+    Serial.print(F("size of result: "));
+    Serial.println(sizeof(result));
     Serial.print(result);
+    Serial.print(F("Free ram: "));
     Serial.println(freeRam());
     parseString(result); // fill the arrays with the data
     Serial.print(F("received: "));
@@ -330,7 +333,7 @@ int freeRam () {
 
 void parseString(char *from) {
 
-//  char from [tableSize]; // 480 bytes should be enough for 10 angles, see top of code
+//  char from [TABLE_SIZE]; // 480 bytes should be enough for 10 angles, see top of code
 //  strcpy(from, everything); //because we can't modify a constant char we need to copy it
   char *found;
   int leng;
@@ -346,7 +349,11 @@ void parseString(char *from) {
   while(found != NULL){
 
     if(i==1){
-      tableLength = atoi(found);
+      // TABLE_LENGTH = atoi(found); //cannot change array length anyway
+      if (TABLE_LENGTH != atoi(found)) {
+        Serial.println(F("WARNING length of received values does not match local array length"));
+      }
+
 //      Serial.println(leng);
     } else if(i==2) {
       strcpy(dateString,found);
@@ -383,11 +390,11 @@ void parseString(char *from) {
 
   Serial.println(F("strings parsed: "));
   Serial.println(F("dates: "));
-  for(int i = 0; i<tableLength; i++) {
+  for(int i = 0; i<TABLE_LENGTH; i++) {
     Serial.println(dates[i]);
   }
     Serial.println(F("angles: "));
-  for(int i = 0; i<tableLength; i++) {
+  for(int i = 0; i<TABLE_LENGTH; i++) {
     Serial.println(angles[i]);
   }
 
