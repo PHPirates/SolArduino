@@ -442,6 +442,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         break;
                     }
                 }
+                process.destroy(); //also terminate the process when ping didn't fail
                 Log.e("sr","after loop ");
 
 
