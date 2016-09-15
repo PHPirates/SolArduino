@@ -101,14 +101,17 @@ void setup () {
 
    solarPanelStop();
    autoMode = true;
-   Serial.println(F("calling Auto() from setup")); //too much serial prints results in bad request?
    requestNewTable(); //fill the angles and dates arrays
-   while(!responseReceived); //wait for response
+   while(!responseReceived) {
+     ether.packetLoop(ether.packetReceive()); //keep receiving response
+   } 
+   Serial.println(F("calling Auto() from setup"));
    solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
-  ether.packetLoop(ether.packetReceive()); //something to do with http request?
+  //especially if the response is not received yet, keep receiving the response
+  ether.packetLoop(ether.packetReceive());
   receiveHttpRequests();
   if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= tableLength) {
