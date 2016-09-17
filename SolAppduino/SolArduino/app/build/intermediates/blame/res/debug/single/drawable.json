@@ -1,11 +1,11 @@
 [
     {
-        "merged": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_ic_menu_overflow_material.xml",
-        "source": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.0.0\\res\\drawable\\abc_ic_menu_overflow_material.xml"
-    },
-    {
         "merged": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\panel.png",
         "source": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\src\\main\\res\\drawable\\panel.png"
+    },
+    {
+        "merged": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_ic_menu_overflow_material.xml",
+        "source": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.0.0\\res\\drawable\\abc_ic_menu_overflow_material.xml"
     },
     {
         "merged": "C:\\Users\\s156757\\gitRepos\\SolArduino\\solarduino\\SolAppduino\\SolArduino\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_cab_background_top_material.xml",

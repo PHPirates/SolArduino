@@ -244,9 +244,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                     case MotionEvent.ACTION_UP:
                         view.setPressed(false); // simulate onClick (release) event so colour changes back
-
-                        Log.e("setAngle", "released");
-
                         // a Timer and TimerTask to repeat the update request with interval 'delay',
                         // until the solar panels reached the angle that is on the seekbar at that moment
                         final Timer timer = new Timer();
@@ -258,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             String angleString = (currentAngle.getText().toString())
                                     .substring(0,2)
                                     .trim();
-
+//                            Log.e("anglestring",angleString);
                             int angleInt = Integer.valueOf(angleString);
 //                            int seekBarProgress = seekbar.getProgress(); // value seekbar
                             @Override
@@ -353,13 +350,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void run() {
                 if (sendPing.getStatus() == AsyncTask.Status.RUNNING) {
                     sendPing.cancel(true);
+                    Log.e("handler","ping failed");
                     unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached.",Toast.LENGTH_SHORT);
                     unreachableToast.show();
                     lastResult = "Arduino not reachable"; //update http request return string
                 }
 
             }
-        }, 2000);
+        }, 300);
     }
 
     /**
@@ -421,17 +419,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         @Override
         protected Void doInBackground(String... url){ //TODO why does this need varargs?
             try{
-                Log.e("sendreq","starting ping");
+//                Log.e("sendreq","starting ping");
                 // try to ping the Arduino first to find out if it's reachable or not.
                 String s;
                 ProcessBuilder processbuilder = new ProcessBuilder("/system/bin/ping", url[0]);
                 Process process = processbuilder.start();
                 BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                Log.e("sr","before loop");
+//                Log.e("sr","before loop");
                 reachable = false;
                 while ((s = stdInput.readLine()) != null)
                 {
-                    Log.e("output", s);
+                    Log.e("result of ping", s);
                     if(s.contains("seq=")){
 //                        Log.e("ping", "first");
                         if (s.contains("Host Unreachable")) {
@@ -443,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
                 }
                 process.destroy(); //also terminate the process when ping didn't fail
-                Log.e("sr","after loop ");
+//                Log.e("sr","after loop ");
 
 
             }catch (Exception e) {
@@ -486,7 +484,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
-            Log.e("result", result);
+            Log.e("result of http request", result);
                 lastResult = result; //set result global as well
 
 //            Log.w("result", lastResult);
@@ -539,9 +537,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
 
                     updateString[1] = updateString[1].trim();
-                    Log.e("update", updateString[1]);
-                    Log.e("check", String.valueOf(autoBox.isChecked()));
-                    Log.e("update", String.valueOf(updateString[1].contains("manual")));
+//                    Log.e("update", updateString[1]);
+//                    Log.e("check", String.valueOf(autoBox.isChecked()));
+//                    Log.e("update", String.valueOf(updateString[1].contains("manual")));
 
                     if (updateString[1].contains("auto")) {
                         if (!autoBox.isChecked()) {
@@ -572,7 +570,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 urlConnection.setDoInput(true);
                 urlConnection.connect();
                 int response = urlConnection.getResponseCode();
-                Log.e("url", "The response is: " + response);
+//                Log.e("url", "The response is: " + response);
 
                 InputStream in = urlConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(

@@ -1,48 +1,46 @@
-// #include <Arduino.h>     // only used when making libraries
+//libraries used
 #include <EtherCard.h>      // https://github.com/jcw/ethercard
 #include <Time.h>           // http://www.arduino.cc/playground/Code/Time
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
-//#include <avr/pgmspace.h>   // To use PROGMEM
-#include "numbers.h"        // The file which contains the data with angles and unix times
+
+//variables about angles and times
 const int TABLE_LENGTH = 10; // declare length here is easier
-int angles[TABLE_LENGTH];
-long dates[TABLE_LENGTH];
-const int TABLE_SIZE = 680; //680 bytes for 10 angles will do, used in ethernet buffer and when parsing
+int angles[TABLE_LENGTH]; //stores angles*10
+long dates[TABLE_LENGTH]; //stores unix times
+const int TABLE_SIZE = 400; //this many bytes for 10 angles will do, used in ethernet buffer and when parsing
 int tableIndex; // The current index in the table when in auto mode
 
 //pin declarations
 const byte POWER_HIGH = 3;
 const byte DIRECTION_PIN = 4;
 const byte POWER_LOW = 5;
-
 const byte POTMETERPIN = A7;
 const byte SAMPLE_RATE = 5; //amount of readings to take the average of when reading the potmeter
 
-//experimentally determined values
+//experimentally determined values of potmeter and angle ends
 const int POTMETER_LOWEND = 650;
 const int POTMETER_HIGHEND = 1007;
 const int DEGREES_HIGHEND = 570; //angle * 10 for more precision
 const int DEGREES_LOWEND = 50;
 
-
+//ethernet variables, these are hard coded for a static setup
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
-
-static byte myip[] = {192, 168, 2, 106};// ip Thomas
-//static byte myip[] = {192, 168, 0, 23}; // ip Abby
-//hard coded for a static setup:
-const static uint8_t gw[] = {192,168,2,254};
-static uint8_t dns[] = {195,121,1,34}; //address that works for NTP, we change it later in the code
+static byte myip[] = {192, 168, 2, 106};
+const static uint8_t gw[] = {192,168,2,254}; //gateway ip
+//address that works for NTP but not for NAS, we change it later in the code
+static uint8_t dns[] = {195,121,1,34};
 // const static uint8_t dns[] = {195,168,2,254};  //address from latest dhcp setup but doesn't work for NTP
-const static uint8_t mask[] = {255,255,255,0};
+const static uint8_t mask[] = {255,255,255,0}; //standard netmask
 
 // NTP globals
 const char poolNTP[] PROGMEM = "europe.pool.ntp.org"; //pool to get time server from
-uint8_t ntpMyPort = 123; //port for the time server, TODO why is this needed?
+uint8_t ntpMyPort = 123; //port for the time server, does not seem to matter
 // TimeZone : GMT+1. Helpful for getting correct current time
 TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +0};
 TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, -60};
 Timezone timeZone(summerTime, winterTime);
 
+//about http responses
 byte Ethernet::buffer[TABLE_SIZE]; //minimum for requesting 10 angles, this seems pre-allocated
 BufferFiller bfill;   //used in every http response sent
 
@@ -52,15 +50,18 @@ const char http_OK[] PROGMEM =
    "Content-Type: text/html\r\n"
    "Pragma: no-cache\r\n\r\n";
 
+//global states
 boolean autoMode;
-
-boolean responseReceived = true;; // a check for knowing whether the response from the NAS was received or not, because we need to wait on that
+boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
 
 void setup () {
+  //the serial shouldn't be used in final code, but this is always in development...
   Serial.begin(9600);
+  //set pinmodes
   pinMode(POWER_HIGH,OUTPUT);
   pinMode(DIRECTION_PIN,OUTPUT);
   pinMode(POWER_LOW,OUTPUT);
+  pinMode(POTMETERPIN,INPUT);
 
   //do not forget to add the extra '10' argument because of this ethernet shield
   if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) {
@@ -71,7 +72,7 @@ void setup () {
   ether.printIp("Address: http://", ether.myip);
 
   //NTP syncing
-//    Find ip address of a time server from the pool
+  //Find ip address of a time server from the pool
    if (!ether.dnsLookup(poolNTP)) {
      Serial.println("DNS failed");
    }
@@ -94,35 +95,34 @@ void setup () {
   dns[2] = 2;
   dns[3] = 254;
   ether.staticSetup(myip,gw,dns,mask);
-//
+  // print ip addresses if you want
 //    ether.printIp("IP:  ", ether.myip);
 //  ether.printIp("GW:  ", ether.gwip);
 //  ether.printIp("DNS: ", ether.dnsip);
 //  ether.printIp("SRV: ", ether.hisip);
 
-   solarPanelStop();
-   autoMode = true;
+   solarPanelStop(); //just in case, default is stopped
+   autoMode = true; //panels start up in auto mode
    requestNewTable(); //fill the angles and dates arrays
-   while(!responseReceived) {
+   while(!responseReceived) { //wait for response before continuing
      ether.packetLoop(ether.packetReceive()); //keep receiving response
    }
    Serial.println(F("calling Auto() from setup"));
-   solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
+   solarPanelAuto(); //this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
   //especially if the response is not received yet, keep receiving the response
   ether.packetLoop(ether.packetReceive());
-  receiveHttpRequests();
+  receiveHttpRequests(); //be responsive as a webserver
   if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
-    if (tableIndex+1 >= TABLE_LENGTH) {
+    if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
       requestNewTable();
     } else if (autoMode && dates[tableIndex+1]<now()) { //if time walked into next part
       Serial.println(F("Advancing to next angle"));
       tableIndex++;
       Serial.println(angles[tableIndex]);
       setSolarPanel(angles[tableIndex]);
-
     }
   }
 }
