@@ -15,10 +15,11 @@ const byte POWER_HIGH = 3;
 const byte DIRECTION_PIN = 4;
 const byte POWER_LOW = 5;
 const byte POTMETERPIN = A7;
-const byte SAMPLE_RATE = 5; //amount of readings to take the average of when reading the potmeter
+//rate of 28 (for int, max 31) instead of 5 hopefully solves panels stopping one degree off
+byte sampleRate = 500; //amount of readings to take the average of when reading the potmeter
 
 //experimentally determined values of potmeter and angle ends
-const int POTMETER_LOWEND = 650;
+const int POTMETER_LOWEND = 652;
 const int POTMETER_HIGHEND = 1007;
 const int DEGREES_HIGHEND = 570; //angle * 10 for more precision
 const int DEGREES_LOWEND = 50;
@@ -144,6 +145,8 @@ void setSolarPanel(int degrees) {
   Serial.print(F("Expected voltage: "));
   Serial.println(expectedVoltage);
 
+    long total = 0;
+    for (int i=0; i<sampleRate; i++) {
     int total = 0;
     for (int i=0; i<SAMPLE_RATE; i++) {
       total += analogRead(POTMETERPIN);
@@ -168,7 +171,7 @@ void setSolarPanel(int degrees) {
           solarPanelDown();
         }
       }
-      int total = 0;
+      long total = 0;
       for (int i=0; i<SAMPLE_RATE; i++) {
         total += analogRead(POTMETERPIN);
       }
@@ -240,6 +243,7 @@ static void my_callback (byte status, word off, word len) {
 
 void receiveHttpRequests() {
   int degrees = -1;
+  boolean askedUpdate = false;
 
   //receive the http request
  word len = ether.packetReceive();
@@ -304,6 +308,7 @@ void receiveHttpRequests() {
          else if (strncmp("?update", data, 7) == 0) {
            //update requested, sent back current angle
            Serial.println(F("Update requested."));
+           askedUpdate = true;
            int angle = (getCurrentAngle()+5)/10; //round to int
            String update = String(angle);
            if(autoMode) {
@@ -320,7 +325,7 @@ void receiveHttpRequests() {
      }
    ether.httpServerReply(bfill.position()); //send the reply, if there was one
    delay(42); // no delay here causes a bad request for requesting angles from the NAS
-   if(autoMode) { //then it is switched on, or was on for example with update requested
+   if(autoMode && !askedUpdate) { //then it is switched on, when not just asking for update
       solarPanelAuto();
     }
 
