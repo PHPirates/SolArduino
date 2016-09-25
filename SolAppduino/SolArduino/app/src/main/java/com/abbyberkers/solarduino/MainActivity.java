@@ -342,8 +342,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * hang the UI thread and crash the app
      */
     public void startHttpRequest() {
-        final SendPingTask sendPing = new SendPingTask();
-        sendPing.execute(host);
+//        final SendPingTask sendPing = new SendPingTask();
+//        sendPing.execute(host);
+        final SendRequest sendRequest = new SendRequest();
+        sendRequest.execute(urlString);
         //start a new handler that will cancel the AsyncTask after 2 seconds
         //in case the Arduino can't be reached
         Log.e("handler","starting up handler");
@@ -351,9 +353,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (sendPing.getStatus() == AsyncTask.Status.RUNNING) {
-                    sendPing.cancel(true);
-                    unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached.",Toast.LENGTH_SHORT);
+                if (sendRequest.getStatus() == AsyncTask.Status.RUNNING) {
+                    sendRequest.cancel(true);
+                    unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached, request terminated.",Toast.LENGTH_SHORT);
                     unreachableToast.show();
                     lastResult = "Arduino not reachable"; //update http request return string
                 }

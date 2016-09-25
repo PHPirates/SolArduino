@@ -7,7 +7,7 @@ int angles[10];
 long dates[10];
 int tableLength = 10; // It's easiest to declare the length here. Changing it on the webserver may break the app because of initialisation of arrays with length 10, although it shouldn't. Change the tableSize to corresponding amount of bytes anyway, and initialise both arrays with the correct length
 const int tableSize = 680; //480 bytes for 10 angles will do, used in ethernet buffer and when parsing
-int tableIndex; // The current index in the table when in auto mode
+int tableIndex = 0; // The current index in the table when in auto mode
 
 //pin declarations
 const byte POWER_HIGH = 3;
@@ -101,13 +101,13 @@ void setup () {
 //  ether.printIp("SRV: ", ether.hisip);
 
    solarPanelStop();
-   autoMode = true;
+   autoMode = false; // by default, do nothing (safer)
    requestNewTable(); //fill the angles and dates arrays
    while(!responseReceived) {
      ether.packetLoop(ether.packetReceive()); //keep receiving response
    }
    Serial.println(F("calling Auto() from setup"));
-   solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
+  //  solarPanelAuto(); //panels start up in auto mode, this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
