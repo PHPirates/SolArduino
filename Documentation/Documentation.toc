@@ -9,10 +9,11 @@
 \contentsline {section}{\numberline {2}Arduino Code}{4}{section.2}
 \contentsline {subsection}{\numberline {2.1}Internet/Ethernet connection}{4}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Solar Panel control}{4}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Communication with the Android app}{5}{subsection.2.3}
-\contentsline {section}{\numberline {3}Android App}{5}{section.3}
-\contentsline {subsection}{\numberline {3.1}User Manual}{5}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Communication with the Arduino}{5}{subsection.3.2}
-\contentsline {section}{\numberline {4}Calculations}{6}{section.4}
-\contentsline {subsection}{\numberline {4.1}Finding the angle between the sun and the line perpendicular to the solar panels}{6}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Mathematica calculations}{6}{subsection.4.2}
+\contentsline {subsection}{\numberline {2.3}Storage of angles}{5}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Communication with the Android app}{5}{subsection.2.4}
+\contentsline {section}{\numberline {3}Android App}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}User Manual}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Communication with the Arduino}{6}{subsection.3.2}
+\contentsline {section}{\numberline {4}Calculations}{7}{section.4}
+\contentsline {subsection}{\numberline {4.1}Finding the angle between the sun and the line perpendicular to the solar panels}{7}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Mathematica calculations}{7}{subsection.4.2}

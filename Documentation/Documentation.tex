@@ -238,7 +238,7 @@
 		We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4-11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
 	
 		\subsection{Software used}
-		We decided on the \href{http://platformio.org/platformio-ide}{PlatformIO IDE}, (which uses python 2.7 and Clang for autocompletion) because it is a lot better than the standard Arduino IDE, and also seemed better than the Stino plugin for Sublime Text 3. A plugin for CLion also looked good but we didn't get that to work. PlatformIO worked fine but not always, so as a backup you can always use the Arduino IDE, but you need to make sure you have all the libraries in your \url{C:\Users\username\Documents\Arduino\libraries} folder.
+		We decided on the \href{http://platformio.org/platformio-ide}{PlatformIO IDE}, (which uses python 2.7 and Clang for autocompletion) because it is a lot better than the standard Arduino IDE, and also seemed better than the Stino plugin for Sublime Text 3. A plugin for CLion also looked good but we didn't get that to work. PlatformIO worked fine but not always, so as a backup you can always use the Arduino IDE, but you need to make sure you have all the libraries in your \url{C:\\Users\\username\\Documents\\Arduino\\libraries} folder.
 	
 	\section{Arduino Code}
 		\subsection{Internet/Ethernet connection}
@@ -255,19 +255,31 @@ if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0)
 			To get the current time using NTP, we adapted \href{http://forum.arduino.cc/index.php?topic=171941.0}{example code} from the Arduino forum.
 
 		\subsection{Solar Panel control}
-			The calculation to find the goal value of the potmeter is with half a degree accuracy because of integer division and the resulting decimal truncation. The offset can be seen with this Mathematica command:
+			The calculation to find the goal value of the potmeter is within one voltage point accurate, which is because of the rounding to an integer voltage at the end. The calculation itself as implemented on the Arduino is 0 to 0.01 off, because of the rounding of the long value.
+			
+			 The offset can be seen with this Mathematica command
 			\begin{lstlisting}
-Plot[
-N[360 + ( Floor[(x - 5) * 100 / (50 - 5) ]) * (74 - 360) /100] - 
-N[360 + ( (x - 5) * 100 / (50 - 5) ) * (74 - 360) /100]
-, {x, 10, 15}]
+Plot[N[360 + ((x - 5)*100/(50 - 5))*(74 - 360)/100] - 
+N[360 + Floor[((x - 5)/(50 - 5))*100*(74 - 360)]/100], {x, 10, 
+10.01}]
 			\end{lstlisting}
-			The idea is to keep setting the right pins high until the difference between the current voltage and the expected voltage is less than 3 'voltage points', about half a degree.
+			which illustrates the difference between the exact solution and the Arduino code without rounding to the integer \verb|expectedVoltage|, which was implemented as 
+			\begin{lstlisting}
+float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
+int expectedVoltage = POTMETER_LOWEND +
+( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
+			\end{lstlisting}
+			The idea is to keep setting the right pins high until the difference between the current voltage and the expected voltage is zero. If the potmeter happens to skip the value, no problem occurs because the Arduino keeps no memory of that and will try to reach the right value again. Tests showed that with sufficient sampling of the input the value may in a rare situation be skipped once but not more.
 			
 		\subsection{Storage of angles}
-			Because the Arduino program space could by far not store all the unix times and angles for like a year, we decided to use a webserver on the Synology NAS as storage space. Every time the Arduino runs out of angles, it detects that either in the \verb|loop()| or in \verb|solarPanelAuto()|, and then requests new angles at \url{http://192.168.2.7} with \verb|requestNewTable()|. After sending such a request, the program needs to wait for a response before continuing, otherwise it continues with old angles. The 'waiting' is implemented with a global flag variable \verb|responseReceived|, which is set true in the callback after the angle and date arrays are updated. Currently the arrays are of size 10, and therefore the little PHP script on the NAS gives the next ten angles and dates when called. The number ten is chosen because of RAM limitations, if you want to change it, change the \verb|tableLength| global variable, the number in the declarations of the arrays, the number of times the PHP script gives back, the \verb|tableSize| which indicates how many bytes the NAS response will need, and is used in the ethernet buffer and when parsing. To calculate that size, given $x$ angles, you'd do something like $11x$ for the dates plus $4x$ for the angles and a little more plus about 140 bytes/characters from the http header would be around 300 bytes for 10 angles. But tests point out almost 400 bytes are needed here, so be sure to test it well. 
+			Because the Arduino program space could by far not store all the unix times and angles for like a year, we decided to use a webserver on the Synology NAS as storage space. Every time the Arduino runs out of angles, it detects that either in the \verb|loop()| or in \verb|solarPanelAuto()|, and then requests new angles at \url{http://192.168.2.7} with \verb|requestNewTable()|. After sending such a request, the program needs to wait for a response before continuing, otherwise it continues with old angles. The 'waiting' is implemented with a global flag variable \verb|responseReceived|, which is set true in the callback after the angle and date arrays are updated. 
+			
+			Currently the arrays are of size 10, and therefore the little PHP script on the NAS gives the next ten angles and dates when called. The number ten is chosen because of RAM limitations, if you want to change it, change the \verb|tableLength| global variable, the number in the declarations of the arrays, the number of times the PHP script gives back, the \verb|tableSize| which indicates how many bytes the NAS response will need, and is used in the ethernet buffer and when parsing. To calculate that size, given $x$ angles, you'd do something like $11x$ for the dates plus $4x$ for the angles and a little more plus about 140 bytes/characters from the http header would be around 300 bytes for 10 angles. But tests point out almost 400 bytes are needed here, so be sure to test it well. 
+			
 			In the NAS, you can find the page with the file browser under \verb|DiskStation/web/index.php|.
 			By the way, on high performace, exporting the angles for ten times a day for two years, like \verb|exportPeriod[DateObject[{2016, 9, 7}], DateObject[{2018, 9, 15}], 10]| took only ten minutes (Lenovo laptop on high performance).
+			
+			A possible improvement is obviously to save the angles locally on for example an SD card, which would decrease dependencies on other systems.
 			
 		\subsection{Communication with the Android app} \label{arduinoToAndroid}
 			Communication goes by http requests, in the form of \url{http://192.168.2.106/?panel=up}. Currently implemented are \verb|panel=up,panel=down,panel=stop,panel=auto,panel=manual|, but these actions do not do anything yet. When you request \url{http://192.168.2.106/} you get a homepage with the current status of the solar panels (currently just the internal time of the Arduino...). It is also possible to request to set the panel to $x$ degrees by sending \url{http://192.168.2.106/?degrees=xx} where $xx$ is an integer which needs to consist of two digits. To get an update of the current solar panel status, which currently only gives back the current angle and whether the panels are on auto or manual, request \url{http://192.168.2.106/?update}. You'll get back some html, with \verb|[angle] ["auto" or "manual"]|.

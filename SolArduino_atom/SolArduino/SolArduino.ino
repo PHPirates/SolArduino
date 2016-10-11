@@ -135,14 +135,13 @@ void setSolarPanel(int degrees) {
     degrees = min (DEGREES_HIGHEND,DEGREES_LOWEND);
   }
 
-  //?: calculation is because of integer division at most 3 'voltage points' off, so only half a degree
   //times hundred to avoid integer division just possible without integer overflow
   float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
   int expectedVoltage = POTMETER_LOWEND +
   ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
   Serial.print(F("Going to degrees: "));
   Serial.println(degrees);
-  Serial.print(F("expected: "));
+  Serial.print(F("Expected voltage: "));
   Serial.println(expectedVoltage);
 
     int total = 0;
