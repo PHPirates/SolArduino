@@ -86,12 +86,12 @@ void setup () {
   //instead of dns lookup, set hisip manually to be used by browseURL
   ether.hisip[0]=192;
   ether.hisip[1]=168;
-  ether.hisip[2]=2;
-  ether.hisip[3]=7;
+  ether.hisip[2]=178;
+  ether.hisip[3]=29;
   // the http request needs a different dns, so we set that here and do setup again
   dns[0] = 192;
   dns[1] = 168;
-  dns[2] = 2;
+  dns[2] = 178;
   dns[3] = 254;
   ether.staticSetup(myip,gw,dns,mask);
 //

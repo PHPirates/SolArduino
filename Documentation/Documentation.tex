@@ -56,7 +56,16 @@
 	\section{Maintenance}
 		NAS times are online for until around %todo
 		
-		To change IP adress, change it in the Arduino code two times (\verb|myip| en \verb|gw|), in the Android app two times (\verb|ipString| and \verb|host|), and in the desktop app.
+		To change IP adress, change it in the Arduino code two times (\verb|myip| en \verb|gw|), if needed also change the NAS ip adress:
+		\begin{lstlisting}
+ether.hisip[0]=192;
+ether.hisip[1]=168;
+ether.hisip[2]=178;
+ether.hisip[3]=29;
+		\end{lstlisting}
+		and the dns (directly under it).
+		
+		Also change it in the Android app two times (\verb|ipString| and \verb|host|), and in the desktop app.
 	
 	\section{Setup of the project}
 		\subsection{Hardware used}
