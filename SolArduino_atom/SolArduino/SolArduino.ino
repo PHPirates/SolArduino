@@ -8,7 +8,7 @@ const int TABLE_LENGTH = 10; // declare length here is easier
 int angles[TABLE_LENGTH]; //stores angles*10
 long dates[TABLE_LENGTH]; //stores unix times
 const int TABLE_SIZE = 400; //this many bytes for 10 angles will do, used in ethernet buffer and when parsing
-int tableIndex; // The current index in the table when in auto mode
+int tableIndex = 0; // The current index in the table when in auto mode
 
 //pin declarations
 const byte POWER_HIGH = 3;
@@ -26,9 +26,9 @@ const int DEGREES_LOWEND = 50;
 
 //ethernet variables, these are hard coded for a static setup
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
-static byte myip[] = {192, 168, 2, 106};
-const static uint8_t gw[] = {192,168,2,254}; //gateway ip
-//address that works for NTP but not for NAS, we change it later in the code
+static byte myip[] = {192, 168, 178, 106};
+const static uint8_t gw[] = {192,168,178,1}; //gateway ip
+//address that works for NTP, we change it later in the code
 static uint8_t dns[] = {195,121,1,34};
 // const static uint8_t dns[] = {195,168,2,254};  //address from latest dhcp setup but doesn't work for NTP
 const static uint8_t mask[] = {255,255,255,0}; //standard netmask
@@ -68,6 +68,13 @@ void setup () {
   if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) {
     Serial.println(F("Failed to access Ethernet controller"));
   }
+
+  // run dhcp to find new gw and dns
+  // ether.dhcpSetup();
+  // ether.printIp("IP:  ", ether.myip);
+  // ether.printIp("GW:  ", ether.gwip);
+  // ether.printIp("DNS: ", ether.dnsip);
+  // ether.printIp("SRV: ", ether.hisip);
   ether.staticSetup(myip,gw,dns,mask); //returns true anyway
   //no serial print because ether.myip is a char[] array
   ether.printIp("Address: http://", ether.myip);
@@ -83,33 +90,27 @@ void setup () {
    Serial.print("time: ");
    Serial.println(now());
 
-//  if (!ether.dnsLookup(website))
-//    Serial.println("DNS failed");
+ // if (!ether.dnsLookup(website))
+ //   Serial.println("DNS failed");
   //instead of dns lookup, set hisip manually to be used by browseURL
   ether.hisip[0]=192;
   ether.hisip[1]=168;
-  ether.hisip[2]=2;
-  ether.hisip[3]=7;
+  ether.hisip[2]=178;
+  ether.hisip[3]=29;
   // the http request needs a different dns, so we set that here and do setup again
   dns[0] = 192;
   dns[1] = 168;
-  dns[2] = 2;
-  dns[3] = 254;
+  dns[2] = 178;
+  dns[3] = 1;
   ether.staticSetup(myip,gw,dns,mask);
-  // print ip addresses if you want
-//    ether.printIp("IP:  ", ether.myip);
-//  ether.printIp("GW:  ", ether.gwip);
-//  ether.printIp("DNS: ", ether.dnsip);
-//  ether.printIp("SRV: ", ether.hisip);
 
    solarPanelStop(); //just in case, default is stopped
-   autoMode = true; //panels start up in auto mode
+   autoMode = false; // by default, do nothing (safer)
    requestNewTable(); //fill the angles and dates arrays
    while(!responseReceived) { //wait for response before continuing
      ether.packetLoop(ether.packetReceive()); //keep receiving response
    }
    Serial.println(F("calling Auto() from setup"));
-   solarPanelAuto(); //this makes sure tableIndex is initialised to a correct value
 }
 
 void loop () {
