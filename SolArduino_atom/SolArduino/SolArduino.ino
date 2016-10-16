@@ -27,10 +27,10 @@ const int DEGREES_LOWEND = 50;
 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
-static byte myip[] = {192, 168, 2, 106};// ip Thomas
+static byte myip[] = {192, 168, 178, 106};// ip Thomas
 //static byte myip[] = {192, 168, 0, 23}; // ip Abby
 //hard coded for a static setup:
-const static uint8_t gw[] = {192,168,2,254};
+const static uint8_t gw[] = {192,168,178,254};
 static uint8_t dns[] = {195,121,1,34}; //address that works for NTP, we change it later in the code
 // const static uint8_t dns[] = {195,168,2,254};  //address from latest dhcp setup but doesn't work for NTP
 const static uint8_t mask[] = {255,255,255,0};
