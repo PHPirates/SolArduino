@@ -30,7 +30,7 @@ static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 static byte myip[] = {192, 168, 178, 106};// ip Thomas
 //static byte myip[] = {192, 168, 0, 23}; // ip Abby
 //hard coded for a static setup:
-const static uint8_t gw[] = {192,168,178,254};
+const static uint8_t gw[] = {192,168,178,1};
 static uint8_t dns[] = {195,121,1,34}; //address that works for NTP, we change it later in the code
 // const static uint8_t dns[] = {195,168,2,254};  //address from latest dhcp setup but doesn't work for NTP
 const static uint8_t mask[] = {255,255,255,0};
@@ -66,6 +66,13 @@ void setup () {
   if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) {
     Serial.println(F("Failed to access Ethernet controller"));
   }
+
+  // run dhcp to find new gw and dns
+  // ether.dhcpSetup();
+  // ether.printIp("IP:  ", ether.myip);
+  // ether.printIp("GW:  ", ether.gwip);
+  // ether.printIp("DNS: ", ether.dnsip);
+  // ether.printIp("SRV: ", ether.hisip);
   ether.staticSetup(myip,gw,dns,mask); //returns true anyway
   //no serial print because ether.myip is a char[] array
   ether.printIp("Address: http://", ether.myip);
@@ -81,24 +88,19 @@ void setup () {
    Serial.print("time: ");
    Serial.println(now());
 
-//  if (!ether.dnsLookup(website))
-//    Serial.println("DNS failed");
+ // if (!ether.dnsLookup(website))
+ //   Serial.println("DNS failed");
   //instead of dns lookup, set hisip manually to be used by browseURL
   ether.hisip[0]=192;
   ether.hisip[1]=168;
-  ether.hisip[2]=2;
-  ether.hisip[3]=7;
+  ether.hisip[2]=178;
+  ether.hisip[3]=29;
   // the http request needs a different dns, so we set that here and do setup again
   dns[0] = 192;
   dns[1] = 168;
-  dns[2] = 2;
-  dns[3] = 254;
+  dns[2] = 178;
+  dns[3] = 1;
   ether.staticSetup(myip,gw,dns,mask);
-//
-//    ether.printIp("IP:  ", ether.myip);
-//  ether.printIp("GW:  ", ether.gwip);
-//  ether.printIp("DNS: ", ether.dnsip);
-//  ether.printIp("SRV: ", ether.hisip);
 
    solarPanelStop();
    autoMode = false; // by default, do nothing (safer)
