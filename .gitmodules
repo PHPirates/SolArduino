@@ -1,0 +1,3 @@
+[submodule "solappduino"]
+	path = solappduino
+	url = git@bitbucket.org:slideclimb/solappduino.git
