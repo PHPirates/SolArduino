@@ -1,29 +1,10 @@
-# README #
+# SolArduino #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This project is set up to move solar panels automatically, and to be able to control them from your phone. In this project are the following things.
 
-### What is this repository for? ###
+* [Arduino code](https://bitbucket.org/slideclimb/solarduino/raw/master/SolArduino_atom/SolArduino/SolArduino.ino)
+* Mathematica calculations, the package file is [here](https://bitbucket.org/slideclimb/solarduino/raw/master/Documentation/Mathematica/SolArduino.m)
+* Android app, find the apk [here](https://bitbucket.org/slideclimb/solarduino/raw/master/SolAppduino/SolArduino/app/build/outputs/apk/app-debug.apk).
+* Desktop app, to be found at [this](https://github.com/slideclimb/SolArduino-desktop) repository.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Find the documentation [here](https://bitbucket.org/slideclimb/solarduino/raw/master/Documentation/Documentation.pdf). 

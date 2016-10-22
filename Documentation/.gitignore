@@ -1,7 +1,7 @@
 *.aux
 *.log
 *.out
-*.pdf
+.pdf
 *.synctex.gz
 *.toc
 /Mathematica/AbbyTest.nb
