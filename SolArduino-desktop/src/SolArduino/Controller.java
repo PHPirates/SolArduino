@@ -67,8 +67,10 @@ public class Controller {
     private void sendHttpRequest(String urlparam) {
         final String url = ip+urlparam;
 
+        //currently the 'arduino not reachable' message is given if the thread still runs
+        //after the timeout, but the thread only kills itself after like ten seconds
+        //for some reasons the requests are queued though, which is a nice feature
         ExecutorService executor = Executors.newSingleThreadExecutor();
-
         try {
             executor.submit(new Callable<String>() {
                 @Override
