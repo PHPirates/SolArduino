@@ -1,5 +1,6 @@
 package SolArduino;
 
+import com.sun.javafx.tk.Toolkit;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,8 +17,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.concurrent.*;
 
 import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 
@@ -64,25 +67,35 @@ public class Controller {
     private void sendHttpRequest(String urlparam) {
         final String url = ip+urlparam;
 
-        Thread thread = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                System.out.println("sending request to "+url);
-                try {
-                    InputStream response = new URL(url).openStream();
-                    try (Scanner scanner = new Scanner(response)) {
-                        String responseBody = scanner.useDelimiter("\\A").next();
-                        text.setText(responseBody);
-                    }
-                } catch (IOException e) {
-                    System.out.println("Request to "+url+" failed.");
-                    printStackTrace();
-                }
-                System.out.println("thread exiting");
-            }
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-        });
-        thread.start();
+        try {
+            executor.submit(new Callable<String>() {
+                @Override
+                public String call() {
+                    String responseBody = null;
+                    System.out.println("sending request to "+url);
+                    try {
+                        InputStream response = new URL(url).openStream();
+                        try (Scanner scanner = new Scanner(response)) {
+                            responseBody = scanner.useDelimiter("\\A").next();
+                            text.setText(responseBody);
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Request to "+url+" failed.");
+//                        printStackTrace();
+                    }
+                    System.out.println("thread exiting");
+                    return responseBody;
+                }
+
+            }).get(2,TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            text.setText("Arduino not reachable!");
+            System.out.println("Request timed out.");
+            executor.shutdown(); //todo doesn't shutdown thread?
+//            e.printStackTrace();
+        }
 
 
     }
