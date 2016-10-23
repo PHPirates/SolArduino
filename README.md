@@ -8,3 +8,5 @@ This project is set up to move solar panels automatically, and to be able to con
 * Desktop app, to be found at [this](https://github.com/slideclimb/SolArduino-desktop) repository.
 
 Find the documentation [here](https://bitbucket.org/slideclimb/solarduino/raw/master/Documentation/Documentation.pdf). 
+
+This project was previously developed on [Bitbucket](https://bitbucket.org/slideclimb/solappduino/overview).
