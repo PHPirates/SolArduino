@@ -26,10 +26,13 @@ const int DEGREES_LOWEND = 50;
 
 //ethernet variables, these are hard coded for a static setup
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
-static byte myip[] = {192, 168, 178, 106};
-const static uint8_t gw[] = {192,168,178,1}; //gateway ip
-//address that works for NTP, we change it later in the code
-static uint8_t dns[] = {195,121,1,34};
+static byte myip[] = {192, 168, 8, 42};
+const static uint8_t gw[] = {192,168,8,1}; //gateway ip
+//address that works for NTP, not needed to change later in the code anymore
+//but that can always change
+static uint8_t dns[] = {192,168,8,1};
+//old dns:
+// static uint8_t dns[] = {195,121,1,34};
 // const static uint8_t dns[] = {195,168,2,254};  //address from latest dhcp setup but doesn't work for NTP
 const static uint8_t mask[] = {255,255,255,0}; //standard netmask
 
@@ -70,7 +73,7 @@ void setup () {
   }
 
   // run dhcp to find new gw and dns
-  // ether.dhcpSetup();
+  ether.dhcpSetup();
   // ether.printIp("IP:  ", ether.myip);
   // ether.printIp("GW:  ", ether.gwip);
   // ether.printIp("DNS: ", ether.dnsip);
@@ -92,17 +95,18 @@ void setup () {
 
  // if (!ether.dnsLookup(website))
  //   Serial.println("DNS failed");
-  //instead of dns lookup, set hisip manually to be used by browseURL
+  //instead of dns lookup, set hisip (ip of NAS) manually to be used by browseURL
   ether.hisip[0]=192;
   ether.hisip[1]=168;
-  ether.hisip[2]=178;
-  ether.hisip[3]=29;
+  ether.hisip[2]=8;
+  ether.hisip[3]=200;
+  //below not applicable anymore, but could always change
   // the http request needs a different dns, so we set that here and do setup again
-  dns[0] = 192;
-  dns[1] = 168;
-  dns[2] = 178;
-  dns[3] = 1;
-  ether.staticSetup(myip,gw,dns,mask);
+  // dns[0] = 192;
+  // dns[1] = 168;
+  // dns[2] = 8;
+  // dns[3] = 1;
+  // ether.staticSetup(myip,gw,dns,mask);
 
    solarPanelStop(); //just in case, default is stopped
    autoMode = false; // by default, do nothing (safer)
@@ -146,7 +150,7 @@ void setSolarPanel(int degrees) {
   Serial.print(F("Expected voltage: "));
   Serial.println(expectedVoltage);
 
-  potMeterValue = readPotMeter();
+  int potMeterValue = readPotMeter();
   while (potMeterValue != expectedVoltage) {
     //if the potmeter happens to skip the value, the panels will go back towards the value
     receiveHttpRequests(); //keep responsive
