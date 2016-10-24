@@ -28,7 +28,7 @@ public class Controller {
 
     String username = System.getProperty("user.name");
 
-    String ip = "http://192.168.178.106/?";
+    String ip = "http://192.168.8.42/?";
 
     @FXML private Text text;
     @FXML private TextField inputDegrees;
