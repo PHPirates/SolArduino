@@ -181,6 +181,16 @@ int readPotMeter() {
 }
 
 void solarPanelAuto() {
+  int angle = getNextAngle();
+  if (angle == -1) {
+    requestNewTable();
+  } else {
+    setSolarPanel(angle);
+  }
+}
+
+//get next auto angle, if -1 then ran out of angles
+int getNextAngle() {
   int i = 0;
   //advance i to i= index of next date in the future
   while(dates[i]<now() && i<TABLE_LENGTH){
@@ -191,12 +201,12 @@ void solarPanelAuto() {
     Serial.print(F("I ran out of angles, i= "));
     Serial.println(i);
     tableIndex = i;
-    requestNewTable();
+    return -1;
   } else {
     tableIndex = i-1; //correct for i being one too much after searching to get corresponding angle
-    Serial.print(F("Set on auto, degrees found: "));
+    Serial.print(F("Next degrees found: "));
     Serial.println(angles[tableIndex]);
-    setSolarPanel(angles[tableIndex]);
+    return angles[tableIndex];
   }
 }
 
@@ -258,7 +268,12 @@ void receiveHttpRequests() {
          else if (strncmp("?panel=auto ", data, 12) == 0) {
              Serial.println(F("Auto mode switched on."));
              autoMode = true; //solarPanelAuto() is called later, first we handle off the request
-             acknowledge("Auto mode switched on.");
+             int angle = getNextAngle();
+             //app requirement: degrees come between underscores
+             String response = "Auto mode switched on, going to_";
+             response += angle;
+             response += "_degrees.";
+             acknowledge(response.c_str());
          }
          else if (strncmp("?panel=manual ", data, 12) == 0){
              acknowledge("Auto mode switched off.");
