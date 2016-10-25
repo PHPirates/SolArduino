@@ -302,6 +302,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     /**
+     * @return degree currently displayed in the textview currentAngle
+     */
+    public int getCurrentDegree() {
+        String angleString = currentAngle.getText().toString();
+
+        if (angleString.length()<3) {
+            return Integer.parseInt(angleString.substring(0,1)); //if only one digit
+        } else {
+            return Integer.parseInt(angleString.substring(0,2));
+        }
+    }
+
+    /**
      * method to uncheck checkbox for automode, when any of the other buttons is pressed
      * @param view
      */
