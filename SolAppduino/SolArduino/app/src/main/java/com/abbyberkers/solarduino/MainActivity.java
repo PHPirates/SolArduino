@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     Timer downTimer;
     Timer upTimer;
+    Timer autoTimer;
 
 //    TextView textView;
     TextView currentAngle;  // show current angle of solar panels
@@ -126,6 +127,24 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     urlString = ipString + "?panel=auto";
 //                    Toast.makeText(getBaseContext(), "Auto mode switched on.", Toast.LENGTH_SHORT).show();
                     startHttpRequest();
+                    autoTimer = new Timer(); // timer to schedule the update requests
+                    //We assume that when timerTask runs the first time, the response with degrees is received
+                    TimerTask timerTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            //get degrees aimed at from lastResult
+                            int next = getNextDegree(lastResult);
+                            int current = getCurrentDegree();
+                            if (next != current) {//get degrees displayed
+                                sendUpdateRequest();
+                            } else {
+                                autoTimer.cancel();
+                            }
+                        }
+                    };
+
+                    // wait 1500ms with first task, then delay interval
+                    autoTimer.schedule(timerTask, 1500, delay);
                 } else {
                     urlString = ipString + "?panel=manual";
                     startHttpRequest();
@@ -255,13 +274,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             // String containing the current angle, taken from
                             // (TextView) currentAngle, minus the degree symbol, trimmed to remove
                             // possible spaces ("9 \u00b0" -> "9")
-                            String angleString = (currentAngle.getText().toString());
-
-                            if (angleString.length()<3) {
-                                angleString = angleString.substring(0,1); //if only one digit
-                            } else {
-                                angleString = angleString.substring(0,2);
-                            }
+                            String angleString = (currentAngle.getText().toString())
+                                    .substring(0,2)
+                                    .trim();
 
                             int angleInt = Integer.valueOf(angleString);
 //                            int seekBarProgress = seekbar.getProgress(); // value seekbar
@@ -299,6 +314,30 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 return false;
             }
         });
+    }
+
+    /**
+     * Parses result string to find degree the panels go to
+     * @param result from http request, set by sendRequest
+     * @return degrees
+     */
+    public int getNextDegree(String result) {
+        String intString = result.substring(result.indexOf("_"),result.lastIndexOf("_"));
+        Log.e("parsing string",result+" becomes "+intString);
+        return Integer.parseInt(intString);
+    }
+
+    /**
+     * @return degree currently displayed in the textview currentAngle
+     */
+    public int getCurrentDegree() {
+        String angleString = currentAngle.getText().toString();
+
+        if (angleString.length()<3) {
+            return Integer.parseInt(angleString.substring(0,1)); //if only one digit
+        } else {
+            return Integer.parseInt(angleString.substring(0,2));
+        }
     }
 
     /**
