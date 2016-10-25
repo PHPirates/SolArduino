@@ -255,9 +255,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             // String containing the current angle, taken from
                             // (TextView) currentAngle, minus the degree symbol, trimmed to remove
                             // possible spaces ("9 \u00b0" -> "9")
-                            String angleString = (currentAngle.getText().toString())
-                                    .substring(0,2)
-                                    .trim();
+                            String angleString = (currentAngle.getText().toString());
+
+                            if (angleString.length()<3) {
+                                angleString = angleString.substring(0,1); //if only one digit
+                            } else {
+                                angleString = angleString.substring(0,2);
+                            }
 
                             int angleInt = Integer.valueOf(angleString);
 //                            int seekBarProgress = seekbar.getProgress(); // value seekbar
