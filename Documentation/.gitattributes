@@ -1,1 +1,2 @@
 Mathematica/*.nb binary
+*.pdf merge=theirs

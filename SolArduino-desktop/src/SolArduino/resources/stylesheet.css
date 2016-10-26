@@ -1,0 +1,33 @@
+/*.button {*/
+  /*!*-fx-graphic: url('http://icons.iconarchive.com/icons/aha-soft/desktop-buffet/128/Pizza-icon.png');*!*/
+ /**/
+/*}*/
+
+/*.button:pressed {*/
+  /*!*-fx-graphic: url('http://icons.iconarchive.com/icons/aha-soft/desktop-buffet/128/Piece-of-cake-icon.png');*!*/
+  /*-fx-graphic: url("down_pressed.png");*/
+/*}*/
+
+#buttonDown {
+    -fx-graphic: url('down_small.png');
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: null;
+    -fx-background-color: transparent;
+}
+
+#buttonDown:pressed {
+    -fx-graphic: url("down_pressed_small.png");
+}
+
+#buttonUp {
+    -fx-graphic: url('up_small.png');
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: null;
+    -fx-background-color: transparent;
+}
+
+#buttonUp:pressed  {
+    -fx-graphic: url("up_pressed_small.png");
+}

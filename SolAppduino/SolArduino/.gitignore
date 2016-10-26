@@ -17,6 +17,8 @@ out/
 
 # Gradle files
 .idea/gradle.xml
+build.gradle
+.idea/gradle.xml
 .gradle/
 build/
 
@@ -37,7 +39,7 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
+.idea/*.xml
 .idea/libraries
 
 # Keystore files

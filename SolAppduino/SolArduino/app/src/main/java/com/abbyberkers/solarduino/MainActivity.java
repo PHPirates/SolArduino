@@ -33,9 +33,9 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
     String urlString;
-    String ipString = "http://192.168.2.106/"; // IP Thomas
+    String ipString = "http://192.168.8.42/"; // IP Thomas
 //    String ipString = "http://192.168.0.23/"; // IP Abby
-    String host = "192.168.2.106"; // host Thomas
+    String host = "192.168.8.42"; // host Thomas
 //    String host = "192.168.0.23"; // host Abby
 //    String ipString = "http://192.168.2.107"; // IP test
 //    String host = "192.168.2.107"; // host test
