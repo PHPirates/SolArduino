@@ -116,7 +116,27 @@ void setup () {
    }
 }
 
+int angle = 5;
+int counter = 0;
+boolean up = true;
 void loop () {
+  //DEBUG
+  counter++;
+  if (counter > 100) {
+    counter = 0;
+    if (angle<50 && up) {
+      angle++;
+    } else if (angle>5 && !up) {
+      angle--;
+    } else if (angle >= 50) {
+      up = false;
+      angle--;
+    } else if (angle <= 5) {
+      up = true;
+      angle++;
+    }
+  }
+  delay(10);
   //especially if the response is not received yet, keep receiving the response
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
@@ -402,7 +422,8 @@ int getCurrentAngle() {
   //to maintain accuracy with integer division
   int fraction = ( (long)( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
   / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
-  return ( (long) fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
+  // return ( (long) fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
+  return angle;
 }
 
 //solar panel movements
