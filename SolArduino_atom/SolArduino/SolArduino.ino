@@ -114,7 +114,6 @@ void setup () {
    while(!responseReceived) { //wait for response before continuing
      ether.packetLoop(ether.packetReceive()); //keep receiving response
    }
-   Serial.println(F("calling Auto() from setup"));
 }
 
 void loop () {
@@ -124,6 +123,9 @@ void loop () {
   if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
       requestNewTable();
+      if (autoMode) {
+        solarPanelAuto();
+      }
     } else if (autoMode && dates[tableIndex+1]<now()) { //if time walked into next part
       Serial.println(F("Advancing to next angle"));
       tableIndex++;
@@ -181,6 +183,7 @@ int readPotMeter() {
 }
 
 void solarPanelAuto() {
+  autoMode = true;
   int i = 0;
   //advance i to i= index of next date in the future
   while(dates[i]<now() && i<TABLE_LENGTH){
@@ -215,7 +218,6 @@ static void my_callback (byte status, word off, word len) {
     delay(42); // Make sure the request is sent and received properly, no delay results in a 400
     parseString(result); // fill the arrays with the data
     responseReceived = true;
-    solarPanelAuto(); // set the solar panels to the right angle
   }
 }
 
