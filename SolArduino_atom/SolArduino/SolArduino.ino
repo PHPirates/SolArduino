@@ -136,7 +136,7 @@ void loop () {
       angle++;
     }
   }
-  delay(10);
+  delay(5);
   //especially if the response is not received yet, keep receiving the response
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
@@ -321,7 +321,7 @@ void receiveHttpRequests() {
            //update requested, sent back current angle
            Serial.println(F("Update requested."));
            askedUpdate = true;
-           int angle = (getCurrentAngle()+5)/10; //round to int
+          //  int angle = (getCurrentAngle()+5)/10; //round to int
            String update = String(angle);
            if(autoMode) {
               update = update + " auto";
@@ -422,8 +422,7 @@ int getCurrentAngle() {
   //to maintain accuracy with integer division
   int fraction = ( (long)( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
   / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
-  // return ( (long) fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
-  return angle;
+  return ( (long) fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
 }
 
 //solar panel movements
