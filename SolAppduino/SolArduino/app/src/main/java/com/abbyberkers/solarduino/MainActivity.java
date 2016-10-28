@@ -273,14 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         final Timer timer = new Timer();
                         final TimerTask task = new TimerTask() {
 
-                            // String containing the current angle, taken from
-                            // (TextView) currentAngle, minus the degree symbol, trimmed to remove
-                            // possible spaces ("9 \u00b0" -> "9")
-                            String angleString = (currentAngle.getText().toString())
-                                    .substring(0,2)
-                                    .trim();
-
-                            int angleInt = Integer.valueOf(angleString);
+                            int angleInt = getCurrentDegree();
 //                            int seekBarProgress = seekbar.getProgress(); // value seekbar
                             @Override
                             public void run() {
@@ -294,13 +287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     timer.cancel();
                                 } else {
                                     // update the angle as long as the desired angle not reached
-
-                                    // get current angle from TextView
-                                    angleString = (currentAngle.getText().toString())
-                                            .substring(0, 2) // get the first 2 chars of string
-                                            .trim(); // trim spaces off
-
-                                    angleInt = Integer.valueOf(angleString);
+                                    angleInt = getCurrentDegree();
                                     seekbarProgress = seekbar.getProgress() + 5;
 
                                     sendUpdateRequest();
@@ -543,9 +530,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
                 // set seekbar at current angle, so update requests aren't sent anymore.
-                seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
-                        .substring(0, 2)
-                        .trim()));
+                seekbar.setProgress(getCurrentDegree());
                 Log.w("internet", "not connected");
             } else if (result.contains("Panel")) {
                 Toast.makeText(getBaseContext(), result.trim(), Toast.LENGTH_SHORT).show();
