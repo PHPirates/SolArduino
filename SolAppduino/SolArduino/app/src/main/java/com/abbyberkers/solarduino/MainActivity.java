@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -377,12 +380,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
+    //TODO double code of starting up handler
     /**
-     * First the Arduino is pinged, if it doesn't succeed within two seconds
-     * a toast will be shown, if it does, the http request is started.
-     * The ping happens in a seperated thread, because if the Arduino is not
-     * reachable, the code will hang there, and otherwise it would
-     * hang the UI thread and crash the app
+     * Starts a http request
      */
     public void startHttpRequest() {
 //        final SendPingTask sendPing = new SendPingTask();
@@ -398,6 +398,34 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void run() {
                 if (sendRequest.getStatus() == AsyncTask.Status.RUNNING) {
                     sendRequest.cancel(true);
+                    unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached, request terminated.",Toast.LENGTH_SHORT);
+                    unreachableToast.show();
+                    lastResult = "Arduino not reachable"; //update http request return string
+                }
+
+            }
+        }, 2000);
+    }
+
+    /**
+     * First the Arduino is pinged, if it doesn't succeed within two seconds
+     * a toast will be shown, if it does, the http request is started.
+     * The ping happens in a seperated thread, because if the Arduino is not
+     * reachable, the code will hang there, and otherwise it would
+     * hang the UI thread and crash the app
+     */
+    public void startPingRequest() {
+        final SendPingTask sendPing = new SendPingTask();
+        sendPing.execute(host);
+        //start a new handler that will cancel the AsyncTask after 2 seconds
+        //in case the Arduino can't be reached
+        Log.e("handler","starting up handler");
+        Handler handler = new Handler(Looper.getMainLooper()); //make sure to start from UI thread
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (sendPing.getStatus() == AsyncTask.Status.RUNNING) {
+                    sendPing.cancel(true);
                     unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached, request terminated.",Toast.LENGTH_SHORT);
                     unreachableToast.show();
                     lastResult = "Arduino not reachable"; //update http request return string
@@ -644,6 +672,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_ping:
+                startPingRequest();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 
