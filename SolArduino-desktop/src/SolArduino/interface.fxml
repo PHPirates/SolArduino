@@ -8,6 +8,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.Slider?>
 <GridPane fx:controller="SolArduino.Controller"
           xmlns:fx="http://javafx.com/fxml"
           alignment="center"
@@ -57,12 +58,19 @@
     </Button>
 
     <Text
-        fx:id="text"
+        fx:id="sliderText"
         GridPane.columnIndex="1"
         GridPane.rowIndex="0"
         />
-    <TextField
-        fx:id="inputDegrees"
+
+    <Slider
+        fx:id="slider"
+        min="5"
+        max="57"
+        showTickMarks="true"
+        majorTickUnit="5"
+        showTickLabels="true"
+        minWidth="300"
         GridPane.columnIndex="1"
         GridPane.rowIndex="1"
         />
@@ -71,7 +79,7 @@
             fx:id="buttonSetAngle"
             GridPane.columnIndex="1"
             GridPane.rowIndex="2"
-            text="set angle"
+            text="set angle at 42 degrees"
             onAction="#setAngle">
     </Button>
 
