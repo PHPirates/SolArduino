@@ -114,7 +114,6 @@ void setup () {
    while(!responseReceived) { //wait for response before continuing
      ether.packetLoop(ether.packetReceive()); //keep receiving response
    }
-   Serial.println(F("calling Auto() from setup"));
 }
 
 void loop () {
@@ -124,6 +123,9 @@ void loop () {
   if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
       requestNewTable();
+      if (autoMode) {
+        solarPanelAuto();
+      }
     } else if (autoMode && dates[tableIndex+1]<now()) { //if time walked into next part
       Serial.println(F("Advancing to next angle"));
       tableIndex++;
@@ -181,6 +183,17 @@ int readPotMeter() {
 }
 
 void solarPanelAuto() {
+  autoMode = true;
+  int angle = getNextAngle();
+  if (angle == -1) {
+    requestNewTable();
+  } else {
+    setSolarPanel(angle);
+  }
+}
+
+//get next auto angle, if -1 then ran out of angles
+int getNextAngle() {
   int i = 0;
   //advance i to i= index of next date in the future
   while(dates[i]<now() && i<TABLE_LENGTH){
@@ -191,12 +204,12 @@ void solarPanelAuto() {
     Serial.print(F("I ran out of angles, i= "));
     Serial.println(i);
     tableIndex = i;
-    requestNewTable();
+    return -1;
   } else {
     tableIndex = i-1; //correct for i being one too much after searching to get corresponding angle
-    Serial.print(F("Set on auto, degrees found: "));
+    Serial.print(F("Next degrees found: "));
     Serial.println(angles[tableIndex]);
-    setSolarPanel(angles[tableIndex]);
+    return angles[tableIndex];
   }
 }
 
@@ -215,7 +228,6 @@ static void my_callback (byte status, word off, word len) {
     delay(42); // Make sure the request is sent and received properly, no delay results in a 400
     parseString(result); // fill the arrays with the data
     responseReceived = true;
-    solarPanelAuto(); // set the solar panels to the right angle
   }
 }
 
@@ -258,7 +270,12 @@ void receiveHttpRequests() {
          else if (strncmp("?panel=auto ", data, 12) == 0) {
              Serial.println(F("Auto mode switched on."));
              autoMode = true; //solarPanelAuto() is called later, first we handle off the request
-             acknowledge("Auto mode switched on.");
+             int angle = getNextAngle();
+             //app requirement: degrees come between underscores
+             String response = "Auto mode switched on, going to_";
+             response += angle;
+             response += "_degrees.";
+             acknowledge(response.c_str());
          }
          else if (strncmp("?panel=manual ", data, 12) == 0){
              acknowledge("Auto mode switched off.");
