@@ -15,7 +15,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("interface.fxml"));
         primaryStage.setTitle("SolArduino");
-        Scene scene = new Scene(root, 500, 300);
+        Scene scene = new Scene(root, 550, 350);
         File file = new File("src/SolArduino/resources/stylesheet.css");
         scene.getStylesheets().add(file.toURI().toString());
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("ic_solarduino.png")));

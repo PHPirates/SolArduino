@@ -15,11 +15,11 @@
           hgap="10"
           vgap="10">
 
-    <padding><Insets top="155" right="25" bottom="10" left="25"/></padding>
+    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
 
     <Button
             fx:id="buttonUp"
-            GridPane.columnIndex="0"
+            GridPane.columnIndex="1"
             GridPane.rowIndex="0"
             onMousePressed="#buttonUp"
             onMouseReleased="#buttonUp">
@@ -30,7 +30,7 @@
     </Button>
     <Button
             fx:id="buttonDown"
-            GridPane.columnIndex="0"
+            GridPane.columnIndex="1"
             GridPane.rowIndex="1"
             onMousePressed="#buttonDown"
             onMouseReleased="#buttonDown">
@@ -44,55 +44,39 @@
         </graphic>
     </Button>
     <Button
-            GridPane.columnIndex="0"
+            GridPane.columnIndex="1"
             GridPane.rowIndex="2"
             text="auto"
             onAction="#buttonAuto">
     </Button>
     <Button
             fx:id="buttonUpdate"
-            GridPane.columnIndex="0"
+            GridPane.columnIndex="1"
             GridPane.rowIndex="3"
             text="update"
             onAction="#buttonUpdate">
     </Button>
 
-    <Text
-        fx:id="sliderText"
-        GridPane.columnIndex="1"
-        GridPane.rowIndex="0"
-        />
-
     <Slider
         fx:id="slider"
         min="5"
         max="57"
+        value="42"
         showTickMarks="true"
         majorTickUnit="5"
         showTickLabels="true"
         minWidth="300"
-        GridPane.columnIndex="1"
-        GridPane.rowIndex="1"
+        GridPane.columnIndex="0"
+        GridPane.rowIndex="4"
         />
 
     <Button
             fx:id="buttonSetAngle"
             GridPane.columnIndex="1"
-            GridPane.rowIndex="2"
-            text="set angle at 42 degrees"
+            GridPane.rowIndex="4"
+            text="set panels at 42 degrees"
             onAction="#setAngle">
     </Button>
 
-    <ImageView
-            fx:id="yay"
-            GridPane.columnIndex="1"
-            GridPane.rowIndex="5"
-            fitHeight="150.0"
-            fitWidth="200.0"
-            pickOnBounds="true"
-            preserveRatio="true"
-            visible="false">
-        <Image url="https://c2.staticflickr.com/8/7127/7552248154_978bcb1773.jpg"/>
-    </ImageView>
 
 </GridPane>

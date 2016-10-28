@@ -34,13 +34,16 @@ public class Controller implements Initializable{
     @FXML private Text sliderText;
     @FXML private Button buttonSetAngle;
     @FXML private TextField inputDegrees;
-    @FXML private ImageView buttonDownImage;
 
     @FXML public void initialize(URL location, ResourceBundle resourceBundle){
         slider.valueProperty().addListener((observable, oldValue, newValue)-> {
-            sliderText.setText(String.valueOf(newValue.intValue()));
             angle = newValue.intValue();
-            buttonSetAngle.setText("set panels at " + angle + " degrees" );
+            if(angle < 10){
+                buttonSetAngle.setText("set panels at  " + angle + "  degrees" );
+
+            } else {
+                buttonSetAngle.setText("set panels at " + angle + " degrees");
+            }
 
         });
     }
