@@ -8,83 +8,96 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
-<GridPane fx:controller="SolArduino.Controller"
-          xmlns:fx="http://javafx.com/fxml"
-          alignment="center"
-          hgap="10"
-          vgap="10">
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<TabPane fx:controller="SolArduino.Controller"
+         xmlns:fx="http://javafx.com/fxml"
+         tabClosingPolicy="UNAVAILABLE">
 
-    <padding><Insets top="155" right="25" bottom="10" left="25"/></padding>
+    <Tab fx:id="control"
+        text="Control">
+        <GridPane>
+            <padding><Insets top="10" right="25" bottom="10" left="25"/></padding>
 
-    <Button
-            fx:id="buttonUp"
-            GridPane.columnIndex="0"
-            GridPane.rowIndex="0"
-            onMousePressed="#buttonUp"
-            onMouseReleased="#buttonUp">
-        <graphic>
-            <ImageView id="buttonUpGraphic" fitWidth="25.0" fitHeight="25.0" pickOnBounds="true" preserveRatio="true">
+            <Button
+                    fx:id="buttonUp"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="0"
+                    onMousePressed="#buttonUp"
+                    onMouseReleased="#buttonUp">
+                <graphic>
+                    <ImageView id="buttonUpGraphic" fitWidth="25.0" fitHeight="25.0" pickOnBounds="true" preserveRatio="true">
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button
+                    fx:id="buttonDown"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="1"
+                    onMousePressed="#buttonDown"
+                    onMouseReleased="#buttonDown">
+                <graphic>
+                    <ImageView fx:id="buttonDownImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                        <!--<image>-->
+                            <!--&lt;!&ndash;<Image url="https://i.gyazo.com/d04854e47cd16cf90cb32e7fdc728b73.png" />&ndash;&gt;-->
+                            <!--<Image url="resources/down.png" />-->
+                        <!--</image>-->
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="2"
+                    text="auto"
+                    onAction="#buttonAuto">
+            </Button>
+            <Button
+                    fx:id="buttonUpdate"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="3"
+                    text="update"
+                    onAction="#buttonUpdate">
+            </Button>
+
+            <Text
+                fx:id="text"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="0"
+                />
+            <TextField
+                fx:id="inputDegrees"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="1"
+                />
+
+            <Button
+                    fx:id="buttonSetAngle"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="2"
+                    text="set angle"
+                    onAction="#setAngle">
+            </Button>
+
+            <ImageView
+                    fx:id="yay"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="5"
+                    fitHeight="150.0"
+                    fitWidth="200.0"
+                    pickOnBounds="true"
+                    preserveRatio="true"
+                    visible="false">
+                <Image url="https://c2.staticflickr.com/8/7127/7552248154_978bcb1773.jpg"/>
             </ImageView>
-        </graphic>
-    </Button>
-    <Button
-            fx:id="buttonDown"
-            GridPane.columnIndex="0"
-            GridPane.rowIndex="1"
-            onMousePressed="#buttonDown"
-            onMouseReleased="#buttonDown">
-        <graphic>
-            <ImageView fx:id="buttonDownImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                <!--<image>-->
-                    <!--&lt;!&ndash;<Image url="https://i.gyazo.com/d04854e47cd16cf90cb32e7fdc728b73.png" />&ndash;&gt;-->
-                    <!--<Image url="resources/down.png" />-->
-                <!--</image>-->
-            </ImageView>
-        </graphic>
-    </Button>
-    <Button
-            GridPane.columnIndex="0"
-            GridPane.rowIndex="2"
-            text="auto"
-            onAction="#buttonAuto">
-    </Button>
-    <Button
-            fx:id="buttonUpdate"
-            GridPane.columnIndex="0"
-            GridPane.rowIndex="3"
-            text="update"
-            onAction="#buttonUpdate">
-    </Button>
+        </GridPane>
+    </Tab>
 
-    <Text
-        fx:id="text"
-        GridPane.columnIndex="1"
-        GridPane.rowIndex="0"
-        />
-    <TextField
-        fx:id="inputDegrees"
-        GridPane.columnIndex="1"
-        GridPane.rowIndex="1"
-        />
+    <Tab fx:id="information"
+        text="Information">
+        <Text
+            fx:id="testText"
+            text="test"
+            />
 
-    <Button
-            fx:id="buttonSetAngle"
-            GridPane.columnIndex="1"
-            GridPane.rowIndex="2"
-            text="set angle"
-            onAction="#setAngle">
-    </Button>
-
-    <ImageView
-            fx:id="yay"
-            GridPane.columnIndex="1"
-            GridPane.rowIndex="5"
-            fitHeight="150.0"
-            fitWidth="200.0"
-            pickOnBounds="true"
-            preserveRatio="true"
-            visible="false">
-        <Image url="https://c2.staticflickr.com/8/7127/7552248154_978bcb1773.jpg"/>
-    </ImageView>
-
-</GridPane>
+    </Tab>
+</TabPane>
