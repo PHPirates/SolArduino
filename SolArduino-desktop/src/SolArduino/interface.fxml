@@ -11,13 +11,15 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <TabPane fx:controller="SolArduino.Controller"
          xmlns:fx="http://javafx.com/fxml"
          tabClosingPolicy="UNAVAILABLE">
 
     <Tab fx:id="control"
         text="Control">
-        <GridPane>
+        <GridPane hgap="10" vgap="10">
             <padding><Insets top="10" right="25" bottom="10" left="25"/></padding>
 
     <Button
@@ -97,10 +99,11 @@
 
     <Tab fx:id="information"
         text="Information">
-        <Text
-            fx:id="testText"
-            text="test"
-            />
-
+        <GridPane hgap="10" vgap="10">
+            <LineChart fx:id="graph">
+                <xAxis><NumberAxis label="time" lowerBound="0" upperBound="24"/></xAxis>
+                <yAxis><NumberAxis label="power" lowerBound="0" upperBound="7000"/></yAxis>
+            </LineChart>
+        </GridPane>
     </Tab>
 </TabPane>
