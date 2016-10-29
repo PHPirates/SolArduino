@@ -10,6 +10,7 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.Slider?>
 <TabPane fx:controller="SolArduino.Controller"
          xmlns:fx="http://javafx.com/fxml"
          tabClosingPolicy="UNAVAILABLE">
@@ -19,64 +20,66 @@
         <GridPane>
             <padding><Insets top="10" right="25" bottom="10" left="25"/></padding>
 
-            <Button
-                    fx:id="buttonUp"
-                    GridPane.columnIndex="0"
-                    GridPane.rowIndex="0"
-                    onMousePressed="#buttonUp"
-                    onMouseReleased="#buttonUp">
-                <graphic>
-                    <ImageView id="buttonUpGraphic" fitWidth="25.0" fitHeight="25.0" pickOnBounds="true" preserveRatio="true">
-                    </ImageView>
-                </graphic>
-            </Button>
-            <Button
-                    fx:id="buttonDown"
-                    GridPane.columnIndex="0"
-                    GridPane.rowIndex="1"
-                    onMousePressed="#buttonDown"
-                    onMouseReleased="#buttonDown">
-                <graphic>
-                    <ImageView fx:id="buttonDownImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                        <!--<image>-->
-                            <!--&lt;!&ndash;<Image url="https://i.gyazo.com/d04854e47cd16cf90cb32e7fdc728b73.png" />&ndash;&gt;-->
-                            <!--<Image url="resources/down.png" />-->
-                        <!--</image>-->
-                    </ImageView>
-                </graphic>
-            </Button>
-            <Button
-                    GridPane.columnIndex="0"
-                    GridPane.rowIndex="2"
-                    text="auto"
-                    onAction="#buttonAuto">
-            </Button>
-            <Button
-                    fx:id="buttonUpdate"
-                    GridPane.columnIndex="0"
-                    GridPane.rowIndex="3"
-                    text="update"
-                    onAction="#buttonUpdate">
-            </Button>
+    <Button
+            fx:id="buttonUp"
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="0"
+            onMousePressed="#buttonUp"
+            onMouseReleased="#buttonUp">
+        <graphic>
+            <ImageView id="buttonUpGraphic" fitWidth="25.0" fitHeight="25.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+        </graphic>
+    </Button>
+    <Button
+            fx:id="buttonDown"
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="1"
+            onMousePressed="#buttonDown"
+            onMouseReleased="#buttonDown">
+        <graphic>
+            <ImageView fx:id="buttonDownImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                <!--<image>-->
+                    <!--&lt;!&ndash;<Image url="https://i.gyazo.com/d04854e47cd16cf90cb32e7fdc728b73.png" />&ndash;&gt;-->
+                    <!--<Image url="resources/down.png" />-->
+                <!--</image>-->
+            </ImageView>
+        </graphic>
+    </Button>
+    <Button
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="2"
+            text="auto"
+            onAction="#buttonAuto">
+    </Button>
+    <Button
+            fx:id="buttonUpdate"
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="3"
+            text="update"
+            onAction="#buttonUpdate">
+    </Button>
 
-            <Text
-                fx:id="text"
-                GridPane.columnIndex="1"
-                GridPane.rowIndex="0"
-                />
-            <TextField
-                fx:id="inputDegrees"
-                GridPane.columnIndex="1"
-                GridPane.rowIndex="1"
-                />
+    <Slider
+        fx:id="slider"
+        min="5"
+        max="57"
+        value="42"
+        showTickMarks="true"
+        majorTickUnit="5"
+        showTickLabels="true"
+        minWidth="300"
+        GridPane.columnIndex="0"
+        GridPane.rowIndex="4"
+        />
 
-            <Button
-                    fx:id="buttonSetAngle"
-                    GridPane.columnIndex="1"
-                    GridPane.rowIndex="2"
-                    text="set angle"
-                    onAction="#setAngle">
-            </Button>
+    <Button
+            fx:id="buttonSetAngle"
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="4"
+            text="set panels at 42 degrees"
+            onAction="#setAngle">
+    </Button>
 
             <ImageView
                     fx:id="yay"
