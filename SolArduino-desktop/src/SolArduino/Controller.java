@@ -93,8 +93,8 @@ public class Controller implements Initializable{
 
     private ObservableList<XYChart.Series<Double, Double>> getGraphData(){
         for (int i = 0; i < graphData.length; i++) {
-            graphData[i][0] = Math.random();
-            graphData[i][1] = Math.random();
+            graphData[i][0] = i+1;
+            graphData[i][1] = Math.random()*6000;
         }
         XYChart.Series series = new XYChart.Series();
         ObservableList<XYChart.Series<Double, Double>> list = FXCollections.observableArrayList();
