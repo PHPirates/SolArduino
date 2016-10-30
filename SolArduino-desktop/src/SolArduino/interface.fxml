@@ -13,30 +13,56 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
 <TabPane fx:controller="SolArduino.Controller"
          xmlns:fx="http://javafx.com/fxml"
          tabClosingPolicy="UNAVAILABLE">
 
     <Tab fx:id="control"
         text="Control">
-        <GridPane hgap="10" vgap="10">
-            <padding><Insets top="10" right="25" bottom="10" left="25"/></padding>
+        <GridPane hgap="10" vgap="10" >
+            <columnConstraints>
+                <ColumnConstraints percentWidth="70"/>
+                <ColumnConstraints percentWidth="30"/>
+
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="20"/>
+                <RowConstraints percentHeight="20"/>
+                <RowConstraints percentHeight="20"/>
+                <RowConstraints percentHeight="20"/>
+                <RowConstraints percentHeight="20"/>
+            </rowConstraints>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
 
     <Button
-            fx:id="buttonUp"
-            GridPane.columnIndex="1"
-            GridPane.rowIndex="0"
-            onMousePressed="#buttonUp"
-            onMouseReleased="#buttonUp">
-        <graphic>
-            <ImageView id="buttonUpGraphic" fitWidth="25.0" fitHeight="25.0" pickOnBounds="true" preserveRatio="true">
-            </ImageView>
-        </graphic>
+        fx:id="buttonUp"
+        GridPane.columnIndex="1"
+        GridPane.rowIndex="0"
+        maxHeight="Infinity"
+        maxWidth="Infinity"
+        onMousePressed="#buttonUp"
+        onMouseReleased="#buttonUp">
+        <!--<graphic>-->
+            <!--<ImageView-->
+                <!--id="buttonUpGraphic"-->
+                <!--fitWidth="40"-->
+                <!--fitHeight="40"-->
+                <!--preserveRatio="true">-->
+            <!--</ImageView>-->
+        <!--</graphic>-->
     </Button>
     <Button
             fx:id="buttonDown"
             GridPane.columnIndex="1"
             GridPane.rowIndex="1"
+            maxWidth="Infinity"
+            maxHeight="Infinity"
             onMousePressed="#buttonDown"
             onMouseReleased="#buttonDown">
         <graphic>
@@ -51,6 +77,8 @@
     <Button
             GridPane.columnIndex="1"
             GridPane.rowIndex="2"
+            maxHeight="Infinity"
+            maxWidth="Infinity"
             text="auto"
             onAction="#buttonAuto">
     </Button>
@@ -58,6 +86,8 @@
             fx:id="buttonUpdate"
             GridPane.columnIndex="1"
             GridPane.rowIndex="3"
+            maxWidth="Infinity"
+            maxHeight="Infinity"
             text="update"
             onAction="#buttonUpdate">
     </Button>
@@ -79,27 +109,29 @@
             fx:id="buttonSetAngle"
             GridPane.columnIndex="1"
             GridPane.rowIndex="4"
+            maxHeight="Infinity"
+            maxWidth="Infinity"
             text="set panels at 42 degrees"
             onAction="#setAngle">
     </Button>
 
-            <ImageView
-                    fx:id="yay"
-                    GridPane.columnIndex="1"
-                    GridPane.rowIndex="5"
-                    fitHeight="150.0"
-                    fitWidth="200.0"
-                    pickOnBounds="true"
-                    preserveRatio="true"
-                    visible="false">
-                <Image url="https://c2.staticflickr.com/8/7127/7552248154_978bcb1773.jpg"/>
-            </ImageView>
         </GridPane>
     </Tab>
 
     <Tab fx:id="information"
         text="Information">
         <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="ALWAYS"/>
+            </rowConstraints>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+
             <LineChart fx:id="graph"
                 GridPane.columnIndex="0">
                 <xAxis><NumberAxis label="time" lowerBound="0" upperBound="24"/></xAxis>
