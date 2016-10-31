@@ -140,8 +140,8 @@
 
             <LineChart fx:id="graph"
                 GridPane.columnIndex="0">
-                <xAxis><NumberAxis label="time" lowerBound="0" upperBound="24"/></xAxis>
-                <yAxis><NumberAxis label="power" lowerBound="0" upperBound="7000"/></yAxis>
+                <xAxis><NumberAxis label="time" lowerBound="4" upperBound="22"/></xAxis>
+                <yAxis><NumberAxis label="angle" lowerBound="0" upperBound="7000"/></yAxis>
             </LineChart>
 
             <Button fx:id="generateGraph"
