@@ -77,8 +77,10 @@
     <Button
             GridPane.columnIndex="1"
             GridPane.rowIndex="2"
-            maxHeight="Infinity"
-            maxWidth="Infinity"
+            GridPane.halignment="CENTER"
+            GridPane.valignment="CENTER"
+            maxHeight="40"
+            maxWidth="100"
             text="auto"
             onAction="#buttonAuto">
     </Button>
@@ -86,8 +88,10 @@
             fx:id="buttonUpdate"
             GridPane.columnIndex="1"
             GridPane.rowIndex="3"
-            maxWidth="Infinity"
-            maxHeight="Infinity"
+            GridPane.halignment="CENTER"
+            GridPane.valignment="CENTER"
+            maxHeight="40"
+            maxWidth="100"
             text="update"
             onAction="#buttonUpdate">
     </Button>
@@ -109,7 +113,9 @@
             fx:id="buttonSetAngle"
             GridPane.columnIndex="1"
             GridPane.rowIndex="4"
-            maxHeight="Infinity"
+            GridPane.halignment="CENTER"
+            GridPane.valignment="CENTER"
+            maxHeight="40"
             maxWidth="Infinity"
             text="set panels at 42 degrees"
             onAction="#setAngle">
