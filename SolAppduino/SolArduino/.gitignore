@@ -1,3 +1,5 @@
+.idea/vcs.xml
+
 # Built application files
 *.apk
 *.ap_
@@ -14,6 +16,8 @@ gen/
 out/
 
 # Gradle files
+build.gradle
+.idea/gradle.xml
 .gradle/
 build/
 

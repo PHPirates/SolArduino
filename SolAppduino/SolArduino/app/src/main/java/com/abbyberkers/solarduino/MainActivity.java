@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +36,9 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
     String urlString;
-    String ipString = "http://192.168.2.106/"; // IP Thomas
+    String ipString = "http://192.168.8.42/"; // IP Thomas
 //    String ipString = "http://192.168.0.23/"; // IP Abby
-    String host = "192.168.2.106"; // host Thomas
+    String host = "192.168.8.42"; // host Thomas
 //    String host = "192.168.0.23"; // host Abby
 //    String ipString = "http://192.168.2.107"; // IP test
 //    String host = "192.168.2.107"; // host test
@@ -49,11 +52,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     int delay = 3365;        // delay for the Timer/TimerTask which asks for an update every (delay) millisecs
                             // 175 secs for 52 degrees -> 3.37 secs per degree, asking every fifth of a degree
+    int handlerTimeout = 2000; //timeout for killing a request or ping
 
     boolean reachable;      // boolean to know whether the Arduino is reachable or not
 
     Timer downTimer;
     Timer upTimer;
+    Timer autoTimer;
 
 //    TextView textView;
     TextView currentAngle;  // show current angle of solar panels
@@ -119,13 +124,33 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         setAngle = (Button) findViewById(R.id.setAngle);
 
         autoBox = (CheckBox) findViewById(R.id.autoBox);
-        autoBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        //clicklistener instead of OnCheckedChange won't register sliding a switch
+        //but this way when toggling the button from somewhere else the clicklistener isn't called
+        autoBox.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) {
+            public void onClick(View v) {
+                if(autoBox.isChecked()) {
                     urlString = ipString + "?panel=auto";
 //                    Toast.makeText(getBaseContext(), "Auto mode switched on.", Toast.LENGTH_SHORT).show();
                     startHttpRequest();
+                    autoTimer = new Timer(); // timer to schedule the update requests
+                    //We assume that when timerTask runs the first time, the response with degrees is received
+                    TimerTask timerTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            //get degrees aimed at from lastResult
+                            int next = getNextDegree(lastResult);
+                            int current = getCurrentDegree();
+                            if (next != current) {//get degrees displayed
+                                sendUpdateRequest();
+                            } else {
+                                autoTimer.cancel();
+                            }
+                        }
+                    };
+
+                    // wait 1500ms with first task, then delay interval
+                    autoTimer.schedule(timerTask, 1500, delay);
                 } else {
                     urlString = ipString + "?panel=manual";
                     startHttpRequest();
@@ -298,6 +323,30 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     /**
+     * Parses result string to find degree the panels go to
+     * @param result from http request, set by sendRequest
+     * @return degrees
+     */
+    public int getNextDegree(String result) {
+        String intString = result.substring(result.indexOf("_"),result.lastIndexOf("_"));
+        Log.e("parsing string",result+" becomes "+intString);
+        return Integer.parseInt(intString);
+    }
+
+    /**
+     * @return degree currently displayed in the textview currentAngle
+     */
+    public int getCurrentDegree() {
+        String angleString = currentAngle.getText().toString();
+
+        if (angleString.length()<3) {
+            return Integer.parseInt(angleString.substring(0,1)); //if only one digit
+        } else {
+            return Integer.parseInt(angleString.substring(0,2));
+        }
+    }
+
+    /**
      * method to uncheck checkbox for automode, when any of the other buttons is pressed
      * @param view
      */
@@ -328,10 +377,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      */
     public void sendDirectionRequest(String direction) {
         urlString = ipString + "?panel=" + direction;
-//        String urlString = "http://www.google.com";
-//        urlString = "http://pannenkoekenwagen.nl/pkw/test.html";
         startHttpRequest(); //urlString will be used here
 
+    }
+
+    /**
+     * Starts a http request
+     */
+    public void startHttpRequest() {
+        final DataSender requestSender = new RequestSender();
+        requestSender.execute(urlString);
+        startHandler(requestSender);
     }
 
     /**
@@ -341,27 +397,33 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * reachable, the code will hang there, and otherwise it would
      * hang the UI thread and crash the app
      */
-    public void startHttpRequest() {
-//        final SendPingTask sendPing = new SendPingTask();
-//        sendPing.execute(host);
-        final SendRequest sendRequest = new SendRequest();
-        sendRequest.execute(urlString);
-        //start a new handler that will cancel the AsyncTask after 2 seconds
+    public void startPingRequest() {
+        final DataSender sendPing = new PingSender();
+        sendPing.execute(host);
+        startHandler(sendPing);
+    }
+
+    /**
+     * Starts handler to handle a dataSender and kill it after x seconds
+     * @param dataSender DataSender object, for example PingSender or RequestSender
+     */
+    public void startHandler(final DataSender dataSender) {
+        //start a new handler that will cancel the AsyncTask after x seconds
         //in case the Arduino can't be reached
         Log.e("handler","starting up handler");
         Handler handler = new Handler(Looper.getMainLooper()); //make sure to start from UI thread
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (sendRequest.getStatus() == AsyncTask.Status.RUNNING) {
-                    sendRequest.cancel(true);
+                if (dataSender.getStatus() == AsyncTask.Status.RUNNING) {
+                    dataSender.cancel(true);
                     unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached, request terminated.",Toast.LENGTH_SHORT);
                     unreachableToast.show();
                     lastResult = "Arduino not reachable"; //update http request return string
                 }
 
             }
-        }, 2000);
+        }, handlerTimeout);
     }
 
     /**
@@ -415,13 +477,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     /**
+     * Both PingSender and RequestSender extend this task, to allow the handler
+     * code to be put in a method and take a DataSender as parameter to include
+     * both types of data senders.
+     */
+    private abstract class DataSender extends AsyncTask<String,Void,String> {}
+
+    /**
      * Class to execute ping request to check the connection with the Arduino,
      * before http request is sent
      */
 
-    private class SendPingTask extends AsyncTask<String,Void,Void> {
+    private class PingSender extends DataSender {
         @Override
-        protected Void doInBackground(String... url){ //TODO why does this need varargs?
+        protected String doInBackground(String... url){ //TODO why does this need varargs?
             try{
                 Log.e("sendreq","starting ping");
                 // try to ping the Arduino first to find out if it's reachable or not.
@@ -455,10 +524,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(String result) { //needs to be a string to extend DataSender
             if(reachable) {
                 super.onPostExecute(result);
-                new SendRequest().execute(urlString);
+                new RequestSender().execute(urlString);
             } else {
                 if(unreachableToast != null) {
                     unreachableToast.setText("Arduino could not be reached.");
@@ -474,7 +543,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     /**
      * http requests happen here in a seperate thread
      */
-    private class SendRequest extends AsyncTask<String, Void, String> {
+    private class RequestSender extends DataSender {
 
         @Override
         protected String doInBackground(String... url){
@@ -601,6 +670,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_ping:
+                startPingRequest();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 
