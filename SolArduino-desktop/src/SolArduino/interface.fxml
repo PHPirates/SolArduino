@@ -17,6 +17,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.chart.CategoryAxis?>
 <TabPane fx:controller="SolArduino.Controller"
          xmlns:fx="http://javafx.com/fxml"
          tabClosingPolicy="UNAVAILABLE">
@@ -139,16 +141,40 @@
 
 
             <LineChart fx:id="graph"
-                GridPane.columnIndex="0">
-                <xAxis><NumberAxis label="time" lowerBound="4" upperBound="22"/></xAxis>
-                <yAxis><NumberAxis label="angle" lowerBound="0" upperBound="7000"/></yAxis>
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="0"
+                GridPane.rowSpan="3">
+                <xAxis>
+                    <NumberAxis fx:id="xAxis"
+                                   label="time"
+                                   autoRanging="false"
+                                   lowerBound="5"
+                                   upperBound="23"
+                                   tickUnit="1"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="yAxis"
+                                label="angle"
+                                autoRanging="false"
+                                tickUnit="10"/>
+                </yAxis>
             </LineChart>
 
             <Button fx:id="generateGraph"
                 GridPane.columnIndex="1"
+                GridPane.rowIndex="0"
                 text="Generate"
                 onAction="#generateGraph">
             </Button>
+
+            <Text text="Pick a day: "
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="1"/>
+            <DatePicker fx:id="datePicker"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="2">
+
+            </DatePicker>
         </GridPane>
     </Tab>
 </TabPane>
