@@ -119,8 +119,7 @@ void setup () {
 int angle = 5;
 int counter = 0;
 boolean up = true;
-void loop () {
-  //DEBUG
+void count () {
   counter++;
   if (counter > 100) {
     counter = 0;
@@ -137,6 +136,9 @@ void loop () {
     }
   }
   delay(5);
+}
+void loop () {
+  count();
   //especially if the response is not received yet, keep receiving the response
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
@@ -176,6 +178,7 @@ void setSolarPanel(int degrees) {
   while (potMeterValue != expectedVoltage) {
     //if the potmeter happens to skip the value, the panels will go back towards the value
     receiveHttpRequests(); //keep responsive
+    count(); //DEBUG 
     if (POTMETER_LOWEND > POTMETER_HIGHEND) {
       if (potMeterValue > expectedVoltage) {
         solarPanelUp();
