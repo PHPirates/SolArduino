@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     int delay = 3365;        // delay for the Timer/TimerTask which asks for an update every (delay) millisecs
                             // 175 secs for 52 degrees -> 3.37 secs per degree, asking every fifth of a degree
+    int handlerTimeout = 2000; //timeout for killing a request or ping
 
     boolean reachable;      // boolean to know whether the Arduino is reachable or not
 
@@ -378,33 +382,48 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     /**
+     * Starts a http request
+     */
+    public void startHttpRequest() {
+        final DataSender requestSender = new RequestSender();
+        requestSender.execute(urlString);
+        startHandler(requestSender);
+    }
+
+    /**
      * First the Arduino is pinged, if it doesn't succeed within two seconds
      * a toast will be shown, if it does, the http request is started.
      * The ping happens in a seperated thread, because if the Arduino is not
      * reachable, the code will hang there, and otherwise it would
      * hang the UI thread and crash the app
      */
-    public void startHttpRequest() {
-//        final SendPingTask sendPing = new SendPingTask();
-//        sendPing.execute(host);
-        final SendRequest sendRequest = new SendRequest();
-        sendRequest.execute(urlString);
-        //start a new handler that will cancel the AsyncTask after 2 seconds
+    public void startPingRequest() {
+        final DataSender sendPing = new PingSender();
+        sendPing.execute(host);
+        startHandler(sendPing);
+    }
+
+    /**
+     * Starts handler to handle a dataSender and kill it after x seconds
+     * @param dataSender DataSender object, for example PingSender or RequestSender
+     */
+    public void startHandler(final DataSender dataSender) {
+        //start a new handler that will cancel the AsyncTask after x seconds
         //in case the Arduino can't be reached
         Log.e("handler","starting up handler");
         Handler handler = new Handler(Looper.getMainLooper()); //make sure to start from UI thread
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (sendRequest.getStatus() == AsyncTask.Status.RUNNING) {
-                    sendRequest.cancel(true);
+                if (dataSender.getStatus() == AsyncTask.Status.RUNNING) {
+                    dataSender.cancel(true);
                     unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached, request terminated.",Toast.LENGTH_SHORT);
                     unreachableToast.show();
                     lastResult = "Arduino not reachable"; //update http request return string
                 }
 
             }
-        }, 2000);
+        }, handlerTimeout);
     }
 
     /**
@@ -458,13 +477,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     /**
+     * Both PingSender and RequestSender extend this task, to allow the handler
+     * code to be put in a method and take a DataSender as parameter to include
+     * both types of data senders.
+     */
+    private abstract class DataSender extends AsyncTask<String,Void,String> {}
+
+    /**
      * Class to execute ping request to check the connection with the Arduino,
      * before http request is sent
      */
 
-    private class SendPingTask extends AsyncTask<String,Void,Void> {
+    private class PingSender extends DataSender {
         @Override
-        protected Void doInBackground(String... url){ //TODO why does this need varargs?
+        protected String doInBackground(String... url){ //TODO why does this need varargs?
             try{
                 Log.e("sendreq","starting ping");
                 // try to ping the Arduino first to find out if it's reachable or not.
@@ -498,10 +524,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(String result) { //needs to be a string to extend DataSender
             if(reachable) {
                 super.onPostExecute(result);
-                new SendRequest().execute(urlString);
+                new RequestSender().execute(urlString);
             } else {
                 if(unreachableToast != null) {
                     unreachableToast.setText("Arduino could not be reached.");
@@ -517,7 +543,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     /**
      * http requests happen here in a seperate thread
      */
-    private class SendRequest extends AsyncTask<String, Void, String> {
+    private class RequestSender extends DataSender {
 
         @Override
         protected String doInBackground(String... url){
@@ -644,6 +670,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_ping:
+                startPingRequest();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 
