@@ -32,6 +32,7 @@ public class Controller implements Initializable{
     String username = System.getProperty("user.name");
 
     int angle = 42;
+    int threadTimeout = 2; //seconds
 
     @FXML private Slider slider;
     @FXML private Text responseTextView;
@@ -76,47 +77,32 @@ public class Controller implements Initializable{
     }
 
     @FXML protected void setAngle(ActionEvent event) {
-//        if (inputDegrees.getText() != null) {
-//            sendHttpRequest("degrees=" + inputDegrees.getText());
-//        }
         sendHttpRequest("degrees=" + angle);
     }
 
     private void sendHttpRequest(String urlparam) {
         final String url = ip+urlparam;
-
-        //currently the 'arduino not reachable' message is given if the thread still runs
-        //after the timeout, but the thread only kills itself after like ten seconds
-        //for some reasons the requests are queued though, which is a nice feature
+        //start up a single thread
         ExecutorService executor = Executors.newSingleThreadExecutor();
         try {
-            executor.submit(new Callable<String>() {
-                @Override
-                public String call() {
-                    String responseBody = null;
-                    System.out.println("sending request to "+url);
-                    try {
-                        InputStream response = new URL(url).openStream();
-                        try (Scanner scanner = new Scanner(response)) {
-                            responseBody = scanner.useDelimiter("\\A").next();
-                            responseTextView.setText(responseBody);
-                        }
-                    } catch (IOException e) {
-                        System.out.println("Request to "+url+" failed.");
-//                        printStackTrace();
+            executor.submit(() -> {
+                String responseBody = "";
+                System.out.println("sending request to "+url);
+                try {
+                    InputStream response = new URL(url).openStream();
+                    try (Scanner scanner = new Scanner(response)) {
+                        responseBody = scanner.useDelimiter("\\A").next();
+                        responseTextView.setText(responseBody);
                     }
-                    System.out.println("thread exiting");
-                    return responseBody;
+                } catch (IOException e) {
+                    //the thread will finally exit after executor.shutdownNow() has tried to stop it
                 }
-
-            }).get(2,TimeUnit.SECONDS);
+                return responseBody;
+            }).get(threadTimeout,TimeUnit.SECONDS); //timeout of x seconds
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             responseTextView.setText("Arduino not reachable!");
             System.out.println("Request timed out.");
-            executor.shutdown(); //todo doesn't shutdown thread?
-//            e.printStackTrace();
+            executor.shutdownNow();
         }
-
-
     }
 }
