@@ -3,6 +3,7 @@ package SolArduino;
 import com.sun.corba.se.spi.orbutil.fsm.Action;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 import javax.annotation.Resources;
@@ -36,7 +38,10 @@ public class Controller implements Initializable{
 
     int angle = 42;
 
+    @FXML private GridPane controlGridPane;
     @FXML private Slider slider;
+    @FXML private Button buttonUp;
+    @FXML private Button buttonDown;
     @FXML private Button buttonSetAngle;
     @FXML private LineChart graph;
     @FXML private TextField inputDegrees;
@@ -44,6 +49,23 @@ public class Controller implements Initializable{
     double[][] graphData = new double[24][2];
 
     @FXML public void initialize(URL location, ResourceBundle resourceBundle){
+
+        controlGridPane.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                buttonUp.setPrefHeight(newValue.intValue());
+                buttonDown.setPrefHeight(newValue.intValue());
+            }
+        });
+
+        controlGridPane.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                buttonUp.setPrefWidth(newValue.intValue());
+                buttonDown.setPrefWidth(newValue.intValue());
+            }
+        });
+
         slider.valueProperty().addListener((observable, oldValue, newValue)-> {
             angle = newValue.intValue();
             if(angle < 10){

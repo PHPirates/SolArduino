@@ -20,26 +20,35 @@
     -fx-padding: 0 0 0 0;
 }
 
-#buttonDown {
-    -fx-graphic: url('down_small.png');
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-effect: null;
-    -fx-background-color: transparent;
-}
-
-#buttonDown:pressed {
-    -fx-graphic: url("down_pressed_small.png");
-}
-
 #buttonUp {
-    -fx-graphic: url('up_small.png');
+    /*-fx-graphic: url('resources/up_small.png');*/
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-effect: null;
     -fx-background-color: transparent;
+    -fx-background-image: url("up.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-content-display: graphic-only;
+    -fx-background-size: contain;
 }
 
 #buttonUp:pressed  {
-    -fx-graphic: url("up_pressed_small.png");
+    -fx-background-image: url("up_pressed.png");
+}
+
+#buttonDown {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: null;
+    -fx-background-color: transparent;
+    -fx-background-image: url("down.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-content-display: graphic-only;
+    -fx-background-size: contain;
+}
+
+#buttonDown:pressed  {
+    -fx-background-image: url("down_pressed.png");
 }
