@@ -20,6 +20,15 @@
     -fx-padding: 0 0 0 0;
 }
 
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:empty .table-cell {
+    -fx-border-color: transparent;
+}
+
 #buttonDown {
     -fx-graphic: url('down_small.png');
     -fx-focus-color: transparent;

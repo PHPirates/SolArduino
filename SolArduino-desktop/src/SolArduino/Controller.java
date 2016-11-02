@@ -9,15 +9,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.sun.corba.se.impl.util.Utility.printStackTrace;
@@ -45,6 +46,7 @@ public class Controller implements Initializable{
     @FXML private Button buttonSetAngle;
     @FXML private LineChart graph;
     @FXML private DatePicker datePicker;
+    @FXML private TableView table;
 
     /**
      * Initialization method for the controller.
@@ -65,12 +67,9 @@ public class Controller implements Initializable{
         datePicker.valueProperty().addListener((observable, oldValue, newValue)-> {
             Date date = Date.from(newValue.atStartOfDay(ZoneId.systemDefault()).toInstant());
             chosenDate.setTime(date);
-            System.out.println(chosenDate);
             graph.setData(getGraphData(chosenDate));
 
         });
-
-//        graph.setData(getGraphData());
 
         try { // read the times.csv and angles.csv files
             // times.csv contains the UNIX times in seconds (since January 1, 00:00:00:00)
@@ -151,31 +150,11 @@ public class Controller implements Initializable{
         sendHttpRequest("http://192.168.178.106/?degrees="+angle);
     }
 
-//    private ObservableList<XYChart.Series<Double, Double>> getGraphData(){
-//        for (int i = 0; i < graphData.length; i++) {
-//            graphData[i][0] = i+1;
-//            graphData[i][1] = Math.random()*6000;
-//        }
-//        XYChart.Series series = new XYChart.Series();
-//        ObservableList<XYChart.Series<Double, Double>> list = FXCollections.observableArrayList();
-//        series.setName("power");
-//        series.getData().clear();
-//        for (double[] aGraphData : graphData) {
-//            series.getData().add(new XYChart.Data<>(aGraphData[0], aGraphData[1]));
-//
-//        }
-//        list.add(series);
-//        return list;
-//    }
-
     private ObservableList<XYChart.Series<Double,Double>> getGraphData(Calendar day){
 
-        int year = day.get(Calendar.YEAR);
-        int month = day.get(Calendar.MONTH);
-        int dayOfMonth = day.get(Calendar.DAY_OF_MONTH);
-        System.out.println(year);
-        System.out.println(month);
-        System.out.println(dayOfMonth);
+        int year = day.get(Calendar.YEAR); // get year of chosen date
+        int month = day.get(Calendar.MONTH); // get month of chosen date
+        int dayOfMonth = day.get(Calendar.DAY_OF_MONTH); // get day of the month of chosen date
         TimeZone timeZone = TimeZone.getDefault(); // get default timezone TODO is this the current timezone?
         Calendar startCalendar = Calendar.getInstance(); // calendar with first second of day we want the graph for
         startCalendar.set(year, month, dayOfMonth,0,0,0); // months start at 0
@@ -191,6 +170,8 @@ public class Controller implements Initializable{
         ObservableList<XYChart.Series<Double,Double>> list = FXCollections.observableArrayList();
         series.setName("angles");
         series.getData().clear();
+
+        ObservableList<TableData> tableList = FXCollections.observableArrayList();
 
         for (int i = 0; i < data.length; i++) {
             int length = String.valueOf(data[i][0]).length();
@@ -209,12 +190,21 @@ public class Controller implements Initializable{
 
                 double time = hour + minute; // double with the time, e.g.: 12:45 = 12.75, so it's displayed neatly in the graph
                 double angle = Double.valueOf(data[i][1])/10;
-                System.out.println(angle);
                 series.getData().add(new XYChart.Data<>(time, angle)); // add time and angle to the data of the graph
+
+                DateFormat timeFormat = new SimpleDateFormat("HH:mm"); // format to show time in the table
+                String timeString = String.valueOf(timeFormat.format(date));
+                tableList.add(new TableData(timeString, angle));
+
             }
         }
 
         list.add(series);
+
+        table.setItems(tableList);
+        table.setMaxHeight((table.getItems().size()+1) * 30); // set height of the table so we don't have empty rows
+
+        datePicker.setValue(day.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()); // set default date in textbox DatePicker
         return list;
     }
 
