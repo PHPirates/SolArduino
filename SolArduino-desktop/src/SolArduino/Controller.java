@@ -1,6 +1,5 @@
 package SolArduino;
 
-import com.sun.org.apache.xpath.internal.operations.Number;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +11,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+
 import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
