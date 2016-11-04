@@ -28,7 +28,7 @@
 
     <Tab fx:id="control"
         text="Control">
-        <GridPane hgap="10" vgap="10" >
+        <GridPane fx:id="controlGridPane" hgap="10" vgap="10" >
             <columnConstraints>
                 <ColumnConstraints percentWidth="70"/>
                 <ColumnConstraints percentWidth="30"/>
