@@ -43,6 +43,7 @@ public class Controller implements Initializable{
     int angle = 42;
 
     @FXML private Slider slider;
+    @FXML private Text responseTextView;
     @FXML private Button buttonSetAngle;
     @FXML private LineChart graph;
     @FXML private DatePicker datePicker;
@@ -208,15 +209,15 @@ public class Controller implements Initializable{
 
     private void sendHttpRequest(String url) {
         System.out.println("sending request to"+url);
-//        try {
-//            InputStream response = new URL(url).openStream();
-//            try (Scanner scanner = new Scanner(response)) {
-//                String responseBody = scanner.useDelimiter("\\A").next();
-//                text.setText(responseBody);
-//            }
-//        } catch (IOException e) {
-//            printStackTrace();
-//        }
+        try {
+            InputStream response = new URL(url).openStream();
+            try (Scanner scanner = new Scanner(response)) {
+                String responseBody = scanner.useDelimiter("\\A").next();
+                responseTextView.setText(responseBody);
+            }
+        } catch (IOException e) {
+            printStackTrace();
+        }
 
     }
 }

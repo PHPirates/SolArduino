@@ -288,7 +288,9 @@ void receiveHttpRequests() {
             stringDegrees += (char)data[10];
 
            degrees = stringDegrees.toInt(); //convert string to integer
-           stringDegrees += " &#176;";
+           String response = "Panels going to ";
+           response += stringDegrees;
+           response += " degrees";
            Serial.print(F("panels to degrees: "));
            Serial.println(degrees);
 
