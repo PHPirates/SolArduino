@@ -5,7 +5,7 @@ This project is set up to move solar panels automatically, and to be able to con
 * [Arduino code](https://github.com/PHPirates/SolArduino/raw/master/SolArduino_atom/SolArduino/SolArduino.ino)
 * Mathematica calculations, the package file is [here](https://github.com/PHPirates/SolArduino/raw/master/Documentation/Mathematica/SolArduino.m) and there is also a package [demonstration](https://github.com/PHPirates/SolArduino/raw/master/Documentation/Mathematica/demonstration.nb) notebook.
 * Android app, find the apk [here](https://github.com/PHPirates/SolArduino/raw/master/solappduino/solarduino/app/build/outputs/apk/app-debug.apk).
-* Desktop app, source code [here](https://github.com/PHPirates/SolArduino/tree/master/SolArduino-desktop/src/SolArduino), executables soon coming.
+* Desktop app, source code [here](https://github.com/PHPirates/SolArduino/tree/master/SolArduino-desktop/src/SolArduino), latest built executable [here](https://github.com/PHPirates/SolArduino/raw/master/SolArduino-desktop/out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar).
 
 Find the documentation [here](https://github.com/PHPirates/SolArduino/raw/master/Documentation/Documentation.pdf).
 
