@@ -40,8 +40,8 @@ import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 public class Controller implements Initializable{
 
     String username = System.getProperty("user.name");
-    String timesFileString = "src/SolArduino/resources/times.csv"; // path to the times.csv file
-    String anglesFileString = "src/SolArduino/resources/angles.csv"; // path to the angles.csv file
+    String timesFileString = "resources/times.csv"; // path to the times.csv file
+    String anglesFileString = "resources/angles.csv"; // path to the angles.csv file
     String separator = ",";
 
     long[][] data; // contains the times and angles from the csv files
@@ -115,11 +115,14 @@ public class Controller implements Initializable{
         try { // read the times.csv and angles.csv files
             // times.csv contains the UNIX times in seconds (since January 1, 00:00:00:00)
 
-            timesFile = new File(timesFileString);
-            anglesFile = new File(anglesFileString);
+            InputStream timesIS = getClass().getResourceAsStream(timesFileString);
+            InputStream anglesIS = getClass().getResourceAsStream(anglesFileString);
 
-            BufferedReader timesReader = new BufferedReader(new FileReader(timesFile)); // BufferedReader to read times file
-            BufferedReader anglesReader = new BufferedReader(new FileReader(anglesFile)); // BufferedReader to read angles file
+            InputStreamReader timesISReader = new InputStreamReader(timesIS);
+            InputStreamReader anglesISReader = new InputStreamReader(anglesIS);
+
+            BufferedReader timesReader = new BufferedReader(timesISReader); // BufferedReader to read times file
+            BufferedReader anglesReader = new BufferedReader(anglesISReader); // BufferedReader to read angles file
 
             String timeLine; // line with the times
             while((timeLine = timesReader.readLine()) != null){
