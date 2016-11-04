@@ -152,7 +152,8 @@
             <LineChart fx:id="graph"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="0"
-                GridPane.rowSpan="3">
+                GridPane.rowSpan="3"
+                legendVisible="false">
                 <xAxis>
                     <NumberAxis
                         label="time"
