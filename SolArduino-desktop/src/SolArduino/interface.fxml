@@ -105,6 +105,12 @@
         GridPane.rowIndex="4"
         />
 
+    <Text
+        fx:id="responseTextView"
+        GridPane.columnIndex="0"
+        GridPane.rowIndex="3"
+        />
+
     <Button
             fx:id="buttonSetAngle"
             GridPane.columnIndex="1"

@@ -1,5 +1,6 @@
 package SolArduino;
 
+import com.sun.javafx.tk.Toolkit;
 import com.sun.corba.se.spi.orbutil.fsm.Action;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.beans.value.ChangeListener;
@@ -27,8 +28,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.concurrent.*;
 
 import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 
@@ -37,12 +40,15 @@ public class Controller implements Initializable{
     String username = System.getProperty("user.name");
 
     int angle = 42;
+    int threadTimeout = 2; //seconds
 
     @FXML private GridPane controlGridPane;
     @FXML private Slider slider;
+    @FXML private Text responseTextView;
     @FXML private Button buttonUp;
     @FXML private Button buttonDown;
     @FXML private Button buttonSetAngle;
+    String ip = "http://192.168.8.42/?";
     @FXML private LineChart graph;
     @FXML private TextField inputDegrees;
 
@@ -83,30 +89,30 @@ public class Controller implements Initializable{
 
     @FXML protected void buttonUp(MouseEvent event) {
         if(event.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
-            sendHttpRequest("http://192.168.178.106/?panel=up");
+            sendHttpRequest("panel=up");
         } else { // mouse released
-            sendHttpRequest("http://192.168.178.106/?panel=stop");
+            sendHttpRequest("panel=stop");
         }
     }
 
     @FXML protected void buttonDown(MouseEvent event) {
         if(event.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
-            sendHttpRequest("http://192.168.178.106/?panel=down");
+            sendHttpRequest("panel=down");
         } else { // mouse released
-            sendHttpRequest("http://192.168.178.106/?panel=stop");
+            sendHttpRequest("panel=stop");
         }
     }
 
     @FXML protected void buttonAuto(ActionEvent event) {
-        sendHttpRequest("http://192.168.178.106/?panel=auto");
+        sendHttpRequest("panel=auto");
     }
 
     @FXML protected void buttonUpdate(ActionEvent event) {
-        sendHttpRequest("http://192.168.178.106/?update");
+        sendHttpRequest("update");
     }
 
     @FXML protected void setAngle(ActionEvent event) {
-        sendHttpRequest("http://192.168.178.106/?degrees="+angle);
+        sendHttpRequest("degrees=" + angle);
     }
 
     @FXML protected void generateGraph(ActionEvent event) {
@@ -130,17 +136,29 @@ public class Controller implements Initializable{
         return list;
     }
 
-    private void sendHttpRequest(String url) {
-        System.out.println("sending request to"+url);
-//        try {
-//            InputStream response = new URL(url).openStream();
-//            try (Scanner scanner = new Scanner(response)) {
-//                String responseBody = scanner.useDelimiter("\\A").next();
-//                text.setText(responseBody);
-//            }
-//        } catch (IOException e) {
-//            printStackTrace();
-//        }
-
+    private void sendHttpRequest(String urlparam) {
+        final String url = ip+urlparam;
+        //start up a single thread
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            executor.submit(() -> {
+                String responseBody = "";
+                System.out.println("sending request to "+url);
+                try {
+                    InputStream response = new URL(url).openStream();
+                    try (Scanner scanner = new Scanner(response)) {
+                        responseBody = scanner.useDelimiter("\\A").next();
+                        responseTextView.setText(responseBody);
+                    }
+                } catch (IOException e) {
+                    //the thread will finally exit after executor.shutdownNow() has tried to stop it
+                }
+                return responseBody;
+            }).get(threadTimeout,TimeUnit.SECONDS); //timeout of x seconds
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            responseTextView.setText("Arduino not reachable!");
+            System.out.println("Request timed out.");
+            executor.shutdownNow();
+        }
     }
 }
