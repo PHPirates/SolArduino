@@ -73,8 +73,6 @@ public class Controller implements Initializable{
 
         try { // read the times.csv and angles.csv files
             // times.csv contains the UNIX times in seconds (since January 1, 00:00:00:00)
-            // if we convert these times to a date, we get the time in GMT +0, so we have to add one or two hours still
-
 
             timesFile = new File(timesFileString);
             anglesFile = new File(anglesFileString);
@@ -155,7 +153,7 @@ public class Controller implements Initializable{
         int year = day.get(Calendar.YEAR); // get year of chosen date
         int month = day.get(Calendar.MONTH); // get month of chosen date
         int dayOfMonth = day.get(Calendar.DAY_OF_MONTH); // get day of the month of chosen date
-        TimeZone timeZone = TimeZone.getDefault(); // get default timezone TODO is this the current timezone?
+        TimeZone timeZone = TimeZone.getDefault(); // get local timezone (with DST)
         Calendar startCalendar = Calendar.getInstance(); // calendar with first second of day we want the graph for
         startCalendar.set(year, month, dayOfMonth,0,0,0); // months start at 0
         long start = startCalendar.getTimeInMillis();
