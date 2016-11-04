@@ -29,6 +29,24 @@
     -fx-border-color: transparent;
 }
 
+.default-color0.chart-series-line {
+    -fx-stroke-width: 1px;
+    -fx-stroke: black;
+}
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: transparent;
+}
+
+.default-color1.chart-series-line {
+    -fx-stroke-width: 1px;
+    -fx-stroke: black;
+}
+
+.default-color1.chart-line-symbol {
+    -fx-background-color: transparent;
+}
+
 #buttonDown {
     -fx-graphic: url('down_small.png');
     -fx-focus-color: transparent;

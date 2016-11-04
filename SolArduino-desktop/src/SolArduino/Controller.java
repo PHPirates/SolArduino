@@ -11,6 +11,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 
 import java.io.*;
@@ -43,6 +44,9 @@ public class Controller implements Initializable{
 
     int angle = 42;
 
+    XYChart.Series lower = new XYChart.Series();
+    XYChart.Series upper = new XYChart.Series();
+
     @FXML private Slider slider;
     @FXML private Text responseTextView;
     @FXML private Button buttonSetAngle;
@@ -54,6 +58,7 @@ public class Controller implements Initializable{
      * Initialization method for the controller.
      */
     @FXML public void initialize(URL location, ResourceBundle resourceBundle){
+
         slider.valueProperty().addListener((observable, oldValue, newValue)-> {
             angle = newValue.intValue();
             if(angle < 10){
@@ -69,6 +74,7 @@ public class Controller implements Initializable{
         datePicker.valueProperty().addListener((observable, oldValue, newValue)-> {
             Date date = Date.from(newValue.atStartOfDay(ZoneId.systemDefault()).toInstant());
             chosenDate.setTime(date);
+
             graph.setData(getGraphData(chosenDate));
 
         });
@@ -111,6 +117,12 @@ public class Controller implements Initializable{
         Calendar calendar = Calendar.getInstance();
         Date time = new Date(System.currentTimeMillis()); // date with current time
         calendar.setTime(time); // set calendar object with current time to pass to getGraphData
+
+        lower.getData().add(new XYChart.Data<>(5,5));
+        lower.getData().add(new XYChart.Data<>(23,5));
+        upper.getData().add(new XYChart.Data<>(5,57));
+        upper.getData().add(new XYChart.Data<>(23,57));
+
         graph.setData(getGraphData(calendar));
 
     }
@@ -174,6 +186,7 @@ public class Controller implements Initializable{
         ObservableList<TableData> tableList = FXCollections.observableArrayList();
 
         for (int i = 0; i < data.length; i++) {
+
             int length = String.valueOf(data[i][0]).length();
             if(length == 10) {
                 // time * 1000 to convert to milliseconds, then add offset for correct time zone
@@ -194,17 +207,17 @@ public class Controller implements Initializable{
 
                 DateFormat timeFormat = new SimpleDateFormat("HH:mm"); // format to show time in the table
                 String timeString = String.valueOf(timeFormat.format(date));
-                tableList.add(new TableData(timeString, angle));
-
+                TableData tableData = new TableData(timeString, angle);
+                tableList.add(tableData);
             }
         }
-
-        list.add(series);
 
         table.setItems(tableList);
         table.setMaxHeight((table.getItems().size()+1) * 30); // set height of the table so we don't have empty rows
 
         datePicker.setValue(day.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()); // set default date in textbox DatePicker
+
+        list.addAll(lower, upper, series);
         return list;
     }
 
