@@ -43,18 +43,13 @@ public class Controller implements Initializable{
     String timesFileString = "resources/times.csv"; // path to the times.csv file
     String anglesFileString = "resources/angles.csv"; // path to the angles.csv file
     String separator = ",";
+    String ip = "http://192.168.8.42/?"; // ip address from the Arduino
 
     long[][] data; // contains the times and angles from the csv files
 
-    File timesFile;
-    File anglesFile;
+    Calendar chosenDate; // calendar with chosen date from the DatePicker
 
-    Calendar chosenDate;
-
-//    BufferedReader timesReader;
-//    BufferedReader anglesReader;
-
-    int angle = 42;
+    int angle = 42; // angle at which the solar panels are set
     int threadTimeout = 2; //seconds
 
     XYChart.Series lower = new XYChart.Series();
@@ -66,7 +61,6 @@ public class Controller implements Initializable{
     @FXML private Button buttonUp;
     @FXML private Button buttonDown;
     @FXML private Button buttonSetAngle;
-    String ip = "http://192.168.8.42/?";
     @FXML private LineChart graph;
     @FXML private DatePicker datePicker;
     @FXML private TableView table;
@@ -76,6 +70,7 @@ public class Controller implements Initializable{
      */
     @FXML public void initialize(URL location, ResourceBundle resourceBundle){
 
+        // make the buttons with the images resize by adding a listener to the GridPane size - Don't see why this works
         controlGridPane.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -92,27 +87,32 @@ public class Controller implements Initializable{
             }
         });
 
+        // listener to detect changes for the slider
         slider.valueProperty().addListener((observable, oldValue, newValue)-> {
             angle = newValue.intValue();
+            // set text at the setAngle button
             if(angle < 10){
+                // little bit alignment, because of 1-digit numbers
                 buttonSetAngle.setText("set panels at  " + angle + "  degrees" );
-
             } else {
                 buttonSetAngle.setText("set panels at " + angle + " degrees");
             }
 
         });
 
-        chosenDate = Calendar.getInstance();
-        datePicker.valueProperty().addListener((observable, oldValue, newValue)-> {
-            Date date = Date.from(newValue.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            chosenDate.setTime(date);
+        chosenDate = Calendar.getInstance(); // create calendar object
+        // listener to detect changes for the DatePicker
+        datePicker.valueProperty().addListener((observable, oldDay, newDay)-> {
+            // create Date object from the start of the newDay
+            Date date = Date.from(newDay.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            chosenDate.setTime(date); // set the date of chosenDate to newDay
 
-            graph.setData(getGraphData(chosenDate));
+            graph.setData(getGraphData(chosenDate)); // change the drawing for the graph
 
         });
 
-        try { // read the times.csv and angles.csv files
+        try {
+            // read the times.csv and angles.csv files
             // times.csv contains the UNIX times in seconds (since January 1, 00:00:00:00)
 
             InputStream timesIS = getClass().getResourceAsStream(timesFileString);
@@ -154,6 +154,7 @@ public class Controller implements Initializable{
         Date time = new Date(System.currentTimeMillis()); // date with current time
         calendar.setTime(time); // set calendar object with current time to pass to getGraphData
 
+        // lower and upper contain data to draw the lines to clarify the range of the solar panels in the graph
         lower.getData().add(new XYChart.Data<>(5,5));
         lower.getData().add(new XYChart.Data<>(23,5));
         upper.getData().add(new XYChart.Data<>(5,57));
@@ -161,13 +162,6 @@ public class Controller implements Initializable{
 
         graph.setData(getGraphData(calendar));
 
-    }
-
-    @FXML protected void generateGraph(ActionEvent event) {
-//        graph.setData(getGraphData());
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2016,10,1,0,5,2);
-        graph.setData(getGraphData(calendar));
     }
 
     @FXML protected void buttonUp(MouseEvent event) {

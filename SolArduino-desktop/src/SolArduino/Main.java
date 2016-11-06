@@ -18,7 +18,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("interface.fxml"));
         primaryStage.setTitle("SolArduino");
         Scene scene = new Scene(root, 650, 350);
-//        File file = new File("src/SolArduino/resources/stylesheet.css");
+        // read the css this way so we don't get problems when creating an executable JAR
         scene.getStylesheets().add(getClass().getResource("resources/stylesheet.css").toExternalForm());
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("ic_solarduino.png")));
         primaryStage.setScene(scene);

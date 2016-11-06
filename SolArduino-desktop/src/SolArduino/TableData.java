@@ -4,8 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
- * @Author s152337
- * 1-11-2016
+ * Class to create data for the table
  */
 public class TableData {
 
