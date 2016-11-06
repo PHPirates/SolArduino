@@ -60,6 +60,9 @@ public class Controller implements Initializable{
     @FXML private Text responseTextView;
     @FXML private Button buttonUp;
     @FXML private Button buttonDown;
+    @FXML private Button buttonUpdate;
+    @FXML private Button getButtonSetAngle;
+    @FXML private Button buttonAuto;
     @FXML private Button buttonSetAngle;
     @FXML private LineChart graph;
     @FXML private DatePicker datePicker;
@@ -76,6 +79,9 @@ public class Controller implements Initializable{
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 buttonUp.setPrefHeight(newValue.intValue());
                 buttonDown.setPrefHeight(newValue.intValue());
+                buttonUpdate.setStyle("-fx-font-size: " + (Double) newValue/20 + "px;");
+                buttonSetAngle.setStyle("-fx-font-size: " + (Double) newValue/25 + "px;");
+                buttonAuto.setStyle("-fx-font-size: " + (Double) newValue/20 + "px;");
             }
         });
 
