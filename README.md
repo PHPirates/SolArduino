@@ -10,11 +10,10 @@ This project is set up to move solar panels automatically, and to be able to con
 ### Create executable JAR from IntelliJ project - first time ###
 1. Go to File > Project Structure > Artifacts
 2. Click the green plus in the left top corner (next to Project Settings)
-3. In the dropdown menu, choose JAR > Form modules with dependencies...
-4. For the main class, click the three dots "..." to browse for the main class `SolArduino.Main`, click OK
-5. Follow the steps under "Build executable JAR"
+3. In the dropdown menu, choose JAR > From modules with dependencies...
+4. Tick the box 'build on make' to build a JAR every time
 
-### Build executable JAR ###
+### Build executable JAR manually ###
 1. Run the project (Shift + F10)
 2. Click Build > Build Artifacts...
 3. SolArduino-desktop:jar > Build
