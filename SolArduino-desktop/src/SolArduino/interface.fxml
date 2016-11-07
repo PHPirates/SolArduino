@@ -79,13 +79,13 @@
             </ImageView>
         </graphic>
     </Button>
-    <Button
+    <Button fx:id="buttonAuto"
             GridPane.columnIndex="1"
             GridPane.rowIndex="2"
             GridPane.halignment="CENTER"
             GridPane.valignment="CENTER"
-            maxHeight="40"
-            maxWidth="100"
+            maxHeight="Infinity"
+            maxWidth="Infinity"
             text="auto"
             onAction="#buttonAuto">
     </Button>
@@ -95,8 +95,8 @@
             GridPane.rowIndex="3"
             GridPane.halignment="CENTER"
             GridPane.valignment="CENTER"
-            maxHeight="40"
-            maxWidth="100"
+            maxHeight="Infinity"
+            maxWidth="Infinity"
             text="update"
             onAction="#buttonUpdate">
     </Button>
@@ -126,7 +126,7 @@
             GridPane.rowIndex="4"
             GridPane.halignment="CENTER"
             GridPane.valignment="CENTER"
-            maxHeight="40"
+            maxHeight="Infinity"
             maxWidth="Infinity"
             text="set panels at 42 degrees"
             onAction="#setAngle">
