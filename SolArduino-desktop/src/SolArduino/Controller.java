@@ -160,7 +160,7 @@ public class Controller implements Initializable{
         upper.getData().add(new XYChart.Data<>(5,57));
         upper.getData().add(new XYChart.Data<>(23,57));
 
-        graph.setData(getGraphData(calendar));
+        graph.setData(getGraphData(getToday()));
 
     }
 
@@ -192,6 +192,14 @@ public class Controller implements Initializable{
         sendHttpRequest("degrees=" + angle);
     }
 
+    @FXML protected void todayGraph(ActionEvent event) {
+        graph.setData(getGraphData(getToday()));
+    }
+
+    /**
+     * @param day
+     * @return list that contains data for graph
+     */
     private ObservableList<XYChart.Series<Double,Double>> getGraphData(Calendar day){
 
         int year = day.get(Calendar.YEAR); // get year of chosen date
@@ -249,6 +257,16 @@ public class Controller implements Initializable{
 
         list.addAll(lower, upper, series);
         return list;
+    }
+
+    /**
+     * @return calendar with current date and time
+     */
+    private Calendar getToday(){
+        Calendar calendar = Calendar.getInstance();
+        Date time = new Date(System.currentTimeMillis()); // date with current time
+        calendar.setTime(time); // set calendar object with current time to pass to getGraphData
+        return calendar;
     }
 
     private void sendHttpRequest(String urlparam) {
