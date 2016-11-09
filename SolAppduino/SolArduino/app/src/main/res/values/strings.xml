@@ -5,4 +5,9 @@
     <string name="auto">AUTO</string>
     <string name="response">No response yet.</string>
     <string name="pingmenu">Ping Arduino</string>
+    <string name="upbuttondescription">Button Up</string>
+    <string name="downbuttondescription">Button Down</string>
+    <string name="initialdegrees">42 \u00b0</string>
+    <string name="imagepaneldescription">Solar Panel</string>
+    <string name="setanglebutton">set angle</string>
 </resources>

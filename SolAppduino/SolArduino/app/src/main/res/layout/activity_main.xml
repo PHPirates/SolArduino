@@ -11,14 +11,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <TableLayout
-        android:id="@+id/table"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TableRow>
+        <TableRow
+            android:id="@+id/table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <TableLayout
                 android:layout_width="0dp"
                 android:layout_weight="1">
@@ -34,7 +32,8 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/up_button"
                         android:background="#00000000"
-                        android:onClick="unCheck"/>
+                        android:onClick="unCheck"
+                        android:contentDescription="@string/upbuttondescription" />
 
                 </TableRow>
                 <TableRow>
@@ -48,7 +47,8 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/down_button"
                         android:background="#00000000"
-                        android:onClick="unCheck"/>
+                        android:onClick="unCheck"
+                        android:contentDescription="@string/downbuttondescription" />
                 </TableRow>
 
             </TableLayout>
@@ -66,7 +66,7 @@
                         android:gravity="center"
                         android:layout_gravity="center_vertical"
                         android:textSize="80sp"
-                        android:text="42 \u00b0"
+                        android:text="@string/initialdegrees"
                         android:textColor="@drawable/text_selector"
                         android:onClick="sendUpdateRequest"/>
                 </TableRow>
@@ -77,26 +77,13 @@
                         android:layout_width="wrap_content"
                         android:text="@string/auto"/>
 
-                    <!--<Button-->
-                        <!--android:id="@+id/testButton"-->
-                        <!--android:text="test"-->
-                        <!--android:onClick="testButton"/>-->
                 </TableRow>
             </TableLayout>
         </TableRow>
-        <!--<TableRow>-->
-            <!--<TextView-->
-                <!--android:id="@+id/response"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/response"/>-->
-
-        <!--</TableRow>-->
-    </TableLayout>
         <FrameLayout
             android:id="@+id/frame"
             android:layout_width="match_parent"
-            android:layout_height="300px"
+            android:layout_height="300dp"
             android:layout_below="@+id/table"
             android:orientation="horizontal">
             <SeekBar
@@ -111,10 +98,10 @@
                 android:id="@+id/linePanel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|bottom"
+                android:layout_gravity="end|bottom"
                 android:scaleType="fitXY"
-                android:src="@drawable/panel"/>
-
+                android:src="@drawable/panel"
+                android:contentDescription="@string/imagepaneldescription" />
         </FrameLayout>
 
     <Button
@@ -122,7 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/frame"
-        android:text="set angle"
+        android:text="@string/setanglebutton"
         android:onClick="unCheck"/>
 
     </RelativeLayout>
