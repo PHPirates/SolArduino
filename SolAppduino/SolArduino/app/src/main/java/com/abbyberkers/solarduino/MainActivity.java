@@ -409,7 +409,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * @param angle to set solar panels on
      */
     public void sendAngleRequest(int angle){
-        Toast.makeText(getBaseContext(), "Angle set at " + angle + "\u00b0", Toast.LENGTH_SHORT).show();
 //        String urlString;
         if(angle < 10){ // make sure the url is always the same length, no matter what degree
             urlString = ipString + "?degrees=0" + String.valueOf(angle);
@@ -554,37 +553,48 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     Toast.makeText(getBaseContext(), string, Toast.LENGTH_SHORT).show();
                 } else if (message.contains("update")) {
                     String[] updateString = result.split(" ");
-                    // string with current angle plus degree symbol
-                    String angle;
-                    if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                        angle = Html.fromHtml(updateString[0],Html.FROM_HTML_MODE_LEGACY)+ "\u00b0";
+                    if (updateString[0].trim().length() == 0) {
+                        Toast.makeText(getBaseContext(), "Arduino did not return an angle", Toast.LENGTH_SHORT).show();
                     } else {
-                        //noinspection deprecation because we caught that in the if-statement above
-                        angle = Html.fromHtml(updateString[0]) + "\u00b0";
-                    }
-                    currentAngle.setText(angle);
-                    // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
-                    if (updateToast != null) {
-                        if (updatedToast != null) {
-                            updatedToast.cancel();
+                        // string with current angle plus degree symbol
+                        String angle;
+                        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            angle = Html.fromHtml(updateString[0], Html.FROM_HTML_MODE_LEGACY) + "\u00b0";
+                        } else {
+                            //noinspection deprecation because we caught that in the if-statement above
+                            angle = Html.fromHtml(updateString[0]) + "\u00b0";
                         }
-                        updateToast.cancel();
-                        updatedToast = Toast.makeText(getBaseContext(), "Updated.", Toast.LENGTH_SHORT);
-                        updatedToast.show();
+                        currentAngle.setText(angle);
+                        // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
+                        if (updateToast != null) {
+                            if (updatedToast != null) {
+                                updatedToast.cancel();
+                            }
+                            updateToast.cancel();
+                            updatedToast = Toast.makeText(getBaseContext(), "Updated.", Toast.LENGTH_SHORT);
+                            updatedToast.show();
+                        }
+
+                        // convert string to integer, then rotate the image
+
+                        int newAngle = 0;
+                        try {
+                            newAngle = Integer.valueOf(updateString[0]);
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getBaseContext(), "Arduino string not formatted correctly",
+                                    Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                        rotate(newAngle);
+
+                        if (newAngle == 5) {
+                            Toast.makeText(getBaseContext(), "Low end stop reached.", Toast.LENGTH_SHORT).show();
+                        } else if (newAngle == 57) {
+                            Toast.makeText(getBaseContext(), "High end stop reached.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        updateString[1] = updateString[1].trim();
                     }
-
-                    // convert string to integer, then rotate the image
-                    int newAngle = Integer.valueOf(updateString[0]);
-                    rotate(newAngle);
-
-                    if (newAngle == 5) {
-                        Toast.makeText(getBaseContext(), "Low end stop reached.", Toast.LENGTH_SHORT).show();
-                    } else if (newAngle == 57) {
-                        Toast.makeText(getBaseContext(), "High end stop reached.", Toast.LENGTH_SHORT).show();
-                    }
-
-                    updateString[1] = updateString[1].trim();
-
                     if (updateString[1].contains("auto")) {
                         if (!autoBox.isChecked()) {
                             autoBox.toggle();
@@ -596,6 +606,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
                 } else if (message.contains("Page")) {
                     Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
+                } else if (message.contains("degrees")) {
+                    //remove trailing newline
+                    if (result.contains("\n")) {
+                        //substring(0,3) means chars at index 0,1,2
+                        result = result.substring(0,result.length()-1);
+                    }
+                    //remove leading zeroes
+                    if (result.charAt(0)=='0') {
+                        result = result.substring(1,result.length());
+                    }
+                    Toast.makeText(getBaseContext(), "Angle set at " + result + "\u00b0", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getBaseContext(), "Bad response received", Toast.LENGTH_SHORT).show();
                 }
