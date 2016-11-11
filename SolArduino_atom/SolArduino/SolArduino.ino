@@ -1,6 +1,6 @@
 //libraries used
 #include <EtherCard.h>      // https://github.com/jcw/ethercard
-#include <Time.h>           // http://www.arduino.cc/playground/Code/Time
+#include <TimeLib.h>           // http://www.arduino.cc/playground/Code/Time
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
 
 //variables about angles and times
@@ -57,6 +57,7 @@ const char http_OK[] PROGMEM =
 //global states
 boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
+String EmergencyState = "";
 
 void setup () {
   //the serial shouldn't be used in final code, but this is always in development...
@@ -73,7 +74,7 @@ void loop () {
   //especially if the response is not received yet, keep receiving the response
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
-  if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
+  if (responseReceived && EmergencyState == "") { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
       requestNewTable();
       if (autoMode) {
