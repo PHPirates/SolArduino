@@ -106,16 +106,9 @@ bool receiveUpdate() {
 
 void parseString(char *from) {
   char *found;
-  int leng;
-  char *times;
-  char dateString[120]; //these may need some tuning
-  char angleString[60];
-
-  Serial.print(F("free ram after assignments: "));
-  Serial.println(freeRam());
 
   found = strtok(from, "_");
-  int i = 0;
+  byte i = 0;
   while(found != NULL){
 
     if(i==1){
@@ -123,33 +116,28 @@ void parseString(char *from) {
         Serial.println(F("WARNING length of received values does not match local array length"));
       }
     } else if(i==2) {
-      strcpy(dateString,found);
       Serial.println(found);
+      char *dateIterator = strtok(found,",");
+      byte j = 0;
+      while (dateIterator != NULL) {
+        //convert char* 'found' to long
+        dates[j] = atol(dateIterator);
+        dateIterator = strtok(NULL, ","); //extract next token
+        j++;
+      }
     } else if(i==3) {
       Serial.println(found);
-      strcpy(angleString,found);
+      //Now again for the angles
+      char *timeIterator = strtok(found,",");
+      int k = 0;
+      while (timeIterator != NULL) {
+        //convert char* 'found' to int
+        angles[k] = atoi(found);
+        timeIterator = strtok(NULL, ","); //extract next token
+        k++;
+      }
     }
     found = strtok(NULL, "_"); //extract next token
-    i++;
-  }
-
-  // now the same splitting up again but for the substrings with dates and angles
-  found = strtok(dateString,",");
-  i = 0;
-  while (found != NULL) {
-    //convert char* 'found' to long
-    dates[i] = atol(found);
-    found = strtok(NULL, ","); //extract next token
-    i++;
-  }
-
-  //Now again for the angles
-    found = strtok(angleString,",");
-  i = 0;
-  while (found != NULL) {
-    //convert char* 'found' to int
-    angles[i] = atoi(found);
-    found = strtok(NULL, ","); //extract next token
     i++;
   }
 
