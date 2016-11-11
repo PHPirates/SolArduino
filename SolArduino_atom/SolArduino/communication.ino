@@ -121,6 +121,7 @@ void parseString(char *from) {
     if(i==1){
       if (TABLE_LENGTH != atoi(found)) {
         Serial.println(F("WARNING length of received values does not match local array length"));
+        EmergencyState = "Length mismatch";
       }
     } else if(i==2) {
       strcpy(dateString,found);
