@@ -1,12 +1,12 @@
 package com.abbyberkers.solarduino;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,9 +23,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -44,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //    String host = "192.168.2.107"; // host test
 
     String lastResult;           // String containing the result from the last http-request
-    String autoMode;        // String with auto if auto mode on, manual if auto mode off
 
     Toast unreachableToast;
     Toast updateToast;
@@ -261,8 +258,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     case MotionEvent.ACTION_DOWN:
                         view.setPressed(true); // simulate onClick (pressed) event so colour changes
 
-                        Log.e("setAngle", "pressed");
-//                        int prog = seekbar.getProgress(); // get the value from the seekbar
                         sendAngleRequest(seekbarProgress); // set the panels at angle
                         view.performClick();
                         break;
@@ -270,21 +265,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     case MotionEvent.ACTION_UP:
                         view.setPressed(false); // simulate onClick (release) event so colour changes back
 
-                        Log.e("setAngle", "released");
-
                         // a Timer and TimerTask to repeat the update request with interval 'delay',
                         // until the solar panels reached the angle that is on the seekbar at that moment
                         final Timer timer = new Timer();
                         final TimerTask task = new TimerTask() {
 
-                            // String containing the current angle, taken from
-                            // (TextView) currentAngle, minus the degree symbol, trimmed to remove
-                            // possible spaces ("9 \u00b0" -> "9")
-                            String angleString = (currentAngle.getText().toString())
-                                    .substring(0,2)
-                                    .trim();
-
-                            int angleInt = Integer.valueOf(angleString);
+                            int angleInt = getCurrentDegree();
 //                            int seekBarProgress = seekbar.getProgress(); // value seekbar
                             @Override
                             public void run() {
@@ -298,13 +284,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     timer.cancel();
                                 } else {
                                     // update the angle as long as the desired angle not reached
-
-                                    // get current angle from TextView
-                                    angleString = (currentAngle.getText().toString())
-                                            .substring(0, 2) // get the first 2 chars of string
-                                            .trim(); // trim spaces off
-
-                                    angleInt = Integer.valueOf(angleString);
+                                    angleInt = getCurrentDegree();
                                     seekbarProgress = seekbar.getProgress() + 5;
 
                                     sendUpdateRequest();
@@ -329,7 +309,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      */
     public int getNextDegree(String result) {
         String intString = result.substring(result.indexOf("_"),result.lastIndexOf("_"));
-        Log.e("parsing string",result+" becomes "+intString);
         return Integer.parseInt(intString);
     }
 
@@ -348,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     /**
      * method to uncheck checkbox for automode, when any of the other buttons is pressed
-     * @param view
+     * @param view checkbox
      */
     public void unCheck(View view){
         if(autoBox.isChecked()){
@@ -410,7 +389,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public void startHandler(final DataSender dataSender) {
         //start a new handler that will cancel the AsyncTask after x seconds
         //in case the Arduino can't be reached
-        Log.e("handler","starting up handler");
         Handler handler = new Handler(Looper.getMainLooper()); //make sure to start from UI thread
         handler.postDelayed(new Runnable() {
             @Override
@@ -428,10 +406,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     /**
      * send a http request to the arduino, to set solar panels at specified angle
-     * @param angle
+     * @param angle to set solar panels on
      */
     public void sendAngleRequest(int angle){
-        Toast.makeText(getBaseContext(), "Angle set at " + angle + "\u00b0", Toast.LENGTH_SHORT).show();
 //        String urlString;
         if(angle < 10){ // make sure the url is always the same length, no matter what degree
             urlString = ipString + "?degrees=0" + String.valueOf(angle);
@@ -445,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     /**
      * Triggered by pressing/tapping the currentAngle TextView.
      * Send an update http-request to the Arduino
-     * @param view
+     * @param view currentAngle TextView
      */
     public void sendUpdateRequest(View view) {
         if(updateToast == null) {
@@ -463,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * Triggered by loops in which the angle needs to be frequently updated.
      *      Button up/down pressed.
      *      When the angle is set at a certain degree, and moving towards there.
-     *      TODO when the panels are moving after auto mode has been enabled?
+     *      When the panels are moving after auto mode has been enabled
      * Send an update http-request to the Arduino.
      */
     public void sendUpdateRequest() {
@@ -490,33 +467,27 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private class PingSender extends DataSender {
         @Override
-        protected String doInBackground(String... url){ //TODO why does this need varargs?
+        /**
+         * using varargs, String...url instead of (String[] url) could be useful when calling,
+         * so you can use method("a","b") instead of method(new String{"a","b"})
+         */
+        protected String doInBackground(String... url){
             try{
-                Log.e("sendreq","starting ping");
                 // try to ping the Arduino first to find out if it's reachable or not.
                 String s;
                 ProcessBuilder processbuilder = new ProcessBuilder("/system/bin/ping", url[0]);
                 Process process = processbuilder.start();
                 BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                Log.e("sr","before loop");
                 reachable = false;
                 while ((s = stdInput.readLine()) != null)
                 {
-                    Log.e("output", s);
                     if(s.contains("seq=")){
 //                        Log.e("ping", "first");
-                        if (s.contains("Host Unreachable")) {
-                            Log.e("sendreq","ping failed"); //TODO is this ever reached?
-                        } else {
-                            reachable = true;
-                        }
+                        reachable = !s.contains("Host Unreachable");
                         break;
                     }
                 }
                 process.destroy(); //also terminate the process when ping didn't fail
-                Log.e("sr","after loop ");
-
-
             }catch (Exception e) {
                 e.printStackTrace();
             }
@@ -557,63 +528,73 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         protected void onPostExecute(String result) {
-            Log.e("result", result);
-                lastResult = result; //set result global as well
+            lastResult = result; //set result global as well
 
-//            Log.w("result", lastResult);
-//            lastResult = result; // set lastResult to be the latest result.
-//            String color = "#" + String.valueOf(Integer.toHexString(defaultColor));
-//            currentAngle.setTextColor(Color.parseColor(color));
             if (result.contains("Un") || result.contains("not be")) {
                 // Arduino could not be reached.
 
                 Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
                 // set seekbar at current angle, so update requests aren't sent anymore.
-                seekbar.setProgress(Integer.valueOf((currentAngle.getText().toString())
-                        .substring(0, 2)
-                        .trim()));
-                Log.w("internet", "not connected");
+                seekbar.setProgress(getCurrentDegree());
             } else if (result.contains("Panel")) {
                 Toast.makeText(getBaseContext(), result.trim(), Toast.LENGTH_SHORT).show();
             } else {
                 String message = urlString;
-                if (message.equals(ipString)) {
-                } else if (message.contains("panel")) {
+                if (message.contains("panel")) {
                     // Toast that the panels are going up or down so the user knows the Arduino
                     // received the request and knows what to do
-                    Toast.makeText(getBaseContext(), Html.fromHtml(result), Toast.LENGTH_SHORT).show();
-                } else if (message.contains("degrees")) {
-//                    Log.e("result", result);
+                    String string;
+                    if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        string = Html.fromHtml(result,Html.FROM_HTML_MODE_LEGACY)+ "\u00b0";
+                    } else {
+                        //noinspection deprecation because we caught that in the if-statement above
+                        string = Html.fromHtml(result) + "\u00b0";
+                    }
+                    Toast.makeText(getBaseContext(), string, Toast.LENGTH_SHORT).show();
                 } else if (message.contains("update")) {
                     String[] updateString = result.split(" ");
-                    // string with current angle plus degree symbol
-                    String angle = Html.fromHtml(updateString[0]) + "\u00b0";
-                    currentAngle.setText(angle);
-                    // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
-                    if (updateToast != null) {
-                        if (updatedToast != null) {
-                            updatedToast.cancel();
+                    if (updateString[0].trim().length() == 0) {
+                        Toast.makeText(getBaseContext(), "Arduino did not return an angle", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // string with current angle plus degree symbol
+                        String angle;
+                        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            angle = Html.fromHtml(updateString[0], Html.FROM_HTML_MODE_LEGACY) + "\u00b0";
+                        } else {
+                            //noinspection deprecation because we caught that in the if-statement above
+                            angle = Html.fromHtml(updateString[0]) + "\u00b0";
                         }
-                        updateToast.cancel();
-                        updatedToast = Toast.makeText(getBaseContext(), "Updated.", Toast.LENGTH_SHORT);
-                        updatedToast.show();
+                        currentAngle.setText(angle);
+                        // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
+                        if (updateToast != null) {
+                            if (updatedToast != null) {
+                                updatedToast.cancel();
+                            }
+                            updateToast.cancel();
+                            updatedToast = Toast.makeText(getBaseContext(), "Updated.", Toast.LENGTH_SHORT);
+                            updatedToast.show();
+                        }
+
+                        // convert string to integer, then rotate the image
+
+                        int newAngle = 0;
+                        try {
+                            newAngle = Integer.valueOf(updateString[0]);
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getBaseContext(), "Arduino string not formatted correctly",
+                                    Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                        rotate(newAngle);
+
+                        if (newAngle == 5) {
+                            Toast.makeText(getBaseContext(), "Low end stop reached.", Toast.LENGTH_SHORT).show();
+                        } else if (newAngle == 57) {
+                            Toast.makeText(getBaseContext(), "High end stop reached.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        updateString[1] = updateString[1].trim();
                     }
-
-                    // convert string to integer, then rotate the image
-                    int newAngle = Integer.valueOf(updateString[0]);
-                    rotate(newAngle);
-
-                    if (newAngle == 5) {
-                        Toast.makeText(getBaseContext(), "Low end stop reached.", Toast.LENGTH_SHORT).show();
-                    } else if (newAngle == 57) {
-                        Toast.makeText(getBaseContext(), "High end stop reached.", Toast.LENGTH_SHORT).show();
-                    }
-
-                    updateString[1] = updateString[1].trim();
-                    Log.e("update", updateString[1]);
-                    Log.e("check", String.valueOf(autoBox.isChecked()));
-                    Log.e("update", String.valueOf(updateString[1].contains("manual")));
-
                     if (updateString[1].contains("auto")) {
                         if (!autoBox.isChecked()) {
                             autoBox.toggle();
@@ -625,8 +606,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
                 } else if (message.contains("Page")) {
                     Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
+                } else if (message.contains("degrees")) {
+                    //remove trailing newline
+                    if (result.contains("\n")) {
+                        //substring(0,3) means chars at index 0,1,2
+                        result = result.substring(0,result.length()-1);
+                    }
+                    //remove leading zeroes
+                    if (result.charAt(0)=='0') {
+                        result = result.substring(1,result.length());
+                    }
+                    Toast.makeText(getBaseContext(), "Angle set at " + result + "\u00b0", Toast.LENGTH_SHORT).show();
                 } else {
-//                    Log.e("message", message);
                     Toast.makeText(getBaseContext(), "Bad response received", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -642,8 +633,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setDoInput(true);
                 urlConnection.connect();
-                int response = urlConnection.getResponseCode();
-                Log.e("url", "The response is: " + response);
+//                int response = urlConnection.getResponseCode();
 
                 InputStream in = urlConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(
@@ -656,9 +646,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 bufferedReader.close();
                 message = stringBuilder.toString();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-//                Toast.makeText(getBaseContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

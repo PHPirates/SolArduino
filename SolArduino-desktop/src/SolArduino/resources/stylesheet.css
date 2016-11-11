@@ -1,33 +1,82 @@
-/*.button {*/
-  /*!*-fx-graphic: url('http://icons.iconarchive.com/icons/aha-soft/desktop-buffet/128/Pizza-icon.png');*!*/
- /**/
-/*}*/
+/* tabs */
+.tab-pane .tab:selected .focus-indicator {
+    -fx-border-color: none;
+}
 
-/*.button:pressed {*/
-  /*!*-fx-graphic: url('http://icons.iconarchive.com/icons/aha-soft/desktop-buffet/128/Piece-of-cake-icon.png');*!*/
-  /*-fx-graphic: url("down_pressed.png");*/
-/*}*/
+.tab-header-area,
+.tab-header-area:focused,
+.tab-header-area:selected {
+    -fx-border-width: 0 0 0 1;
+    -fx-border-insets: 0 0 0 -1;
+    -fx-padding: 0 0 0 0;
+}
 
-#buttonDown {
-    -fx-graphic: url('down_small.png');
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-effect: null;
+/* table */
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:empty .table-cell {
+    -fx-border-color: transparent;
+}
+
+/* chart */
+.default-color0.chart-series-line {
+    -fx-stroke-width: 1px;
+    -fx-stroke: #00000077;
+}
+
+.default-color0.chart-line-symbol {
     -fx-background-color: transparent;
 }
 
-#buttonDown:pressed {
-    -fx-graphic: url("down_pressed_small.png");
+.default-color1.chart-series-line {
+    -fx-stroke-width: 1px;
+    -fx-stroke: #00000077;
 }
 
+.default-color1.chart-line-symbol {
+    -fx-background-color: transparent;
+}
+
+.default-color2.chart-series-line {
+    -fx-stroke: #00979C;
+}
+
+.default-color2.chart-line-symbol {
+    -fx-background-color: #00979C, white;
+}
+
+/* up and down button */
 #buttonUp {
-    -fx-graphic: url('up_small.png');
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-effect: null;
     -fx-background-color: transparent;
+    -fx-background-image: url("up.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-content-display: graphic-only;
+    -fx-background-size: contain;
 }
 
 #buttonUp:pressed  {
-    -fx-graphic: url("up_pressed_small.png");
+    -fx-background-image: url("up_pressed.png");
+}
+
+#buttonDown {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: null;
+    -fx-background-color: transparent;
+    -fx-background-image: url("down.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-content-display: graphic-only;
+    -fx-background-size: contain;
+}
+
+#buttonDown:pressed  {
+    -fx-background-image: url("down_pressed.png");
 }
