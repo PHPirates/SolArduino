@@ -40,8 +40,8 @@ const static uint8_t mask[] = {255,255,255,0}; //standard netmask
 const char poolNTP[] PROGMEM = "europe.pool.ntp.org"; //pool to get time server from
 uint8_t ntpMyPort = 123; //port for the time server, does not seem to matter
 // TimeZone : GMT+1. Helpful for getting correct current time
-TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +0};
-TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, -60};
+TimeChangeRule summerTime = {"UTC+2", Last, Sun, Mar, 2, +60};
+TimeChangeRule winterTime = {"UTC+1", Last, Sun, Oct, 3, +30};
 Timezone timeZone(summerTime, winterTime);
 
 //about http responses

@@ -30,9 +30,13 @@ void setupNTP() {
    }
    ether.printIp("Lookup IP   : ", ether.hisip);
    //sync arduino clock, current time in seconds can be found with now();
-   setTime(getNtpTime());
+   setTime(timeZone.toLocal(getNtpTime())); //+3
+    // setTime(getNtpTime());
    Serial.print("time: ");
    Serial.println(now());
+   Serial.print(hour());
+   Serial.print(F(":"));
+   Serial.println(minute());
 }
 
 void setupNAS() {

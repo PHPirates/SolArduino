@@ -212,14 +212,17 @@ void homePage() {
  word h = t / 3600;
  byte m = (t / 60) % 60;
  byte s = t % 60;
+ //real time
+ int realh = hour();
+ int realm = minute();
  bfill = ether.tcpOffset();
  bfill.emit_p(PSTR(
    "$F"
   //  "<meta http-equiv='refresh' content='1'/>"
    "<title>SolArduino</title>"
-   "<h1>$D$D:$D$D:$D$D</h1>"),
+   "<h1>$D$D:$D$D:$D$D</h1><br>$D:$D"),
    http_OK,
-     h/10, h%10, m/10, m%10, s/10, s%10);
+     h/10, h%10, m/10, m%10, s/10, s%10,realh,realm);
   }
 
 void acknowledge(const char* message) {
