@@ -40,8 +40,8 @@ const static uint8_t mask[] = {255,255,255,0}; //standard netmask
 const char poolNTP[] PROGMEM = "europe.pool.ntp.org"; //pool to get time server from
 uint8_t ntpMyPort = 123; //port for the time server, does not seem to matter
 // TimeZone : GMT+1. Helpful for getting correct current time
-TimeChangeRule summerTime = {"UTC+1", Last, Sun, Mar, 2, +0};
-TimeChangeRule winterTime = {"UTC+2", Last, Sun, Oct, 3, -60};
+TimeChangeRule summerTime = {"UTC+2", Last, Sun, Mar, 2, +60};
+TimeChangeRule winterTime = {"UTC+1", Last, Sun, Oct, 3, +30};
 Timezone timeZone(summerTime, winterTime);
 
 //about http responses
@@ -57,6 +57,7 @@ const char http_OK[] PROGMEM =
 //global states
 boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
+String EmergencyState = "";
 
 void setup () {
   //the serial shouldn't be used in final code, but this is always in development...
@@ -95,7 +96,7 @@ void loop () {
   //especially if the response is not received yet, keep receiving the response
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
-  if (responseReceived) { // a check to make sure we don't request angles again before we received the ones we already had requested
+  if (responseReceived && EmergencyState == "") { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
       requestNewTable();
       if (autoMode) {

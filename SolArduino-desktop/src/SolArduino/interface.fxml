@@ -1,13 +1,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.GridPane?>
-
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.Slider?>
@@ -15,18 +10,16 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+
 <TabPane fx:controller="SolArduino.Controller"
          xmlns:fx="http://javafx.com/fxml"
          tabClosingPolicy="UNAVAILABLE">
 
-    <Tab fx:id="control"
+    <Tab
         text="Control">
         <GridPane fx:id="controlGridPane" hgap="10" vgap="10" >
             <columnConstraints>
@@ -71,11 +64,7 @@
             onMousePressed="#buttonDown"
             onMouseReleased="#buttonDown">
         <graphic>
-            <ImageView fx:id="buttonDownImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                <!--<image>-->
-                    <!--&lt;!&ndash;<Image url="https://i.gyazo.com/d04854e47cd16cf90cb32e7fdc728b73.png" />&ndash;&gt;-->
-                    <!--<Image url="resources/down.png" />-->
-                <!--</image>-->
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
             </ImageView>
         </graphic>
     </Button>
@@ -135,7 +124,7 @@
         </GridPane>
     </Tab>
 
-    <Tab fx:id="information"
+    <Tab
         text="Information">
         <GridPane hgap="10" vgap="10">
             <columnConstraints>
@@ -181,7 +170,8 @@
 
             </DatePicker>
 
-            <Button fx:id="todayButton"
+            <!-- today button -->
+            <Button
                 GridPane.columnIndex="2"
                 GridPane.rowIndex="1"
                 text="Today"
@@ -196,12 +186,12 @@
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                 </columnResizePolicy>
                 <columns>
-                    <TableColumn fx:id="timeColumn" text="time">
+                    <TableColumn text="time"> <!--fx:id="timeColumn"-->
                         <cellValueFactory>
                             <PropertyValueFactory property="time"/>
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn fx:id="angleColumn" text="angle">
+                    <TableColumn text="angle"> <!--fx:id="angleColumn"-->
                         <cellValueFactory>
                             <PropertyValueFactory property="angle"/>
                         </cellValueFactory>

@@ -121,6 +121,7 @@ void parseString(char *from) {
     if(i==1){
       if (TABLE_LENGTH != atoi(found)) {
         Serial.println(F("WARNING length of received values does not match local array length"));
+        EmergencyState = "Length mismatch";
       }
     } else if(i==2) {
       strcpy(dateString,found);
@@ -163,6 +164,12 @@ void parseString(char *from) {
     Serial.println(angles[i]);
   }
 
+  //if result is e.g. HTTP/1.1 500 Internal Server Error
+  //or otherwise malformed, both arrays will contain just zeroes.
+  if (dates[0] == 0) {
+    EmergencyState = F("Something wrong with NAS, maybe out of angles?");
+  }
+
 }
 
 unsigned long getNtpTime() {
@@ -194,6 +201,7 @@ static void my_callback (byte status, word off, word len) {
     Ethernet::buffer[off+TABLE_SIZE] = 0;
     char* result = (char*) Ethernet::buffer + off;
     delay(42); // Make sure the request is sent and received properly, no delay results in a 400
+    Serial.println(result);
     parseString(result); // fill the arrays with the data
     responseReceived = true;
   }
@@ -204,21 +212,35 @@ void homePage() {
  word h = t / 3600;
  byte m = (t / 60) % 60;
  byte s = t % 60;
+ //real time
+ int realh = hour();
+ int realm = minute();
  bfill = ether.tcpOffset();
  bfill.emit_p(PSTR(
    "$F"
   //  "<meta http-equiv='refresh' content='1'/>"
    "<title>SolArduino</title>"
-   "<h1>$D$D:$D$D:$D$D</h1>"),
+   "<h1>$D$D:$D$D:$D$D</h1><br>$D:$D"),
    http_OK,
-     h/10, h%10, m/10, m%10, s/10, s%10);
+     h/10, h%10, m/10, m%10, s/10, s%10,realh,realm);
   }
 
 void acknowledge(const char* message) {
-  //send a http response
-  bfill = ether.tcpOffset();
-  bfill.emit_p(PSTR(
-    "$F" //$F is for a progmem string,
-    "$S"), //$S for a c string
-  http_OK,message); //parameters to be replaced go here
+  if (EmergencyState == "") {
+    //send a http response
+    bfill = ether.tcpOffset();
+    bfill.emit_p(PSTR(
+      "$F" //$F is for a progmem string,
+      "$S"), //$S for a c string
+    http_OK,message); //parameters to be replaced go here
+  } else {
+    Serial.println(F("EMERGENCY"));
+    Serial.println(EmergencyState);
+    //send a http response
+    bfill = ether.tcpOffset();
+    bfill.emit_p(PSTR(
+      "$F" //$F is for a progmem string,
+      "$S"), //$S for a c string
+    http_OK,EmergencyState.c_str()); //parameters to be replaced go here
+  }
 }
