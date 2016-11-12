@@ -1,61 +1,51 @@
 package SolArduino;
 
-import com.sun.javafx.tk.Toolkit;
-import com.sun.corba.se.spi.orbutil.fsm.Action;
-import com.sun.org.apache.xpath.internal.SourceTree;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-
 import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
-import static com.sun.corba.se.impl.util.Utility.printStackTrace;
-
 public class Controller implements Initializable{
 
-    String username = System.getProperty("user.name");
-    String timesFileString = "resources/times.csv"; // path to the times.csv file
-    String anglesFileString = "resources/angles.csv"; // path to the angles.csv file
-    String separator = ",";
-    String ip = "http://192.168.2.42/?"; // ip address from the Arduino
+    //Global variables for easy change/lookup
+    @SuppressWarnings("FieldCanBeLocal")
+    private String timesFileString = "resources/times.csv"; // path to the times.csv file
+    @SuppressWarnings("FieldCanBeLocal")
+    private String anglesFileString = "resources/angles.csv"; // path to the angles.csv file
+    @SuppressWarnings("FieldCanBeLocal")
+    private String separator = ",";
+    @SuppressWarnings("FieldCanBeLocal")
 
-    long[][] data; // contains the times and angles from the csv files
+    private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
 
-    Calendar chosenDate; // calendar with chosen date from the DatePicker
+    private long[][] data; // contains the times and angles from the csv files
 
-    int angle = 42; // angle at which the solar panels are set
-    int threadTimeout = 2; //seconds
+    private Calendar chosenDate; // calendar with chosen date from the DatePicker
 
-    XYChart.Series lower = new XYChart.Series();
-    XYChart.Series upper = new XYChart.Series();
+    private int angle = 42; // angle at which the solar panels are set
+    @SuppressWarnings("FieldCanBeLocal")
+    private int threadTimeout = 2; //seconds
+    @SuppressWarnings("FieldCanBeLocal")
+    private int textTimeout = 2; // seconds after which the text 'arduino not reachable' disappears
+
+    private XYChart.Series<Double,Double> lower = new XYChart.Series<>();
+    private XYChart.Series<Double,Double> upper = new XYChart.Series<>();
 
     @FXML private GridPane controlGridPane;
     @FXML private Slider slider;
@@ -63,12 +53,11 @@ public class Controller implements Initializable{
     @FXML private Button buttonUp;
     @FXML private Button buttonDown;
     @FXML private Button buttonUpdate;
-    @FXML private Button getButtonSetAngle;
     @FXML private Button buttonAuto;
     @FXML private Button buttonSetAngle;
-    @FXML private LineChart graph;
+    @FXML private LineChart<Double,Double> graph;
     @FXML private DatePicker datePicker;
-    @FXML private TableView table;
+    @FXML private TableView<TableData> table;
 
     /**
      * Initialization method for the controller.
@@ -76,23 +65,17 @@ public class Controller implements Initializable{
     @FXML public void initialize(URL location, ResourceBundle resourceBundle){
 
         // make the buttons with the images resize by adding a listener to the GridPane size - Don't see why this works
-        controlGridPane.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                buttonUp.setPrefHeight(newValue.intValue());
-                buttonDown.setPrefHeight(newValue.intValue());
-                buttonUpdate.setStyle("-fx-font-size: " + (Double) newValue/20 + "px;");
-                buttonSetAngle.setStyle("-fx-font-size: " + (Double) newValue/25 + "px;");
-                buttonAuto.setStyle("-fx-font-size: " + (Double) newValue/20 + "px;");
-            }
+        controlGridPane.heightProperty().addListener((observable, oldValue, newValue) -> {
+            buttonUp.setPrefHeight(newValue.intValue());
+            buttonDown.setPrefHeight(newValue.intValue());
+            buttonUpdate.setStyle("-fx-font-size: " + (Double) newValue/20 + "px;");
+            buttonSetAngle.setStyle("-fx-font-size: " + (Double) newValue/25 + "px;");
+            buttonAuto.setStyle("-fx-font-size: " + (Double) newValue/20 + "px;");
         });
 
-        controlGridPane.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                buttonUp.setPrefWidth(newValue.intValue());
-                buttonDown.setPrefWidth(newValue.intValue());
-            }
+        controlGridPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            buttonUp.setPrefWidth(newValue.intValue());
+            buttonDown.setPrefWidth(newValue.intValue());
         });
 
         // listener to detect changes for the slider
@@ -163,10 +146,10 @@ public class Controller implements Initializable{
         calendar.setTime(time); // set calendar object with current time to pass to getGraphData
 
         // lower and upper contain data to draw the lines to clarify the range of the solar panels in the graph
-        lower.getData().add(new XYChart.Data<>(5,5));
-        lower.getData().add(new XYChart.Data<>(23,5));
-        upper.getData().add(new XYChart.Data<>(5,57));
-        upper.getData().add(new XYChart.Data<>(23,57));
+        lower.getData().add(new XYChart.Data<>((double)5,(double)5));
+        lower.getData().add(new XYChart.Data<>((double)23,(double)5));
+        upper.getData().add(new XYChart.Data<>((double)5,(double)57));
+        upper.getData().add(new XYChart.Data<>((double)23,(double)57));
 
         graph.setData(getGraphData(getToday()));
 
@@ -188,24 +171,24 @@ public class Controller implements Initializable{
         }
     }
 
-    @FXML protected void buttonAuto(ActionEvent event) {
+    @FXML protected void buttonAuto() {
         sendHttpRequest("panel=auto");
     }
 
-    @FXML protected void buttonUpdate(ActionEvent event) {
+    @FXML protected void buttonUpdate() {
         sendHttpRequest("update");
     }
 
-    @FXML protected void setAngle(ActionEvent event) {
+    @FXML protected void setAngle() {
         sendHttpRequest("degrees=" + angle);
     }
 
-    @FXML protected void todayGraph(ActionEvent event) {
+    @FXML protected void todayGraph() {
         graph.setData(getGraphData(getToday()));
     }
 
     /**
-     * @param day
+     * @param day for which data is returned
      * @return list that contains data for graph
      */
     private ObservableList<XYChart.Series<Double,Double>> getGraphData(Calendar day){
@@ -224,7 +207,7 @@ public class Controller implements Initializable{
         endCalendar.set(year, month, dayOfMonth,23,59,59);
         long end = endCalendar.getTimeInMillis() + offset; // set end time with correct time zone
 
-        XYChart.Series series = new XYChart.Series();
+        XYChart.Series<Double,Double> series = new XYChart.Series<>();
         ObservableList<XYChart.Series<Double,Double>> list = FXCollections.observableArrayList();
         series.setName("angles");
         series.getData().clear();
@@ -248,7 +231,7 @@ public class Controller implements Initializable{
                 double minute = Double.valueOf(minuteFormat.format(date))/60; // convert minutes to part of hour (decimal)
 
                 double time = hour + minute; // double with the time, e.g.: 12:45 = 12.75, so it's displayed neatly in the graph
-                double angle = Double.valueOf(data[i][1])/10;
+                double angle = (double) data[i][1] /10;
                 series.getData().add(new XYChart.Data<>(time, angle)); // add time and angle to the data of the graph
 
                 DateFormat timeFormat = new SimpleDateFormat("HH:mm"); // format to show time in the table
@@ -263,6 +246,7 @@ public class Controller implements Initializable{
 
         datePicker.setValue(day.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()); // set default date in textbox DatePicker
 
+        //noinspection unchecked because this is not to be fixed at call site
         list.addAll(lower, upper, series);
         return list;
     }
@@ -308,7 +292,7 @@ public class Controller implements Initializable{
                     return null;
                 }
             };
-            service.schedule(task,2,TimeUnit.SECONDS);
+            service.schedule(task,textTimeout,TimeUnit.SECONDS);
 
             executor.shutdownNow();
         }

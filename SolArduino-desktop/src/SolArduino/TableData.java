@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  * Class to create data for the table
  */
+@SuppressWarnings({"WeakerAccess", "unused"}) //weird incorrect warnings
 public class TableData {
 
     private final SimpleStringProperty time;
