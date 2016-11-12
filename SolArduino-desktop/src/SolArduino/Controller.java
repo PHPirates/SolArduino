@@ -7,6 +7,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,7 +45,7 @@ public class Controller implements Initializable{
     String timesFileString = "resources/times.csv"; // path to the times.csv file
     String anglesFileString = "resources/angles.csv"; // path to the angles.csv file
     String separator = ",";
-    String ip = "http://192.168.8.42/?"; // ip address from the Arduino
+    String ip = "http://192.168.2.42/?"; // ip address from the Arduino
 
     long[][] data; // contains the times and angles from the csv files
 
@@ -297,6 +299,17 @@ public class Controller implements Initializable{
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             responseTextView.setText("Arduino not reachable!");
             System.out.println("Request timed out.");
+            //remove text again after two seconds by executing a delayed task
+            ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    responseTextView.setText("");
+                    return null;
+                }
+            };
+            service.schedule(task,2,TimeUnit.SECONDS);
+
             executor.shutdownNow();
         }
     }
