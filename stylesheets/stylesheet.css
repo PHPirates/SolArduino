@@ -18,8 +18,8 @@ a {
 .btn {
   display: inline-block;
   margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  background-color: #00929F;
   border-color: rgba(255, 255, 255, 0.2);
   border-style: solid;
   border-width: 1px;
@@ -29,9 +29,9 @@ a {
     margin-left: 1rem; }
 
 .btn:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
   text-decoration: none;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #87C74B;
   border-color: rgba(255, 255, 255, 0.3); }
 
 @media screen and (min-width: 64em) {
@@ -54,10 +54,14 @@ a {
       margin-left: 0; } }
 
 .page-header {
-  color: #fff;
-  text-align: center;
-  background-color: #00929f;
-  background-image: radial-gradient(circle at top left, #fff600, #00929f 500px); }
+	color: #00929F;
+	text-align: center;
+	background-color: #00929f;
+	/*background-image: radial-gradient(circle at top left, #fff600, #00929f 500px);*/
+	background-image: url("solar-panels.jpg");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+  }
 
 @media screen and (min-width: 64em) {
   .page-header {
@@ -73,7 +77,21 @@ a {
 
 .project-name {
   margin-top: 0;
-  margin-bottom: 0.1rem; }
+  margin-bottom: 0.1rem;
+margin-bottom: 2rem;
+  font-weight: normal;
+display: block; 
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #ffffff;
+  background-color: #00929F;
+  border-color: rgba(255, 255, 255, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0.3rem;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s; 
+}
 
 @media screen and (min-width: 64em) {
   .project-name {
@@ -90,7 +108,17 @@ a {
 .project-tagline {
   margin-bottom: 2rem;
   font-weight: normal;
-  opacity: 0.7; }
+display: block; 
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
+  color: #ffffff;
+  background-color: #00929F;
+  border-color: rgba(255, 255, 255, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0.3rem;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;  }
 
 @media screen and (min-width: 64em) {
   .project-tagline {
