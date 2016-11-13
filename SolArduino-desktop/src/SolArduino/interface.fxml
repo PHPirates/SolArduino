@@ -25,7 +25,6 @@
             <columnConstraints>
                 <ColumnConstraints percentWidth="70"/>
                 <ColumnConstraints percentWidth="30"/>
-
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints percentHeight="20"/>
@@ -204,11 +203,32 @@
 
     <Tab text="Version">
         <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
 
-            <Text text = "Version 1.0"/>
+            <Text fx:id="currentVersion"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="0"/>
+
+            <Button fx:id="versionButton"
+                    text="Check version"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="0"
+                    onAction="#checkVersion"/>
+            <Text fx:id="lastVersion"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="1" />
+
+            <Button fx:id="versionUpdate"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="1"
+                    visible="false"
+                    onAction="#getDownloadLink"/>
         </GridPane>
     </Tab>
 </TabPane>

@@ -8,10 +8,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,6 +38,8 @@ public class Controller implements Initializable{
     @SuppressWarnings("FieldCanBeLocal")
 
     private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
+    private String currentVersionString = "Version 1.0";
+    private String lastVersionString;
 
     private long[][] data; // contains the times and angles from the csv files
 
@@ -50,11 +57,14 @@ public class Controller implements Initializable{
     @FXML private GridPane controlGridPane;
     @FXML private Slider slider;
     @FXML private Text responseTextView;
+    @FXML private Text currentVersion;
+    @FXML private Text lastVersion;
     @FXML private Button buttonUp;
     @FXML private Button buttonDown;
     @FXML private Button buttonUpdate;
     @FXML private Button buttonAuto;
     @FXML private Button buttonSetAngle;
+    @FXML private Button versionUpdate;
     @FXML private LineChart<Double,Double> graph;
     @FXML private DatePicker datePicker;
     @FXML private TableView<TableData> table;
@@ -63,6 +73,8 @@ public class Controller implements Initializable{
      * Initialization method for the controller.
      */
     @FXML public void initialize(URL location, ResourceBundle resourceBundle){
+
+        currentVersion.setText(currentVersionString);
 
         // make the buttons with the images resize by adding a listener to the GridPane size - Don't see why this works
         controlGridPane.heightProperty().addListener((observable, oldValue, newValue) -> {
@@ -187,6 +199,29 @@ public class Controller implements Initializable{
         graph.setData(getGraphData(getToday()));
     }
 
+    @FXML protected void checkVersion() {
+        System.out.println("checking version");
+        lastVersion.setText("Version...");
+        checkVersionOnline("https://raw.githubusercontent.com/PHPirates/SolArduino/desktopversion/SolArduino-desktop/version.txt");
+        if(!currentVersionString.equals(lastVersionString)) {
+            versionUpdate.setText("Update to " + lastVersionString);
+            versionUpdate.setVisible(true);
+        } else {
+            lastVersion.setText("Up to date.");
+            versionUpdate.setVisible(false);
+        }
+    }
+
+    @FXML protected void getDownloadLink() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/PHPirates/SolArduino/raw/master/SolArduino-desktop/out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar"));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (URISyntaxException e1) {
+            e1.printStackTrace();
+        }
+    }
+
     /**
      * @param day for which data is returned
      * @return list that contains data for graph
@@ -259,6 +294,32 @@ public class Controller implements Initializable{
         Date time = new Date(System.currentTimeMillis()); // date with current time
         calendar.setTime(time); // set calendar object with current time to pass to getGraphData
         return calendar;
+    }
+
+    private void checkVersionOnline(String url) {
+        //start up a single thread
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            executor.submit(() -> {
+                String line = "";
+                System.out.println("sending request to "+url);
+                try {
+                    InputStream response = new URL(url).openStream();
+                    try (Scanner scanner = new Scanner(response)) {
+                        line = scanner.nextLine();
+                        lastVersion.setText("Last version: "+ line);
+                        lastVersionString = line;
+                        System.out.println(line);
+                    }
+                } catch (IOException e) {
+                    //the thread will finally exit after executor.shutdownNow() has tried to stop it
+                }
+                return line;
+            }).get(threadTimeout,TimeUnit.SECONDS); //timeout of x seconds
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            System.out.println("Request timed out.");
+            executor.shutdownNow();
+        }
     }
 
     private void sendHttpRequest(String urlparam) {
