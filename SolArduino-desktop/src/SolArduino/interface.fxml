@@ -201,4 +201,8 @@
             </TableView>
         </GridPane>
     </Tab>
+
+    <Tab text="Version">
+        <Text text = "Version 1.0"/>
+    </Tab>
 </TabPane>
