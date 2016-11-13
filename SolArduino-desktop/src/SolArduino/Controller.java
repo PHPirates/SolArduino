@@ -38,7 +38,7 @@ public class Controller implements Initializable{
     @SuppressWarnings("FieldCanBeLocal")
 
     private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
-    private String currentVersionString = "Version 1.0"; // current version of the desktop app
+    private String currentVersionString = "Version 1.1"; // current version of the desktop app
     private String lastVersionString;
     private String checkVersionLink = "https://raw.githubusercontent.com/PHPirates/SolArduino/" +
             "master/SolArduino-desktop/version.txt";
