@@ -23,6 +23,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.winsontan520.wversionmanager.library.WVersionManager;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -85,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        WVersionManager versionManager = new WVersionManager(this);
+        versionManager.setVersionContentUrl("https://github.com/PHPirates/SolArduino/raw/master/solappduino/version.json");
+        versionManager.setUpdateUrl("https://github.com/PHPirates/SolArduino/raw/master/solappduino/solarduino/app/app-release.apk");
+        versionManager.checkVersion();
 
 //        textView = (TextView) findViewById(R.id.textView);
         currentAngle = (TextView) findViewById(R.id.currentAngle);
