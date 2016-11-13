@@ -1,4 +1,4 @@
 {
-"version_code": 2,
-"content": "Version 1.1 <p>New features:</p><li>Moved ping to menu item</li><li>Updates angle when put on auto</li>"
+"version_code": 3,
+"content": "Version 1.2 <p>New features:</p><li>Added update check on startup</li><li>Moved ping to menu item</li><li>Updates angle when put on auto</li>"
 }

@@ -24,8 +24,8 @@ android {
         applicationId "com.abbyberkers.solarduino"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
     }
     repositories {
         maven { url 'http://repo1.maven.org/maven2' }
