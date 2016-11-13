@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         setContentView(R.layout.activity_main);
 
         WVersionManager versionManager = new WVersionManager(this);
-        versionManager.setVersionContentUrl("");
+        versionManager.setVersionContentUrl("https://github.com/PHPirates/SolArduino/raw/master/solappduino/version.json");
+        versionManager.setUpdateUrl("https://github.com/PHPirates/SolArduino/raw/master/solappduino/solarduino/app/app-release.apk");
         versionManager.checkVersion();
 
 //        textView = (TextView) findViewById(R.id.textView);
