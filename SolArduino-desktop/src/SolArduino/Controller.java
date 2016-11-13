@@ -41,7 +41,7 @@ public class Controller implements Initializable{
     private String currentVersionString = "Version 1.0"; // current version of the desktop app
     private String lastVersionString;
     private String checkVersionLink = "https://raw.githubusercontent.com/PHPirates/SolArduino/" +
-            "desktopversion/SolArduino-desktop/version.txt"; // TODO change desktopversion in master once merged
+            "master/SolArduino-desktop/version.txt";
     private String jarLink = "https://github.com/PHPirates/SolArduino/raw/master/SolArduino-desktop/" +
             "out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar";
 
