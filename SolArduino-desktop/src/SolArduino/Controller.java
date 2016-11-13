@@ -38,8 +38,13 @@ public class Controller implements Initializable{
     @SuppressWarnings("FieldCanBeLocal")
 
     private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
-    private String currentVersionString = "Version 1.0";
+    private String currentVersionString = "Version 1.0"; // current version of the desktop app
     private String lastVersionString;
+    private String checkVersionLink = "https://raw.githubusercontent.com/PHPirates/SolArduino/" +
+            "desktopversion/SolArduino-desktop/version.txt"; // TODO change desktopversion in master once merged
+    private String jarLink = "https://github.com/PHPirates/SolArduino/raw/master/SolArduino-desktop/" +
+            "out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar";
+
 
     private long[][] data; // contains the times and angles from the csv files
 
@@ -201,12 +206,11 @@ public class Controller implements Initializable{
 
     @FXML protected void checkVersion() {
         System.out.println("checking version");
-        lastVersion.setText("Version...");
-        checkVersionOnline("https://raw.githubusercontent.com/PHPirates/SolArduino/desktopversion/SolArduino-desktop/version.txt");
-        if(!currentVersionString.equals(lastVersionString)) {
+        checkVersionOnline(checkVersionLink); // check what the last version is from the txt file online
+        if(!currentVersionString.equals(lastVersionString)) { // if not up to date, show button with download link
             versionUpdate.setText("Update to " + lastVersionString);
             versionUpdate.setVisible(true);
-        } else {
+        } else { // if up to date show text to say so (and hide update button)
             lastVersion.setText("Up to date.");
             versionUpdate.setVisible(false);
         }
@@ -214,7 +218,7 @@ public class Controller implements Initializable{
 
     @FXML protected void getDownloadLink() {
         try {
-            Desktop.getDesktop().browse(new URI("https://github.com/PHPirates/SolArduino/raw/master/SolArduino-desktop/out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar"));
+            Desktop.getDesktop().browse(new URI(jarLink)); // open link with the last jar file in a browser
         } catch (IOException e1) {
             e1.printStackTrace();
         } catch (URISyntaxException e1) {
