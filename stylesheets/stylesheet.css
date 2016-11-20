@@ -19,7 +19,8 @@ a {
   display: inline-block;
   margin-bottom: 1rem;
   color: #ffffff;
-  background-color: #00929F;
+  /* font-weight: bold; */
+  background-color: rgba(0,149,159, 0.8);
   border-color: rgba(255, 255, 255, 0.2);
   border-style: solid;
   border-width: 1px;
@@ -31,7 +32,7 @@ a {
 .btn:hover {
   color: #ffffff;
   text-decoration: none;
-  background-color: #87C74B;
+  background-color: #00929F;
   border-color: rgba(255, 255, 255, 0.3); }
 
 @media screen and (min-width: 64em) {
@@ -79,36 +80,37 @@ a {
   margin-top: 0;
   margin-bottom: 0.1rem;
 margin-bottom: 2rem;
-  font-weight: normal;
-display: block; 
+  color: #ffffff;
+/* display: block; 
   max-width: 300px;
   margin-left: auto;
   margin-right: auto;
-  color: #ffffff;
+  
   background-color: #00929F;
   border-color: rgba(255, 255, 255, 0.2);
   border-style: solid;
   border-width: 1px;
   border-radius: 0.3rem;
-  transition: color 0.2s, background-color 0.2s, border-color 0.2s; 
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;  */
 }
 
 @media screen and (min-width: 64em) {
   .project-name {
-    font-size: 3.25rem; } }
+    font-size: 4rem; } }
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
   .project-name {
-    font-size: 2.25rem; } }
+    font-size: 3rem; } }
 
 @media screen and (max-width: 42em) {
   .project-name {
-    font-size: 1.75rem; } }
+    font-size: 2rem; } }
 
 .project-tagline {
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   font-weight: normal;
-display: block; 
+  color: #ffffff;
+/* display: block; 
   margin-left: auto;
   margin-right: auto;
   max-width: 500px;
@@ -118,19 +120,21 @@ display: block;
   border-style: solid;
   border-width: 1px;
   border-radius: 0.3rem;
-  transition: color 0.2s, background-color 0.2s, border-color 0.2s;  }
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;  */ 
+  }
 
 @media screen and (min-width: 64em) {
   .project-tagline {
-    font-size: 1.25rem; } }
+    font-size: 2rem; 
+	margin-bottom: 5.5rem;} }
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
   .project-tagline {
-    font-size: 1.15rem; } }
+    font-size: 1.5rem; } }
 
 @media screen and (max-width: 42em) {
   .project-tagline {
-    font-size: 1rem; } }
+    font-size: 1.1rem; } }
 
 .main-content :first-child {
   margin-top: 0; }
