@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -34,6 +34,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def newName = output.outputFile.name
+                    newName = newName.replace("app-", "SolArduino-")
+                    newName = newName.replace("-release", "-release" + variant.versionName)
+                    //noinspection GroovyAssignabilityCheck
+                    output.outputFile = new File(output.outputFile.parent, newName)
+                }
+            }
         }
     }
 }
