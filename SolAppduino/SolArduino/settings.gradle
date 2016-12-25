@@ -1,1 +1,1 @@
-include ':app', ':wversionmanager-1.3'
+include ':app'
