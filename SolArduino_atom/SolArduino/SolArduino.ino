@@ -19,10 +19,11 @@ const byte POTMETERPIN = A7;
 const byte SAMPLE_RATE = 500; //amount of readings to take the average of when reading the potmeter
 
 //experimentally determined values of potmeter and angle ends
-const int POTMETER_LOWEND = 652;
-const int POTMETER_HIGHEND = 1007;
-const int DEGREES_HIGHEND = 570; //angle * 10 for more precision
-const int DEGREES_LOWEND = 50;
+const int SOFT_BOUND = 50; // about 50/( (1007-652)/(570-50) ) = 7.3 degrees safety
+const int POTMETER_LOWEND = 652 + SOFT_BOUND;
+const int POTMETER_HIGHEND = 1007 - SOFT_BOUND;
+const int DEGREES_HIGHEND = 570 - 73; //angle * 10 for more precision
+const int DEGREES_LOWEND = 50 + 73;
 
 //ethernet variables, these are hard coded for a static setup
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
