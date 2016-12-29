@@ -312,6 +312,13 @@ int expectedVoltage = POTMETER_LOWEND +
 			
 			On every action sent, the Arduino will send back an http response starting with \verb|HTTP/1.0 200 OK|, and including something like \verb|Panels going up.|.
 			
+		\subsection{Safety measures}
+			In order to avoid relying on the hardware end stops, a few safety measures were introduced:
+			\begin{itemize}
+				\item A soft bound was introduced for the potmeter constants and degrees constants. We hope this catches varying potmeter bounds: sometimes the value of the low end may be a few points lower and then the code would try endlessly to get the solar panels below their hardware end stop.
+				\item In the \verb|solarPanelDown| and \verb|solarPanelUp| methods, as close to the solar panel control as possible, we put an extra check if the reading of the analog pin does not go out of bounds. These bounds therefore include the soft bounds. This check intentionally does not rely on \verb|readPotMeter()| (which samples readings for better accuracy), which reduces accuracy near the soft end stops but increases safety. Accuracy inbetween should not be influenced.
+			\end{itemize}
+		
 	\section{Android App}
 		\subsection{User Manual}
 			To move the solar panels up (or down), press the up (or down) button and hold it until the desired position/angle is reached. The current degree on the top right and the picture update while the button is held, so you know when the panels are at the desired position.
