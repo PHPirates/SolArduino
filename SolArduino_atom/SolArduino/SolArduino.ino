@@ -59,6 +59,12 @@ const char http_OK[] PROGMEM =
 boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
 String EmergencyState = "";
+bool panelsStopped = true; //needed to control timer logic
+
+unsigned long upTimeout = millis(); //movoing timeout timer
+unsigned long downTimeout = millis(); //only for up and down
+const int movingTimeout = 2000; // time in milliseconds for the panels to stop moving after having received no command
+
 
 void setup () {
   //the serial shouldn't be used in final code, but this is always in development...
@@ -75,6 +81,7 @@ void loop () {
   //especially if the response is not received yet, keep receiving the response
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
+  checkMovingTimeout();
   if (responseReceived && EmergencyState == "") { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
       requestNewTable();

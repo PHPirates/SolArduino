@@ -47,6 +47,24 @@ void solarPanelAuto() {
   }
 }
 
+// timeout is set to a value in the future on user up/down requests
+void checkMovingTimeout() {
+  if (millis() > upTimeout and !panelsStopped) {
+    solarPanelStop();
+  }
+  if (millis() > downTimeout and !panelsStopped) {
+    solarPanelStop();
+  }
+}
+
+void resetUpTimeout() {
+  upTimeout = millis() + movingTimeout;
+}
+
+void resetDownTimeout() {
+  downTimeout = millis() + movingTimeout;
+}
+
 int getCurrentAngle() {
   int potMeterValue = readPotMeter();
   Serial.print(F("Potmeter: "));
@@ -73,6 +91,8 @@ void solarPanelDown() {
   //near the soft end stops but increases safety. Accuracy inbetween should not
   // be influenced
   if (analogRead(POTMETERPIN) > POTMETER_LOWEND) {
+    panelsStopped = false;
+    Serial.println(F("panels moving down")); //TODO DEBUG
     digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
     digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
     digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
@@ -81,6 +101,8 @@ void solarPanelDown() {
 
 void solarPanelUp() {
   if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) {
+    panelsStopped = false;
+    Serial.println(F("panels moving up")); //TODO DEBUG
     digitalWrite(POWER_LOW, LOW);
     digitalWrite(POWER_HIGH, HIGH);
     digitalWrite(DIRECTION_PIN, LOW);
@@ -88,6 +110,8 @@ void solarPanelUp() {
 }
 
 void solarPanelStop() {
+  panelsStopped = true;
+  Serial.println(F("panels stopped")); //TODO DEBUG
   digitalWrite(POWER_LOW, LOW);
   digitalWrite(POWER_HIGH, LOW);
   digitalWrite(DIRECTION_PIN, LOW);

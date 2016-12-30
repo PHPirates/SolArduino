@@ -20,12 +20,14 @@ void receiveHttpRequests() {
              homePage();
          }
          else if (strncmp("?panel=up ", data, 10) == 0) {
-           solarPanelUp();
+             solarPanelUp();
+             resetUpTimeout(); // up works with timeout
              acknowledge("Panels going up."); //send acknowledge http response
              autoMode = false;
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
-           solarPanelDown();
+             solarPanelDown();
+             resetDownTimeout(); // down works with timeout
              acknowledge("Panels going down.");
              autoMode = false;
          }
@@ -50,6 +52,7 @@ void receiveHttpRequests() {
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
             degrees = receiveDegrees(data);
+            // solar panels are set on this degrees below: after sending a response
          }
          else if (strncmp("?update", data, 7) == 0) {
            askedUpdate = receiveUpdate();
