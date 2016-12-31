@@ -37,6 +37,10 @@ public class Controller implements Initializable{
     private String separator = ",";
     @SuppressWarnings("FieldCanBeLocal")
 
+    private Timer timerUp; // access is global to cancel it on button release
+    private Timer timerDown; // access is global to cancel it on button release
+
+    private int timeout = 1000; // timeout for sending up/down requests
     private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
     private String currentVersionString = "Version 1.1"; // current version of the desktop app
     private String lastVersionString;
@@ -61,6 +65,7 @@ public class Controller implements Initializable{
 
     @FXML private GridPane controlGridPane;
     @FXML private Slider slider;
+    @FXML private Text angleTextView;
     @FXML private Text responseTextView;
     @FXML private Text currentVersion;
     @FXML private Text lastVersion;
@@ -175,16 +180,37 @@ public class Controller implements Initializable{
     @FXML protected void buttonUp(MouseEvent event) {
         if(event.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
             sendHttpRequest("panel=up");
+            timerUp = new Timer();
+            TimerTask sendUpTask = new TimerTask() {
+                @Override
+                public void run() {
+                    sendHttpRequest("panel=up");
+                    sendUpdateRequest();
+                }
+            };
+            timerUp.schedule(sendUpTask,timeout,timeout);
+
         } else { // mouse released
             sendHttpRequest("panel=stop");
+            timerUp.cancel();
         }
     }
 
     @FXML protected void buttonDown(MouseEvent event) {
         if(event.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
             sendHttpRequest("panel=down");
+            timerDown = new Timer();
+            TimerTask sendDownTask = new TimerTask() {
+                @Override
+                public void run() {
+                    sendHttpRequest("panel=down");
+                    sendUpdateRequest();
+                }
+            };
+            timerDown.schedule(sendDownTask, timeout, timeout);
         } else { // mouse released
             sendHttpRequest("panel=stop");
+            timerDown.cancel();
         }
     }
 
@@ -193,7 +219,7 @@ public class Controller implements Initializable{
     }
 
     @FXML protected void buttonUpdate() {
-        sendHttpRequest("update");
+        sendUpdateRequest();
     }
 
     @FXML protected void setAngle() {
@@ -326,7 +352,16 @@ public class Controller implements Initializable{
         }
     }
 
+    //normal http request and update request put response in a different textview
     private void sendHttpRequest(String urlparam) {
+        sendHttpRequest(urlparam,responseTextView);
+    }
+
+    private void sendUpdateRequest() {
+        sendHttpRequest("update",angleTextView);
+    }
+
+    private void sendHttpRequest(String urlparam, Text responseTextView) {
         final String url = ip+urlparam;
         //start up a single thread
         ExecutorService executor = Executors.newSingleThreadExecutor();

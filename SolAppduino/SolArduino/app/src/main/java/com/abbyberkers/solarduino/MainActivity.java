@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     Toast unreachableToast;
     Toast updateToast;
     Toast updatedToast;
+    Toast responseToast;
 
-    int delay = 3365;        // delay for the Timer/TimerTask which asks for an update every (delay) millisecs
-                            // 175 secs for 52 degrees -> 3.37 secs per degree, asking every fifth of a degree
+    int delay = 1000;        // arduino timeout is 2000 millis, so ask every second
     int handlerTimeout = 2000; //timeout for killing a request or ping
 
     boolean reachable;      // boolean to know whether the Arduino is reachable or not
@@ -207,12 +207,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         TimerTask timerTask = new TimerTask() {
                             @Override
                             public void run() {
+                                sendDirectionRequest("up"); // also send up before arduino times out
                                 sendUpdateRequest();
                             }
                         };
 
-                        // wait 1500ms with first task, then delay interval
-                        upTimer.schedule(timerTask, 1500, delay);
+                        // wait delay with first task, then delay interval
+                        upTimer.schedule(timerTask, delay, delay);
                         view.performClick();
                         break;
                     case MotionEvent.ACTION_UP:
@@ -240,11 +241,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         TimerTask timerTask = new TimerTask() {
                             @Override
                             public void run() {
+                                sendDirectionRequest("down"); //arduino expects request every [delay]ms
                                 sendUpdateRequest();
                             }
                         };
-                        // wait 1500ms with first task, then delay interval
-                        downTimer.schedule(timerTask, 1500, delay);
+                        // wait delay with first task, then delay interval
+                        downTimer.schedule(timerTask, delay, delay);
                         view.performClick();
                         break;
 
@@ -403,6 +405,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void run() {
                 if (dataSender.getStatus() == AsyncTask.Status.RUNNING) {
                     dataSender.cancel(true);
+                    if (unreachableToast != null) unreachableToast.cancel();
                     unreachableToast = Toast.makeText(getBaseContext(),"The Arduino could not be reached, request terminated.",Toast.LENGTH_SHORT);
                     unreachableToast.show();
                     lastResult = "Arduino not reachable"; //update http request return string
@@ -545,12 +548,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 // set seekbar at current angle, so update requests aren't sent anymore.
                 seekbar.setProgress(getCurrentDegree());
             } else if (result.contains("Panel")) {
-                Toast.makeText(getBaseContext(), result.trim(), Toast.LENGTH_SHORT).show();
+                if (responseToast != null) responseToast.cancel(); //cancel any previous panel movement toast
+                responseToast = Toast.makeText(getBaseContext(), result.trim(), Toast.LENGTH_SHORT);
+                responseToast.show();
             } else {
-                String message = urlString;
-                if (message.contains("panel")) {
+                String urlString = MainActivity.this.urlString;
+                if (urlString.contains("panel")) {
                     // Toast that the panels are going up or down so the user knows the Arduino
                     // received the request and knows what to do
+                    //todo if this is just panels up or down, why are we converting it to an integer?
                     String string;
                     if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                         string = Html.fromHtml(result,Html.FROM_HTML_MODE_LEGACY)+ "\u00b0";
@@ -559,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         string = Html.fromHtml(result) + "\u00b0";
                     }
                     Toast.makeText(getBaseContext(), string, Toast.LENGTH_SHORT).show();
-                } else if (message.contains("update")) {
+                } else if (urlString.contains("update")) {
                     String[] updateString = result.split(" ");
                     if (updateString[0].trim().length() == 0) {
                         Toast.makeText(getBaseContext(), "Arduino did not return an angle", Toast.LENGTH_SHORT).show();
@@ -612,9 +618,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             autoBox.toggle();
                         }
                     }
-                } else if (message.contains("Page")) {
+                } else if (urlString.contains("Page")) {
                     Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
-                } else if (message.contains("degrees")) {
+                } else if (urlString.contains("degrees")) {
                     //remove trailing newline
                     if (result.contains("\n")) {
                         //substring(0,3) means chars at index 0,1,2

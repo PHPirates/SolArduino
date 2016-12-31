@@ -103,6 +103,12 @@
                 />
 
             <Text
+                fx:id="angleTextView"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="2"
+                />
+
+            <Text
                 fx:id="responseTextView"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="3"
