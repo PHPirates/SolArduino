@@ -47,6 +47,38 @@ void solarPanelAuto() {
   }
 }
 
+void enterStormMode() {
+    if (now() < stormTimes[0]){
+      // no time for storm mode yet
+      Serial.println("Before storm.");
+    } else if (now() >= stormTimes[0] && now() < stormTimes[1]){
+      Serial.println("During storm.");
+      // storm mode active
+      setSolarPanel(DEGREES_LOWEND);
+
+      if(autoMode){ // check if panels were in autoMode before entering storm mode so they can go back to auto afterwards
+        wasAuto = true;
+        autoMode = false;
+      }
+
+      if(angleBeforeStorm == -1){
+        angleBeforeStorm = getCurrentAngle();
+      }
+    } else if (now() > stormTimes[1]){
+      Serial.println("After storm.");
+      // deactivate storm mode
+      stormTimes[0] = 0;
+      stormTimes[1] = 0;
+
+      if(wasAuto) {
+        autoMode = true; // solarPanelAuto() is called in loop()
+      } else {
+        setSolarPanel(angleBeforeStorm);
+        angleBeforeStorm = -1;
+      }
+    }
+}
+
 int getCurrentAngle() {
   int potMeterValue = readPotMeter();
   Serial.print(F("Potmeter: "));

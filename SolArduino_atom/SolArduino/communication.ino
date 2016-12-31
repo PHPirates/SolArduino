@@ -16,7 +16,7 @@ void receiveHttpRequests() {
          data += 5;
          //start parsing data
          if (data[0] == ' ') {
-             // No parameters given (http://192.168.2.10), return home page
+             // No parameters given (http://192.168.8.42), return home page
              homePage();
          }
          else if (strncmp("?panel=up ", data, 10) == 0) {
@@ -50,6 +50,10 @@ void receiveHttpRequests() {
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
             degrees = receiveDegrees(data);
+         }
+         else if (strncmp("?storm", data, 6) == 0){
+            solarPanelStorm(data);
+            acknowledge("Storm mode planned.");
          }
          else if (strncmp("?update", data, 7) == 0) {
            askedUpdate = receiveUpdate();
@@ -102,6 +106,28 @@ bool receiveUpdate() {
   }
   acknowledge(update.c_str()); //convert to string, then to const char
   return true;
+}
+
+// reads start and end time from url and stores them in stormTimes[]
+void solarPanelStorm(char *data) {
+    String startTime;
+    for(int i = 12; i < 22; i++) {
+      startTime += (char)data[i];
+    }
+
+    String endTime;
+    for(int i = 32; i < 42; i++){
+      endTime += (char)data[i];
+    }
+
+    Serial.print("start time: ");
+    Serial.println(startTime);
+
+    Serial.print("end time: ");
+    Serial.println(endTime);
+
+    stormTimes[0] = atol(startTime.c_str());
+    stormTimes[1] = atol(endTime.c_str());
 }
 
 void parseString(char *from) {

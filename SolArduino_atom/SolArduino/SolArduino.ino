@@ -58,6 +58,10 @@ const char http_OK[] PROGMEM =
 boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
 String EmergencyState = "";
+// variables needed for storm mode
+long stormTimes[2] = {0,0}; // start and end time, {0,0} when no storm mode planned
+boolean wasAuto = false; // to remember if the panels were on auto mode before entering storm mode
+int angleBeforeStorm = -1; // to remember angle before storm, remains -1 if panels were on auto
 
 void setup () {
   //the serial shouldn't be used in final code, but this is always in development...
@@ -71,6 +75,10 @@ void setup () {
 }
 
 void loop () {
+  if(stormTimes[0] != 0){ // check if storm mode is planned
+    enterStormMode();
+  }
+
   //especially if the response is not received yet, keep receiving the response
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
