@@ -23,16 +23,19 @@ void receiveHttpRequests() {
            solarPanelUp();
              acknowledge("Panels going up."); //send acknowledge http response
              autoMode = false;
+             stormModeOff();
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
            solarPanelDown();
              acknowledge("Panels going down.");
              autoMode = false;
+             stormModeOff();
          }
          else if (strncmp("?panel=stop ", data, 12) == 0) {
            solarPanelStop();
              acknowledge("Panels stopped/not moving.");
              autoMode = false;
+             stormModeOff();
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
              Serial.println(F("Auto mode switched on."));
@@ -43,15 +46,20 @@ void receiveHttpRequests() {
              response += angle;
              response += "_degrees.";
              acknowledge(response.c_str());
+             stormModeOff();
          }
          else if (strncmp("?panel=manual ", data, 12) == 0){
              acknowledge("Auto mode switched off.");
              autoMode = false;
+             stormModeOff();
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
             degrees = receiveDegrees(data);
+            stormModeOff();
          }
          else if (strncmp("?storm", data, 6) == 0){
+           Serial.print("now: ");
+           Serial.println(now());
             solarPanelStorm(data);
             acknowledge("Storm mode planned.");
          }

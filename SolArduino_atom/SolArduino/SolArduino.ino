@@ -62,6 +62,7 @@ String EmergencyState = "";
 long stormTimes[2] = {0,0}; // start and end time, {0,0} when no storm mode planned
 boolean wasAuto = false; // to remember if the panels were on auto mode before entering storm mode
 int angleBeforeStorm = -1; // to remember angle before storm, remains -1 if panels were on auto
+bool printed = false;
 
 void setup () {
   //the serial shouldn't be used in final code, but this is always in development...
@@ -75,6 +76,8 @@ void setup () {
 }
 
 void loop () {
+  // Serial.print("stormTimes[0] = ");
+  // Serial.println(stormTimes[0]);
   if(stormTimes[0] != 0){ // check if storm mode is planned
     enterStormMode();
   }

@@ -50,11 +50,15 @@ void solarPanelAuto() {
 void enterStormMode() {
     if (now() < stormTimes[0]){
       // no time for storm mode yet
-      Serial.println("Before storm.");
+      // Serial.println("Before storm.");
     } else if (now() >= stormTimes[0] && now() < stormTimes[1]){
-      Serial.println("During storm.");
+      if(!printed){
+        Serial.println("During storm.");
+        printed = true;
+      }
       // storm mode active
-      setSolarPanel(DEGREES_LOWEND);
+      // TODO UNCOMMENT
+      // setSolarPanel(DEGREES_LOWEND);
 
       if(autoMode){ // check if panels were in autoMode before entering storm mode so they can go back to auto afterwards
         wasAuto = true;
@@ -67,16 +71,21 @@ void enterStormMode() {
     } else if (now() > stormTimes[1]){
       Serial.println("After storm.");
       // deactivate storm mode
-      stormTimes[0] = 0;
-      stormTimes[1] = 0;
+      stormModeOff();
 
       if(wasAuto) {
         autoMode = true; // solarPanelAuto() is called in loop()
       } else {
-        setSolarPanel(angleBeforeStorm);
+        // TODO UNCOMMENT
+        // setSolarPanel(angleBeforeStorm);
         angleBeforeStorm = -1;
       }
     }
+}
+
+void stormModeOff() {
+  stormTimes[0] = 0;
+  stormTimes[1] = 0;
 }
 
 int getCurrentAngle() {
@@ -101,7 +110,7 @@ int readPotMeter() {
 //solar panel movements
 void solarPanelDown() {
   digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
-  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
+  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is b on
   digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
 }
 

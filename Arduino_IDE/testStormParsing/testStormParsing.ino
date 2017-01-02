@@ -8,8 +8,8 @@
 
 // ADDED
 long stormTimes[2] = {0,0};
- boolean wasAuto = false;
- int angleBeforeStorm = -1;
+boolean wasAuto = false;
+int angleBeforeStorm = -1;
 
 void setup() {
   // put your setup code here, to run once:
@@ -24,7 +24,7 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   // ADDED
-  if(stormTimes[0] != 0){ // check if stormmode is planned
+  if(stormTimes[0] != 0){ // check if storm mode is planned
     Serial.println("storm mode planned");
     enterStormMode();
   } 
@@ -75,8 +75,8 @@ void receiveHttpRequests() {
   
 }
 
-void solarPanelStorm(char *data) { // ADDED
-    // reading start and end time from url
+// reads start and end time from url and stores them in stormTimes[]
+void solarPanelStorm(char *data) {
     String startTime;
     for(int i = 12; i < 22; i++) {
       startTime += (char)data[i];
@@ -97,7 +97,7 @@ void solarPanelStorm(char *data) { // ADDED
     stormTimes[1] = atol(endTime.c_str());
 }
 
-void enterStormMode() { // ADDED
+void enterStormMode() {
     if (now < stormTimes[0]){
       // no time for storm mode yet
       Serial.println("Before storm.");
