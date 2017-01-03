@@ -49,20 +49,19 @@ void solarPanelAuto() {
 
 // timeout is set to a value in the future on user up/down requests
 void checkMovingTimeout() {
-  if (millis() > upTimeout and !panelsStopped) {
-    solarPanelStop();
-  }
-  if (millis() > downTimeout and !panelsStopped) {
+  if (millis() > moveTimeout and !panelsStopped) {
+    Serial.print(F("timed out at"));
+    Serial.println(millis());
     solarPanelStop();
   }
 }
 
-void resetUpTimeout() {
-  upTimeout = millis() + movingTimeout;
-}
-
-void resetDownTimeout() {
-  downTimeout = millis() + movingTimeout;
+void resetMoveTimeout() {
+  moveTimeout = millis() + MOVE_TIMEOUT_DELTA;
+  Serial.print(F("set moveTimeout at "));
+  Serial.print(millis());
+  Serial.print(F(" for "));
+  Serial.println(moveTimeout);
 }
 
 int getCurrentAngle() {
@@ -91,11 +90,14 @@ void solarPanelDown() {
   //near the soft end stops but increases safety. Accuracy inbetween should not
   // be influenced
   if (analogRead(POTMETERPIN) > POTMETER_LOWEND) {
+    EmergencyState = "";
     panelsStopped = false;
     Serial.println(F("panels moving down")); //TODO DEBUG
     digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
     digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
     digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
+  } else {
+    EmergencyState = "panels below lower bound!";
   }
 }
 

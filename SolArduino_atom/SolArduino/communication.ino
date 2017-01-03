@@ -21,13 +21,13 @@ void receiveHttpRequests() {
          }
          else if (strncmp("?panel=up ", data, 10) == 0) {
              solarPanelUp();
-             resetUpTimeout(); // up works with timeout
+             resetMoveTimeout(); // up works with timeout
              acknowledge("Panels going up."); //send acknowledge http response
              autoMode = false;
          }
          else if (strncmp("?panel=down ", data, 12) == 0) {
              solarPanelDown();
-             resetDownTimeout(); // down works with timeout
+             resetMoveTimeout(); // down works with timeout
              acknowledge("Panels going down.");
              autoMode = false;
          }
@@ -62,7 +62,7 @@ void receiveHttpRequests() {
          }
      }
    ether.httpServerReply(bfill.position()); //send the reply, if there was one
-   delay(42); // no delay here causes a bad request for requesting angles from the NAS
+   delay(42); // no delay here causes a 400 bad request for requesting angles from the NAS
    if(autoMode && !askedUpdate) { //then it is switched on, when not just asking for update
       solarPanelAuto();
     }
@@ -95,7 +95,6 @@ int receiveDegrees(char *data) {
 
 bool receiveUpdate() {
   //update requested, sent back current angle
-  Serial.println(F("Update requested."));
   int angle = (getCurrentAngle()+5)/10; //round to int
   String update = String(angle);
   if(autoMode) {
@@ -203,7 +202,7 @@ static void my_callback (byte status, word off, word len) {
   if (!responseReceived) { //sometimes there come more responses, but we only need one
     Ethernet::buffer[off+TABLE_SIZE] = 0;
     char* result = (char*) Ethernet::buffer + off;
-    delay(42); // Make sure the request is sent and received properly, no delay results in a 400
+    delay(42); // Make sure the request is sent and received properly, no delay results in a 400 bad request
     Serial.println(result);
     parseString(result); // fill the arrays with the data
     responseReceived = true;

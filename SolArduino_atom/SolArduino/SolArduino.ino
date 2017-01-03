@@ -61,9 +61,8 @@ boolean responseReceived = true; // a flag for knowing whether the response from
 String EmergencyState = "";
 bool panelsStopped = true; //needed to control timer logic
 
-unsigned long upTimeout = millis(); //movoing timeout timer
-unsigned long downTimeout = millis(); //only for up and down
-const int movingTimeout = 2000; // time in milliseconds for the panels to stop moving after having received no command
+unsigned long moveTimeout = millis(); //movoing timeout timer
+const int MOVE_TIMEOUT_DELTA = 2000; // time in milliseconds for the panels to stop moving after having received no command
 
 
 void setup () {
@@ -74,7 +73,7 @@ void setup () {
   setupEthernet();
   setupNTP();
   setupNAS();
-  setupPanels();
+  // setupPanels(); //TODO
 }
 
 void loop () {
@@ -84,7 +83,7 @@ void loop () {
   checkMovingTimeout();
   if (responseReceived && EmergencyState == "") { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
-      requestNewTable();
+      // requestNewTable(); //TODO
       if (autoMode) {
         solarPanelAuto();
       }
