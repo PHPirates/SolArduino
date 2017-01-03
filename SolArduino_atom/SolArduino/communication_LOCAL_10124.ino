@@ -52,7 +52,6 @@ void receiveHttpRequests() {
          }
          else if (strncmp("?degrees=", data, 9) == 0) {
             degrees = receiveDegrees(data);
-            autoMode = false;
             // solar panels are set on this degrees below: after sending a response
          }
          else if (strncmp("?update", data, 7) == 0) {
