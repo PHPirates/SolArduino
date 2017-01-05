@@ -6,7 +6,7 @@
     android:paddingBottom="0dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="4dp"
+    android:paddingTop="0dp"
     tools:context="com.abbyberkers.solarduino.MainActivity">
 
     <RelativeLayout
@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_gravity="center_vertical"
-                        android:textSize="80sp"
+                        android:textSize="60sp"
                         android:text="@string/initialdegrees"
                         android:textColor="@drawable/text_selector"
                         android:onClick="sendUpdateRequest"/>
@@ -76,16 +76,68 @@
                         android:id="@+id/autoBox"
                         android:layout_width="wrap_content"
                         android:text="@string/auto"/>
+                    <CheckBox
+                        android:id="@+id/stormBox"
+                        android:layout_width="wrap_content"
+                        android:text="STORM"/>
+                </TableRow>
 
+                <TableRow
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp">
+                    <TextView
+                        android:id="@+id/fromTV"
+                        android:text="From"
+                        android:paddingLeft="10dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:id="@+id/stormStartButton"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:textSize="12sp"
+                        android:layout_height="40dp"
+                        android:text="start time"
+                        android:onClick="showStormStart"/>
+                </TableRow>
+                <TableRow
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp">
+                    <TextView
+                        android:id="@+id/toTV"
+                        android:text="To"
+                        android:paddingLeft="10dp"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"/>
+                    <Button
+                        android:id="@+id/stormEndButton"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:textSize="12sp"
+                        android:layout_height="40dp"
+                        android:text="end time"
+                        android:onClick="showStormEnd"/>
                 </TableRow>
             </TableLayout>
         </TableRow>
+
+        <Button
+        android:id="@+id/setAngle"
+        android:layout_width="match_parent"
+        android:textSize="12sp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/frame"
+        android:text="@string/setanglebutton"
+        android:onClick="unCheck"/>
+
         <FrameLayout
             android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:orientation="horizontal"
             android:layout_below="@+id/table"
-            android:orientation="horizontal">
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
             <SeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="250dp"
@@ -103,14 +155,6 @@
                 android:src="@drawable/panel"
                 android:contentDescription="@string/imagepaneldescription" />
         </FrameLayout>
-
-    <Button
-        android:id="@+id/setAngle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/frame"
-        android:text="@string/setanglebutton"
-        android:onClick="unCheck"/>
 
     </RelativeLayout>
 </ScrollView>

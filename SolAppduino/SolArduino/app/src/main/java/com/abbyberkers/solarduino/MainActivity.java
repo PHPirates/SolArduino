@@ -4,9 +4,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +34,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -74,6 +82,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     Button setAngle;        // button to set angle of solar panels
 
     CheckBox autoBox;
+
+    CheckBox stormBox;
+    Button stormStartButton;
+    Button stormEndButton;
+    TextView from;
+    TextView to;
+    FragmentManager fm = getSupportFragmentManager();
+    int startYear, startMonth, startDay, startHour, startMinute;
+    int endYear, endMonth, endDay, endHour, endMinute;
+    boolean timeOnButton = false;
+    Calendar startCalendar = Calendar.getInstance();
+    Calendar endCalendar = Calendar.getInstance();
 
     FrameLayout frameLayout;
 
@@ -128,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         downButton = (ImageButton) findViewById(R.id.downButton);
         setAngle = (Button) findViewById(R.id.setAngle);
 
+
+
         autoBox = (CheckBox) findViewById(R.id.autoBox);
         //clicklistener instead of OnCheckedChange won't register sliding a switch
         //but this way when toggling the button from somewhere else the clicklistener isn't called
@@ -163,6 +185,43 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 }
             }
         });
+
+
+
+        stormBox = (CheckBox) findViewById(R.id.stormBox);
+        stormStartButton = (Button) findViewById(R.id.stormStartButton);
+        stormEndButton = (Button) findViewById(R.id.stormEndButton);
+        from = (TextView) findViewById(R.id.fromTV);
+        to = (TextView) findViewById(R.id.toTV);
+
+        if(!stormBox.isChecked()){
+            changeStormVisibility(false); // make buttons and textviews invisible
+        } else {
+            changeStormVisibility(true); // make buttons and textview visible
+        }
+
+        stormBox.setOnClickListener(new CompoundButton.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(stormBox.isChecked()){
+                    Log.e("Storm", "Storm mode activated.");
+                    changeStormVisibility(true);
+                    // putting the showStormPickers methods in the wrong order shows them in the right order
+                    showStormPickers(false); // show date pickers for end date/time
+                    showStormPickers(true); // show date pickers for start date/time
+                    timeOnButton = true;
+                } else {
+                    Log.e("Storm", "Deactivated.");
+                    changeStormVisibility(false);
+                    timeOnButton = false;
+                    stormStartButton.setText("start time");
+                    stormEndButton.setText("end time");
+//                    startCalendar.setTimeInMillis(System.currentTimeMillis());
+                }
+            }
+        });
+
+
 
         frameLayout = (FrameLayout) findViewById(R.id.frame);
 //        int height = frameLayout.getLayoutParams().height;
@@ -343,6 +402,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
 
+    /**
+     * method to change the visibility of the from and to textviews and the buttons with the start
+     * and end time for the storm mode
+     * @param active boolean, true if buttons should be made visible, false if invisible
+     */
+    public void changeStormVisibility(boolean active) {
+        if(active){
+            stormStartButton.setVisibility(View.VISIBLE);
+            stormEndButton.setVisibility(View.VISIBLE);
+            from.setVisibility(View.VISIBLE);
+            to.setVisibility(View.VISIBLE);
+        } else {
+            stormStartButton.setVisibility(View.INVISIBLE);
+            stormEndButton.setVisibility(View.INVISIBLE);
+            from.setVisibility(View.INVISIBLE);
+            to.setVisibility(View.INVISIBLE);
+        }
+    }
+
     // fatal exception when this is removed...
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent){
@@ -358,6 +436,169 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         imageView.setRotation(i);
     }
 
+    public void datePass(boolean start, int year, int month, int day){
+        if(start){
+            this.startYear = year;
+            this.startMonth = month;
+            this.startDay = day;
+        } else{
+            this.endYear = year;
+            this.endMonth = month;
+            this.endDay = day;
+        }
+
+        Log.e("Date", year + "-" + month + "-" + day);
+
+    }
+
+    public void timePass(boolean start, int hour, int minute) {
+        if(start){
+            this.startHour = hour;
+            this.startMinute = minute;
+        } else {
+            this.endHour = hour;
+            this.endMinute = minute;
+        }
+
+        Log.e("Time", hour + ":" + minute);
+        Log.e("Start", String.valueOf(start));
+
+
+        printTime(start);
+    }
+
+    public void printTime(boolean start) {
+        /**
+         * Print time and date on corresponding buttons
+         */
+
+        timeOnButton = true;
+
+//        startCalendar.getInstance();
+//        Calendar c = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy   HH:mm", Locale.getDefault());
+
+        //sets time for alarm
+        if(start) {
+            startCalendar.set(Calendar.YEAR, startYear);
+            startCalendar.set(Calendar.MONTH, startMonth);
+            startCalendar.set(Calendar.DAY_OF_MONTH, startDay);
+            startCalendar.set(Calendar.HOUR_OF_DAY, startHour);
+            startCalendar.set(Calendar.MINUTE, startMinute);
+            startCalendar.set(Calendar.SECOND, 0);
+
+            Date startDate = new Date(startCalendar.getTimeInMillis());
+            String startDateString = simpleDateFormat.format(startDate);
+//            String startDateString = DateFormat.getDateTimeInstance().format(startDate);
+            stormStartButton.setText(startDateString);
+
+        } else {
+            endCalendar.set(Calendar.YEAR, endYear);
+            endCalendar.set(Calendar.MONTH, endMonth);
+            endCalendar.set(Calendar.DAY_OF_MONTH, endDay);
+            endCalendar.set(Calendar.HOUR_OF_DAY, endHour);
+            endCalendar.set(Calendar.MINUTE, endMinute);
+            endCalendar.set(Calendar.SECOND, 0);
+
+            Date endDate = new Date(endCalendar.getTimeInMillis());
+            String endDateString = simpleDateFormat.format(endDate);
+            stormEndButton.setText(endDateString);
+        }
+
+    }
+
+    public void showStormPickers(boolean start){
+        if(start) {
+            showTimeDialog("Start Time", start); // -- these are in the wrong order because they're opened the wrong way around... somehow...
+            showDateDialog("Start Date", start); // -|
+        } else {
+            showTimeDialog("End Time", start);
+            showDateDialog("End Date", start);
+        }
+    }
+
+    public void showStormStart(View view){
+        showStormPickers(true);
+    }
+
+    public void showStormEnd(View view){
+        showStormPickers(false);
+    }
+
+    public void showDateDialog(String title, boolean start) {
+        //date to be sent to fragment
+        DateFragment dateFragment = new DateFragment();
+        Bundle bundle = new Bundle(); //bundle to be sent
+
+        if (timeOnButton) { //if there's something in the bundle
+
+                Log.e("Time", "on button");
+                //convert long to ints
+                Calendar c = Calendar.getInstance();
+//                c.setTimeInMillis(); TODO set time that was on button
+            if(start) {
+                c.setTimeInMillis(startCalendar.getTimeInMillis());
+            } else {
+                c.setTimeInMillis(endCalendar.getTimeInMillis());
+            }
+                bundle.putInt("year", c.get(Calendar.YEAR));
+                bundle.putInt("month", c.get(Calendar.MONTH));
+                bundle.putInt("day", c.get(Calendar.DAY_OF_MONTH));
+
+
+        } else {
+            Calendar c = Calendar.getInstance();
+//                c.setTimeInMillis();
+            bundle.putInt("year", c.get(Calendar.YEAR));
+            bundle.putInt("month", c.get(Calendar.MONTH));
+            bundle.putInt("day", c.get(Calendar.DAY_OF_MONTH));
+
+        }
+
+        bundle.putString("title", title);
+        bundle.putBoolean("start", start);
+
+        dateFragment.setArguments(bundle);
+
+        dateFragment.show(fm, "Dialog Fragment");
+
+    }
+
+    public void showTimeDialog(String title, boolean start) {
+        TimeFragment timeFragment = new TimeFragment();
+        Bundle bundle = new Bundle();
+
+        Bundle extras = getIntent().getExtras();
+        //get time from database to be default time if editing, current time if adding
+        if (extras != null) { //if there's something in the bundle
+            //int Value = extras.getInt("id"); //get the id to search
+
+                //convert long to ints
+                Calendar c = Calendar.getInstance();
+//                c.setTimeInMillis(dataDate);
+                bundle.putInt("hour", c.get(Calendar.HOUR_OF_DAY));
+                bundle.putInt("minute", c.get(Calendar.MINUTE));
+
+                //adding an alarm, current time is default
+//                bundle.putInt("hour", hour);
+//                bundle.putInt("minute", minute);
+        } else {
+            Calendar c = Calendar.getInstance();
+            bundle.putInt("hour", c.get(Calendar.HOUR_OF_DAY));
+            bundle.putInt("minute", c.get(Calendar.MINUTE));
+        }
+
+        bundle.putString("title", title);
+        bundle.putBoolean("start", start);
+
+        timeFragment.setArguments(bundle);
+
+        timeFragment.show(fm, "Dialog Fragment");
+
+    }
+
+
+    // Request rhingies start here -----------------------------------------------------------------------------------------
     /**
      * send a http request to the arduino, to move panels up and down
      * @param direction up, down, or stop (and auto?)
