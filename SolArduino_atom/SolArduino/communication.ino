@@ -33,7 +33,7 @@ void receiveHttpRequests() {
          }
          else if (strncmp("?panel=stop ", data, 12) == 0) {
            solarPanelStop();
-             acknowledge("Panels stopped/not moving.");
+             acknowledge("Panels stopped.");
              autoMode = false;
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
