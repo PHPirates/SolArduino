@@ -112,6 +112,11 @@ bool receiveUpdate() {
   } else {
      update = update + " manual";
   }
+  if (stormTimes[0] != 0){
+    update = update + "storm";
+  } else {
+    update = update + "calm";
+  }
   acknowledge(update.c_str()); //convert to string, then to const char
   return true;
 }
