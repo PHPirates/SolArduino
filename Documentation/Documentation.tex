@@ -317,6 +317,7 @@ int expectedVoltage = POTMETER_LOWEND +
 			\begin{itemize}
 				\item A soft bound was introduced for the potmeter constants and degrees constants. We hope this catches varying potmeter bounds: sometimes the value of the low end may be a few points lower and then the code would try endlessly to get the solar panels below their hardware end stop.
 				\item In the \verb|solarPanelDown| and \verb|solarPanelUp| methods, as close to the solar panel control as possible, we put an extra check if the reading of the analog pin does not go out of bounds. These bounds therefore include the soft bounds. This check intentionally does not rely on \verb|readPotMeter()| (which samples readings for better accuracy), which reduces accuracy near the soft end stops but increases safety. Accuracy inbetween should not be influenced.
+				\item The Arduino now has a timeout on moving the panels up or down, which means that when you do not send another up/down request within the timeout of $x$ seconds the panels will stop automatically. The app and desktop version now try to send a request each $\frac{x}{2}$ seconds, but subject to change. Especially because of the in practice noticed bad connections this is a very practical alternative to keeping an open connection which would be even better but is a bit complicated with an Arduino.
 			\end{itemize}
 		
 	\section{Android App}
