@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     CheckBox autoBox;
 
+    // things for the storm mode
     CheckBox stormBox;
     Button stormStartButton;
     Button stormEndButton;
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     boolean timeOnButton = false;
     Calendar startCalendar = Calendar.getInstance();
     Calendar endCalendar = Calendar.getInstance();
+    long startInSeconds;
+    long endInSeconds;
 
     FrameLayout frameLayout;
 
@@ -447,7 +450,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             this.endDay = day;
         }
 
-        Log.e("Date", year + "-" + month + "-" + day);
+//        Log.e("Date", year + "-" + month + "-" + day);
 
     }
 
@@ -460,8 +463,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             this.endMinute = minute;
         }
 
-        Log.e("Time", hour + ":" + minute);
-        Log.e("Start", String.valueOf(start));
+//        Log.e("Time", hour + ":" + minute);
+//        Log.e("Start", String.valueOf(start));
 
 
         printTime(start);
@@ -487,9 +490,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             startCalendar.set(Calendar.MINUTE, startMinute);
             startCalendar.set(Calendar.SECOND, 0);
 
+            startInSeconds = startCalendar.getTimeInMillis()/1000 + 3600; // +2 hours because timezones?
+            Log.e("start in seconds", String.valueOf(startInSeconds));
+
             Date startDate = new Date(startCalendar.getTimeInMillis());
             String startDateString = simpleDateFormat.format(startDate);
-//            String startDateString = DateFormat.getDateTimeInstance().format(startDate);
             stormStartButton.setText(startDateString);
 
         } else {
@@ -500,10 +505,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             endCalendar.set(Calendar.MINUTE, endMinute);
             endCalendar.set(Calendar.SECOND, 0);
 
+            endInSeconds = endCalendar.getTimeInMillis()/1000 + 3600;
+            Log.e("end in seconds", String.valueOf(endInSeconds));
+
             Date endDate = new Date(endCalendar.getTimeInMillis());
             String endDateString = simpleDateFormat.format(endDate);
             stormEndButton.setText(endDateString);
         }
+
+        sendStormRequest(startInSeconds, endInSeconds);
 
     }
 
@@ -528,15 +538,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public void showDateDialog(String title, boolean start) {
         //date to be sent to fragment
         DateFragment dateFragment = new DateFragment();
-        Bundle bundle = new Bundle(); //bundle to be sent
+        Bundle bundle = new Bundle(); // bundle to be sent
 
-        if (timeOnButton) { //if there's something in the bundle
+        if (timeOnButton) { // if there are times on the button already
 
-                Log.e("Time", "on button");
-                //convert long to ints
                 Calendar c = Calendar.getInstance();
-//                c.setTimeInMillis(); TODO set time that was on button
-            if(start) {
+            if(start) { // if the start button is clicked
                 c.setTimeInMillis(startCalendar.getTimeInMillis());
             } else {
                 c.setTimeInMillis(endCalendar.getTimeInMillis());
@@ -548,7 +555,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         } else {
             Calendar c = Calendar.getInstance();
-//                c.setTimeInMillis();
             bundle.putInt("year", c.get(Calendar.YEAR));
             bundle.putInt("month", c.get(Calendar.MONTH));
             bundle.putInt("day", c.get(Calendar.DAY_OF_MONTH));
@@ -598,7 +604,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
 
-    // Request rhingies start here -----------------------------------------------------------------------------------------
+    // Request thingies start here -----------------------------------------------------------------------------------------
     /**
      * send a http request to the arduino, to move panels up and down
      * @param direction up, down, or stop (and auto?)
@@ -607,6 +613,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         urlString = ipString + "?panel=" + direction;
         startHttpRequest(); //urlString will be used here
 
+    }
+
+    public void sendStormRequest(long start, long end) {
+        String startString = String.valueOf(start);
+        String endString = String.valueOf(end);
+        urlString = ipString + "?stormstart=" + startString + "stormend=" + endString;
+        startHttpRequest();
     }
 
     /**
