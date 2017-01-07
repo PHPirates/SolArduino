@@ -68,15 +68,23 @@ int readPotMeter() {
 
 //solar panel movements
 void solarPanelDown() {
-  digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
-  digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
-  digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
+  // extra, redundant, safety.
+  //Intentionally does not rely on readPotMeter(), which reduces accuracy
+  //near the soft end stops but increases safety. Accuracy inbetween should not
+  // be influenced
+  if (analogRead(POTMETERPIN) > POTMETER_LOWEND) {
+    digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
+    digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
+    digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
+  }
 }
 
 void solarPanelUp() {
-  digitalWrite(POWER_LOW, LOW);
-  digitalWrite(POWER_HIGH, HIGH);
-  digitalWrite(DIRECTION_PIN, LOW);
+  if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) {
+    digitalWrite(POWER_LOW, LOW);
+    digitalWrite(POWER_HIGH, HIGH);
+    digitalWrite(DIRECTION_PIN, LOW);
+  }
 }
 
 void solarPanelStop() {
