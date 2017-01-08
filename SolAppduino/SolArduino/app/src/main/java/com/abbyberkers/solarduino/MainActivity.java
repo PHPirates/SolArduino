@@ -197,11 +197,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         from = (TextView) findViewById(R.id.fromTV);
         to = (TextView) findViewById(R.id.toTV);
 
-        if(!stormBox.isChecked()){
-            changeStormVisibility(false); // make buttons and textviews invisible
-        } else {
-            changeStormVisibility(true); // make buttons and textview visible
-        }
+//        if(!stormBox.isChecked()){
+//            changeStormVisibility(false); // make buttons and textviews invisible
+//        } else {
+//            changeStormVisibility(true); // make buttons and textview visible
+//        }
 
         stormBox.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
@@ -813,20 +813,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         string = Html.fromHtml(result) + "\u00b0";
                     }
                     Toast.makeText(getBaseContext(), string, Toast.LENGTH_SHORT).show();
-                } else if (message.contains("update")) {
+                } else if (message.contains("update")) { // received update request
                     String[] updateString = result.split(" ");
                     if (updateString[0].trim().length() == 0) {
                         Toast.makeText(getBaseContext(), "Arduino did not return an angle", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // string with current angle plus degree symbol
-                        String angle;
+                    } else { // received angle
+                        String angle; // string with current angle plus degree symbol
                         if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                             angle = Html.fromHtml(updateString[0], Html.FROM_HTML_MODE_LEGACY) + "\u00b0";
                         } else {
                             //noinspection deprecation because we caught that in the if-statement above
                             angle = Html.fromHtml(updateString[0]) + "\u00b0";
                         }
-                        currentAngle.setText(angle);
+                        currentAngle.setText(angle); // display the new angle in the textview
                         // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
                         if (updateToast != null) {
                             if (updatedToast != null) {
@@ -849,14 +848,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         }
                         rotate(newAngle);
 
+                        // toast for when the endstops are reached
                         if (newAngle == 5) {
                             Toast.makeText(getBaseContext(), "Low end stop reached.", Toast.LENGTH_SHORT).show();
                         } else if (newAngle == 57) {
                             Toast.makeText(getBaseContext(), "High end stop reached.", Toast.LENGTH_SHORT).show();
                         }
+                            // TODO updateString[1] = updateString[1].trim(); was here???
 
-                        updateString[1] = updateString[1].trim();
                     }
+
+                    updateString[1] = updateString[1].trim(); // TODO why was this inside the else above?
+
                     if (updateString[1].contains("auto")) {
                         if (!autoBox.isChecked()) {
                             autoBox.toggle();
@@ -866,6 +869,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             autoBox.toggle();
                         }
                     }
+
+                    updateString[2] = updateString[2].trim();
+                    if(updateString[2].contains("storm")) {
+                        if(!stormBox.isChecked()) {
+                            stormBox.toggle();
+                        }
+                        showStormPickers(true);
+                    } else if(updateString[2].contains("calm")) {
+                        if(stormBox.isChecked()) {
+                            stormBox.toggle();
+                        }
+                        showStormPickers(false);
+                    }
+
                 } else if (message.contains("Page")) {
                     Toast.makeText(getBaseContext(), "Page not found.", Toast.LENGTH_SHORT).show();
                 } else if (message.contains("degrees")) {
