@@ -875,12 +875,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         if(!stormBox.isChecked()) {
                             stormBox.toggle();
                         }
-                        showStormPickers(true);
+                        changeStormVisibility(true);
+//                        showStormPickers(true);
                     } else if(updateString[2].contains("calm")) {
                         if(stormBox.isChecked()) {
                             stormBox.toggle();
                         }
-                        showStormPickers(false);
+                        changeStormVisibility(false);
+//                        showStormPickers(false);
                     }
 
                 } else if (message.contains("Page")) {
