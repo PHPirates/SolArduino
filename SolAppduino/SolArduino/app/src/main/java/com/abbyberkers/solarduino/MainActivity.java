@@ -618,7 +618,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public void sendStormRequest(long start, long end) {
         String startString = String.valueOf(start);
         String endString = String.valueOf(end);
-        urlString = ipString + "?stormstart=" + startString + "stormend=" + endString;
+        urlString = ipString + "?stormstart=" + startString + "&stormend=" + endString;
         startHttpRequest();
     }
 
