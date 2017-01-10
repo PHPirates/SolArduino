@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     timeOnButton = false;
                     stormStartButton.setText("start time");
                     stormEndButton.setText("end time");
+                    sendStormRequest(0,0);
 //                    startCalendar.setTimeInMillis(System.currentTimeMillis());
                 }
             }
@@ -491,7 +492,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             startCalendar.set(Calendar.SECOND, 0);
 
             startInSeconds = startCalendar.getTimeInMillis()/1000 + 3600; // +2 hours because timezones?
-            Log.e("start in seconds", String.valueOf(startInSeconds));
 
             Date startDate = new Date(startCalendar.getTimeInMillis());
             String startDateString = simpleDateFormat.format(startDate);
@@ -506,13 +506,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             endCalendar.set(Calendar.SECOND, 0);
 
             endInSeconds = endCalendar.getTimeInMillis()/1000 + 3600;
-            Log.e("end in seconds", String.valueOf(endInSeconds));
 
             Date endDate = new Date(endCalendar.getTimeInMillis());
             String endDateString = simpleDateFormat.format(endDate);
             stormEndButton.setText(endDateString);
         }
 
+        Log.e("start in seconds", String.valueOf(startInSeconds));
+        Log.e("end in seconds", String.valueOf(endInSeconds));
         sendStormRequest(startInSeconds, endInSeconds);
 
     }

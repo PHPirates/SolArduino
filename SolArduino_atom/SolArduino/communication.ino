@@ -130,7 +130,7 @@ void solarPanelStorm(char *data) {
     }
 
     String endTime;
-    for(int i = 31; i < 41; i++){
+    for(int i = 32; i < 42; i++){
       endTime += (char)data[i];
     }
 
