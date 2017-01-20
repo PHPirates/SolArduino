@@ -48,6 +48,14 @@
     -fx-background-color: #00979C, white;
 }
 
+#buttonNextDay {
+    -fx-padding: 5px;
+}
+
+#buttonPreviousDay {
+    -fx-padding: 5px;
+}
+
 /* up and down button */
 #buttonUp {
     -fx-focus-color: transparent;

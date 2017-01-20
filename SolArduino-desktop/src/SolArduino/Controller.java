@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.ResourceBundle;
@@ -230,6 +231,20 @@ public class Controller implements Initializable{
         graph.setData(getGraphData(getToday()));
     }
 
+    @FXML protected void nextDayGraph() {
+        LocalDate nextDay = datePicker.getValue();
+        nextDay = nextDay.plusDays(1);
+
+        graph.setData(getGraphData(localDateToCalendar(nextDay)));
+    }
+
+    @FXML protected void previousDayGraph() {
+        LocalDate previousDay = datePicker.getValue();
+        previousDay = previousDay.minusDays(1);
+
+        graph.setData(getGraphData(localDateToCalendar(previousDay)));
+    }
+
     @FXML protected void checkVersion() {
         System.out.println("checking version");
         checkVersionOnline(checkVersionLink); // check what the last version is from the txt file online
@@ -250,6 +265,13 @@ public class Controller implements Initializable{
         } catch (URISyntaxException e1) {
             e1.printStackTrace();
         }
+    }
+
+    public Calendar localDateToCalendar(LocalDate localDate) {
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()); // first convert LocalDate to Date
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date); // convert Date to Calendar
+        return cal;
     }
 
     /**
