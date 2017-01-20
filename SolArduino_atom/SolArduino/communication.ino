@@ -15,6 +15,7 @@ void receiveHttpRequests() {
      else {
          data += 5;
          //start parsing data
+         Serial.println(data);
          if (data[0] == ' ') {
              // No parameters given (http://192.168.8.42), return home page
              homePage();
@@ -113,9 +114,9 @@ bool receiveUpdate() {
      update = update + " manual";
   }
   if (stormTimes[0] != 0){
-    update = update + "storm";
+    update = update + " storm";
   } else {
-    update = update + "calm";
+    update = update + " calm";
   }
   acknowledge(update.c_str()); //convert to string, then to const char
   return true;

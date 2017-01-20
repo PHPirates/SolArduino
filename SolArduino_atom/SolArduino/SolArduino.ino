@@ -59,7 +59,7 @@ boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
 String EmergencyState = "";
 // variables needed for storm mode
-long stormTimes[2] = {0,0}; // start and end time, {0,0} when no storm mode planned
+unsigned long stormTimes[2] = {0,0}; // start and end time, {0,0} when no storm mode planned
 boolean wasAuto = false; // to remember if the panels were on auto mode before entering storm mode
 int angleBeforeStorm = -1; // to remember angle before storm, remains -1 if panels were on auto
 bool printed = false;
