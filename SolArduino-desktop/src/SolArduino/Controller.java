@@ -1,5 +1,6 @@
 package SolArduino;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -40,6 +41,7 @@ public class Controller implements Initializable{
 
     private Timer timerUp; // access is global to cancel it on button release
     private Timer timerDown; // access is global to cancel it on button release
+    private Timer animationTimer;
 
     private int timeout = 1000; // timeout for sending up/down requests
     private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
@@ -50,6 +52,7 @@ public class Controller implements Initializable{
     private String jarLink = "https://github.com/PHPirates/SolArduino/raw/master/SolArduino-desktop/" +
             "out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar";
 
+    private boolean animationRunning = false;
 
     private long[][] data; // contains the times and angles from the csv files
 
@@ -70,6 +73,7 @@ public class Controller implements Initializable{
     @FXML private Text responseTextView;
     @FXML private Text currentVersion;
     @FXML private Text lastVersion;
+    @FXML private Text text;
     @FXML private Button buttonUp;
     @FXML private Button buttonDown;
     @FXML private Button buttonUpdate;
@@ -245,6 +249,25 @@ public class Controller implements Initializable{
         graph.setData(getGraphData(localDateToCalendar(previousDay)));
     }
 
+    @FXML protected void playAnimationForward() {
+        if(animationRunning) {
+            stopAnimation();
+        }
+        playAnimation(true);
+    }
+
+    @FXML protected void playAnimationBackward() {
+        if(animationRunning) {
+            stopAnimation();
+        }
+        playAnimation(false);
+    }
+
+    @FXML protected void stopAnimation() {
+        animationTimer.cancel();
+        animationRunning = false;
+    }
+
     @FXML protected void checkVersion() {
         System.out.println("checking version");
         checkVersionOnline(checkVersionLink); // check what the last version is from the txt file online
@@ -265,6 +288,25 @@ public class Controller implements Initializable{
         } catch (URISyntaxException e1) {
             e1.printStackTrace();
         }
+    }
+
+    public void playAnimation(boolean forward) {
+        animationTimer = new Timer();
+        animationRunning = true;
+        TimerTask animationTimerTask = new TimerTask() {
+
+            @Override
+            public void run() {
+                Platform.runLater(()->{ // runLater to avoid not being on fx-application thread
+                    if(forward) {
+                        nextDayGraph();
+                    } else {
+                        previousDayGraph();
+                    }
+                });
+            }
+        };
+        animationTimer.schedule(animationTimerTask,10,1000);
     }
 
     public Calendar localDateToCalendar(LocalDate localDate) {
