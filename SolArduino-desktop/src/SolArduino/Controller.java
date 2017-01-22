@@ -53,6 +53,11 @@ public class Controller implements Initializable{
             "out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar";
 
     private boolean animationRunning = false;
+    private boolean forward;
+
+    private int[] animationSpeed = {100, 200, 300, 500, 750, 750, 500, 300, 200, 100};
+    private int middle = animationSpeed.length/2;
+    private int count = middle;
 
     private long[][] data; // contains the times and angles from the csv files
 
@@ -232,6 +237,9 @@ public class Controller implements Initializable{
     }
 
     @FXML protected void todayGraph() {
+        if(animationRunning){
+            stopAnimation();
+        }
         graph.setData(getGraphData(getToday()));
     }
 
@@ -250,22 +258,38 @@ public class Controller implements Initializable{
     }
 
     @FXML protected void playAnimationForward() {
-        if(animationRunning) {
-            stopAnimation();
+        if(count < animationSpeed.length-1) {
+            if(animationRunning) {
+                animationTimer.cancel();
+            }
+
+            count++;
+            int speed = animationSpeed[count];
+            playAnimation(speed);
         }
-        playAnimation(true);
+
     }
 
     @FXML protected void playAnimationBackward() {
-        if(animationRunning) {
-            stopAnimation();
+        if(count > 0){
+            if(animationRunning) {
+                animationTimer.cancel();
+            }
+
+            count--;
+            int speed = animationSpeed[count];
+            playAnimation(speed);
+
         }
-        playAnimation(false);
+
     }
 
     @FXML protected void stopAnimation() {
-        animationTimer.cancel();
-        animationRunning = false;
+        if(animationRunning) {
+            animationTimer.cancel();
+            animationRunning = false;
+            count = middle;
+        }
     }
 
     @FXML protected void checkVersion() {
@@ -290,7 +314,7 @@ public class Controller implements Initializable{
         }
     }
 
-    public void playAnimation(boolean forward) {
+    public void playAnimation(int speed) {
         animationTimer = new Timer();
         animationRunning = true;
         TimerTask animationTimerTask = new TimerTask() {
@@ -298,7 +322,7 @@ public class Controller implements Initializable{
             @Override
             public void run() {
                 Platform.runLater(()->{ // runLater to avoid not being on fx-application thread
-                    if(forward) {
+                    if(count >= middle) {
                         nextDayGraph();
                     } else {
                         previousDayGraph();
@@ -306,7 +330,7 @@ public class Controller implements Initializable{
                 });
             }
         };
-        animationTimer.schedule(animationTimerTask,10,1000);
+        animationTimer.schedule(animationTimerTask,10,speed);
     }
 
     public Calendar localDateToCalendar(LocalDate localDate) {
