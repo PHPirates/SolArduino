@@ -41,7 +41,7 @@ public class Controller implements Initializable{
 
     private Timer timerUp; // access is global to cancel it on button release
     private Timer timerDown; // access is global to cancel it on button release
-    private Timer animationTimer;
+    private Timer animationTimer; // access is global to be able to cancel it
 
     private int timeout = 1000; // timeout for sending up/down requests
     private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
@@ -52,11 +52,13 @@ public class Controller implements Initializable{
     private String jarLink = "https://github.com/PHPirates/SolArduino/raw/master/SolArduino-desktop/" +
             "out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar";
 
-    private boolean animationRunning = false;
-    private boolean forward;
+    private boolean animationRunning = false; // boolean that keeps track of whether an animation is going on
 
+    // array with animation speeds.
+    // first half are for backwards, second half for forwards
     private int[] animationSpeed = {100, 200, 300, 500, 750, 750, 500, 300, 200, 100};
-    private int middle = animationSpeed.length/2;
+    private int middle = animationSpeed.length/2; // default for count
+    // int to keep track of where in the animationSpeed we are, and thus whether animation goes forwards or backwards
     private int count = middle;
 
     private long[][] data; // contains the times and angles from the csv files
@@ -78,7 +80,6 @@ public class Controller implements Initializable{
     @FXML private Text responseTextView;
     @FXML private Text currentVersion;
     @FXML private Text lastVersion;
-    @FXML private Text text;
     @FXML private Button buttonUp;
     @FXML private Button buttonDown;
     @FXML private Button buttonUpdate;
@@ -244,10 +245,10 @@ public class Controller implements Initializable{
     }
 
     @FXML protected void nextDayGraph() {
-        LocalDate nextDay = datePicker.getValue();
-        nextDay = nextDay.plusDays(1);
+        LocalDate nextDay = datePicker.getValue(); // get date that's on DatePicker
+        nextDay = nextDay.plusDays(1); // add one day
 
-        graph.setData(getGraphData(localDateToCalendar(nextDay)));
+        graph.setData(getGraphData(localDateToCalendar(nextDay))); // display new graph
     }
 
     @FXML protected void previousDayGraph() {
@@ -258,11 +259,13 @@ public class Controller implements Initializable{
     }
 
     @FXML protected void playAnimationForward() {
-        if(count < animationSpeed.length-1) {
-            if(animationRunning) {
+        if(count < animationSpeed.length-1) { // to avoid IndexOutOfBound exceptions
+            if(animationRunning) { // check if there is an animation going on
                 animationTimer.cancel();
             }
 
+            // increase count before getting the speed, if we increase count afterwards,
+            // the animation would first go faster if we press back and only go slower/backwards the second time
             count++;
             int speed = animationSpeed[count];
             playAnimation(speed);
@@ -285,10 +288,10 @@ public class Controller implements Initializable{
     }
 
     @FXML protected void stopAnimation() {
-        if(animationRunning) {
+        if(animationRunning) { // check if animation is running
             animationTimer.cancel();
             animationRunning = false;
-            count = middle;
+            count = middle; // set count to the default value
         }
     }
 
@@ -315,13 +318,14 @@ public class Controller implements Initializable{
     }
 
     public void playAnimation(int speed) {
-        animationTimer = new Timer();
+        animationTimer = new Timer(); // create new timer
         animationRunning = true;
         TimerTask animationTimerTask = new TimerTask() {
 
             @Override
             public void run() {
                 Platform.runLater(()->{ // runLater to avoid not being on fx-application thread
+                    // if count is higher than the default, the animation goes forward. Backwards when it's lower.
                     if(count >= middle) {
                         nextDayGraph();
                     } else {
