@@ -16,7 +16,7 @@ void setSolarPanel(int degrees) {
   Serial.println(expectedVoltage);
 
   int potMeterValue = readPotMeter();
-  while (potMeterValue != expectedVoltage) {
+  while (potMeterValue != expectedVoltage && EmergencyState == "") {
     //if the potmeter happens to skip the value, the panels will go back towards the value
     receiveHttpRequests(); //keep responsive
     if (POTMETER_LOWEND > POTMETER_HIGHEND) {
@@ -89,23 +89,28 @@ void solarPanelDown() {
   //Intentionally does not rely on readPotMeter(), which reduces accuracy
   //near the soft end stops but increases safety. Accuracy inbetween should not
   // be influenced
-  if (analogRead(POTMETERPIN) > POTMETER_LOWEND) {
-    EmergencyState = "";
-    panelsStopped = false;
-    digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
-    digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
-    digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
-  } else {
-    EmergencyState = "panels below lower bound!";
+  if (EmergencyState == "") { // move only when no emergency
+  if (analogRead(POTMETERPIN) > max (POTMETER_HIGHEND,POTMETER_LOWEND)) {
+      panelsStopped = false;
+      digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
+      digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
+      digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
+    } else {
+      EmergencyState = F("panels below lower bound!"); //with the current configuration, at least
+    }
   }
 }
 
 void solarPanelUp() {
-  if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) {
-    panelsStopped = false;
-    digitalWrite(POWER_LOW, LOW);
-    digitalWrite(POWER_HIGH, HIGH);
-    digitalWrite(DIRECTION_PIN, LOW);
+  if (EmergencyState == "") {
+    if (analogRead(POTMETERPIN) < min (POTMETER_HIGHEND,POTMETER_LOWEND)) {
+      panelsStopped = false;
+      digitalWrite(POWER_LOW, LOW);
+      digitalWrite(POWER_HIGH, HIGH);
+      digitalWrite(DIRECTION_PIN, LOW);
+    } else {
+      EmergencyState = F("panels above upper bound!");
+    }
   }
 }
 
