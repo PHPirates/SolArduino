@@ -1,5 +1,6 @@
 package SolArduino;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -20,6 +21,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.ResourceBundle;
@@ -39,16 +41,25 @@ public class Controller implements Initializable{
 
     private Timer timerUp; // access is global to cancel it on button release
     private Timer timerDown; // access is global to cancel it on button release
+    private Timer animationTimer; // access is global to be able to cancel it
 
     private int timeout = 1000; // timeout for sending up/down requests
     private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
-    private String currentVersionString = "Version 1.1"; // current version of the desktop app
+    private String currentVersionString = "Version 1.2"; // current version of the desktop app
     private String lastVersionString;
     private String checkVersionLink = "https://raw.githubusercontent.com/PHPirates/SolArduino/" +
             "master/SolArduino-desktop/version.txt";
     private String jarLink = "https://github.com/PHPirates/SolArduino/raw/master/SolArduino-desktop/" +
             "out/artifacts/SolArduino_desktop_jar/SolArduino-desktop.jar";
 
+    private boolean animationRunning = false; // boolean that keeps track of whether an animation is going on
+
+    // array with animation speeds.
+    // first half are for backwards, second half for forwards
+    private int[] animationSpeed = {100, 200, 300, 500, 750, 750, 500, 300, 200, 100};
+    private int middle = animationSpeed.length/2; // default for count
+    // int to keep track of where in the animationSpeed we are, and thus whether animation goes forwards or backwards
+    private int count = middle;
 
     private long[][] data; // contains the times and angles from the csv files
 
@@ -227,7 +238,61 @@ public class Controller implements Initializable{
     }
 
     @FXML protected void todayGraph() {
+        if(animationRunning){
+            stopAnimation();
+        }
         graph.setData(getGraphData(getToday()));
+    }
+
+    @FXML protected void nextDayGraph() {
+        LocalDate nextDay = datePicker.getValue(); // get date that's on DatePicker
+        nextDay = nextDay.plusDays(1); // add one day
+
+        graph.setData(getGraphData(localDateToCalendar(nextDay))); // display new graph
+    }
+
+    @FXML protected void previousDayGraph() {
+        LocalDate previousDay = datePicker.getValue();
+        previousDay = previousDay.minusDays(1);
+
+        graph.setData(getGraphData(localDateToCalendar(previousDay)));
+    }
+
+    @FXML protected void playAnimationForward() {
+        if(count < animationSpeed.length-1) { // to avoid IndexOutOfBound exceptions
+            if(animationRunning) { // check if there is an animation going on
+                animationTimer.cancel();
+            }
+
+            // increase count before getting the speed, if we increase count afterwards,
+            // the animation would first go faster if we press back and only go slower/backwards the second time
+            count++;
+            int speed = animationSpeed[count];
+            playAnimation(speed);
+        }
+
+    }
+
+    @FXML protected void playAnimationBackward() {
+        if(count > 0){
+            if(animationRunning) {
+                animationTimer.cancel();
+            }
+
+            count--;
+            int speed = animationSpeed[count];
+            playAnimation(speed);
+
+        }
+
+    }
+
+    @FXML protected void stopAnimation() {
+        if(animationRunning) { // check if animation is running
+            animationTimer.cancel();
+            animationRunning = false;
+            count = middle; // set count to the default value
+        }
     }
 
     @FXML protected void checkVersion() {
@@ -250,6 +315,33 @@ public class Controller implements Initializable{
         } catch (URISyntaxException e1) {
             e1.printStackTrace();
         }
+    }
+
+    public void playAnimation(int speed) {
+        animationTimer = new Timer(); // create new timer
+        animationRunning = true;
+        TimerTask animationTimerTask = new TimerTask() {
+
+            @Override
+            public void run() {
+                Platform.runLater(()->{ // runLater to avoid not being on fx-application thread
+                    // if count is higher than the default, the animation goes forward. Backwards when it's lower.
+                    if(count >= middle) {
+                        nextDayGraph();
+                    } else {
+                        previousDayGraph();
+                    }
+                });
+            }
+        };
+        animationTimer.schedule(animationTimerTask,10,speed);
+    }
+
+    public Calendar localDateToCalendar(LocalDate localDate) {
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()); // first convert LocalDate to Date
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date); // convert Date to Calendar
+        return cal;
     }
 
     /**

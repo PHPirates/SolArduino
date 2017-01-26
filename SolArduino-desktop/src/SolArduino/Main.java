@@ -13,7 +13,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("interface.fxml"));
         primaryStage.setTitle("SolArduino");
-        Scene scene = new Scene(root, 650, 350);
+        Scene scene = new Scene(root, 750, 400);
         // read the css this way so we don't get problems when creating an executable JAR
         scene.getStylesheets().add(getClass().getResource("resources/stylesheet.css").toExternalForm());
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("ic_solarduino.png")));

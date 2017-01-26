@@ -166,18 +166,56 @@
                 </yAxis>
             </LineChart>
 
-            <Text text="Pick a day: "
-                GridPane.columnIndex="1"
-                GridPane.rowIndex="0"/>
-            <DatePicker fx:id="datePicker"
-                GridPane.columnIndex="1"
-                GridPane.rowIndex="1">
+            <GridPane GridPane.columnIndex="0"
+                    GridPane.rowIndex="3"
+                    alignment="CENTER"
+                    hgap="10"
+                    vgap="10">
 
+                <Button text="&lt;&lt;"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                        onAction="#playAnimationBackward"/>
+
+                <Button text="&gt;&gt;"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="0"
+                        onAction="#playAnimationForward"/>
+
+                <Button text="stop"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="0"
+                        onAction="#stopAnimation"/>
+            </GridPane>
+
+            <Text fx:id="text"
+                    text="Pick a day: "
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="0"
+                GridPane.columnSpan="3"/>
+
+            <Button fx:id="buttonPreviousDay"
+                    text="&lt;"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="1"
+                    minWidth="25"
+                    onAction="#previousDayGraph"/>
+
+            <DatePicker fx:id="datePicker"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="1">
             </DatePicker>
+
+            <Button fx:id="buttonNextDay"
+                    text="&gt;"
+                    GridPane.columnIndex="3"
+                    GridPane.rowIndex="1"
+                    minWidth="25"
+                    onAction="#nextDayGraph"/>
 
             <!-- today button -->
             <Button
-                GridPane.columnIndex="2"
+                GridPane.columnIndex="4"
                 GridPane.rowIndex="1"
                 text="Today"
                 minWidth="80"
@@ -186,7 +224,8 @@
             <TableView fx:id="table"
                        GridPane.columnIndex="1"
                        GridPane.rowIndex="2"
-                       GridPane.columnSpan="2">
+                       GridPane.columnSpan="4"
+                       GridPane.rowSpan="2">
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                 </columnResizePolicy>
