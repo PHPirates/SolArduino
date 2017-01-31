@@ -20,7 +20,7 @@ const byte SAMPLE_RATE = 500; //amount of readings to take the average of when r
 
 //experimentally determined values of potmeter and angle ends
 const int SOFT_BOUND = 50; // about 50/( (1007-652)/(570-50) ) = 7.3 degrees safety
-const int POTMETER_LOWEND = 652 + SOFT_BOUND;
+const int POTMETER_LOWEND = 652 + SOFT_BOUND; //NOTE especially in solarPanelUp/Down we assumed the low end has the lowest number!!
 const int POTMETER_HIGHEND = 1007 - SOFT_BOUND;
 const int DEGREES_HIGHEND = 570 - 73; //angle * 10 for more precision, including soft bound
 const int DEGREES_LOWEND = 50 + 73;

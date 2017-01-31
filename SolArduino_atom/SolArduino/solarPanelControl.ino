@@ -90,7 +90,11 @@ void solarPanelDown() {
   //near the soft end stops but increases safety. Accuracy inbetween should not
   // be influenced
   if (EmergencyState == "") { // move only when no emergency
-  if (analogRead(POTMETERPIN) > max (POTMETER_HIGHEND,POTMETER_LOWEND)) {
+  if (analogRead(POTMETERPIN) > POTMETER_LOWEND) {
+      //reset emergency state when within bounds again
+      if (analogRead(POTMETERPIN) < POTMETER_HIGHEND && strcmp("panels above upper bound!",EmergencyState,25)) {
+        EmergencyState = "";
+      }
       panelsStopped = false;
       digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
       digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
@@ -103,7 +107,11 @@ void solarPanelDown() {
 
 void solarPanelUp() {
   if (EmergencyState == "") {
-    if (analogRead(POTMETERPIN) < min (POTMETER_HIGHEND,POTMETER_LOWEND)) {
+    if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) {
+      //reset emergency state when within bounds again
+      if (analogRead(POTMETERPIN) > POTMETER_LOWEND && strcmp("panels below lower bound!",EmergencyState,25)) {
+        EmergencyState = "";
+      }
       panelsStopped = false;
       digitalWrite(POWER_LOW, LOW);
       digitalWrite(POWER_HIGH, HIGH);

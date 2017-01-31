@@ -196,7 +196,7 @@ ether.printIp("SRV: ", ether.hisip);
 					(1.2,11.5) node[align=left] {39 \\(GND)}
 						(2,11) to[short,-*] (-1,11)
 					(5.7,12) node[align=left] {28 \\ enable}
-						(5,11.5) to (10,11.5)
+						(5,11.5) to (6.5,11.5) % fi to right
 						
 				%Arduino GND
 					(-3,11) node[align=left] {Arduino\\ GND}
@@ -226,7 +226,7 @@ ether.printIp("SRV: ", ether.hisip);
 						(pnpLow.E) to (10,10) node[circ] {}
 					(pnpLow.C) to[switch, align=left, l=low\\ end stop] (10,6)
 						to (6.5,6)
-						to[short, -*] (6.5,11.5)
+						to (6.5,10) % up to high end stop
 					(npnLow.B) to[R=R4 4.7k$\Omega$] (1.2, 7.225) 
 					(npnLow.E) to (4,6)
 						to[short, -*] (-1,6)
@@ -237,10 +237,13 @@ ether.printIp("SRV: ", ether.hisip);
 					(9,16.5) to[R, align=left, l=R3\\ 10k$\Omega$, *-] (9,18.5)
 						to (12,18.5)
 					(pnpHigh.E) to[short, -*] (10,18.5)
-					(pnpHigh.C) to[switch, align=left, l=high\\ end stop] (10,14.5)
-						to (10,11.5)
+					(pnpHigh.C) to (11.5,15.74) % from Q2 to right ...
+					(11.5,15.74) to (11.5,7.225) % ... to right of Q4 ...
+					(11.5,7.225) to[short,-*] (10,7.225) % ... to Q4
 					(npnHigh.E) to (-1,14.955)
 					(npnHigh.B) to[R=R1 4.7k$\Omega$] (1.2, 15.725)
+					% draw end stop
+					(6.5,11.5) to[switch, align=right, l=high end stop] (6.5,10)
 				;
 			\end{circuitikz}\end{center}
 			
@@ -317,7 +320,10 @@ int expectedVoltage = POTMETER_LOWEND +
 			\begin{itemize}
 				\item A soft bound was introduced for the potmeter constants and degrees constants. We hope this catches varying potmeter bounds: sometimes the value of the low end may be a few points lower and then the code would try endlessly to get the solar panels below their hardware end stop.
 				\item In the \verb|solarPanelDown| and \verb|solarPanelUp| methods, as close to the solar panel control as possible, we put an extra check if the reading of the analog pin does not go out of bounds. These bounds therefore include the soft bounds. This check intentionally does not rely on \verb|readPotMeter()| (which samples readings for better accuracy), which reduces accuracy near the soft end stops but increases safety. Accuracy inbetween should not be influenced.
+				
+				To be more precise: we assume the lowest number of the potmeter value corresponds to the lower end stop. In the code we check that when going down the potmeter value should be higher than the potmeter low end constant, therefore the panels cannot move down when below the (soft) end stop according to the potmeter. If the check fails, the internal EmergencyState is set to ``panels below lower bound!'', which can only be removed in solarPanelUp when the potmeterpin is above the low end constant or on a reboot of the Arduino. Therefore the panels cannot move downwards by Arduino signals when below the low end stop. For moving up of course everything is the other way around.
 				\item The Arduino now has a timeout on moving the panels up or down, which means that when you do not send another up/down request within the timeout of $x$ seconds the panels will stop automatically. The app and desktop version now try to send a request each $\frac{x}{2}$ seconds, but subject to change. Especially because of the in practice noticed bad connections this is a very practical alternative to keeping an open connection which would be even better but is a bit complicated with an Arduino.
+				\item The high and low end stop were put in series, such that \textit{all power} which can move the panels goes via \textit{both} end stops. That means that whatever happens, as long as the physical end stops work the panels will not go through their end stops anymore. This of course also means that when they do, by Arduino accident or (more probably) by manual buttons, you have to shortcut the end stop with an extra wire (just hold it to both connectors) to get it moving again (one can use the manual buttons).
 			\end{itemize}
 		
 	\section{Android App}
