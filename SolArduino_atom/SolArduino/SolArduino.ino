@@ -19,11 +19,11 @@ const byte POTMETERPIN = A7;
 const byte SAMPLE_RATE = 500; //amount of readings to take the average of when reading the potmeter
 
 //experimentally determined values of potmeter and angle ends
-const int SOFT_BOUND = 50; // about 50/( (1007-652)/(570-50) ) = 7.3 degrees safety
+const int SOFT_BOUND = 25; // about 25/( (977-652)/(570-50) ) = 4.0 degrees safety
 const int POTMETER_LOWEND = 652 + SOFT_BOUND; //NOTE especially in solarPanelUp/Down we assumed the low end has the lowest number!!
-const int POTMETER_HIGHEND = 1007 - SOFT_BOUND;
-const int DEGREES_HIGHEND = 570 - 73; //angle * 10 for more precision, including soft bound
-const int DEGREES_LOWEND = 50 + 73;
+const int POTMETER_HIGHEND = 977 - SOFT_BOUND; //was 1007
+const int DEGREES_HIGHEND = 570 - 40; //angle * 10 for more precision, including soft bound
+const int DEGREES_LOWEND = 50 + 40;
 
 //ethernet variables, these are hard coded for a static setup
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
@@ -59,10 +59,11 @@ const char http_OK[] PROGMEM =
 boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
 String EmergencyState = "";
+char compareCharArray[25];
 bool panelsStopped = true; //needed to control timer logic
 
 unsigned long moveTimeout = millis(); //moving timeout timer
-const int MOVE_TIMEOUT_DELTA = 2000; // time in milliseconds for the panels to stop moving after having received no command
+const int MOVE_TIMEOUT_DELTA = 4000; // time in milliseconds for the panels to stop moving after having received no command
 
 
 void setup () {
@@ -93,6 +94,10 @@ void loop () {
       Serial.println(angles[tableIndex]);
       setSolarPanel(angles[tableIndex]);
     }
+  }
+  //stop always on other emergencies than expected ones
+  if (!(EmergencyState == "" || EmergencyIsAboveUpperBound() || EmergencyIsBelowLowerBound())) {
+    solarPanelStop();
   }
 }
 
