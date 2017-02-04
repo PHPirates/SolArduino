@@ -1,5 +1,7 @@
 package com.abbyberkers.solarduino;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -95,10 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        WVersionManager versionManager = new WVersionManager(this);
-        versionManager.setVersionContentUrl("https://github.com/PHPirates/SolArduino/raw/master/solappduino/version.json");
-        versionManager.setUpdateUrl("https://github.com/PHPirates/SolArduino/raw/master/solappduino/solarduino/app/app-release.apk");
-        versionManager.checkVersion();
+        checkForUpdates();
 
 //        textView = (TextView) findViewById(R.id.textView);
         currentAngle = (TextView) findViewById(R.id.currentAngle);
@@ -322,6 +321,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 return false;
             }
         });
+    }
+
+    /**
+     * check for updates
+     */
+    public void checkForUpdates() {
+        WVersionManager versionManager = new WVersionManager(this);
+        versionManager.setVersionContentUrl("https://github.com/PHPirates/SolArduino/raw/master/solappduino/version.json");
+        //v1.2:
+//        versionManager.setVersionContentUrl("https://raw.githubusercontent.com/PHPirates/SolArduino/a3ca1759042450bff63827a04e01206947013922/solappduino/version.json");
+        versionManager.setUpdateUrl("https://github.com/PHPirates/SolArduino/raw/master/SolAppduino/SolArduino/app/SolArduino-release1.3.apk");
+        versionManager.checkVersion();
     }
 
     /**
@@ -716,6 +727,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         switch (item.getItemId()) {
             case R.id.action_ping:
                 startPingRequest();
+                return true;
+            case R.id.action_update:
+                checkForUpdates();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

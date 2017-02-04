@@ -10,4 +10,5 @@
     <string name="initialdegrees">42 \u00b0</string>
     <string name="imagepaneldescription">Solar Panel</string>
     <string name="setanglebutton">set angle</string>
+    <string name="update">Check for updates</string>
 </resources>
