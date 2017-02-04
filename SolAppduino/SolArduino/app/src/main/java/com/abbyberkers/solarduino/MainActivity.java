@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +36,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
+
+    // I know this is very bad but currently the Arduino does not return angles when
+    //the panels are out of bounds
+    String upperBound = "52";
+    String lowerBound = "9";
 
     String urlString;
     String ipString = "http://192.168.8.42/"; // IP Thomas
@@ -143,9 +149,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     TimerTask timerTask = new TimerTask() {
                         @Override
                         public void run() {
-                            //get degrees aimed at from lastResult
-                            int next = getNextDegree(lastResult);
                             int current = getCurrentDegree();
+                            //get degrees aimed at from lastResult
+                            int next = current;
+                            try {
+                                next = getNextDegree(lastResult);
+                            } catch (IndexOutOfBoundsException e) {
+                                //this happens when lastResult is for example "panels above upper bound!"
+                                Log.e("onCreate","finding integer in "+lastResult+" failed");
+                            }
                             if (next != current) {//get degrees displayed
                                 sendUpdateRequest();
                             } else {
@@ -318,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
      * @return degrees
      */
     public int getNextDegree(String result) {
-        String intString = result.substring(result.indexOf("_"),result.lastIndexOf("_"));
+        String intString = result.substring(result.indexOf("_")+1,result.lastIndexOf("_"));
         return Integer.parseInt(intString);
     }
 
@@ -330,8 +342,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         if (angleString.length()<3) {
             return Integer.parseInt(angleString.substring(0,1)); //if only one digit
-        } else {
+        } else if (angleString.length()==3){
             return Integer.parseInt(angleString.substring(0,2));
+        } else { //there must be a character like < or > in front
+            return Integer.parseInt(angleString.substring(1,3));
         }
     }
 
@@ -578,7 +592,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             //noinspection deprecation because we caught that in the if-statement above
                             angle = Html.fromHtml(updateString[0]) + "\u00b0";
                         }
-                        currentAngle.setText(angle);
                         // send "Updated." Toast, cancel the previous "Updated." Toast if that was still showing
                         if (updateToast != null) {
                             if (updatedToast != null) {
@@ -592,13 +605,30 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         // convert string to integer, then rotate the image
 
                         int newAngle = 0;
-                        try {
-                            newAngle = Integer.valueOf(updateString[0]);
-                        } catch (NumberFormatException e) {
-                            Toast.makeText(getBaseContext(), "Arduino string not formatted correctly",
-                                    Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
+
+                        //a new case of the Arduino returning either "panels above upper bound!"
+                        // or "panels below lower bound!"
+                        switch (updateString[1]) {
+                            case "above": //"panels above upper bound!"
+                                currentAngle.setText(">53°");
+                                newAngle = 57;
+                                break;
+                            case "below": //"panels below lower bound!"
+                                currentAngle.setText("<9°");
+                                newAngle = 5;
+                                break;
+                            default:
+                                currentAngle.setText(angle);
+                                try {
+                                    newAngle = Integer.valueOf(updateString[0]);
+                                } catch (NumberFormatException e) {
+                                    Toast.makeText(getBaseContext(), "Arduino string not formatted correctly",
+                                            Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
+                                break;
                         }
+
                         rotate(newAngle);
 
                         if (newAngle == 5) {
