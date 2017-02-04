@@ -114,8 +114,8 @@ void parseString(char *from) {
   char dateString[120]; //these may need some tuning
   char angleString[60];
 
-  Serial.print(F("free ram after assignments: "));
-  Serial.println(freeRam());
+  // Serial.print(F("free ram after assignments: "));
+  // Serial.println(freeRam());
 
   found = strtok(from, "_");
   int i = 0;
@@ -128,9 +128,9 @@ void parseString(char *from) {
       }
     } else if(i==2) {
       strcpy(dateString,found);
-      Serial.println(found);
+      // Serial.println(found);
     } else if(i==3) {
-      Serial.println(found);
+      // Serial.println(found);
       strcpy(angleString,found);
     }
     found = strtok(NULL, "_"); //extract next token
@@ -158,14 +158,16 @@ void parseString(char *from) {
   }
 
   Serial.println(F("strings parsed: "));
-  Serial.println(F("dates: "));
-  for(int i = 0; i<TABLE_LENGTH; i++) {
-    Serial.println(dates[i]);
-  }
-    Serial.println(F("angles: "));
-  for(int i = 0; i<TABLE_LENGTH; i++) {
-    Serial.println(angles[i]);
-  }
+  Serial.print(F("date 1: "));
+  // for(int i = 0; i<TABLE_LENGTH; i++) {
+  //   Serial.println(dates[i]);
+  // }
+  Serial.println(dates[0]);
+  Serial.print(F("angle 1: "));
+  Serial.println(angles[0]);
+  // for(int i = 0; i<TABLE_LENGTH; i++) {
+  //   Serial.println(angles[i]);
+  // }
 
   //if result is e.g. HTTP/1.1 500 Internal Server Error
   //or otherwise malformed, both arrays will contain just zeroes.
@@ -204,7 +206,7 @@ static void my_callback (byte status, word off, word len) {
     Ethernet::buffer[off+TABLE_SIZE] = 0;
     char* result = (char*) Ethernet::buffer + off;
     delay(42); // Make sure the request is sent and received properly, no delay results in a 400 bad request
-    Serial.println(result);
+    // Serial.println(result);
     parseString(result); // fill the arrays with the data
     responseReceived = true;
   }

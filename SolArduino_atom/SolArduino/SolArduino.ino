@@ -59,7 +59,7 @@ const char http_OK[] PROGMEM =
 boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
 String EmergencyState = "";
-char compareCharArray[25];
+char compareCharArray[25]; //compare EmergencyState whether panels out of bounds in EmergencyIsAboveUpperBound()
 bool panelsStopped = true; //needed to control timer logic
 
 unsigned long moveTimeout = millis(); //moving timeout timer
