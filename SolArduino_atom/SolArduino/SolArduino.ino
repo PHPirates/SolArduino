@@ -82,7 +82,7 @@ void loop () {
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
   checkMovingTimeout();
-  if (responseReceived && EmergencyState == "") { // a check to make sure we don't request angles again before we received the ones we already had requested
+  if (responseReceived && (EmergencyState == "" || EmergencyIsAboveUpperBound() || EmergencyIsBelowLowerBound()) ) { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
       requestNewTable();
       if (autoMode) {
