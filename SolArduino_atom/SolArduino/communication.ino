@@ -231,7 +231,7 @@ void homePage() {
   }
 
 void acknowledge(const char* message) {
-  if (EmergencyState == "") {
+  if (EmergencyState == "" || EmergencyIsAboveUpperBound() || EmergencyIsBelowLowerBound() ) {
     //send a http response
     bfill = ether.tcpOffset();
     bfill.emit_p(PSTR(
