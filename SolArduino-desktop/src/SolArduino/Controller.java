@@ -28,6 +28,9 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
+/**
+ * Controller class.
+ */
 //lots of variables that we really want to be easily found
 @SuppressWarnings("FieldCanBeLocal")
 public class Controller implements Initializable {
@@ -450,18 +453,13 @@ public class Controller implements Initializable {
         startCalendar
                 .set(year, month, dayOfMonth, 0, 0, 0); // months start at 0
         long start = startCalendar.getTimeInMillis();
-        long offset = timeZone.getOffset(
-                start); // calculate the offset because of time zone using
-        // the start time
-        start += offset; // set the actual start time, with correct time zone
-        
+
         Calendar endCalendar = Calendar
                 .getInstance(); // calendar with last second of day we want
         // the graph for
         endCalendar.set(year, month, dayOfMonth, 23, 59, 59);
-        long end = endCalendar.getTimeInMillis()
-                + offset; // set end time with correct time zone
-        
+        long end = endCalendar.getTimeInMillis(); // set end time with correct time zone
+
         XYChart.Series<Double, Double> series = new XYChart.Series<>();
         ObservableList<XYChart.Series<Double, Double>> list = FXCollections
                 .observableArrayList();
@@ -477,7 +475,7 @@ public class Controller implements Initializable {
             if (length == 10) {
                 // time * 1000 to convert to milliseconds, then add offset
                 // for correct time zone
-                data[i][0] = (data[i][0] * 1000) + offset;
+                data[i][0] *= 1000;
             }
             
             if ((start < data[i][0]) && (data[i][0]
