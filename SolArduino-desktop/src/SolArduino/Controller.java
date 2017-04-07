@@ -48,7 +48,7 @@ public class Controller implements Initializable {
     
     private int timeout = 1000; // timeout for sending up/down requests
     private String ip = "http://192.168.8.42/?"; // ip address from the Arduino
-    private String currentVersionString = "Version 1.2";
+    private String currentVersionString = "Version 1.2.1";
     // current version of the desktop app
     private String lastVersionString;
     private String checkVersionLink =
