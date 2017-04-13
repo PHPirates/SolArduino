@@ -1,1 +1,1 @@
-# [SolArduino](https://phpirates.github.io/SolArduino/) #
+# [Link to website](https://phpirates.github.io/SolArduino/) #
