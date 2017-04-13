@@ -30,8 +30,8 @@ void setupNTP() {
    }
    ether.printIp("Lookup IP   : ", ether.hisip);
    //sync arduino clock, current time in seconds can be found with now();
-   setTime(timeZone.toLocal(getNtpTime())); //+3
-    // setTime(getNtpTime());
+   //setTime(timeZone.toLocal(getNtpTime())); // why change the time in seconds, as that has nothing to do with timezones?
+   setTime(getNtpTime());
    Serial.print("time: ");
    Serial.println(now());
    Serial.print(hour());

@@ -19,11 +19,12 @@ const byte POTMETERPIN = A7;
 const byte SAMPLE_RATE = 500; //amount of readings to take the average of when reading the potmeter
 
 //experimentally determined values of potmeter and angle ends
-const int SOFT_BOUND = 25; // about 25/( (977-652)/(570-50) ) = 4.0 degrees safety
-const int POTMETER_LOWEND = 652 + SOFT_BOUND; //NOTE especially in solarPanelUp/Down we assumed the low end has the lowest number!!
-const int POTMETER_HIGHEND = 977 - SOFT_BOUND; //was 1007
-const int DEGREES_HIGHEND = 570 - 40; //angle * 10 for more precision, including soft bound
-const int DEGREES_LOWEND = 50 + 40;
+const int SOFT_BOUND = 5; // about 5 /( (970-611)/(570-50) ) = 0.7 degrees safety
+//NOTE especially in solarPanelUp/Down we assumed the low end has the lowest number!!
+const int POTMETER_LOWEND = 611 + SOFT_BOUND; // was 652
+const int POTMETER_HIGHEND = 970 - SOFT_BOUND; //was 977, 1007
+const int DEGREES_HIGHEND = 570 - 7; //angle * 10 for more precision, including soft bound
+const int DEGREES_LOWEND = 50 + 7;
 
 //ethernet variables, these are hard coded for a static setup
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };

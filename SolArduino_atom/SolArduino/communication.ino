@@ -187,7 +187,8 @@ unsigned long getNtpTime() {
     if(length > 0 && ether.ntpProcessAnswer(&timeFromNTP, ntpMyPort)) {
       // Serial.print("Time from NTP: ");
       // Serial.println(timeFromNTP);
-      return timeZone.toLocal(timeFromNTP - seventy_years);
+//      return timeZone.toLocal(timeFromNTP - seventy_years);
+      return timeFromNTP - seventy_years;
     }
   }
   return 0;
