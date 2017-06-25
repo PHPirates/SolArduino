@@ -210,6 +210,10 @@ static void my_callback (byte status, word off, word len) {
     // Serial.println(result);
     parseString(result); // fill the arrays with the data
     responseReceived = true;
+    // when new data is received, update angle of solar panels
+    if (autoMode) {
+        solarPanelAuto();
+    }
   }
 }
 
@@ -232,7 +236,7 @@ void homePage() {
   }
 
 void acknowledge(const char* message) {
-  if (EmergencyState == "" || EmergencyIsAboveUpperBound() || EmergencyIsBelowLowerBound() ) {
+  if (EmergencyState == "") {
     //send a http response
     bfill = ether.tcpOffset();
     bfill.emit_p(PSTR(

@@ -16,7 +16,7 @@ const byte DIRECTION_PIN = 4;
 const byte POWER_LOW = 5;
 const byte POTMETERPIN = A7;
 //rate of 28 (for int, max 31) instead of 5 hopefully solves panels stopping one degree off
-const byte SAMPLE_RATE = 500; //amount of readings to take the average of when reading the potmeter
+const int SAMPLE_RATE = 500; //amount of readings to take the average of when reading the potmeter
 
 //experimentally determined values of potmeter and angle ends
 const int SOFT_BOUND = 5; // about 5 /( (970-611)/(570-50) ) = 0.7 degrees safety
@@ -60,7 +60,8 @@ const char http_OK[] PROGMEM =
 boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
 String EmergencyState = "";
-char compareCharArray[25]; //compare EmergencyState whether panels out of bounds in EmergencyIsAboveUpperBound()
+boolean aboveUpperBound; // two cases which are recoverable errors and hence not a normal emergency
+boolean belowLowerBound;
 bool panelsStopped = true; //needed to control timer logic
 
 unsigned long moveTimeout = millis(); //moving timeout timer
@@ -83,12 +84,9 @@ void loop () {
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
   checkMovingTimeout();
-  if (responseReceived && (EmergencyState == "" || EmergencyIsAboveUpperBound() || EmergencyIsBelowLowerBound()) ) { // a check to make sure we don't request angles again before we received the ones we already had requested
+  if (responseReceived && (EmergencyState == "") ) { // a check to make sure we don't request angles again before we received the ones we already had requested
     if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
       requestNewTable();
-      if (autoMode) {
-        solarPanelAuto();
-      }
     } else if (autoMode && dates[tableIndex+1]<now()) { //if time walked into next part
       Serial.println(F("Advancing to next angle"));
       tableIndex++;
@@ -97,7 +95,7 @@ void loop () {
     }
   }
   //stop always on other emergencies than expected ones
-  if (!(EmergencyState == "" || EmergencyIsAboveUpperBound() || EmergencyIsBelowLowerBound())) {
+  if (!(EmergencyState == "")) {
     solarPanelStop();
   }
 }

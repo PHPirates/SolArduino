@@ -16,21 +16,21 @@ void setSolarPanel(int degrees) {
   Serial.println(expectedVoltage);
 
   int potMeterValue = readPotMeter();
-  while (potMeterValue != expectedVoltage && (EmergencyState == "" || EmergencyIsAboveUpperBound() || EmergencyIsBelowLowerBound() ) ) {
+  while (potMeterValue != expectedVoltage && EmergencyState == "" && !aboveUpperBound && !belowLowerBound ) {
     // the emergency check ensures the Arduino won't get stuck here when it
-    // can't reach the expectedVoltage: emergency will be set when panels out of bounds
+    // can't reach the expectedVoltage: flags will be set when panels out of bounds.
     //if the potmeter happens to skip the value, the panels will go back towards the value
     receiveHttpRequests(); //keep responsive
     if (POTMETER_LOWEND > POTMETER_HIGHEND) {
       if (potMeterValue > expectedVoltage) {
         //only move up when it is possible, otherwise just quit it
-        if (!EmergencyIsAboveUpperBound()) {
+        if (!aboveUpperBound) {
           solarPanelUp();
         } else {
           break;
         }
       } else {
-        if (!EmergencyIsBelowLowerBound()) {
+        if (!belowLowerBound) {
           solarPanelDown();
         } else {
           break;
@@ -38,13 +38,13 @@ void setSolarPanel(int degrees) {
       }
     } else {
       if (potMeterValue < expectedVoltage) {
-        if (!EmergencyIsAboveUpperBound()) {
+        if (!aboveUpperBound) {
           solarPanelUp();
         } else {
           break;
         }
       } else {
-        if (!EmergencyIsBelowLowerBound()) {
+        if (!belowLowerBound) {
           solarPanelDown();
         } else {
           break;
@@ -102,36 +102,26 @@ int readPotMeter() {
   return total/SAMPLE_RATE;
 }
 
-bool EmergencyIsAboveUpperBound() {
-  EmergencyState.toCharArray(compareCharArray,26);
-  return strcmp("panels above upper bound!",compareCharArray)==0;
-}
-
-bool EmergencyIsBelowLowerBound() {
-  EmergencyState.toCharArray(compareCharArray,26);
-  return strcmp("panels below lower bound!",compareCharArray)==0;
-}
-
 //solar panel movements
 void solarPanelDown() {
   // extra, redundant, safety.
   //Intentionally does not rely on readPotMeter(), which reduces accuracy
   //near the soft end stops but increases safety. Accuracy inbetween should not
   // be influenced
-  // move only when no emergency, or emergency was above upper bound
-  if ((EmergencyState == "") || EmergencyIsAboveUpperBound()) {
-    //reset emergency state when within bounds again
-    if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) {
-      EmergencyState = "";
+  // move only down when no emergency and panels not below lower bound
+  if ((EmergencyState == "") && !belowLowerBound) {
+    //also, reset when panels are below upper bound again
+    if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) { 
+      aboveUpperBound = false;
     }
-    if (analogRead(POTMETERPIN) > POTMETER_LOWEND) {
+    if (analogRead(POTMETERPIN) > POTMETER_LOWEND) { // if panels not below lower bound, move down
       panelsStopped = false;
       Serial.println(F("Panels going down"));
       digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
       digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
       digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
-    } else {
-      EmergencyState = F("panels below lower bound!"); //with the current configuration, at least
+    } else { // panels below lower bound
+      belowLowerBound = true;
       solarPanelStop();
     }
   } else {
@@ -140,9 +130,10 @@ void solarPanelDown() {
 }
 
 void solarPanelUp() {
-  if ((EmergencyState == "") || EmergencyIsBelowLowerBound()) {
-    if (analogRead(POTMETERPIN) > POTMETER_LOWEND) {
-      EmergencyState = "";
+  // go up when we can
+  if ((EmergencyState == "") && !aboveUpperBound) {
+    if (analogRead(POTMETERPIN) > POTMETER_LOWEND) { // if we move above low bound, reset flag
+      belowLowerBound = false;
     }
     if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) {
       panelsStopped = false;
@@ -150,8 +141,8 @@ void solarPanelUp() {
       digitalWrite(POWER_LOW, LOW);
       digitalWrite(POWER_HIGH, HIGH);
       digitalWrite(DIRECTION_PIN, LOW);
-    } else {
-      EmergencyState = F("panels above upper bound!");
+    } else { // we are above upper bound, do not go up
+      aboveUpperBound = true;
       solarPanelStop();
     }
   } else {
