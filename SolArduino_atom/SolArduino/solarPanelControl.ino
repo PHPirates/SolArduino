@@ -16,10 +16,10 @@ void setSolarPanel(int degrees) {
   Serial.println(expectedVoltage);
 
   int potMeterValue = readPotMeter();
-  while (potMeterValue != expectedVoltage && EmergencyState == "" && !aboveUpperBound && !belowLowerBound ) {
-    // the emergency check ensures the Arduino won't get stuck here when it
+  while (potMeterValue != expectedVoltage && EmergencyState == "") {
+    // The breaks below will ensure the Arduino won't get stuck here when it
     // can't reach the expectedVoltage: flags will be set when panels out of bounds.
-    //if the potmeter happens to skip the value, the panels will go back towards the value
+    // If the potmeter happens to skip the value, the panels will go back towards the value.
     receiveHttpRequests(); //keep responsive
     if (POTMETER_LOWEND > POTMETER_HIGHEND) {
       if (potMeterValue > expectedVoltage) {
@@ -36,7 +36,7 @@ void setSolarPanel(int degrees) {
           break;
         }
       }
-    } else {
+    } else { // low end has lowest voltage points
       if (potMeterValue < expectedVoltage) {
         if (!aboveUpperBound) {
           solarPanelUp();
@@ -53,7 +53,7 @@ void setSolarPanel(int degrees) {
     }
     potMeterValue = readPotMeter();
   }
-  solarPanelStop(); //stop movement when close enough
+  solarPanelStop(); //stop movement when close enough or otherwise aborted
 }
 
 void solarPanelAuto() {

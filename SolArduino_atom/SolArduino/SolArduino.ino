@@ -94,7 +94,7 @@ void loop () {
       setSolarPanel(angles[tableIndex]);
     }
   }
-  //stop always on other emergencies than expected ones
+  //stop always on emergencies
   if (!(EmergencyState == "")) {
     solarPanelStop();
   }
