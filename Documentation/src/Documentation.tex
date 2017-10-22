@@ -81,10 +81,10 @@ ether.printIp("SRV: ", ether.hisip);
 		The current ip address is \url{http://192.168.8.42}.
 	
 	\section{Setup of the project}\label{sec:setupOfTheProject}
-	\input{Setup}
+	\input{../src/Setup}
 
 	\section{Arduino Code}\label{sec:arduinoCode}
-	\input{ArduinoCode}
+	\input{../src/ArduinoCode}
 
 	\section{Android App}\label{sec:androidApp}
 		\subsection{User Manual}\label{subsec:userManual}
@@ -106,7 +106,7 @@ ether.printIp("SRV: ", ether.hisip);
 		
 		\subsection{Communication with the Arduino}\label{subsec:communicationWithTheArduino}
 			To communicate with the Arduino, the Android app sends http requests to the Arduino.
-			For all the requests accepted by the Arduino, check section~\ref{arduinoToAndroid}.
+			For all the requests accepted by the Arduino, check section~\ref{subsec:arduinotoandroid}.
 			Below a list containing what requests are sent when something is clicked can be found.
 			\begin{itemize}
 				\item \textbf{Up and down button.} \url{http://192.168.2.106/?panel=up} is sent at the moment the button is pressed, so the Arduino knows we want the panels to move up.
