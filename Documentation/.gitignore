@@ -1,3 +1,7 @@
+.idea/
+out/
+aux/
+*.iml
 *.aux
 *.log
 *.out

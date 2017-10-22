@@ -1,0 +1,177 @@
+\subsection{Hardware used}\label{subsec:hardwareUsed}
+We used an Arduino Nano ATmega328, bought at \href{http://nl.rs-online.com/}{rs-components}.
+We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano.
+This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
+\subsubsection{Components list}
+	\begin{itemize}
+		\item BC547 NPN transistor
+		\item BC557 PNP transistor
+		\item $4.7$k $\Omega$ resistor (yellow - violet - red - gold)
+		\item $1$k $\Omega$ resistor (brown - black - black - brown - brown - red)
+		\item $10$k $\Omega$ resistor (brown - black - orange - gold)
+	\end{itemize}
+\subsubsection{Button circuit}
+	We implemented the begin- and endstops in the circuit for the buttons that move the panels up and down.
+	When a button is NOT pushed, 1 and 1B, and 2 and 2B of that button are connected.
+	When a button is pushed, connections are made between 1 and 1A, and 2 and 2A of that button.
+	\begin{center}\begin{circuitikz}
+		\draw 
+		% 20, 28, E4
+			(4,0) node {20} 
+			(6,0) node {28}
+			(8,0) node {E4}
+		% button hoog
+			(0.75 , -6) node {button up}
+			(2.25, -5.25) node {1A}
+			(2.25, -6) node {1}
+			(2.25, -6.75) node {1B}
+			(3.75, -5.25) node {2A}
+			(3.75, -6) node {2}
+			(3.75, -6.75) node {2B}
+		% button laag
+			(10 ,-6) node {button down}
+			(7.25, -5.25) node {1A}
+			(7.25,-6) node {1}
+			(7.25, -6.75) node {1B}
+			(8.5, -5.25) node {2A}
+			(8.5, -6) node {2}
+			(8.5, -6.75) node {2B}
+		% drawing
+			% 28 to 1,2 hoog via eindstoppen
+				(6,-0.25) to (6,-1)
+					to (3,-1) 
+					to (3,-2)
+				(2.5,-2) to (3.5,-2)
+				(2.5,-2) to[switch, l_= high end stop] (2.5,-4) %eindstop hoog
+					to (1.75,-4)
+					to (1.75,-6) to (2,-6) 
+				(3.5,-2) to[switch = low end stop] (3.5,-4) %eindstop laag
+					to (4.25,-4)
+					to (4.25,-6) to (4,-6) 
+			% 1A hoog to 1B laag
+				(2,-5.25) to (1.9,-5.25)
+					to (1.9,-4.75)
+					to(5.75,-4.75)
+					to(5.75,-6.75)
+					to(7,-6.75)
+			% 2B hoog to 1A laag
+				(4,-6.75) to (5.25,-6.75)
+					to (5.25,-5.25)
+					to (7,-5.25)
+			% 20 to 1 laag
+				(4,-0.25) to (4,-1.25)
+					to (6.25,-1.25)
+					to (6.25,-6)
+					to (7,-6)
+			% 1 laag to 2 laag
+				(7.5,-6) to (8.25,-6)
+			% E4 to 2A laag
+				(8,-0.25) to (8,-4.75)
+					to (9,-4.75)
+					to (9,-5.25)
+					to (8.75,-5.25)
+		;
+	\end{circuitikz}\end{center}
+\subsubsection{Arduino circuit}
+	\begin{center}\begin{circuitikz}
+		\draw[dashed] 
+			(2,10) to (5,10)
+				to (5,14)
+				to (2,14)
+				to (2,10)
+			(3.5,13) node[align=left] {Lenze\\ frequency\\ inverter}
+		;
+		\draw
+		%E4 and its components (Arduino I/O, transistors)
+			(10,0) node {E4}
+			(1,1.225) node[align=center] {Arduino\\ I/O}
+			(10,2) node [pnp] (pnpE4) {}
+				(pnpE4.B) node[right=8mm, align=left] {Q6\\ BC557}
+			(5,1.225) node [npn] (npnE4) {}
+				(npnE4.B) node[right=8mm, align=left] {Q5\\ BC547}
+		%Low end stop and its components
+			(0.5,7.225) node[align=center] {Arduino\\ I/O}
+			(10,8) node [pnp] (pnpLow) {}
+				(pnpLow.B) node[right=8mm, align=left] {Q4\\ BC557}
+			(4, 7.225) node [npn] (npnLow) {}
+				(npnLow.B) node[right=8mm, align=left] {Q3\\ BC547}
+		%High end stop and its components
+			(0.5, 15.725) node[align=center] {Arduino\\ I/O}
+			(10,16.5) node[pnp] (pnpHigh) {}
+				(pnpHigh.B) node[right=8mm, align=left] {Q2\\ BC557}
+			(4, 15.725) node[npn] (npnHigh) {}
+				(npnHigh.B) node[right=8mm, align=left] {Q1\\ BC547}
+		%Frequency Invertor and components (including line to GNDs)
+			(3.5,11) node[sground] {}
+				to (2,11)
+			(1.2,11.5) node[align=left] {39 \\(GND)}
+				(2,11) to[short,-*] (-1,11)
+			(5.7,12) node[align=left] {28 \\ enable}
+				(5,11.5) to (6.5,11.5) % fi to right
+		%Arduino GND
+			(-3,11) node[align=left] {Arduino\\ GND}
+				(-2,11) to (-1,11)
+				(-1,0) to (-1,14.955) % line on the left that connects GND
+				(12,4) to (12,18.5) % line on the right that connects 20
+		%circuit around E4
+			(10,0.25) to (pnpE4.C)
+			(pnpE4.B) to[R=R8 1k$\Omega$] (npnE4.C) 
+			(npnE4.E) to (5,0)
+				to (-1,0)
+			(npnE4.B) to[R, l=R7 4.8k$\Omega$] (2.1, 1.225)
+			(9,2) node[circ] {}
+				to[R,align=left, l=R9\\ 10k$\Omega$] (9,4)
+				to (12,4)
+			(10,4) node[circ] {} 
+				to (pnpE4.E)
+		%circuit around low end stop
+			(pnpLow.B) to[R=R5 1k$\Omega$] (7,8) 
+				to (npnLow.C)
+			(9,8) node[circ] {} 
+				to[R, align=left, l=R6\\ 10k$\Omega$] (9,10)
+				to[short, -*] (12,10)
+				(pnpLow.E) to (10,10) node[circ] {}
+			(pnpLow.C) to[switch, align=left, l=low\\ end stop] (10,6)
+				to (6.5,6)
+				to (6.5,10) % up to high end stop
+			(npnLow.B) to[R=R4 4.7k$\Omega$] (1.2, 7.225)
+			(npnLow.E) to (4,6)
+				to[short, -*] (-1,6)
+		%circuit around high end stop
+			(pnpHigh.B) to[R=R2 1k$\Omega$] (7,16.5)
+				to (npnHigh.C)
+			(9,16.5) to[R, align=left, l=R3\\ 10k$\Omega$, *-] (9,18.5)
+				to (12,18.5)
+			(pnpHigh.E) to[short, -*] (10,18.5)
+			(pnpHigh.C) to (11.5,15.74) % from Q2 to right ...
+			(11.5,15.74) to (11.5,7.225) % ... to right of Q4 ...
+			(11.5,7.225) to[short,-*] (10,7.225) % ... to Q4
+			(npnHigh.E) to (-1,14.955)
+			(npnHigh.B) to[R=R1 4.7k$\Omega$] (1.2, 15.725)
+			% draw end stop
+			(6.5,11.5) to[switch, align=right, l=high end stop] (6.5,10)
+		;
+	\end{circuitikz}\end{center}
+	\begin{tabular}{l|l|l|l}
+		circuit & terminal (connection to) & to meter cupboard & Arduino \\
+		\hline
+		Low end stop & no & white/green & 5 \\
+		Ground & 4 & red & GND \\
+		E4 & 5 & blue & 4 \\
+		High end stop & 6 & green & 3 \\
+		\hline
+		To potmeter: \\
+		\hline
+		blue (GND) & 7 \\
+		yellow/green (signal) & 8 & black & A7 \\
+		brown (+5V) & 9 & yellow & 5V
+	\end{tabular}
+\subsubsection{Potentiometer}
+The yellow-green wire from the potentiometer to the main control box is the signal wire, on connection 8 in that box.
+With the Arduino we measured 74 (analog in so scale 0-1024) in the highest position and 360 in the lowest position, with connection 9 to ground on the Arduino.
+\subsubsection{Motor control}
+We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4-11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
+\subsection{Software used}\label{subsec:softwareUsed}
+We decided on the \href{http://platformio.org/platformio-ide}{PlatformIO IDE}, (which uses python 2.7 and Clang for autocompletion) because it is a lot better than the standard Arduino IDE, and also seemed better than the Stino plugin for Sublime Text 3.
+A plugin for CLion also looked good but we didn't get that to work.
+PlatformIO worked fine but not always, so as a backup you can always use the Arduino IDE, but you need to make sure you have all the libraries in your \url{C:\\Users\\username\\Documents\\Arduino\\libraries} folder.
