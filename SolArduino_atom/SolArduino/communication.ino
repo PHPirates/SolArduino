@@ -114,23 +114,27 @@ void parseString(char *from) {
   char dateString[120]; //these may need some tuning
   char angleString[60];
 
-  // Serial.print(F("free ram after assignments: "));
-  // Serial.println(freeRam());
+//   Serial.print(F("free ram after assignments: "));
+//   Serial.println(freeRam());
 
+  // Debug received response, look for html response code 
+  Serial.println(from);
+  
   found = strtok(from, "_");
   int i = 0;
   while(found != NULL){
 
+    // First, split into three pieces: number of angles, string with dates, string with angles
     if(i==1){
       if (TABLE_LENGTH != atoi(found)) {
         Serial.println(F("WARNING length of received values does not match local array length"));
-        EmergencyState = "Length mismatch";
+        EmergencyState = F("Length mismatch");
       }
     } else if(i==2) {
       strcpy(dateString,found);
-      // Serial.println(found);
+//       Serial.println(found);
     } else if(i==3) {
-      // Serial.println(found);
+//       Serial.println(found);
       strcpy(angleString,found);
     }
     found = strtok(NULL, "_"); //extract next token

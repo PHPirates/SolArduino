@@ -7,7 +7,7 @@
 const int TABLE_LENGTH = 10; // declare length here is easier
 int angles[TABLE_LENGTH]; //stores angles*10
 long dates[TABLE_LENGTH]; //stores unix times
-const int TABLE_SIZE = 400; //this many bytes for 10 angles will do, used in ethernet buffer and when parsing
+const int TABLE_SIZE = 600; //was 400, increased to allow bad request content to show. This many bytes for 10 angles will do, used in ethernet buffer and when parsing
 int tableIndex = 0; // The current index in the table when in auto mode
 
 //pin declarations

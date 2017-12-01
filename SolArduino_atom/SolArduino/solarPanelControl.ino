@@ -152,7 +152,7 @@ void solarPanelUp() {
 
 void solarPanelStop() {
   panelsStopped = true;
-  Serial.println(F("Panels stopped"));
+//  Serial.println(F("Panels stopped"));
   digitalWrite(POWER_LOW, LOW);
   digitalWrite(POWER_HIGH, LOW);
   digitalWrite(DIRECTION_PIN, LOW);
