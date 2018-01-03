@@ -43,10 +43,10 @@ void setupNAS() {
   // if (!ether.dnsLookup(website))
   //   Serial.println("DNS failed");
    //instead of dns lookup, set hisip (ip of NAS) manually to be used by browseURL
-   ether.hisip[0]=192;
-   ether.hisip[1]=168;
-   ether.hisip[2]=8;
-   ether.hisip[3]=200;
+   ether.hisip[0]=91;
+   ether.hisip[1]=184;
+   ether.hisip[2]=13;
+   ether.hisip[3]=53;
    //below not applicable anymore, but could always change
    // the http request needs a different dns, so we set that here and do setup again
    // dns[0] = 192;
