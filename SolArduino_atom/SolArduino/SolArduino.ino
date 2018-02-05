@@ -21,8 +21,8 @@ const int SAMPLE_RATE = 500; //amount of readings to take the average of when re
 //experimentally determined values of potmeter and angle ends
 const int SOFT_BOUND = 5; // about 5 /( (970-611)/(570-50) ) = 0.7 degrees safety
 //NOTE especially in solarPanelUp/Down we assumed the low end has the lowest number!!
-const int POTMETER_LOWEND = 611 + SOFT_BOUND; // was 652
-const int POTMETER_HIGHEND = 970 - SOFT_BOUND; //was 977, 1007
+const int POTMETER_LOWEND = 0; // was 611, was 652
+const int POTMETER_HIGHEND = 1000; //was 970, was 977, 1007
 const int DEGREES_HIGHEND = 570 - 7; //angle * 10 for more precision, including soft bound
 const int DEGREES_LOWEND = 50 + 7;
 
@@ -98,6 +98,18 @@ void loop () {
   if (!(EmergencyState == "")) {
     solarPanelStop();
   }
+
+  // Useful for calibrating potmeter
+//  printPotmeterValue();
+}
+
+unsigned long potMeterCount = millis();
+void printPotmeterValue() {
+  if (millis() > potMeterCount + 1000) {
+    Serial.println(readPotMeter());
+    potMeterCount = millis();
+  }
+  
 }
 
 //get next auto angle, if -1 then ran out of angles

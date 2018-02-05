@@ -69,18 +69,18 @@ void solarPanelAuto() {
 // timeout is set to a value in the future on user up/down requests
 void checkMovingTimeout() {
   if (millis() > moveTimeout and !panelsStopped) {
-    Serial.print(F("timed out at"));
-    Serial.println(millis());
+//    Serial.print(F("timed out at"));
+//    Serial.println(millis());
     solarPanelStop();
   }
 }
 
 void resetMoveTimeout() {
   moveTimeout = millis() + MOVE_TIMEOUT_DELTA;
-  Serial.print(F("set moveTimeout at "));
-  Serial.print(millis());
-  Serial.print(F(" for "));
-  Serial.println(moveTimeout);
+//  Serial.print(F("set moveTimeout at "));
+//  Serial.print(millis());
+//  Serial.print(F(" for "));
+//  Serial.println(moveTimeout);
 }
 
 int getCurrentAngle() {
@@ -114,16 +114,16 @@ void solarPanelDown() {
     if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) { 
       aboveUpperBound = false;
     }
-    if (analogRead(POTMETERPIN) > POTMETER_LOWEND) { // if panels not below lower bound, move down
+//    if (analogRead(POTMETERPIN) > POTMETER_LOWEND) { // if panels not below lower bound, move down
       panelsStopped = false;
-      Serial.println(F("Panels going down"));
+//      Serial.println(F("Panels going down"));
       digitalWrite(POWER_LOW, HIGH); //Put current via the low end stop to 28
       digitalWrite(POWER_HIGH, LOW); //Make sure the high end circuit is not on
       digitalWrite(DIRECTION_PIN, HIGH); //To go down, also let the current flow to E4
-    } else { // panels below lower bound
-      belowLowerBound = true;
-      solarPanelStop();
-    }
+//    } else { // panels below lower bound
+//      belowLowerBound = true;
+//      solarPanelStop();
+//    }
   } else {
     solarPanelStop();
   }
@@ -135,16 +135,16 @@ void solarPanelUp() {
     if (analogRead(POTMETERPIN) > POTMETER_LOWEND) { // if we move above low bound, reset flag
       belowLowerBound = false;
     }
-    if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) {
+//    if (analogRead(POTMETERPIN) < POTMETER_HIGHEND) {
       panelsStopped = false;
-      Serial.println(F("Panels going up"));
+//      Serial.println(F("Panels going up"));
       digitalWrite(POWER_LOW, LOW);
       digitalWrite(POWER_HIGH, HIGH);
       digitalWrite(DIRECTION_PIN, LOW);
-    } else { // we are above upper bound, do not go up
-      aboveUpperBound = true;
-      solarPanelStop();
-    }
+//    } else { // we are above upper bound, do not go up
+//      aboveUpperBound = true;
+//      solarPanelStop();
+//    }
   } else {
     solarPanelStop();
   }
