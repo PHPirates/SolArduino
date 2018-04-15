@@ -67,6 +67,9 @@ bool panelsStopped = true; //needed to control timer logic
 unsigned long moveTimeout = millis(); //moving timeout timer
 const int MOVE_TIMEOUT_DELTA = 4000; // time in milliseconds for the panels to stop moving after having received no command
 
+// Whether automatically requesting angles and auto mode which uses them, are enabled.
+const boolean ENABLE_AUTO = false;
+
 
 void setup () {
   //the serial shouldn't be used in final code, but this is always in development...
@@ -75,7 +78,9 @@ void setup () {
   setPinModes();
   setupEthernet();
   setupNTP();
-  setupNAS();
+  if (ENABLE_AUTO) {
+    setupNAS();
+  }
   setupPanels();
 }
 
@@ -84,16 +89,22 @@ void loop () {
   ether.packetLoop(ether.packetReceive());
   receiveHttpRequests(); //be responsive as a webserver
   checkMovingTimeout();
-  if (responseReceived && (EmergencyState == "") ) { // a check to make sure we don't request angles again before we received the ones we already had requested
-    if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
-      requestNewTable();
-    } else if (autoMode && dates[tableIndex+1]<now()) { //if time walked into next part
-      Serial.println(F("Advancing to next angle"));
-      tableIndex++;
-      Serial.println(angles[tableIndex]);
-      setSolarPanel(angles[tableIndex]);
+  
+  if (ENABLE_AUTO) {
+    
+    if (responseReceived && (EmergencyState == "") ) { // a check to make sure we don't request angles again before we received the ones we already had requested
+      if (tableIndex+1 >= TABLE_LENGTH) { //if we are at the end
+        requestNewTable();
+      } else if (autoMode && dates[tableIndex+1]<now()) { //if time walked into next part
+        Serial.println(F("Advancing to next angle"));
+        tableIndex++;
+        Serial.println(angles[tableIndex]);
+        setSolarPanel(angles[tableIndex]);
+      }
     }
+
   }
+  
   //stop always on emergencies
   if (!(EmergencyState == "")) {
     solarPanelStop();

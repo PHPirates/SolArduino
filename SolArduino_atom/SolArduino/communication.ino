@@ -37,6 +37,7 @@ void receiveHttpRequests() {
              autoMode = false;
          }
          else if (strncmp("?panel=auto ", data, 12) == 0) {
+            if (ENABLE_AUTO) {
              Serial.println(F("Auto mode switched on."));
              autoMode = true; //solarPanelAuto() is called later, first we handle off the request
              int angle = getNextAngle();
@@ -45,6 +46,9 @@ void receiveHttpRequests() {
              response += angle;
              response += "_degrees.";
              acknowledge(response.c_str());
+            } else {
+              acknowledge("Sorry, someone has disabled auto mode.");
+            }
          }
          else if (strncmp("?panel=manual ", data, 12) == 0){
              acknowledge("Auto mode switched off.");

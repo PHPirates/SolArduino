@@ -60,8 +60,10 @@ void setupNAS() {
 void setupPanels() {
   solarPanelStop(); //just in case, default is stopped
   autoMode = false; // by default, do nothing (safer)
-  requestNewTable(); //fill the angles and dates arrays
-  while(!responseReceived) { //wait for response before continuing
-    ether.packetLoop(ether.packetReceive()); //keep receiving response
+  if (ENABLE_AUTO) {
+    requestNewTable(); //fill the angles and dates arrays
+    while(!responseReceived) { //wait for response before continuing
+      ether.packetLoop(ether.packetReceive()); //keep receiving response
+    }
   }
 }
