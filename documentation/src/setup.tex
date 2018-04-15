@@ -153,14 +153,14 @@ This seemed easier than a wifi shield because of this reason, and with a wifi sh
 		;
 	\end{circuitikz}\end{center}
 	\begin{tabular}{l|l|l|l}
-		circuit & terminal (connection to) & to meter cupboard & Arduino \\
+		In circuit & terminal (connection to) & to meter cupboard & Arduino \\
 		\hline
 		Low end stop & no & white/green & 5 \\
 		Ground & 4 & red/brown & GND \\
 		E4 & 5 & blue & 4 \\
 		High end stop & 6 & green & 3 \\
 		\hline
-		To potmeter: &&& \\
+		Circuit to potmeter &&& \\
 		blue (signal) & 7 & black & A7\\
 		yellow/green (+5V) & 8 & yellow & +5V \\
 		brown (GND) & 9 & &
@@ -168,12 +168,14 @@ This seemed easier than a wifi shield because of this reason, and with a wifi sh
 \subsubsection{Potentiometer}
 The \textbf{blue} wire from the potentiometer to the main control box is the signal wire, on connection 7 in that box.
 
-Potmeter values as measured by the Arduino, scale 0--1024.
+Potmeter values as measured by the Arduino, scale 0--1024:
+
 \begin{tabular}{ccc}
 	Date & Low end stop & High end stop \\
 	2017-10-22 & 360 & 74 \\
 	2018-04-15 & 405 & 40 \\
 \end{tabular}
+
 \subsubsection{Motor control}
 We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4-11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
 \subsection{Software used}\label{subsec:softwareUsed}
