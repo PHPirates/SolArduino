@@ -1,105 +1,40 @@
-void setSolarPanel(int degrees) {
-  //upper and lower bounds
-  if (degrees > max (DEGREES_HIGHEND,DEGREES_LOWEND)) {
-    degrees = max (DEGREES_HIGHEND,DEGREES_LOWEND);
-  } else if(degrees < min (DEGREES_HIGHEND,DEGREES_LOWEND)) {
-    degrees = min (DEGREES_HIGHEND,DEGREES_LOWEND);
-  }
 
-  //times hundred to avoid integer division just possible without integer overflow
-  float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
-  int expectedVoltage = POTMETER_LOWEND +
-  ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
-  Serial.print(F("Going to degrees: "));
-  Serial.println(degrees);
-  Serial.print(F("Expected voltage: "));
-  Serial.println(expectedVoltage);
+//pin declarations
+const byte POWER_HIGH = 3;
+const byte DIRECTION_PIN = 4;
+const byte POWER_LOW = 5;
+const byte POTMETERPIN = A7;
 
-  int potMeterValue = readPotMeter();
-  while (potMeterValue != expectedVoltage && EmergencyState == "") {
-    // The breaks below will ensure the Arduino won't get stuck here when it
-    // can't reach the expectedVoltage: flags will be set when panels out of bounds.
-    // If the potmeter happens to skip the value, the panels will go back towards the value.
-    receiveHttpRequests(); //keep responsive
-    if (POTMETER_LOWEND > POTMETER_HIGHEND) {
-      if (potMeterValue > expectedVoltage) {
-        //only move up when it is possible, otherwise just quit it
-        if (!aboveUpperBound) {
-          solarPanelUp();
-        } else {
-          break;
-        }
-      } else {
-        if (!belowLowerBound) {
-          solarPanelDown();
-        } else {
-          break;
-        }
-      }
-    } else { // low end has lowest voltage points
-      if (potMeterValue < expectedVoltage) {
-        if (!aboveUpperBound) {
-          solarPanelUp();
-        } else {
-          break;
-        }
-      } else {
-        if (!belowLowerBound) {
-          solarPanelDown();
-        } else {
-          break;
-        }
-      }
-    }
-    potMeterValue = readPotMeter();
-  }
-  solarPanelStop(); //stop movement when close enough or otherwise aborted
+//experimentally determined values of potmeter and angle ends
+const int SOFT_BOUND = 7; // about 7 /( (405-40)/(570-50) ) = 10, so 1 degree safety
+const int POTMETER_LOWEND = 405;
+const int POTMETER_HIGHEND = 40; 
+const int DEGREES_HIGHEND = 570 - 10; //angle * 10 for more precision, including soft bound
+const int DEGREES_LOWEND = 50 + 10;
+
+String EmergencyState = "";
+boolean aboveUpperBound; // two cases which are recoverable errors and hence not a normal emergency
+boolean belowLowerBound;
+bool panelsStopped = true; //needed to control timer logic
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(POWER_HIGH,OUTPUT);
+  pinMode(DIRECTION_PIN,OUTPUT);
+  pinMode(POWER_LOW,OUTPUT);
+  Serial.begin(9600);
 }
 
-void solarPanelAuto() {
-  autoMode = true;
-  int angle = getNextAngle();
-  if (angle == -1) {
-    requestNewTable();
-  } else {
-    setSolarPanel(angle);
-  }
-}
-
-// timeout is set to a value in the future on user up/down requests
-void checkMovingTimeout() {
-  if (millis() > moveTimeout and !panelsStopped) {
-//    Serial.print(F("timed out at"));
-//    Serial.println(millis());
-    solarPanelStop();
-  }
-}
-
-void resetMoveTimeout() {
-  moveTimeout = millis() + MOVE_TIMEOUT_DELTA;
-//  Serial.print(F("set moveTimeout at "));
-//  Serial.print(millis());
-//  Serial.print(F(" for "));
-//  Serial.println(moveTimeout);
-}
-
-int getCurrentAngle() {
-  int potMeterValue = readPotMeter();
-  Serial.print(F("Potmeter: "));
-  Serial.println(potMeterValue);
-  //fraction of potmetervalue from the low end. Times hundred
-  //to maintain accuracy with integer division
-  int fraction = ( (long)( abs(potMeterValue - POTMETER_LOWEND) ) * 100 )
-  / abs( POTMETER_HIGHEND - POTMETER_LOWEND );
-  return ( (long) fraction * (DEGREES_HIGHEND - DEGREES_LOWEND) ) / 100 + DEGREES_LOWEND;
-}
-
-int readPotMeter() {
-  long total = 0;
-  for (int i=0; i<SAMPLE_RATE; i++) {
-    total += analogRead(POTMETERPIN);
-  }
-  return total/SAMPLE_RATE;
+void loop() {
+  // put your main code here, to run repeatedly:
+  solarPanelUp();
+  delay(5000);
+  solarPanelStop();
+  delay(5000);
+  solarPanelDown();
+  delay(5000);
+  solarPanelStop();
+  delay(5000);
 }
 
 //solar panel movements
@@ -198,8 +133,6 @@ void solarPanelUp() {
 }
 
 void solarPanelStop() {
-  panelsStopped = true;
-//  Serial.println(F("Panels stopped"));
   digitalWrite(POWER_LOW, LOW);
   digitalWrite(POWER_HIGH, LOW);
   digitalWrite(DIRECTION_PIN, LOW);

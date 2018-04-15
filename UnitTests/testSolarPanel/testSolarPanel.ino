@@ -21,7 +21,7 @@ void loop() {
   solarPanelDown();
   delay(5000);
   solarPanelStop();
-  delay(500);
+  delay(5000);
 }
 
 //solar panel movements

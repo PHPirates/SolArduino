@@ -19,12 +19,11 @@ const byte POTMETERPIN = A7;
 const int SAMPLE_RATE = 500; //amount of readings to take the average of when reading the potmeter
 
 //experimentally determined values of potmeter and angle ends
-const int SOFT_BOUND = 5; // about 5 /( (970-611)/(570-50) ) = 0.7 degrees safety
-//NOTE especially in solarPanelUp/Down we assumed the low end has the lowest number!!
-const int POTMETER_LOWEND = 0; // was 611, was 652
-const int POTMETER_HIGHEND = 2000; //was 970, was 977, 1007
-const int DEGREES_HIGHEND = 570 - 7; //angle * 10 for more precision, including soft bound
-const int DEGREES_LOWEND = 50 + 7;
+const int SOFT_BOUND = 7; // about 7 /( (405-40)/(570-50) ) = 10, so 1 degree safety
+const int POTMETER_LOWEND = 405;
+const int POTMETER_HIGHEND = 40; 
+const int DEGREES_HIGHEND = 570 - 10; //angle * 10 for more precision, including soft bound
+const int DEGREES_LOWEND = 50 + 10;
 
 //ethernet variables, these are hard coded for a static setup
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
@@ -60,7 +59,8 @@ const char http_OK[] PROGMEM =
 boolean autoMode;
 boolean responseReceived = true; // a flag for knowing whether the response from the NAS was received or not, because we need to wait on that
 String EmergencyState = "";
-boolean aboveUpperBound; // two cases which are recoverable errors and hence not a normal emergency
+// two cases which are recoverable errors and hence not a normal emergency
+boolean aboveUpperBound; 
 boolean belowLowerBound;
 bool panelsStopped = true; //needed to control timer logic
 

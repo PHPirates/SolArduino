@@ -1,6 +1,6 @@
 const byte POTMETERPIN = A7;
 
-const int SAMPLE_RATE = 1; //amount of readings to take the average of when reading the potmeter
+const int SAMPLE_RATE = 500; //amount of readings to take the average of when reading the potmeter
 
 void setup() {
   Serial.begin(9600);
