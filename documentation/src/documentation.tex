@@ -56,8 +56,10 @@
 	
 	\section{Maintenance}\label{sec:maintenance}
 		NAS times are online for until around 14/9/2018.
+
+		\subsection{Changing IP address}\label{subsec:changingIpAddress}
 		
-		To change IP adress, change it in the Arduino code two times (\verb|myip| en \verb|gw|), if needed also change the NAS ip adress:
+		To change IP address, change it in the Arduino code two times (\verb|myip| en \verb|gw|), if needed also change the NAS ip adress:
 		\begin{lstlisting}
 ether.hisip[0]=192;
 ether.hisip[1]=168;
@@ -79,7 +81,26 @@ ether.printIp("SRV: ", ether.hisip);
 		Also change it in the Android app two times (\verb|ipString| and \verb|host|), and in the desktop app.
 		
 		The current ip address is \url{http://192.168.8.42}.
-	
+
+	\subsection{Panels are stuck when out of bounds}\label{subsec:outOfBounds}
+
+	For safety, when panels go out of bounds they cannot move anymore in any direction.
+	To get them moving again, shortcut the low end stop if the panels are down like in Figure~\ref{lowendstop} and do the same for the high end stop if the panels are up like in Figure~\ref{highendstop}.
+
+
+	\begin{figure}
+		\centering
+		\includegraphics[width=.8\linewidth]{images/lowendstop.PNG}
+		\caption{Shortcutting the low end stop}
+		\label{lowendstop}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics[width=.8\linewidth]{images/highendstop.PNG}
+		\caption{Shortcutting the high end stop}
+		\label{highendstop}
+	\end{figure}
+
 	\section{Setup of the project}\label{sec:setupOfTheProject}
 	\input{../src/setup.tex}
 

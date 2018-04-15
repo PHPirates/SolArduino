@@ -177,7 +177,7 @@ Potmeter values as measured by the Arduino, scale 0--1024:
 \end{tabular}
 
 \subsubsection{Motor control}
-We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4-11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
+We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4--11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
 \subsection{Software used}\label{subsec:softwareUsed}
 We decided on the \href{http://platformio.org/platformio-ide}{PlatformIO IDE}, (which uses python 2.7 and Clang for autocompletion) because it is a lot better than the standard Arduino IDE, and also seemed better than the Stino plugin for Sublime Text 3.
 A plugin for CLion also looked good but we didn't get that to work.
