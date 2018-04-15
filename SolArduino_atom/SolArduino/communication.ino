@@ -201,7 +201,7 @@ unsigned long getNtpTime() {
 void requestNewTable() {
   Serial.println(F("requesting new data"));
   responseReceived = false; // set boolean to 'wait for request'
-  ether.browseUrl(PSTR("/solarduino.php"), "", NULL, my_callback);
+  ether.browseUrl(PSTR("/index.php"), "", NULL, my_callback);
   tableIndex = 0; //reset global index
 }
 

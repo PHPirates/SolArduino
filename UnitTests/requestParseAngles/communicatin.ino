@@ -75,12 +75,12 @@ void requestNewTable() {
 
 // called when the client request is complete
 static void my_callback (byte status, word off, word len) {
-  if (!responseReceived) { //sometimes there come more responses, but we only need one
+//  if (!responseReceived) { //sometimes there come more responses, but we only need one
     Ethernet::buffer[off+TABLE_SIZE] = 0;
     char* result = (char*) Ethernet::buffer + off;
     delay(42); // Make sure the request is sent and received properly, no delay results in a 400 bad request
     Serial.println(result);
     parseString(result); // fill the arrays with the data
     responseReceived = true;
-  }
+//  }
 }
