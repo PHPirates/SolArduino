@@ -26,7 +26,7 @@ cache:
 script: # Change working directory each time so including files will work. Change back so the pdfs can be found for deployment. This way, building multiple files goes well.
  - cd ./documentation/src/
  - tectonic ./documentation.tex --print
- - cd ../
+ - cd ../../
 deploy:
   provider: releases
   api_key:
