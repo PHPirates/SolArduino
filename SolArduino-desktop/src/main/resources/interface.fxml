@@ -15,7 +15,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<TabPane fx:controller="SolArduino.Controller"
+<TabPane fx:controller="nl.deltadak.solarduino.Controller"
          xmlns:fx="http://javafx.com/fxml"
          tabClosingPolicy="UNAVAILABLE">
 

@@ -1,4 +1,4 @@
-package SolArduino;
+package nl.deltadak.solarduino;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -29,7 +29,7 @@ import java.util.Scanner;
 import java.util.concurrent.*;
 
 /**
- * Controller class.
+ * nl.deltadak.solarduino.Controller class.
  */
 //lots of variables that we really want to be easily found
 @SuppressWarnings("FieldCanBeLocal")

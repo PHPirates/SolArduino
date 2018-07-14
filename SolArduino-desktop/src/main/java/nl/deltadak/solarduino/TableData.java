@@ -1,4 +1,4 @@
-package SolArduino;
+package nl.deltadak.solarduino;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
