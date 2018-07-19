@@ -1,6 +1,6 @@
 module Main where
 
-import Data.String.Strip
+import PowerFunctions
 
 main :: IO ()
-main = interact strip
+main = do print $ directPower 0.5 10
