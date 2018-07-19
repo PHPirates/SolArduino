@@ -1,6 +1,7 @@
 jobs:
   include:
-    - # config from https://docs.haskellstack.org/en/stable/travis_ci/#running-tests
+    - stage: core-haskell
+      # config from https://docs.haskellstack.org/en/stable/travis_ci/#running-tests
       # haddock coverage is also shown in the build log
 
       # Use new container infrastructure to enable caching
@@ -21,6 +22,7 @@ jobs:
             - libgmp-dev
 
       before_install:
+      - cd ./SolArduino-core/haskell
       # Download and unpack the stack executable
       - mkdir -p ~/.local/bin
       - export PATH=$HOME/.local/bin:$PATH
@@ -33,7 +35,9 @@ jobs:
       script:
       # Build the package, its tests, and its docs and run the tests
       - stack --no-terminal test --haddock --no-haddock-deps
-    - install:
+    - stage: documentation
+      language: generic
+      install:
         # Silent install from conda docs
         # https://conda.io/docs/user-guide/install/macos.html#install-macos-silent
         # adapted using
