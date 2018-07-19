@@ -1,39 +1,41 @@
-install:
-  # Silent install from conda docs
-  # https://conda.io/docs/user-guide/install/macos.html#install-macos-silent
-  # adapted using
-  # https://conda.io/docs/user-guide/tasks/use-conda-with-travis-ci.html
+jobs:
+  include:
+   - install:
+      # Silent install from conda docs
+      # https://conda.io/docs/user-guide/install/macos.html#install-macos-silent
+      # adapted using
+      # https://conda.io/docs/user-guide/tasks/use-conda-with-travis-ci.html
 
-  # Needed to check if conda already installed
-  - export PATH="$HOME/miniconda/bin:$PATH"
+      # Needed to check if conda already installed
+      - export PATH="$HOME/miniconda/bin:$PATH"
 
-  # If not yet installed, obtain Miniconda
-  # and tectonic
-  # From tectonic docs
-  # https://tectonic-typesetting.github.io/en-US/install.html#the-anaconda-method
-  - if ! command -v conda > /dev/null; then
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-      bash miniconda.sh -b -p $HOME/miniconda -u;
-      conda config --add channels conda-forge;
-      conda config --set always_yes yes;
-      conda update --all;
-      conda install tectonic;
-    fi
-  - conda info -a
-cache:
-  directories:
-    - $HOME/miniconda
-script: # Change working directory each time so including files will work. Change back so the pdfs can be found for deployment. This way, building multiple files goes well.
- - cd ./documentation/src/
- - tectonic ./documentation.tex --print
- - cd ../../
-deploy:
-  provider: releases
-  api_key:
-    secure: rQIugDrSWmIXr7oIIxhcpvPIAql6YYc0+4+yIyHi2iJ3jYuOT7EI/a1q81tKMvPOXs/U+vyLIhyyzstK4KXkRj0wTS+e518PE9VZyysVRkmzX8fQkScjne4ITTXOeAsxpTU9gm7QnS+evtalt5izIbsBl/6lJY0HnrVwtd7PmMB2v9IQhF+FuoZRVJF+MWBUrENNPPP6p4PLXbbZgFUaYDvQuIyZvn5EGSlSnVlUmgggkUJJtjs+H+j0M7Ju+wk1jVhO3e4VQa8lO9NN3m8U2aYz99zgT2yLZQ/gBa1OeKsVfJuhajOfnigUuGhsZD2PXPHZdLlxPI2SuxsSUmFnJesxVaTHTROz+e8d+xL90iyCq/l1p8BUiap1ZNalkbYK637TiPnxLKVKhzDDH0Sf+OjY92HK0cpBSKBCvlH+JYX4EY/DqIBubFCctc5Qd/PqcYZqyKCepadnKB+nXWpmp4n9Sr2/wA4EDdrMsRIlNHOi0cfiGleo9abJ/ZiDVUekW0Bgic3rCIZlN8S05huXuWxWJTBJvMtA1w2XyRCejapVo4EH1w8uxTClwiT4V++bMOpQK9QYd2L9vIMXy7J4h+iFhGO9vkP09ACEo40SS77+zFq79aEYTOIcqjP5uB3RhV8tKAfv4MTuL9x50yPzobr0hzTVxengQPYAmEldQj4=
-  file:
-  - ./documentation/src/documentation.pdf
-  skip_cleanup: true
-  on:
-    tags: true
-    branch: master
+      # If not yet installed, obtain Miniconda
+      # and tectonic
+      # From tectonic docs
+      # https://tectonic-typesetting.github.io/en-US/install.html#the-anaconda-method
+      - if ! command -v conda > /dev/null; then
+          wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+          bash miniconda.sh -b -p $HOME/miniconda -u;
+          conda config --add channels conda-forge;
+          conda config --set always_yes yes;
+          conda update --all;
+          conda install tectonic;
+        fi
+      - conda info -a
+    cache:
+      directories:
+        - $HOME/miniconda
+    script: # Change working directory each time so including files will work. Change back so the pdfs can be found for deployment. This way, building multiple files goes well.
+     - cd ./documentation/src/
+     - tectonic ./documentation.tex --print
+     - cd ../../
+    deploy:
+      provider: releases
+      api_key:
+        secure: rQIugDrSWmIXr7oIIxhcpvPIAql6YYc0+4+yIyHi2iJ3jYuOT7EI/a1q81tKMvPOXs/U+vyLIhyyzstK4KXkRj0wTS+e518PE9VZyysVRkmzX8fQkScjne4ITTXOeAsxpTU9gm7QnS+evtalt5izIbsBl/6lJY0HnrVwtd7PmMB2v9IQhF+FuoZRVJF+MWBUrENNPPP6p4PLXbbZgFUaYDvQuIyZvn5EGSlSnVlUmgggkUJJtjs+H+j0M7Ju+wk1jVhO3e4VQa8lO9NN3m8U2aYz99zgT2yLZQ/gBa1OeKsVfJuhajOfnigUuGhsZD2PXPHZdLlxPI2SuxsSUmFnJesxVaTHTROz+e8d+xL90iyCq/l1p8BUiap1ZNalkbYK637TiPnxLKVKhzDDH0Sf+OjY92HK0cpBSKBCvlH+JYX4EY/DqIBubFCctc5Qd/PqcYZqyKCepadnKB+nXWpmp4n9Sr2/wA4EDdrMsRIlNHOi0cfiGleo9abJ/ZiDVUekW0Bgic3rCIZlN8S05huXuWxWJTBJvMtA1w2XyRCejapVo4EH1w8uxTClwiT4V++bMOpQK9QYd2L9vIMXy7J4h+iFhGO9vkP09ACEo40SS77+zFq79aEYTOIcqjP5uB3RhV8tKAfv4MTuL9x50yPzobr0hzTVxengQPYAmEldQj4=
+      file:
+      - ./documentation/src/documentation.pdf
+      skip_cleanup: true
+      on:
+        tags: true
+        branch: master
