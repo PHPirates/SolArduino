@@ -1,4 +1,4 @@
-name:                solarduino-haskell
+name:                haskell-template-project
 version:             0.1.0.0
 -- synopsis:
 -- description:
@@ -25,7 +25,7 @@ executable haskell-template-project
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
-                     , solarduino-haskell
+                     , haskell-template-project
   default-language:    Haskell2010
 
 test-suite haskell-template-project-test
@@ -33,7 +33,7 @@ test-suite haskell-template-project-test
   hs-source-dirs:      test
   main-is:             StripTest.hs
   build-depends:       base
-                     , solarduino-haskell
+                     , haskell-template-project
                      , tasty-hunit
                      , tasty
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
