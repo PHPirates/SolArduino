@@ -1,1 +1,0 @@
-This is a haskell implementation of the Mathematica code used to generate optimal angles for the solar panels.
