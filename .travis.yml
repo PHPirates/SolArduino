@@ -22,7 +22,7 @@ jobs:
             - libgmp-dev
 
       before_install:
-      - cd ./SolArduino-core/haskell
+      - cd ./SolArduino-core/haskell/solarduino-haskell
       # Download and unpack the stack executable
       - mkdir -p ~/.local/bin
       - export PATH=$HOME/.local/bin:$PATH
