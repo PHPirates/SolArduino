@@ -7,12 +7,13 @@ directPower :: Float -- ^ The angle the solar panels have with the sun, in radia
             -> Float -- ^ The power the panels receive from the sun in W/m^2
 directPower theta n
     | cos theta < 0 = 0 -- If the sun is more than 90 degrees off, the formula is not correct, and we set the insolation to 0
-    | otherwise =
+    | otherwise
         -- Parameters from urban visibility haze model
+     =
         let i = 1367 * (1 + 0.034 * cos (360 * n / 365.25))
             aZero = 0.2538 - 0.0063 * 36
-            aOne = 0.7678 + 0.001 * 6.5^2
-            k = 0.249 + 0.081 * 2.5^2
-            temp = i * (aZero + aOne * ((exp 1) ** (-k / cos theta)))
+            aOne = 0.7678 + 0.001 * 6.5 ^ 2
+            k = 0.249 + 0.081 * 2.5 ^ 2
+            temp = i * (aZero + aOne * (exp 1 ** (-k / cos theta)))
             -- Use the ** power because from a cosine results a Float, not a fraction
-        in temp
+         in temp
