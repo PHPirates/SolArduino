@@ -1,4 +1,4 @@
 module PowerFunctions where
 
-power :: Float -> Float
-power x = x*x
+directPower :: Float -> Float
+directPower x = x*x
