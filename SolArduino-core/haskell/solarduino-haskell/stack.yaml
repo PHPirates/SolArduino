@@ -18,7 +18,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-12.1
+resolver: lts-12.4
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -35,10 +35,15 @@ resolver: lts-12.1
 #  - wai
 packages:
 - .
+#- location:
+#    git: https://github.com/aligusnet/astro.git
+#    commit: 06ba5f0b963375ae9986105d8dc16767e3cecb88
+
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
-# extra-deps: []
+#extra-deps:
+#- astro-0.4.2.1
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
@@ -63,3 +68,21 @@ packages:
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
+
+#package-indices:
+#- name: Hackage
+#  download-prefix: https://s3.amazonaws.com/hackage.fpcomplete.com/package/
+#
+#  # HTTP location of the package index
+#  http: https://s3.amazonaws.com/hackage.fpcomplete.com/01-index.tar.gz
+#
+#  # Or, if using Hackage Security below, give the root URL:
+#  http: https://s3.amazonaws.com/hackage.fpcomplete.com/
+#
+#  # optional fields, both default to false
+#  require-hashes: false
+#
+#  # Starting with stack 1.4, we default to using Hackage Security
+#  hackage-security:
+#    keyids: ["deadbeef", "12345"] # list of all approved keys
+#    key-threshold: 3 # number of keys required
