@@ -26,6 +26,6 @@ directPowerTest =
 sunPositionTest =
     testGroup
         "sunPosition tests"
-        [ testCase "Test sunPosition" $
-          getSunPosition (lctFromYMDHMS (DH 1) 2018 7 30 10 29 0) @?= HC (DD 42.375915495531196) (DD 117.3390445162529)
+        [ testCase "Test sunPosition 2018 7 30 10 29 0" $
+          getSunPosition 2018 7 30 10 29 0 @?= HC (DD 38.89) (DD 111.15)
         ]
