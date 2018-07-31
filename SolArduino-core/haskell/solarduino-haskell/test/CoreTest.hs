@@ -26,6 +26,14 @@ directPowerTest =
 sunPositionTest =
     testGroup
         "sunPosition tests"
-        [ testCase "Test sunPosition 2018 7 30 10 29 0" $
-          getSunPosition 2018 7 30 10 29 0 @?= HC (DD 38.89) (DD 111.15)
+        [ testCase "Test altitude sunPosition 2018 7 30 10 29 0"
+            (let expectedPos = HC (DD 38.89) (DD 111.15)
+                 sunPos = getSunPosition 2018 7 30 10 29 0
+            in
+                abs (hAltitude expectedPos - hAltitude sunPos) `compare` 0.02 @?= LT )
+        , testCase "Test azimuth sunPosition 2018 7 30 10 29 0"
+          (let expectedPos = HC (DD 38.89) (DD 111.15)
+               sunPos = getSunPosition 2018 7 30 10 29 0
+          in
+              abs (hAzimuth expectedPos - hAzimuth sunPos) `compare` 0.02 @?= LT )
         ]

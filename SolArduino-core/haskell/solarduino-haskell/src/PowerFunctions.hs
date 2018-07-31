@@ -1,4 +1,4 @@
-module PowerFunctions where
+module PowerFunctions (directPower) where
 
 -- | Calculate the solar insolation: the power in W/m^2 the solar panels receive from the sun under a certain angle.
 -- The formula is from http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295

@@ -1,4 +1,4 @@
-module SunPosition where
+module SunPosition (getSunPosition) where
 
 import Data.Astro.Time.JulianDate
 import Data.Astro.Coordinate
