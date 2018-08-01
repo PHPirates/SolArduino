@@ -1,5 +1,8 @@
 module PowerFunctions (directPower) where
 
+import Data.Astro.Coordinate
+import Data.Astro.Types
+
 -- | Calculate the solar insolation: the power in W/m^2 the solar panels receive from the sun under a certain angle.
 -- The formula is from http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295
 directPower :: Float -- ^ The angle the solar panels have with the sun, in radians.
@@ -17,3 +20,16 @@ directPower theta n
             temp = i * (aZero + aOne * (exp 1 ** (-k / cos theta)))
             -- Use the ** power because from a cosine results a Float, not a fraction
          in temp
+
+
+sunMisalignment :: HorizonCoordinates -- ^ Coordinates of the sun
+                -> Double -- ^ Solar panel angle in degrees
+                -> Double -- ^ Misalignment of the solar panels with the sun in degrees
+sunMisalignment sunCoords alpha =
+        acos(cos(gammaPanels - gammaSun) * cos thetaSun * sin thetaPanels + cos thetaPanels * sin thetaSun )
+        where -- We require an azimuth with 0 due South and negative to the east, hence we subtract 180 degrees
+            gammaSun = toRadians (hAzimuth sunCoords) - pi
+            thetaSun = toRadians $ hAltitude sunCoords
+            -- Same for the solar panels, but the azimuth is fixed
+            gammaPanels = toRadians (-22)
+            thetaPanels = alpha * pi / 180

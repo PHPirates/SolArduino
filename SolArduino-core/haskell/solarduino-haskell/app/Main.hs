@@ -1,6 +1,12 @@
 module Main where
 
-import PowerFunctions
+import Criterion.Main
+import SunPosition
 
+-- | Benchmark functions using Criterion.
 main :: IO ()
-main = putStrLn $ show $ directPower 0.5 10
+main = defaultMain [
+    bgroup "getSunPosition" [
+        bench "2018 7 30 10 29 0" $ whnf (getSunPosition 2018 7 30 10 29) 0
+        ]
+    ]
