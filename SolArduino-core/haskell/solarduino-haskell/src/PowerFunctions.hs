@@ -1,4 +1,4 @@
-module PowerFunctions (directPower) where
+module PowerFunctions (directPower, sunMisalignment) where
 
 import Data.Astro.Coordinate
 import Data.Astro.Types

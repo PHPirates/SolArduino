@@ -12,7 +12,11 @@ main = defaultMain tests
 
 -- Output is compared with the original Mathematica implementation
 tests :: TestTree
-tests = testGroup "Tests" [directPowerTest, sunPositionTest]
+tests = testGroup "Tests" [
+        directPowerTest
+      , sunPositionTest
+      , sunMisalignmentTest
+      ]
 
 directPowerTest =
     testGroup
@@ -40,3 +44,12 @@ sunPositionTest =
         , testCase "Test azimuth sunPosition 2019 1 1 12 0 0"
           (abs (DD 155.24 - hAzimuth (getSunPosition 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
         ]
+
+sunMisalignmentTest = testGroup "sunMisalignment tests" [
+        testCase "Test (getSunPosition 2018 8 1 15 57 0) 42" (
+        abs (0.7983 - sunMisalignment (getSunPosition 2018 8 1 15 57 0) 42) `compare` 0.001 @?= LT
+        )
+      , testCase "Test (getSunPosition 2020 11 24 17 15 0) 60" (
+        abs (1.2964 - sunMisalignment (getSunPosition 2020 11 24 17 15 0) 60) `compare` 0.001 @?= LT
+        )
+    ]
