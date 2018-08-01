@@ -1,4 +1,4 @@
-module PowerFunctions (directPower, sunMisalignment) where
+module PowerFunctions (directPower, sunMisalignment, totalPower) where
 
 import Data.Astro.Coordinate
 import Data.Astro.Types
@@ -35,8 +35,8 @@ sunMisalignment sunCoords alpha =
             thetaPanels = realToFrac alpha * pi / 180
 
 -- | Find the power received by the solar panels at each sun position and sum that. This does not equal the total power received by the solar panels over a certain time period. Higher is better.
-totalPower :: [HorizonCoordinates] -- ^ A list of sun positions, all of the same day
+totalPower :: [HorizonCoordinates] -- ^ A list of sun positions
             -> Float -- ^ The angle of the solar panels
             -> Int -- ^ Day of the year
             -> Float -- ^ Sum of the power received by the panels at each sun position
-totalPower sunPositions alpha day = foldl (\acc sunPos -> directPower (sunMisalignment sunPos alpha ) day  ) 0 sunPositions
+totalPower sunPositions alpha day = foldl (\acc sunPos -> acc + directPower (sunMisalignment sunPos alpha ) day  ) 0 sunPositions

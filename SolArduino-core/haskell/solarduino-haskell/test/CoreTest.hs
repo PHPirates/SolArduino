@@ -16,6 +16,7 @@ tests = testGroup "Tests" [
         directPowerTest
       , sunPositionTest
       , sunMisalignmentTest
+      , totalPowerTest
       ]
 
 directPowerTest =
@@ -52,4 +53,19 @@ sunMisalignmentTest = testGroup "sunMisalignment tests" [
       , testCase "Test (getSunPosition 2020 11 24 17 15 0) 60" (
         abs (1.2964 - sunMisalignment (getSunPosition 2020 11 24 17 15 0) 60) `compare` 0.001 @?= LT
         )
+    ]
+
+totalPowerTest = testGroup "totalPower tests" [
+        testCase "Test 24 145"
+        (abs (386.334 -
+        totalPower [getSunPosition 2018 8 1 18 35 0, getSunPosition 2018 3 3 16 35 0] 24 145
+        ) `compare` 0.5 @?= LT)
+      , testCase "Test 5 2"
+        (abs (705.406 -
+        totalPower [getSunPosition 2018 2 1 20 35 0, getSunPosition 2018 3 17 12 0 0, getSunPosition 2018 3 17 12 10 0] 5 2
+        ) `compare` 0.5 @?= LT)
+      , testCase "Test 0 212"
+        (abs (619.392 -
+        totalPower [getSunPosition 2018 8 1 19 0 0, getSunPosition 2018 8 1 19 10 0, getSunPosition 2018 8 1 19 16 0, getSunPosition 2018 8 1 19 18 0] 0 212
+        ) `compare` 0.5 @?= LT)
     ]
