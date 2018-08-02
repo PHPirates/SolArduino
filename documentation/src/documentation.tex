@@ -182,7 +182,9 @@ urlcolor=cyan,
         \alpha = \arccos (\cos (\gamma_p - \gamma_s) \cos \theta_s \sin \theta_p + \sin \theta_s \cos \theta_p)\,.
     \]
 
-    \subsection{Mathematica calculations}\label{subsec:mathematicaCalculations}
+    \subsection{Implementation of calculations to find optimal angles}
+
+    \subsubsection{Mathematica calculations}\label{subsec:mathematicaCalculations}
 
     The Mathematica package (imported with \verb|<< SolArduino`|, be sure to place it in your
     \url{\%AppData\%\\Mathematica\\Applications} folder) can calculate the optimal angle for a given day.
@@ -196,6 +198,13 @@ urlcolor=cyan,
     It is important to note that the functions \verb|angle|, \verb|directPower| and more do not take the hour of the day as input, but the index of the \verb|sunPositions| table which contains the azimuth and altitude of the sun over the day.
     Therefore, \textit{before you call functions which take an index as parameter you need to make sure you have }\verb|sunPositions| \textit{initialised} at the right day, done by calling \verb|calculatesunPos[DateObject[{2016,7,18}]]| with whatever day you want in the table.
 
-    By the way, on high performace, exporting the angles for ten times a day for two years, like  \verb|exportPeriod[DateObject[{2016, 9, 7}], DateObject[{2018, 9, 15}], 10]| took only ten minutes (Lenovo laptop on high performance).
+    Exporting the angles for ten times a day for two years, like  \verb|exportPeriod[DateObject[{2016, 9, 7}], DateObject[{2018, 9, 15}], 10]| took only ten minutes (Lenovo W541 laptop on high performance).
+
+    \subsubsection{Haskell calculations}
+
+    Because Mathematica is proprietary, we decided to also provide a Haskell implementation.
+    It uses the \href{https://hackage.haskell.org/package/astro}{Astro package} to find the position of the sun.
+
+
 
 \end{document}

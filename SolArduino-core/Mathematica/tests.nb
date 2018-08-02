@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     48824,       1022]
-NotebookOptionsPosition[     47055,        987]
-NotebookOutlinePosition[     47395,       1002]
-CellTagsIndexPosition[     47352,        999]
+NotebookDataLength[     55088,       1187]
+NotebookOptionsPosition[     52996,       1147]
+NotebookOutlinePosition[     53336,       1162]
+CellTagsIndexPosition[     53293,       1159]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -851,7 +851,7 @@ Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"angle", "[", 
+  RowBox[{"sunMisalignment", "[", 
    RowBox[{"sunPos_", ",", "a_"}], "]"}], ":=", " ", 
   RowBox[{"(", " ", 
    RowBox[{"(*", " ", 
@@ -949,7 +949,7 @@ Cell[BoxData[{
         ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"angle", "[", 
+  RowBox[{"sunMisalignment", "[", 
    RowBox[{"sunPos", ",", " ", "42"}], "]"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -962,27 +962,187 @@ Cell[BoxData[{
        "2020", ",", " ", "11", ",", " ", "24", ",", " ", "17", ",", " ", "15",
          ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
- RowBox[{"angle", "[", 
+ RowBox[{"sunMisalignment", "[", 
   RowBox[{"sunPos", ",", " ", "60"}], "]"}]}], "Input",
  CellChangeTimes->{{3.7420317739406185`*^9, 3.7420317756848764`*^9}, {
   3.7421208886248674`*^9, 3.742121004877183*^9}, {3.742121553391858*^9, 
-  3.742121625081149*^9}, {3.7421217157261896`*^9, 3.7421217162009597`*^9}},
+  3.742121625081149*^9}, {3.7421217157261896`*^9, 3.7421217162009597`*^9}, {
+  3.742129500752987*^9, 3.7421295114916906`*^9}},
  CellLabel->
-  "In[154]:=",ExpressionUUID->"de3d7f2a-9c6a-4b2f-b0f5-4ef285578f3e"],
+  "In[160]:=",ExpressionUUID->"de3d7f2a-9c6a-4b2f-b0f5-4ef285578f3e"],
 
 Cell[BoxData["0.7983276482532772558`4.4804379528578355"], "Output",
  CellChangeTimes->{
   3.7421210061130853`*^9, {3.742121573866042*^9, 3.742121625820325*^9}, 
-   3.742121716869015*^9},
+   3.742121716869015*^9, 3.7421295133209696`*^9},
  CellLabel->
-  "Out[157]=",ExpressionUUID->"34e117c1-fd1a-4661-93d4-8a6c853e6771"],
+  "Out[163]=",ExpressionUUID->"5609a54d-b077-49ba-9868-69bdb697d998"],
 
 Cell[BoxData["1.2963964240192105077`4.7274606723422625"], "Output",
  CellChangeTimes->{
   3.7421210061130853`*^9, {3.742121573866042*^9, 3.742121625820325*^9}, 
-   3.742121716884068*^9},
+   3.742121716869015*^9, 3.7421295133680105`*^9},
  CellLabel->
-  "Out[159]=",ExpressionUUID->"e07a6681-9177-40a9-868b-2e3aede4a5f2"]
+  "Out[165]=",ExpressionUUID->"91483f0a-1521-4e03-8f6f-05e453f73229"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"totalPower", "[", 
+    RowBox[{"sunPositions_", ",", " ", "alpha_", ",", " ", "day_"}], "]"}], 
+   " ", ":=", " ", 
+   RowBox[{"(", "\[IndentingNewLine]", 
+    RowBox[{"Sum", "[", 
+     RowBox[{
+      RowBox[{"directPower", "[", 
+       RowBox[{
+        RowBox[{"sunMisalignment", "[", 
+         RowBox[{"sunPos", ",", " ", "alpha"}], "]"}], ",", " ", "day"}], 
+       "]"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"sunPos", ",", " ", "sunPositions"}], "}"}]}], "]"}], 
+    "\[IndentingNewLine]", ")"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"position", " ", "=", " ", 
+   RowBox[{"GeoPosition", "[", 
+    RowBox[{"{", 
+     RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos1", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "8", ",", " ", "1", ",", " ", "18", ",", " ", "35", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos2", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "3", ",", " ", "3", ",", " ", "16", ",", " ", "35", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"totalPower", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"pos1", ",", " ", "pos2"}], "}"}], ",", " ", "24", ",", " ", 
+    "145"}], "]"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos1", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "2", ",", " ", "1", ",", " ", "20", ",", " ", "35", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos2", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "3", ",", " ", "17", ",", " ", "12", ",", " ", "0", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos3", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "3", ",", " ", "17", ",", " ", "12", ",", " ", "10", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"totalPower", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"pos1", ",", " ", "pos2", ",", " ", "pos3"}], "}"}], ",", " ", 
+    "5", ",", " ", "2"}], "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos1", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "8", ",", " ", "1", ",", " ", "19", ",", " ", "00", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos2", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "8", ",", " ", "1", ",", " ", "19", ",", " ", "10", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos3", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "8", ",", " ", "1", ",", " ", "19", ",", " ", "16", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pos4", " ", "=", " ", 
+   RowBox[{"SunPosition", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "2018", ",", " ", "8", ",", " ", "1", ",", " ", "19", ",", " ", "18", 
+        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"totalPower", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"pos1", ",", " ", "pos2", ",", " ", "pos3", ",", " ", "pos4"}], 
+    "}"}], ",", " ", "5", ",", " ", "2"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.742129525756857*^9, 3.7421295538409567`*^9}, {
+  3.74212986634149*^9, 3.7421298789135036`*^9}, {3.7421300211671677`*^9, 
+  3.7421301752622657`*^9}, {3.7421309943718786`*^9, 3.74213099564581*^9}, {
+  3.74213104639505*^9, 3.7421310465401583`*^9}, {3.742131112805512*^9, 
+  3.742131114687886*^9}, {3.742131669694503*^9, 3.742131672669628*^9}, {
+  3.7421317099142466`*^9, 3.742131756375451*^9}, {3.7421317869743185`*^9, 
+  3.7421317889627676`*^9}, {3.742131906985115*^9, 3.74213191207275*^9}, {
+  3.7421319701902847`*^9, 3.742131978141939*^9}, {3.742132018585842*^9, 
+  3.742132083231042*^9}},ExpressionUUID->"7993d04d-1e4b-4dd2-9dbc-\
+f33621c0f822"],
+
+Cell[BoxData["386.3341463150989`"], "Output",
+ CellChangeTimes->{
+  3.742130176828394*^9, 3.7421309965074263`*^9, 3.7421310480322204`*^9, 
+   3.7421311153563385`*^9, {3.7421319427316637`*^9, 3.7421319787053704`*^9}},
+ CellLabel->
+  "Out[208]=",ExpressionUUID->"4f6532eb-a0f4-4dc4-823c-7aadf1d66653"],
+
+Cell[BoxData["705.4057885184304`"], "Output",
+ CellChangeTimes->{
+  3.742130176828394*^9, 3.7421309965074263`*^9, 3.7421310480322204`*^9, 
+   3.7421311153563385`*^9, {3.7421319427316637`*^9, 3.742131978726386*^9}},
+ CellLabel->
+  "Out[212]=",ExpressionUUID->"e2aa0681-1b5d-430e-a87a-6eb4106f2a5e"]
 }, Open  ]]
 },
 WindowSize->{944, 981},
@@ -1020,9 +1180,14 @@ Cell[40550, 810, 662, 16, 42, "Output",ExpressionUUID->"48fbe098-231a-41c5-9c24-
 Cell[41215, 828, 737, 18, 42, "Output",ExpressionUUID->"75dbad2e-f0f9-4cb9-a4c3-dc8a183863c7"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[41989, 851, 4506, 119, 371, "Input",ExpressionUUID->"de3d7f2a-9c6a-4b2f-b0f5-4ef285578f3e"],
-Cell[46498, 972, 269, 5, 32, "Output",ExpressionUUID->"34e117c1-fd1a-4661-93d4-8a6c853e6771"],
-Cell[46770, 979, 269, 5, 65, "Output",ExpressionUUID->"e07a6681-9177-40a9-868b-2e3aede4a5f2"]
+Cell[41989, 851, 4587, 120, 371, "Input",ExpressionUUID->"de3d7f2a-9c6a-4b2f-b0f5-4ef285578f3e"],
+Cell[46579, 973, 293, 5, 32, "Output",ExpressionUUID->"5609a54d-b077-49ba-9868-69bdb697d998"],
+Cell[46875, 980, 293, 5, 32, "Output",ExpressionUUID->"91483f0a-1521-4e03-8f6f-05e453f73229"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[47205, 990, 5173, 140, 352, "Input",ExpressionUUID->"7993d04d-1e4b-4dd2-9dbc-f33621c0f822"],
+Cell[52381, 1132, 299, 5, 32, "Output",ExpressionUUID->"4f6532eb-a0f4-4dc4-823c-7aadf1d66653"],
+Cell[52683, 1139, 297, 5, 32, "Output",ExpressionUUID->"e2aa0681-1b5d-430e-a87a-6eb4106f2a5e"]
 }, Open  ]]
 }
 ]
