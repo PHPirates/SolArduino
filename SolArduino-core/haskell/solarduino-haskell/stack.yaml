@@ -43,9 +43,11 @@ packages:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 extra-deps:
-  - levmar-1.2.1.8
   - bindings-levmar-1.1.0.5
-#- astro-0.4.2.1
+#  - levmar-1.2.1.8 -- Does not support base 4.9 at the moment. A more up to date fork is used
+  - github: PHPirates/levmar
+    commit: f36ef9ae1c0d44950a28a445d4f459257f77dd4d
+#    subdirs:
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
