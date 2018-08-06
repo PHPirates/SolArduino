@@ -1,10 +1,10 @@
 module SunPosition (getSunPosition) where
 
-import Data.Astro.Time.JulianDate
-import Data.Astro.Coordinate
-import Data.Astro.Types
-import Data.Astro.Sun
-import Data.Astro.Effects
+import           Data.Astro.Coordinate
+import           Data.Astro.Effects
+import           Data.Astro.Sun
+import           Data.Astro.Time.JulianDate
+import           Data.Astro.Types
 
 -- 51.546545, 4.411744
 location :: GeographicCoordinates

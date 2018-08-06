@@ -1,7 +1,7 @@
 module PowerFunctions (directPower, sunMisalignment, totalPower) where
 
-import Data.Astro.Coordinate
-import Data.Astro.Types
+import           Data.Astro.Coordinate
+import           Data.Astro.Types
 
 -- | Calculate the solar insolation: the power in W/m^2 the solar panels receive from the sun under a certain angle.
 -- The formula is from http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295

@@ -1,12 +1,12 @@
-import Test.Tasty
-import Test.Tasty.HUnit
-import GoldenSection (goldenSectionSearch)
+import           GoldenSection              (goldenSectionSearch)
+import           Test.Tasty
+import           Test.Tasty.HUnit
 
-import PowerFunctions
-import SunPosition (getSunPosition)
-import Data.Astro.Time.JulianDate (lctFromYMDHMS)
-import Data.Astro.Types
-import Data.Astro.Coordinate
+import           Data.Astro.Coordinate
+import           Data.Astro.Time.JulianDate (lctFromYMDHMS)
+import           Data.Astro.Types
+import           PowerFunctions
+import           SunPosition                (getSunPosition)
 
 -- to run tests in terminal: stack test
 main = defaultMain tests
@@ -24,10 +24,10 @@ tests = testGroup "Tests" [
 directPowerTest =
     testGroup
         "directPower Tests"
-        [ testCase "Test directPower 10 0.5" $ (abs (directPower 10 0.5 - 489.607)) `compare` 0.001 @?= LT
-        , testCase "Test directPower 253 0.34" $ (abs (directPower 253 0.34 - 526.962)) `compare` 0.001 @?= LT
-        , testCase "Test directPower 0 0" $ (abs (directPower 0 0 - 576.186)) `compare` 0.001 @?= LT
-        , testCase "Test directPower 10 3.14" $ (abs (directPower 10 3.14)) `compare` 0.001 @?= LT
+        [ testCase "Test directPower 10 0.5" $ abs (directPower 10 0.5 - 489.607) `compare` 1.0e-3 @?= LT
+        , testCase "Test directPower 253 0.34" $ abs (directPower 253 0.34 - 526.962) `compare` 1.0e-3 @?= LT
+        , testCase "Test directPower 0 0" $ abs (directPower 0 0 - 576.186) `compare` 1.0e-3 @?= LT
+        , testCase "Test directPower 10 3.14" $ abs (directPower 10 3.14) `compare` 1.0e-3 @?= LT
         ]
 
 sunPositionTest =
