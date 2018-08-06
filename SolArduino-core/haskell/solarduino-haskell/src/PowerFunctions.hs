@@ -35,7 +35,8 @@ sunMisalignment sunCoords alpha =
             gammaPanels = toRadians (-22)
             thetaPanels = realToFrac alpha * pi / 180
 
--- | Find the power received by the solar panels at each sun position and sum that. This does not equal the total power received by the solar panels over a certain time period. Higher is better.
+-- | Find the power received by the solar panels at each sun position and sum that.
+-- This does not equal the total power received by the solar panels over a certain time period. Higher is better.
 totalPower :: [HorizonCoordinates] -- ^ A list of sun positions
             -> Double -- ^ The angle of the solar panels
             -> Int -- ^ Day of the year

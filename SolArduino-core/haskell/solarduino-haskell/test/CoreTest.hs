@@ -39,13 +39,13 @@ sunPositionTest =
         , testCase "Test azimuth sunPosition 2018 7 30 10 29 0"
           (abs (DD 111.15 - hAzimuth (getSunPosition 2018 7 30 10 29 0)) `compare` 0.02 @?= LT )
         , testCase "Test altitude sunPosition 2019 1 1 6 0 0"
-            (abs (DD (-34.11) - hAltitude (getSunPosition 2019 1 1 6 0 0)) `compare` 0.02 @?= LT )
+            (abs (DD (-24.80) - hAltitude (getSunPosition 2019 1 1 6 0 0)) `compare` 0.02 @?= LT )
         , testCase "Test azimuth sunPosition 2019 1 1 6 0 0"
-          (abs (DD 84.65 - hAzimuth (getSunPosition 2019 1 1 6 0 0)) `compare` 0.02 @?= LT )
+          (abs (DD 96.37 - hAzimuth (getSunPosition 2019 1 1 6 0 0)) `compare` 0.02 @?= LT )
         , testCase "Test altitude sunPosition 2019 1 1 12 0 0"
-            (abs (DD 11.92 - hAltitude (getSunPosition 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
+            (abs (DD 14.77 - hAltitude (getSunPosition 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
         , testCase "Test azimuth sunPosition 2019 1 1 12 0 0"
-          (abs (DD 155.24 - hAzimuth (getSunPosition 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
+          (abs (DD 169.12 - hAzimuth (getSunPosition 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
         ]
 
 sunMisalignmentTest = testGroup "sunMisalignment tests" [
