@@ -1,5 +1,6 @@
 import Test.Tasty
 import Test.Tasty.HUnit
+import GoldenSection (goldenSectionSearch)
 
 import PowerFunctions
 import SunPosition (getSunPosition)
@@ -17,15 +18,16 @@ tests = testGroup "Tests" [
       , sunPositionTest
       , sunMisalignmentTest
       , totalPowerTest
+      , optimizationTest
       ]
 
 directPowerTest =
     testGroup
         "directPower Tests"
-        [ testCase "Test directPower 0.5 10" $ compare (abs (directPower 0.5 10 - 489.607)) 0.001 @?= LT
-        , testCase "Test directPower 0.34 253" $ compare (abs (directPower 0.34 253 - 526.962)) 0.001 @?= LT
-        , testCase "Test directPower 0 0" $ compare (abs (directPower 0 0 - 576.186)) 0.001 @?= LT
-        , testCase "Test directPower 3.14 10" $ compare (abs (directPower 3.14 10)) 0.001 @?= LT
+        [ testCase "Test directPower 10 0.5" $ (abs (directPower 10 0.5 - 489.607)) `compare` 0.001 @?= LT
+        , testCase "Test directPower 253 0.34" $ (abs (directPower 253 0.34 - 526.962)) `compare` 0.001 @?= LT
+        , testCase "Test directPower 0 0" $ (abs (directPower 0 0 - 576.186)) `compare` 0.001 @?= LT
+        , testCase "Test directPower 10 3.14" $ (abs (directPower 10 3.14)) `compare` 0.001 @?= LT
         ]
 
 sunPositionTest =
@@ -69,3 +71,15 @@ totalPowerTest = testGroup "totalPower tests" [
         totalPower [getSunPosition 2018 8 1 19 0 0, getSunPosition 2018 8 1 19 10 0, getSunPosition 2018 8 1 19 16 0, getSunPosition 2018 8 1 19 18 0] 0 212
         ) `compare` 0.5 @?= LT)
     ]
+
+optimizationTest =
+    testGroup
+        "Test the accuracy of the optimization method"
+        [ testCase "Test optimizing directPower convergence" $
+           (snd result - fst result) `compare` 1e-5 @?= LT
+        , testCase "Test optimizing directPower fst result" $
+          abs ( negate $ fst result) `compare` 1e-5 @?= LT
+        , testCase "Test optimizing directPower snd result" $
+          abs ( negate $ snd result) `compare` 1e-5 @?= LT
+        ]
+        where result = goldenSectionSearch (directPower 42) (-pi / 3) (pi / 3) 1e-5

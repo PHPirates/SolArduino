@@ -4,7 +4,7 @@ module Main where
 import PowerFunctions
 
 main :: IO ()
-main = print (directPower 0.5 10)
+main = print (directPower 10 0.5)
 -- | Benchmark functions using Criterion.
 --main = defaultMain [
 --    bgroup "getSunPosition" [

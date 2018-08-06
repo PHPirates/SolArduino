@@ -3,7 +3,7 @@ version:             0.1.0.0
 -- synopsis:
 -- description:
 homepage:            https://github.com/PHPirates/solarduino-haskell#readme
-license:             BSD3
+license:             ISC
 license-file:        LICENSE
 author:              Thomas Schouten
 maintainer:          k3l1n6i2y5k7d1e3@deltadak.slack.com
@@ -19,6 +19,7 @@ library
                      , SunPosition
   build-depends:       base >= 4.7 && < 5
                      , astro
+                     , golden-haskell
 --                     , criterion
   default-language:    Haskell2010
 
@@ -39,6 +40,7 @@ test-suite solarduino-haskell-test
                      , tasty-hunit
                      , tasty
                      , astro
+                     , golden-haskell
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
