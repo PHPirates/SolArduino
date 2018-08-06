@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     48824,       1022]
-NotebookOptionsPosition[     47055,        987]
-NotebookOutlinePosition[     47395,       1002]
-CellTagsIndexPosition[     47352,        999]
+NotebookDataLength[     59619,       1264]
+NotebookOptionsPosition[     57172,       1222]
+NotebookOutlinePosition[     57512,       1237]
+CellTagsIndexPosition[     57469,       1234]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -750,11 +750,62 @@ Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"position", " ", "=", " ", 
-   RowBox[{"GeoPosition", "[", 
+  RowBox[{
+   RowBox[{"position", " ", "=", " ", 
+    RowBox[{"GeoPosition", "[", 
+     RowBox[{"{", 
+      RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"DateObject", "[", 
+   RowBox[{"{", 
+    RowBox[{
+    "2018", ",", " ", "7", ",", " ", "30", ",", " ", "10", ",", " ", "29", 
+     ",", " ", "0"}], "}"}], "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"correct", ",", " ", 
+    RowBox[{
+     RowBox[{"this", " ", "is", " ", "GMT"}], "+", "2"}]}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"DateObject", "[", 
+   RowBox[{
     RowBox[{"{", 
-     RowBox[{"51.546545", ",", "4.411744"}], "}"}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+     RowBox[{
+     "2018", ",", " ", "7", ",", " ", "30", ",", " ", "10", ",", " ", "29", 
+      ",", " ", "0"}], "}"}], ",", " ", 
+    RowBox[{"TimeZone", " ", "\[Rule]", " ", "\"\<Europe/Amsterdam\>\""}]}], 
+   " ", "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"correct", ",", " ", 
+    RowBox[{
+     RowBox[{"CEST", " ", "is", " ", "now", " ", "GMT"}], "+", "2"}]}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"DateObject", "[", 
+   RowBox[{"{", 
+    RowBox[{
+    "2019", ",", " ", "1", ",", " ", "1", ",", " ", "6", ",", " ", "0", ",", 
+     " ", "0"}], "}"}], "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"incorrect", ",", " ", 
+    RowBox[{
+     RowBox[{"this", " ", "is", " ", "GMT"}], "+", "2"}]}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"DateObject", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "2019", ",", " ", "1", ",", " ", "1", ",", " ", "6", ",", " ", "0", ",", 
+      " ", "0"}], "}"}], ",", " ", 
+    RowBox[{"TimeZone", " ", "\[Rule]", " ", "\"\<Europe/Amsterdam\>\""}]}], 
+   " ", "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"correct", ",", " ", 
+    RowBox[{
+     RowBox[{"CEST", " ", "is", " ", "now", " ", "GMT"}], "+", "1"}]}], " ", 
+   "*)"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{"SunPosition", "[", 
   RowBox[{"position", ",", " ", 
    RowBox[{"DateObject", "[", 
@@ -765,30 +816,137 @@ Cell[BoxData[{
  RowBox[{"SunPosition", "[", 
   RowBox[{"position", ",", " ", 
    RowBox[{"DateObject", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "2018", ",", " ", "7", ",", " ", "30", ",", " ", "10", ",", " ", "29", 
+       ",", " ", "0"}], "}"}], ",", " ", 
+     RowBox[{"TimeZone", " ", "\[Rule]", " ", "\"\<Europe/Amsterdam\>\""}]}], 
+    " ", "]"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SunPosition", "[", 
+  RowBox[{"position", ",", " ", 
+   RowBox[{"DateObject", "[", 
     RowBox[{"{", 
      RowBox[{
      "2019", ",", " ", "1", ",", " ", "1", ",", " ", "6", ",", " ", "0", ",", 
-      " ", "0"}], "}"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+      " ", "0"}], "}"}], " ", "]"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SunPosition", "[", 
+  RowBox[{"position", ",", " ", 
+   RowBox[{"DateObject", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "2019", ",", " ", "1", ",", " ", "1", ",", " ", "6", ",", " ", "0", ",",
+        " ", "0"}], "}"}], ",", " ", 
+     RowBox[{"TimeZone", " ", "\[Rule]", " ", "\"\<Europe/Amsterdam\>\""}]}], 
+    " ", "]"}]}], "]"}], "\[IndentingNewLine]", 
  RowBox[{"AbsoluteTiming", "[", 
   RowBox[{"SunPosition", "[", 
    RowBox[{"position", ",", " ", 
     RowBox[{"DateObject", "[", 
-     RowBox[{"{", 
-      RowBox[{
-      "2019", ",", " ", "1", ",", " ", "1", ",", " ", "12", ",", " ", "0", 
-       ",", " ", "0"}], "}"}], "]"}]}], "]"}], "]"}], "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "2019", ",", " ", "1", ",", " ", "1", ",", " ", "12", ",", " ", "0", 
+        ",", " ", "0"}], "}"}], ",", " ", 
+      RowBox[{"TimeZone", " ", "\[Rule]", " ", "\"\<Europe/Amsterdam\>\""}]}],
+      "]"}]}], "]"}], "]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"(*", " ", 
    RowBox[{"{", " ", 
     RowBox[{"azimuth", ",", " ", "altitude"}], " ", "}"}], " ", 
    "*)"}]}]}], "Input",
  CellChangeTimes->{{3.7420210039820967`*^9, 3.742021066120038*^9}, {
-  3.742021533789687*^9, 3.742021566951538*^9}, {3.7420216455120354`*^9, 
-  3.7420216608465333`*^9}, {3.742031777622274*^9, 3.742031820116948*^9}, {
-  3.7420326351048985`*^9, 3.7420326360685883`*^9}, {3.7420363023088474`*^9, 
-  3.742036304913709*^9}, {3.742104586742736*^9, 3.742104591882372*^9}},
- CellLabel->
-  "In[114]:=",ExpressionUUID->"4a5efc35-9ed8-41ae-8d3f-8b8daec080be"],
+   3.742021533789687*^9, 3.742021566951538*^9}, {3.7420216455120354`*^9, 
+   3.7420216608465333`*^9}, {3.742031777622274*^9, 3.742031820116948*^9}, {
+   3.7420326351048985`*^9, 3.7420326360685883`*^9}, {3.7420363023088474`*^9, 
+   3.742036304913709*^9}, {3.742104586742736*^9, 3.742104591882372*^9}, {
+   3.74254673671497*^9, 3.7425467451288233`*^9}, {3.7425468546693506`*^9, 
+   3.74254686456314*^9}, {3.7425469242891335`*^9, 3.742546967632883*^9}, {
+   3.742564658083433*^9, 3.7425646698473425`*^9}, {3.742565020574189*^9, 
+   3.7425650275179324`*^9}, 3.7425651357044325`*^9, {3.74256569319306*^9, 
+   3.7425657308061285`*^9}, 3.7425658226557956`*^9},
+ CellLabel->"In[80]:=",ExpressionUUID->"4a5efc35-9ed8-41ae-8d3f-8b8daec080be"],
+
+Cell[BoxData[
+ TemplateBox[{RowBox[{"\"Mon 30 Jul 2018 10:29:00\"", 
+     StyleBox[
+      RowBox[{"\"GMT+\"", "\[InvisibleSpace]", 
+        StyleBox["2.`", NumberMarks -> False, StripOnInput -> False]}], 
+      FontColor -> GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
+     RowBox[{
+       RowBox[{"{", 
+         RowBox[{
+          "2018", ",", "7", ",", "30", ",", "10", ",", "29", ",", "0"}], 
+         "}"}], ",", "\"Instant\"", ",", "\"Gregorian\"", ",", "2.`"}], "]"}]},
+  "DateObject",
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.742565823707502*^9},
+ CellLabel->"Out[81]=",ExpressionUUID->"e049cba6-564f-4114-a218-e4fde8b7833b"],
+
+Cell[BoxData[
+ TemplateBox[{RowBox[{"\"Mon 30 Jul 2018 10:29:00\"", 
+     StyleBox["\"CEST\"", FontColor -> GrayLevel[0.5]]}],
+   RowBox[{"DateObject", "[", 
+     RowBox[{
+       RowBox[{"{", 
+         RowBox[{
+          "2018", ",", "7", ",", "30", ",", "10", ",", "29", ",", "0"}], 
+         "}"}], ",", "\"Instant\"", ",", "\"Gregorian\"", ",", 
+       "\"Europe/Amsterdam\""}], "]"}]},
+  "DateObject",
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.742565823745528*^9},
+ CellLabel->"Out[82]=",ExpressionUUID->"ca13de8f-cfc1-43a9-9893-c6662bcbd4b2"],
+
+Cell[BoxData[
+ TemplateBox[{RowBox[{"\"Tue 1 Jan 2019 06:00:00\"", 
+     StyleBox[
+      RowBox[{"\"GMT+\"", "\[InvisibleSpace]", 
+        StyleBox["2.`", NumberMarks -> False, StripOnInput -> False]}], 
+      FontColor -> GrayLevel[0.5]]}],RowBox[{"DateObject", "[", 
+     RowBox[{
+       RowBox[{"{", 
+         RowBox[{"2019", ",", "1", ",", "1", ",", "6", ",", "0", ",", "0"}], 
+         "}"}], ",", "\"Instant\"", ",", "\"Gregorian\"", ",", "2.`"}], "]"}]},
+  "DateObject",
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.7425658237665653`*^9},
+ CellLabel->"Out[83]=",ExpressionUUID->"37b530e7-802a-439e-b53b-3d66dd25be6a"],
+
+Cell[BoxData[
+ TemplateBox[{RowBox[{"\"Tue 1 Jan 2019 06:00:00\"", 
+     StyleBox["\"CEST\"", FontColor -> GrayLevel[0.5]]}],
+   RowBox[{"DateObject", "[", 
+     RowBox[{
+       RowBox[{"{", 
+         RowBox[{"2019", ",", "1", ",", "1", ",", "6", ",", "0", ",", "0"}], 
+         "}"}], ",", "\"Instant\"", ",", "\"Gregorian\"", ",", 
+       "\"Europe/Amsterdam\""}], "]"}]},
+  "DateObject",
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.7425658237865796`*^9},
+ CellLabel->"Out[84]=",ExpressionUUID->"a3fe666d-8065-4c4f-9d3b-6ae2fa89f94b"],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -803,10 +961,34 @@ Cell[BoxData[
      RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
      "\"AngularDegrees\""},
     "QuantityPostfix"]}], "}"}]], "Output",
- CellChangeTimes->{3.7420215991374345`*^9, 3.7420318238225946`*^9, 
-  3.742032636730074*^9, 3.742036305672252*^9, 3.7421045929601374`*^9},
- CellLabel->
-  "Out[115]=",ExpressionUUID->"93f1ac91-890d-4a0d-866e-e777293ec150"],
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.742565823807572*^9},
+ CellLabel->"Out[85]=",ExpressionUUID->"a20ea33b-58f5-4f08-b06a-f873e00f663d"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TemplateBox[{
+    "111.1453402470188933648`5.045891259680732",
+     RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
+     "\"AngularDegrees\""},
+    "QuantityPostfix"], ",", 
+   TemplateBox[{
+    "38.8866552504558740111`4.5898005898756695",
+     RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
+     "\"AngularDegrees\""},
+    "QuantityPostfix"]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.7425658238266068`*^9},
+ CellLabel->"Out[86]=",ExpressionUUID->"8a98ff43-1c14-46da-a51f-7b5b73f8b463"],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -821,30 +1003,57 @@ Cell[BoxData[
      RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
      "\"AngularDegrees\""},
     "QuantityPostfix"]}], "}"}]], "Output",
- CellChangeTimes->{3.7420215991374345`*^9, 3.7420318238225946`*^9, 
-  3.742032636730074*^9, 3.742036305672252*^9, 3.7421045929861574`*^9},
- CellLabel->
-  "Out[116]=",ExpressionUUID->"48fbe098-231a-41c5-9c24-f10275a5be33"],
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.7425658238406296`*^9},
+ CellLabel->"Out[87]=",ExpressionUUID->"9052d2a9-6efa-4286-87a3-28f5511ba157"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.024514589612993652`", ",", 
+  RowBox[{
+   TemplateBox[{
+    "96.3652976262628300219`4.98392066706947",
+     RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
+     "\"AngularDegrees\""},
+    "QuantityPostfix"], ",", 
+   TemplateBox[{
+    RowBox[{"-", "24.8043415681415346796`4.3945277031674825"}],
+     RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
+     "\"AngularDegrees\""},
+    "QuantityPostfix"]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.742565823854603*^9},
+ CellLabel->"Out[88]=",ExpressionUUID->"d342d8a5-aeca-4d47-89c7-3b41adb442d0"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.022735772950181976`", ",", 
    RowBox[{"{", 
     RowBox[{
      TemplateBox[{
-      "155.2421609439037410993`5.1910096794137734",
+      "169.1176323661005369559`5.22818888991643",
        RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
        "\"AngularDegrees\""},
       "QuantityPostfix"], ",", 
      TemplateBox[{
-      "11.915816921848609411`4.076123821964816",
+      "14.7741190935663428974`4.1695015955290335",
        RowBox[{"\[InvisibleSpace]", "\"\[Degree]\""}],"degrees",
        "\"AngularDegrees\""},
       "QuantityPostfix"]}], "}"}]}], "}"}]], "Output",
- CellChangeTimes->{3.7420215991374345`*^9, 3.7420318238225946`*^9, 
-  3.742032636730074*^9, 3.742036305672252*^9, 3.7421045930402155`*^9},
- CellLabel->
-  "Out[117]=",ExpressionUUID->"75dbad2e-f0f9-4cb9-a4c3-dc8a183863c7"]
+ CellChangeTimes->{
+  3.7420215991374345`*^9, 3.7420318238225946`*^9, 3.742032636730074*^9, 
+   3.742036305672252*^9, 3.7421045929601374`*^9, 3.742546870350134*^9, {
+   3.7425469288142395`*^9, 3.7425469447441683`*^9}, 3.7425646714971275`*^9, 
+   3.7425650289521403`*^9, {3.7425656953735723`*^9, 3.7425657316156845`*^9}, 
+   3.7425658238736167`*^9},
+ CellLabel->"Out[89]=",ExpressionUUID->"73ba8267-1ca9-4eef-88c3-cdbfaad5c2af"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -943,11 +1152,14 @@ Cell[BoxData[{
    RowBox[{"SunPosition", "[", 
     RowBox[{"position", ",", " ", 
      RowBox[{"DateObject", "[", 
-      RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "2018", ",", " ", "8", ",", " ", "1", ",", " ", "15", ",", " ", "57", 
+         ",", " ", "0"}], "}"}], ",", " ", 
        RowBox[{
-       "2018", ",", " ", "8", ",", " ", "1", ",", " ", "15", ",", " ", "57", 
-        ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+       "TimeZone", " ", "\[Rule]", " ", "\"\<Europe/Amsterdam\>\""}]}], 
+      "]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"angle", "[", 
    RowBox[{"sunPos", ",", " ", "42"}], "]"}], 
@@ -957,33 +1169,56 @@ Cell[BoxData[{
    RowBox[{"SunPosition", "[", 
     RowBox[{"position", ",", " ", 
      RowBox[{"DateObject", "[", 
-      RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "2020", ",", " ", "11", ",", " ", "24", ",", " ", "17", ",", " ", 
+         "15", ",", " ", "0"}], "}"}], ",", " ", 
        RowBox[{
-       "2020", ",", " ", "11", ",", " ", "24", ",", " ", "17", ",", " ", "15",
-         ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+       "TimeZone", " ", "\[Rule]", " ", "\"\<Europe/Amsterdam\>\""}]}], 
+      "]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{"angle", "[", 
   RowBox[{"sunPos", ",", " ", "60"}], "]"}]}], "Input",
  CellChangeTimes->{{3.7420317739406185`*^9, 3.7420317756848764`*^9}, {
   3.7421208886248674`*^9, 3.742121004877183*^9}, {3.742121553391858*^9, 
-  3.742121625081149*^9}, {3.7421217157261896`*^9, 3.7421217162009597`*^9}},
- CellLabel->
-  "In[154]:=",ExpressionUUID->"de3d7f2a-9c6a-4b2f-b0f5-4ef285578f3e"],
+  3.742121625081149*^9}, {3.7421217157261896`*^9, 3.7421217162009597`*^9}, {
+  3.7425658967580843`*^9, 3.7425658989535875`*^9}},
+ CellLabel->"In[90]:=",ExpressionUUID->"de3d7f2a-9c6a-4b2f-b0f5-4ef285578f3e"],
 
 Cell[BoxData["0.7983276482532772558`4.4804379528578355"], "Output",
  CellChangeTimes->{
   3.7421210061130853`*^9, {3.742121573866042*^9, 3.742121625820325*^9}, 
-   3.742121716869015*^9},
- CellLabel->
-  "Out[157]=",ExpressionUUID->"34e117c1-fd1a-4661-93d4-8a6c853e6771"],
+   3.742121716869015*^9, 3.74256594634814*^9},
+ CellLabel->"Out[93]=",ExpressionUUID->"cfed8d8a-6e58-41a6-8bbb-2c021f5b47b5"],
 
-Cell[BoxData["1.2963964240192105077`4.7274606723422625"], "Output",
+Cell[BoxData["1.5406948662984071689`4.810862619555881"], "Output",
  CellChangeTimes->{
   3.7421210061130853`*^9, {3.742121573866042*^9, 3.742121625820325*^9}, 
-   3.742121716884068*^9},
- CellLabel->
-  "Out[159]=",ExpressionUUID->"e07a6681-9177-40a9-868b-2e3aede4a5f2"]
-}, Open  ]]
+   3.742121716869015*^9, 3.7425659463831635`*^9},
+ CellLabel->"Out[95]=",ExpressionUUID->"839fc557-2c19-4e93-8818-ffb8ededf9ef"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"SunRise", "[", 
+    RowBox[{"position", ",", " ", 
+     RowBox[{"DateObject", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "2018", ",", " ", "7", ",", " ", "30", ",", " ", "10", ",", " ", "29",
+          ",", " ", "0"}], "}"}], ",", " ", 
+       RowBox[{
+       "TimeZone", " ", "\[Rule]", " ", "\"\<Europe/Amsterdam\>\""}]}], 
+      "]"}]}], "]"}], ";", " ", 
+   RowBox[{"(*", " ", "idk", " ", "*)"}]}]}]], "Input",
+ CellChangeTimes->{{3.7425469782731857`*^9, 3.7425469795650673`*^9}, {
+   3.742564853934966*^9, 3.7425648604621177`*^9}, {3.7425651209201756`*^9, 
+   3.74256514797556*^9}, {3.7425654150816264`*^9, 3.7425655254724483`*^9}, 
+   3.742565684914328*^9, 
+   3.7425659023038807`*^9},ExpressionUUID->"2c710516-3b55-4696-b5e5-\
+379e865a2b56"]
 },
 WindowSize->{944, 981},
 WindowMargins->{{Automatic, 0}, {Automatic, 0}},
@@ -1014,16 +1249,23 @@ Cell[7060, 190, 12108, 220, 245, "Output",ExpressionUUID->"c599dd44-7c4a-4093-b9
 Cell[19171, 412, 19027, 333, 245, "Output",ExpressionUUID->"0f1ab8d6-4b18-4927-b426-57852a68564f"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[38235, 750, 1660, 40, 105, "Input",ExpressionUUID->"4a5efc35-9ed8-41ae-8d3f-8b8daec080be"],
-Cell[39898, 792, 649, 16, 42, "Output",ExpressionUUID->"93f1ac91-890d-4a0d-866e-e777293ec150"],
-Cell[40550, 810, 662, 16, 42, "Output",ExpressionUUID->"48fbe098-231a-41c5-9c24-f10275a5be33"],
-Cell[41215, 828, 737, 18, 42, "Output",ExpressionUUID->"75dbad2e-f0f9-4cb9-a4c3-dc8a183863c7"]
+Cell[38235, 750, 4652, 118, 257, "Input",ExpressionUUID->"4a5efc35-9ed8-41ae-8d3f-8b8daec080be"],
+Cell[42890, 870, 949, 19, 43, "Output",ExpressionUUID->"e049cba6-564f-4114-a218-e4fde8b7833b"],
+Cell[43842, 891, 862, 18, 43, "Output",ExpressionUUID->"ca13de8f-cfc1-43a9-9893-c6662bcbd4b2"],
+Cell[44707, 911, 936, 18, 43, "Output",ExpressionUUID->"37b530e7-802a-439e-b53b-3d66dd25be6a"],
+Cell[45646, 931, 849, 17, 43, "Output",ExpressionUUID->"a3fe666d-8065-4c4f-9d3b-6ae2fa89f94b"],
+Cell[46498, 950, 853, 19, 42, "Output",ExpressionUUID->"a20ea33b-58f5-4f08-b06a-f873e00f663d"],
+Cell[47354, 971, 855, 19, 42, "Output",ExpressionUUID->"8a98ff43-1c14-46da-a51f-7b5b73f8b463"],
+Cell[48212, 992, 868, 19, 42, "Output",ExpressionUUID->"9052d2a9-6efa-4286-87a3-28f5511ba157"],
+Cell[49083, 1013, 866, 19, 42, "Output",ExpressionUUID->"d342d8a5-aeca-4d47-89c7-3b41adb442d0"],
+Cell[49952, 1034, 943, 21, 75, "Output",ExpressionUUID->"73ba8267-1ca9-4eef-88c3-cdbfaad5c2af"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[41989, 851, 4506, 119, 371, "Input",ExpressionUUID->"de3d7f2a-9c6a-4b2f-b0f5-4ef285578f3e"],
-Cell[46498, 972, 269, 5, 32, "Output",ExpressionUUID->"34e117c1-fd1a-4661-93d4-8a6c853e6771"],
-Cell[46770, 979, 269, 5, 65, "Output",ExpressionUUID->"e07a6681-9177-40a9-868b-2e3aede4a5f2"]
-}, Open  ]]
+Cell[50932, 1060, 4799, 125, 371, "Input",ExpressionUUID->"de3d7f2a-9c6a-4b2f-b0f5-4ef285578f3e"],
+Cell[55734, 1187, 286, 4, 32, "Output",ExpressionUUID->"cfed8d8a-6e58-41a6-8bbb-2c021f5b47b5"],
+Cell[56023, 1193, 288, 4, 32, "Output",ExpressionUUID->"839fc557-2c19-4e93-8818-ffb8ededf9ef"]
+}, Open  ]],
+Cell[56326, 1200, 842, 20, 48, "Input",ExpressionUUID->"2c710516-3b55-4696-b5e5-379e865a2b56"]
 }
 ]
 *)
