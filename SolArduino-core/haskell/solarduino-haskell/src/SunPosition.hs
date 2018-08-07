@@ -1,4 +1,4 @@
-module SunPosition (getSunPosition) where
+module SunPosition (getSunPosition, toLocalTime) where
 
 import           Data.Astro.Coordinate
 import           Data.Astro.Effects
@@ -11,26 +11,21 @@ location :: GeographicCoordinates
 location = GeoC (fromDMS 51 32 48) (fromDMS 4 24 42)
 
 -- | Get the sun position from local time. Location is hard-coded.
-getSunPosition :: Integer -- ^ Year
-            -> Int -- ^ Month
-            -> Int -- ^ Day
-            -> Int -- ^ Hour
-            -> Int -- ^ Minute
-            -> TimeBaseType -- ^ Second
+getSunPosition :: LocalCivilTime -- ^ Local time, including summer/winter time
             -> HorizonCoordinates -- ^ The altitude and azimuth, e.g. HC {hAltitude = DD 49.312050979507404, hAzimuth = DD 118.94723825710143}
-getSunPosition year month day hour min sec  = ec1ToHC location julianDate equatorialCoordinates
-    where julianDate = lctUniversalTime $ summerWinterTime year month day hour min sec
+getSunPosition localTime = ec1ToHC location julianDate equatorialCoordinates
+    where julianDate = lctUniversalTime localTime
           equatorialCoordinates = sunPosition2 julianDate
 
 -- | Take summer and winter time into account
-summerWinterTime :: Integer -- ^ Year
+toLocalTime :: Integer -- ^ Year
                     -> Int -- ^ Month
                     -> Int -- ^ Day
                     -> Int -- ^ Hour
                     -> Int -- ^ Minute
                     -> TimeBaseType -- ^ Second
                     -> LocalCivilTime -- ^ Local time including winter/summer time
-summerWinterTime year month day hour min sec
+toLocalTime year month day hour min sec
     -- Since we cannot figure out where 'last sundays' fall, this way it's at most one week off
     | month < 4 || month > 10 = lctFromYMDHMS (DH 1) year month day hour min sec
     | otherwise = lctFromYMDHMS (DH 2) year month day hour min sec
