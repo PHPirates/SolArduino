@@ -17,9 +17,12 @@ library
   hs-source-dirs:      src
   exposed-modules:     PowerFunctions
                      , SunPosition
+                     , AngleFunctions
   build-depends:       base >= 4.7 && < 5
                      , astro
                      , golden-haskell
+                     , time
+                     , tuple
 --                     , criterion
   default-language:    Haskell2010
 

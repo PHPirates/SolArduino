@@ -38,7 +38,7 @@ sunMisalignment sunCoords alpha =
 -- | Find the power received by the solar panels at each sun position and sum that.
 -- This does not equal the total power received by the solar panels over a certain time period. Higher is better.
 totalPower :: [HorizonCoordinates] -- ^ A list of sun positions
-            -> Double -- ^ The angle of the solar panels
             -> Int -- ^ Day of the year
+            -> Double -- ^ The angle of the solar panels
             -> Double -- ^ Sum of the power received by the panels at each sun position
-totalPower sunPositions alpha day = foldl (\acc sunPos -> acc + directPower day (sunMisalignment sunPos alpha )  ) 0 sunPositions
+totalPower sunPositions day alpha = foldl (\acc sunPos -> acc + directPower day (sunMisalignment sunPos alpha )  ) 0 sunPositions

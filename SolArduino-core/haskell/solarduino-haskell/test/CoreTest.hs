@@ -35,40 +35,40 @@ sunPositionTest =
         "sunPosition tests"
         [ testCase "Test altitude sunPosition 2018 7 30 10 29 0"
             -- horizonCoords = HC (DD 38.89) (DD 111.15) -- altitude, azimuth
-            (abs (DD 38.89 - hAltitude (getSunPosition (toLocalTime 2018 7 30 10 29 0))) `compare` 0.02 @?= LT )
+            (abs (DD 38.89 - hAltitude (getSunPositionYMDHMS 2018 7 30 10 29 0)) `compare` 0.02 @?= LT )
         , testCase "Test azimuth sunPosition 2018 7 30 10 29 0"
-          (abs (DD 111.15 - hAzimuth (getSunPosition (toLocalTime 2018 7 30 10 29 0))) `compare` 0.02 @?= LT )
+          (abs (DD 111.15 - hAzimuth (getSunPositionYMDHMS 2018 7 30 10 29 0)) `compare` 0.02 @?= LT )
         , testCase "Test altitude sunPosition 2019 1 1 6 0 0"
-            (abs (DD (-24.80) - hAltitude (getSunPosition (toLocalTime 2019 1 1 6 0 0))) `compare` 0.02 @?= LT )
+            (abs (DD (-24.80) - hAltitude (getSunPositionYMDHMS 2019 1 1 6 0 0)) `compare` 0.02 @?= LT )
         , testCase "Test azimuth sunPosition 2019 1 1 6 0 0"
-          (abs (DD 96.37 - hAzimuth (getSunPosition (toLocalTime 2019 1 1 6 0 0))) `compare` 0.02 @?= LT )
+          (abs (DD 96.37 - hAzimuth (getSunPositionYMDHMS 2019 1 1 6 0 0)) `compare` 0.02 @?= LT )
         , testCase "Test altitude sunPosition 2019 1 1 12 0 0"
-            (abs (DD 14.77 - hAltitude (getSunPosition (toLocalTime 2019 1 1 12 0 0))) `compare` 0.02 @?= LT )
+            (abs (DD 14.77 - hAltitude (getSunPositionYMDHMS 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
         , testCase "Test azimuth sunPosition 2019 1 1 12 0 0"
-          (abs (DD 169.12 - hAzimuth (getSunPosition (toLocalTime 2019 1 1 12 0 0))) `compare` 0.02 @?= LT )
+          (abs (DD 169.12 - hAzimuth (getSunPositionYMDHMS 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
         ]
 
 sunMisalignmentTest = testGroup "sunMisalignment tests" [
         testCase "Test (getSunPosition 2018 8 1 15 57 0) 42" (
-        abs (0.7983 - sunMisalignment (getSunPosition (toLocalTime 2018 8 1 15 57 0)) 42) `compare` 0.001 @?= LT
+        abs (0.7983 - sunMisalignment (getSunPositionYMDHMS 2018 8 1 15 57 0) 42) `compare` 0.001 @?= LT
         )
       , testCase "Test (getSunPosition 2020 11 24 17 15 0) 60" (
-        abs (1.5407 - sunMisalignment (getSunPosition (toLocalTime 2020 11 24 17 15 0)) 60) `compare` 0.001 @?= LT
+        abs (1.5407 - sunMisalignment (getSunPositionYMDHMS 2020 11 24 17 15 0) 60) `compare` 0.001 @?= LT
         )
     ]
 
 totalPowerTest = testGroup "totalPower tests" [
-        testCase "Test 24 145"
+        testCase "Test 145 24"
         (abs (237.324 -
-        totalPower [getSunPosition (toLocalTime 2018 8 1 18 35 0), getSunPosition (toLocalTime 2018 3 3 16 35 0)] 24 145
+        totalPower [getSunPositionYMDHMS 2018 8 1 18 35 0, getSunPositionYMDHMS 2018 3 3 16 35 0] 145 24
         ) `compare` 0.5 @?= LT)
-      , testCase "Test 5 2"
+      , testCase "Test 2 5"
         (abs (767.742 -
-        totalPower [getSunPosition (toLocalTime 2018 2 1 20 35 0), getSunPosition (toLocalTime 2018 3 17 12 0 0), getSunPosition (toLocalTime 2018 3 17 12 10 0)] 5 2
+        totalPower [getSunPositionYMDHMS 2018 2 1 20 35 0, getSunPositionYMDHMS 2018 3 17 12 0 0, getSunPositionYMDHMS 2018 3 17 12 10 0] 2 5
         ) `compare` 0.5 @?= LT)
-      , testCase "Test 0 212"
+      , testCase "Test 212 0"
         (abs (619.392 -
-        totalPower [getSunPosition (toLocalTime 2018 8 1 19 0 0), getSunPosition (toLocalTime 2018 8 1 19 10 0), getSunPosition (toLocalTime 2018 8 1 19 16 0), getSunPosition (toLocalTime 2018 8 1 19 18 0)] 0 212
+        totalPower [getSunPositionYMDHMS 2018 8 1 19 0 0, getSunPositionYMDHMS 2018 8 1 19 10 0, getSunPositionYMDHMS 2018 8 1 19 16 0, getSunPositionYMDHMS 2018 8 1 19 18 0] 212 0
         ) `compare` 0.5 @?= LT)
     ]
 
