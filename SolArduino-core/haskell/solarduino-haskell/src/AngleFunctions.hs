@@ -24,7 +24,7 @@ bestAngle lctStart lctEnd nrSunPos = fst $ goldenSectionSearch (totalPower listO
         -- Time between sampled sun positions, such that the total number of sun positions will be as given.
         interval = intervalLengthInHours / (fromIntegral nrSunPos - 1)
 
-        listOfSunPos = [getSunPosition (addHours (DH n) jdStart) | n <- [0, interval .. intervalLengthInHours]]
+        listOfSunPos = [getSunPosition (addHours (DH n) jdStart) | n <- take nrSunPos [0, interval..]]
 
         -- In general the start date may not be the same as the end date, but we take the first one to optimize with.
         -- In practice it will be the same day, as setting the solar panels on an angle for multiple days is uncommon.
