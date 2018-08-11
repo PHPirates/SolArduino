@@ -1,12 +1,14 @@
+import           Data.Astro.Coordinate
+import           Data.Astro.Time.JulianDate (lctFromYMDHMS)
+import           Data.Astro.Types
+import           Data.Time.Calendar
 import           GoldenSection              (goldenSectionSearch)
 import           Test.Tasty
 import           Test.Tasty.HUnit
 
-import           Data.Astro.Coordinate
-import           Data.Astro.Time.JulianDate (lctFromYMDHMS)
-import           Data.Astro.Types
 import           PowerFunctions
 import           SunPosition
+import           Util
 
 -- to run tests in terminal: stack test
 main = defaultMain tests
@@ -19,6 +21,7 @@ tests = testGroup "Tests" [
       , sunMisalignmentTest
       , totalPowerTest
       , optimizationTest
+      , dstTest
       ]
 
 directPowerTest =
@@ -83,3 +86,12 @@ optimizationTest =
           abs ( negate $ snd result) `compare` 1e-5 @?= LT
         ]
         where result = goldenSectionSearch (directPower 42) (-pi / 3) (pi / 3) 1e-5
+
+dstTest =
+    testGroup
+        "Test summer/winter time (DST) check"
+        [ testCase "Test last winter day" $ isSummerTime (fromGregorian 2018 3 25) @?= False
+        , testCase "Test first summer day" $ isSummerTime (fromGregorian 2018 3 26) @?= True
+        , testCase "Test last summer day" $ isSummerTime (fromGregorian 2018 10 27) @?= True
+        , testCase "Test first winter day" $ isSummerTime (fromGregorian 2018 10 28) @?= False
+        ]
