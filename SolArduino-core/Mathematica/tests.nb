@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     66591,       1456]
-NotebookOptionsPosition[     63628,       1407]
-NotebookOutlinePosition[     63968,       1422]
-CellTagsIndexPosition[     63925,       1419]
+NotebookDataLength[     69342,       1528]
+NotebookOptionsPosition[     65862,       1472]
+NotebookOutlinePosition[     66202,       1487]
+CellTagsIndexPosition[     66159,       1484]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1403,6 +1403,71 @@ Cell[BoxData["212"], "Output",
  CellChangeTimes->{3.7425697032944193`*^9, 3.7425697707244987`*^9, 
   3.742569950539607*^9},
  CellLabel->"Out[62]=",ExpressionUUID->"643940a1-a002-409d-be29-4e8823373225"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"<<", "SolArduino`"}], "\[IndentingNewLine]", 
+ RowBox[{"calculatesunPos", "[", 
+  RowBox[{"DateObject", "[", 
+   RowBox[{"{", 
+    RowBox[{"2016", ",", "8", ",", "17"}], "}"}], "]"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"dayAngles", "[", 
+  RowBox[{
+   RowBox[{"DateObject", "[", 
+    RowBox[{"{", 
+     RowBox[{"2016", ",", "8", ",", "17"}], "}"}], "]"}], ",", "14"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{3.742982852132395*^9},
+ CellLabel->"In[1]:=",ExpressionUUID->"89cb9dc1-45a1-4338-ba15-330bc379a076"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Get","noopen",
+   "\"Cannot open \
+\\!\\(\\*RowBox[{\\\"\\\\\\\"SolArduino`\\\\\\\"\\\"}]\\).\"",2,1,1,
+   20712198812705952931,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.742982854962899*^9},
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"ae521c8d-db61-4b3f-91c8-f3e09830fca7"],
+
+Cell[BoxData["$Failed"], "Output",
+ CellChangeTimes->{3.7429828549649005`*^9},
+ CellLabel->"Out[1]=",ExpressionUUID->"471f6f0f-c893-4a81-b02c-5dcdb12f27c1"],
+
+Cell[BoxData[
+ RowBox[{"calculatesunPos", "[", 
+  TemplateBox[{RowBox[{
+      StyleBox["\"Day: \"", FontColor -> GrayLevel[0.5], FontWeight -> Plain],
+       "\"Wed 17 Aug 2016\""}],RowBox[{"DateObject", "[", 
+      RowBox[{
+        RowBox[{"{", 
+          RowBox[{"2016", ",", "8", ",", "17"}], "}"}], ",", "\"Day\"", ",", 
+        "\"Gregorian\"", ",", "2.`"}], "]"}]},
+   "DateObject",
+   Editable->False], "]"}]], "Output",
+ CellChangeTimes->{3.7429828549769087`*^9},
+ CellLabel->"Out[2]=",ExpressionUUID->"ebff082d-7b5c-4f1d-b2c8-5ecb14616925"],
+
+Cell[BoxData[
+ RowBox[{"dayAngles", "[", 
+  RowBox[{
+   TemplateBox[{RowBox[{
+       StyleBox[
+       "\"Day: \"", FontColor -> GrayLevel[0.5], FontWeight -> Plain], 
+       "\"Wed 17 Aug 2016\""}],RowBox[{"DateObject", "[", 
+       RowBox[{
+         RowBox[{"{", 
+           RowBox[{"2016", ",", "8", ",", "17"}], "}"}], ",", "\"Day\"", ",", 
+         "\"Gregorian\"", ",", "2.`"}], "]"}]},
+    "DateObject",
+    Editable->False], ",", "14"}], "]"}]], "Output",
+ CellChangeTimes->{3.742982854992919*^9},
+ CellLabel->"Out[3]=",ExpressionUUID->"ae0f270b-329f-44fb-862b-17318a89a171"]
 }, Open  ]]
 },
 WindowSize->{944, 981},
@@ -1426,7 +1491,7 @@ Cell[580, 22, 2923, 76, 276, "Input",ExpressionUUID->"9954b9d8-ae79-40c4-aab9-6e
 Cell[3506, 100, 321, 4, 32, "Output",ExpressionUUID->"804326b8-7446-4d90-b393-9e0637fab2b8"],
 Cell[3830, 106, 318, 4, 32, "Output",ExpressionUUID->"84a71cff-949e-4db6-b44a-decd8507fdaf"],
 Cell[4151, 112, 318, 4, 32, "Output",ExpressionUUID->"43091368-537b-439b-99bf-3f33b01b62ca"],
-Cell[4472, 118, 305, 4, 65, "Output",ExpressionUUID->"7624409a-fbf7-4656-9fd5-aab3d334889c"]
+Cell[4472, 118, 305, 4, 32, "Output",ExpressionUUID->"7624409a-fbf7-4656-9fd5-aab3d334889c"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[4814, 127, 2337, 61, 200, "Input",ExpressionUUID->"4ee43eea-5d3c-4c9b-b517-34980b62b0c2"],
@@ -1457,6 +1522,13 @@ Cell[62749, 1386, 218, 3, 32, "Output",ExpressionUUID->"479aa017-91fa-47b9-ae18-
 Cell[62970, 1391, 217, 3, 32, "Output",ExpressionUUID->"594095b3-0048-4d6f-b358-8449aa9af994"],
 Cell[63190, 1396, 217, 3, 32, "Output",ExpressionUUID->"3cc28229-4dcb-4301-ac52-776d1d8579ea"],
 Cell[63410, 1401, 202, 3, 32, "Output",ExpressionUUID->"643940a1-a002-409d-be29-4e8823373225"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[63649, 1409, 542, 14, 67, "Input",ExpressionUUID->"89cb9dc1-45a1-4338-ba15-330bc379a076"],
+Cell[64194, 1425, 356, 10, 21, "Message",ExpressionUUID->"ae521c8d-db61-4b3f-91c8-f3e09830fca7"],
+Cell[64553, 1437, 156, 2, 32, "Output",ExpressionUUID->"471f6f0f-c893-4a81-b02c-5dcdb12f27c1"],
+Cell[64712, 1441, 549, 12, 43, "Output",ExpressionUUID->"ebff082d-7b5c-4f1d-b2c8-5ecb14616925"],
+Cell[65264, 1455, 582, 14, 76, "Output",ExpressionUUID->"ae0f270b-329f-44fb-862b-17318a89a171"]
 }, Open  ]]
 }
 ]

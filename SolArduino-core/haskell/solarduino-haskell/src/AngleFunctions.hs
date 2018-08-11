@@ -12,11 +12,14 @@ import Data.Tuple.Select
 
 -- | Find the optimal angle over a certain time period.
 -- This method finds a certain number of sun positions and then optimizes the angle such that the sum of the total of power from the sun at each sun position is maximal.
+-- Example:
+-- import Data.Astro.Time.JulianDate
+-- bestAngle (bestAngle (toLocalTime 2018 8 11 3 0 0) (toLocalTime 2018 8 11 22 0 0) 100)
 bestAngle :: LocalCivilTime -- ^ Start time, must take summer/winter time into account (see SunPosition#toLocalTime)
              -> LocalCivilTime -- ^ End time
              -> Int -- ^ Number of sun positions to use in this interval. More is slower but more precise.
              -> Double -- ^ Optimal angle
-bestAngle lctStart lctEnd nrSunPos = fst $ goldenSectionSearch (totalPower listOfSunPos dayOfYear ) 0 90 0.1
+bestAngle lctStart lctEnd nrSunPos = fst $ goldenSectionSearch (totalPower listOfSunPos dayOfYear ) 0 90 0.01
     where -- We need to convert to JulianDate to use the times
         jdStart = lctUniversalTime lctStart
         jdEnd = lctUniversalTime lctEnd
