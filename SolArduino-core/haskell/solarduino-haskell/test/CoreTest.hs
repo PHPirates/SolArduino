@@ -6,6 +6,7 @@ import           GoldenSection              (goldenSectionSearch)
 import           Test.Tasty
 import           Test.Tasty.HUnit
 
+import           AngleFunctions
 import           PowerFunctions
 import           SunPosition
 import           Util
@@ -22,6 +23,7 @@ tests = testGroup "Tests" [
       , totalPowerTest
       , optimizationTest
       , dstTest
+      , bestAngleTest
       ]
 
 directPowerTest =
@@ -94,4 +96,11 @@ dstTest =
         , testCase "Test first summer day" $ isSummerTime (fromGregorian 2018 3 26) @?= True
         , testCase "Test last summer day" $ isSummerTime (fromGregorian 2018 10 27) @?= True
         , testCase "Test first winter day" $ isSummerTime (fromGregorian 2018 10 28) @?= False
+        ]
+
+bestAngleTest =
+    testGroup
+        "Test best angle over time period"
+        [ testCase "Test 2018 8 11" $
+          abs (bestAngle (toUniversalTime 2018 8 11 3 0 0) (toUniversalTime 2018 8 11 22 0 0) 100 - 28.5) `compare` 0.1 @?= LT
         ]
