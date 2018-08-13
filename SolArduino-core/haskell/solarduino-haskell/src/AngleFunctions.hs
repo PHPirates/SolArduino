@@ -6,10 +6,11 @@ import           SunPosition
 
 import           Data.Astro.Time.JulianDate
 import           Data.Astro.Types
+import           Data.Maybe
+import           Data.Time.Calendar             (Day)
 import           Data.Time.Calendar.MonthDay
 import           Data.Time.Calendar.OrdinalDate
 import           Data.Tuple.Select
-import Data.Time.Calendar (Day)
 
 -- | Find the optimal angle over a certain time period.
 -- This method finds a certain number of sun positions and then optimizes the angle such that the sum of the total of power from the sun at each sun position is maximal.
@@ -40,22 +41,29 @@ bestAngle jdStart jdEnd nrSunPos = fst $ goldenSectionSearch (totalPower listOfS
 -- The result is a list of pairs (a, t), the solar panels should be set at angle a at time t.
 -- Example:
 -- import Data.Astro.Time.JulianDate
--- bestAnglesDay (toUniversalTime 2018 8 11 0 0 0) 1000 10
-bestAnglesDay :: JulianDate -- ^ Date for which to find the optimal angles
+-- bestAnglesDay (toLocalDate 2018 8 11) 1000 10
+bestAnglesDay :: LocalCivilDate -- ^ Date for which to find the optimal angles
                 -> Int -- ^ Number of sun positions to sample for this day. More is slower but more precise.
                 -> Int -- ^ Number of times to adjust the solar panels
                 -> [(Double, JulianDate)] -- ^ Angle, time
 bestAnglesDay date nrSunPos nrAdjustments =
     [ ( bestAngle
-            (addHours (DH n) date)
-            (addHours (DH (n + interval)) date)
+            (addHours (DH n) sunriseDate)
+            (addHours (DH (n + interval)) sunriseDate)
             (nrSunPos `div` nrAdjustments) -- Use integer division to get an integer number of samples
-      , addHours (DH n) date)
-    | n <- [startHour,interval .. endHour]
+      , addHours (DH n) sunriseDate)
+    | n <- [0,interval .. sunShineHours]
     ]
   where
-    -- Hour of the day at which to start
-    startHour = 0.0 -- todo could be sunrise
-    endHour = 24.0 -- todo could be sunset
+    -- Hour of the day at which to start, by default 0:00
+    defaultSunrise = lcdDate date
+    sunriseDate = fromMaybe defaultSunrise $ getSunrise date
+    -- Hour of the day at which to end, by default 24:00
+    defaultSunset = addHours 24 defaultSunrise
+    sunsetDate = fromMaybe defaultSunset $ getSunset date
+    -- Number of hours which the sun is up
+    sunShineHours :: Double
+    sunShineHours = 24 * numberOfDays sunriseDate sunsetDate
     -- The solar panels move after each interval, of this length
-    interval = (endHour - startHour) / fromIntegral nrAdjustments
+    interval = sunShineHours / fromIntegral nrAdjustments
+
