@@ -45,9 +45,10 @@ bestAngle jdStart jdEnd nrSunPos = fst $ goldenSectionSearch (totalPower listOfS
 bestAnglesDay :: LocalCivilDate -- ^ Date for which to find the optimal angles
                 -> Int -- ^ Number of sun positions to sample for this day. More is slower but more precise.
                 -> Int -- ^ Number of times to adjust the solar panels
-                -> [(Double, JulianDate)] -- ^ Angle, time
+                -> [(Double, JulianDate)] -- ^ Angle, time, length at least the number of times
 bestAnglesDay date nrSunPos nrAdjustments =
-    [ ( bestAngle
+    take nrAdjustments [ -- This ensures not too many elements are returned
+        ( bestAngle
             (addHours (DH n) sunriseDate)
             (addHours (DH (n + interval)) sunriseDate)
             (nrSunPos `div` nrAdjustments) -- Use integer division to get an integer number of samples
@@ -58,12 +59,14 @@ bestAnglesDay date nrSunPos nrAdjustments =
     -- Hour of the day at which to start, by default 0:00
     defaultSunrise = lcdDate date
     sunriseDate = fromMaybe defaultSunrise $ getSunrise date
+
     -- Hour of the day at which to end, by default 24:00
     defaultSunset = addHours 24 defaultSunrise
     sunsetDate = fromMaybe defaultSunset $ getSunset date
+
     -- Number of hours which the sun is up
-    sunShineHours :: Double
     sunShineHours = 24 * numberOfDays sunriseDate sunsetDate
+
     -- The solar panels move after each interval, of this length
     interval = sunShineHours / fromIntegral nrAdjustments
 

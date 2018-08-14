@@ -27,6 +27,8 @@ tests = testGroup "Tests" [
       , dstTest
       , bestAngleTest
       , sunriseTest
+      , sunsetTest
+      , bestAnglesDayTest
       ]
 
 directPowerTest =
@@ -126,4 +128,27 @@ sunriseTest =
               sunriseTuple = gmtToCET $ toYMDHMS sunrise
               sunriseAltitude = hAltitude $ getSunPosition sunrise
 
--- test sunset in winter time
+sunsetTest =
+    testGroup
+        "Test sunset"
+        [ testCase "Test year of sunset" $ sel1 sunsetTuple @?= 2018
+        , testCase "Test month of sunset" $ sel2 sunsetTuple @?= 8
+        , testCase "Test day of sunset" $ sel3 sunsetTuple @?= 13
+        , testCase "Test hour of sunset" $ sel4 sunsetTuple @?= 21
+        , testCase "Test minute of sunset" $ abs (sel5 sunsetTuple - 7) `compare` 5 @?= LT
+        , testCase "Test altitude at sunset" $ abs sunsetAltitude `compare` 1 @?= LT
+        ]
+        where date = toLocalDate 2018 8 13
+              defaultTime = toUniversalTime 2018 8 13 10 0 0
+              sunset = fromMaybe defaultTime $ getSunset date
+              sunsetTuple = gmtToCET $ toYMDHMS sunset
+              sunsetAltitude = hAltitude $ getSunPosition sunset
+
+bestAnglesDayTest =
+    testGroup
+        "Test optimal angles for a day"
+        [ testCase ("Test 2018 8 14 element nr " ++ show n) $ abs (fst (angles !! n) - expectedAngles !! n ) `compare` threshold @?= LT | n <- [0..9]
+        ]
+        where angles = bestAnglesDay (toLocalDate 2018 8 14) 1000 10
+              expectedAngles = [47.8, 48.3, 46.3, 43.1, 38.6, 31.8, 20.0, 0.0, 0.0, 0.0]
+              threshold = 3.0 -- amount of degrees it's allowed to be off compared to the Mathematica implementation
