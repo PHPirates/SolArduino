@@ -48,6 +48,7 @@ test-suite solarduino-haskell-test
                      , astro
                      , golden-haskell
                      , time
+                     , tuple
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 

@@ -1,4 +1,4 @@
-module Util (toLocalTime, toLocalDate, toUniversalTime, julianToLocalTime, julianToLocalDate, localToJulianDate, isSummerTime) where
+module Util (toLocalTime, toLocalDate, toUniversalTime, julianToLocalTime, julianToLocalDate, localToJulianDate, gmtToCET, isSummerTime) where
 
 import           Data.Astro.Time.JulianDate
 import           Data.Astro.Types
@@ -31,12 +31,29 @@ toLocalDate year month day
 julianToLocalTime :: JulianDate -- ^ Universal time
                   -> LocalCivilTime -- ^ Local time
 julianToLocalTime date = toLocalTime (sel1 tuple) (sel2 tuple) (sel3 tuple) (sel4 tuple) (sel5 tuple) (sel6 tuple)
-    where tuple = toYMDHMS date
+    where tuple = gmtToCET $ toYMDHMS date -- toYMDHMS returns time in GMT timezone
+
+-- | Convert time in the GMT timezone to CET which includes summer/winter time
+-- Example:
+-- timeInGmt = toYMDHMS (JD 2458344.9166666665)
+-- localTime = toLocalTime $ gmtToCET timeInGmt
+gmtToCET :: (Integer, Int, Int, Int, Int, TimeBaseType) -- ^ Time in GMT timezone
+         -> (Integer, Int, Int, Int, Int, TimeBaseType) -- ^ Time in CET timezone
+gmtToCET tuple
+    | isSummerTime $ fromGregorian year month day = (year, month, day, hour + 2, min, sec)
+    | otherwise = (year, month, day, hour + 1, min, sec)
+    where year = sel1 tuple
+          month = sel2 tuple
+          day = sel3 tuple
+          hour = sel4 tuple
+          min = sel5 tuple
+          sec = sel6 tuple
 
 -- | Convert the local time to a universal time.
 localToJulianDate :: LocalCivilTime -- ^ Local time
                   -> JulianDate -- ^ Universal time
-localToJulianDate lct = fromYMDHMS (sel1 tuple) (sel2 tuple) (sel3 tuple) (sel4 tuple) (sel5 tuple) (sel6 tuple)
+-- To atake timezones into account, we go via a tuple and toUniversalTime instead of using lctUniversalTime
+localToJulianDate lct = toUniversalTime (sel1 tuple) (sel2 tuple) (sel3 tuple) (sel4 tuple) (sel5 tuple) (sel6 tuple)
     where tuple = lctToYMDHMS lct
 
 -- | Convert the universal time to a local date, taking summer/winter time into account.

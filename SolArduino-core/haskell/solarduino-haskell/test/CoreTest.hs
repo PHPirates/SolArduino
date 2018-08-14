@@ -1,7 +1,9 @@
 import           Data.Astro.Coordinate
-import           Data.Astro.Time.JulianDate (lctFromYMDHMS)
+import           Data.Astro.Time.JulianDate
 import           Data.Astro.Types
+import           Data.Maybe                 (fromMaybe)
 import           Data.Time.Calendar
+import           Data.Tuple.Select
 import           GoldenSection              (goldenSectionSearch)
 import           Test.Tasty
 import           Test.Tasty.HUnit
@@ -24,6 +26,7 @@ tests = testGroup "Tests" [
       , optimizationTest
       , dstTest
       , bestAngleTest
+      , sunriseTest
       ]
 
 directPowerTest =
@@ -51,6 +54,8 @@ sunPositionTest =
             (abs (DD 14.77 - hAltitude (getSunPositionYMDHMS 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
         , testCase "Test azimuth sunPosition 2019 1 1 12 0 0"
           (abs (DD 169.12 - hAzimuth (getSunPositionYMDHMS 2019 1 1 12 0 0)) `compare` 0.02 @?= LT )
+        , testCase "Test altitude via JulianDate"
+                    (abs (DD 14.77 - hAltitude (getSunPosition (toUniversalTime 2019 1 1 12 0 0))) `compare` 0.02 @?= LT )
         ]
 
 sunMisalignmentTest = testGroup "sunMisalignment tests" [
@@ -104,3 +109,21 @@ bestAngleTest =
         [ testCase "Test 2018 8 11" $
           abs (bestAngle (toUniversalTime 2018 8 11 3 0 0) (toUniversalTime 2018 8 11 22 0 0) 100 - 28.5) `compare` 0.1 @?= LT
         ]
+
+sunriseTest =
+    testGroup
+        "Test sunrise"
+        [ testCase "Test year of sunrise" $ sel1 sunriseTuple @?= 2018
+        , testCase "Test month of sunrise" $ sel2 sunriseTuple @?= 8
+        , testCase "Test day of sunrise" $ sel3 sunriseTuple @?= 13
+        , testCase "Test hour of sunrise" $ sel4 sunriseTuple @?= 6
+        , testCase "Test minute of sunrise" $ abs (sel5 sunriseTuple - 25) `compare` 5 @?= LT
+        , testCase "Test altitude at sunrise" $ abs sunriseAltitude `compare` 1 @?= LT
+        ]
+        where date = toLocalDate 2018 8 13
+              defaultTime = toUniversalTime 2018 8 13 10 0 0
+              sunrise = fromMaybe defaultTime $ getSunrise date
+              sunriseTuple = gmtToCET $ toYMDHMS sunrise
+              sunriseAltitude = hAltitude $ getSunPosition sunrise
+
+-- test sunset in winter time

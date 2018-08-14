@@ -28,7 +28,7 @@ getSunPositionYMDHMS :: Integer -- ^ Year
                   -> Int -- ^ Minute
                   -> TimeBaseType -- ^ Second
                   -> HorizonCoordinates -- ^ The altitude and azimuth, e.g. HC {hAltitude = DD 49.312050979507404, hAzimuth = DD 118.94723825710143}
-getSunPositionYMDHMS year month day hour min sec = getSunPosition $ lctUniversalTime $ toLocalTime year month day hour min sec
+getSunPositionYMDHMS year month day hour min sec = getSunPosition $ toUniversalTime year month day hour min sec
 
 -- | Get sunrise, location is hard-coded.
 -- Example:
@@ -41,11 +41,11 @@ getSunrise :: LocalCivilDate -- ^ Date: day
 getSunrise date = fmap localToJulianDate justSunrisetime
         -- Get a RiseSetMB which is a data type with sunrise and sunset
   where
--- A vertical shift like 0.833333 is a 'good value' according to the docs
+    -- A vertical shift like 0.833333 is a 'good value' according to the docs
     riseset = sunRiseAndSet location 0.833333 date
-        -- This function is to unpack the RiseSetMB data
+    -- This function is to unpack the RiseSetMB data
     getOnlySunrise (RiseSet sunrise sunset) = sunrise
-        -- The sunrise is a Maybe Tuple, so we get the first element (the time, second one is the azimuth) as a Maybe LocalCivilTime
+    -- The sunrise is a Maybe Tuple, so we get the first element (the time, second one is the azimuth) as a Maybe LocalCivilTime
     justSunrisetime = fst <$> getOnlySunrise riseset
 
 -- | Get sunset, location is hard-coded.
