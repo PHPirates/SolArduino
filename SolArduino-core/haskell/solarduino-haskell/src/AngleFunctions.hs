@@ -59,7 +59,7 @@ bestAnglesDay date nrSunPos nrAdjustments =
             (addHours (DH (t + interval)) sunriseDate)
             (nrSunPos `div` nrAdjustments) -- Use integer division to get an integer number of samples
       , addHours (DH t) sunriseDate)
-    | t <- [0,interval .. sunShineHours]
+    | t <- [0,interval..]
     ]
   where
     -- Hour of the day at which to start, by default 0:00

@@ -28,7 +28,9 @@ tests = testGroup "Tests" [
       , bestAngleTest
       , sunriseTest
       , sunsetTest
-      , bestAnglesDayTest
+      , bestAnglesDayTestAug
+      , bestAnglesDayTestOct
+      , utilTest
       ]
 
 directPowerTest =
@@ -144,7 +146,7 @@ sunsetTest =
               sunsetTuple = gmtToCET $ toYMDHMS sunset
               sunsetAltitude = hAltitude $ getSunPosition sunset
 
-bestAnglesDayTest =
+bestAnglesDayTestAug =
     testGroup
         "Test optimal angles for a day"
         [ testCase ("Test 2018 8 14 element nr " ++ show n) $ abs (fst (angles !! n) - expectedAngles !! n ) `compare` threshold @?= LT | n <- [0..9]
@@ -152,3 +154,22 @@ bestAnglesDayTest =
         where angles = bestAnglesDay (toLocalDate 2018 8 14) 1000 10
               expectedAngles = [47.8, 48.3, 46.3, 43.1, 38.6, 31.8, 20.0, 0.0, 0.0, 0.0]
               threshold = 3.0 -- amount of degrees it's allowed to be off compared to the Mathematica implementation
+
+bestAnglesDayTestOct =
+    testGroup
+        "Test optimal angles for a day"
+        [ testCase ("Test 2018 10 13 element nr " ++ show n) $ abs (fst (angles !! n) - expectedAngles !! n ) `compare` threshold @?= LT | n <- [3..9] -- skip the first ones as above 60 degrees inaccuracies are bigger but not so important
+        ]
+        where angles = bestAnglesDay (toLocalDate 2018 10 13) 1000 10
+              expectedAngles = [88.0, 76.9, 68.7, 63.2, 59.7, 56.6, 53.3, 47.7, 36.0, 0.0]
+              threshold = 3.0 -- amount of degrees it's allowed to be off compared to the Mathematica implementation
+
+utilTest =
+    testGroup
+        "Test time/date converters"
+        [ testCase "Test localdate 2018 8 15" $ toLocalDate 2018 8 15 == julianToLocalDate (fromYMDHMS 2018 8 15 0 0 0) @?= True
+        , testCase "Test localdate 2018 2 15" $ toLocalDate 2018 2 15 == julianToLocalDate (fromYMDHMS 2018 2 15 0 0 0) @?= True
+        , testCase "Test julianToLocalTime" $ localToJulianDate (julianToLocalTime (JD 2458345.5)) @?= JD 2458345.5
+        , testCase "Test gmtToCET" $ gmtToCET (2018, 8, 15, 13, 22, 0) @?= (2018, 8, 15, 15, 22, 0)
+        , testCase "Test gmtToCET" $ gmtToCET (2018, 2, 15, 13, 22, 0) @?= (2018, 2, 15, 14, 22, 0)
+        ]
