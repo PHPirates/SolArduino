@@ -12,7 +12,7 @@ import           Data.Time.Calendar
 import           Data.Time.Calendar.MonthDay
 import           Data.Time.Calendar.OrdinalDate
 import           Data.Tuple.Select
-import           Util                           (toLocalDate)
+import           TimeConverters                           (toLocalDate)
 
 -- | Find the optimal angle over a certain time period.
 -- This method finds a certain number of sun positions and then optimizes the angle such that the sum of the total of power from the sun at each sun position is maximal.

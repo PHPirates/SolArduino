@@ -18,7 +18,8 @@ library
   exposed-modules:     PowerFunctions
                      , SunPosition
                      , AngleFunctions
-                     , Util
+                     , TimeConverters
+                     , SummerTime
   build-depends:       base >= 4.7 && < 5
                      , astro
                      , golden-haskell

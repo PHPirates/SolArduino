@@ -10,8 +10,9 @@ import           Test.Tasty.HUnit
 
 import           AngleFunctions
 import           PowerFunctions
+import           SummerTime                 (isSummerTime)
 import           SunPosition
-import           Util
+import           TimeConverters
 
 -- to run tests in terminal: stack test
 main = defaultMain tests
@@ -181,4 +182,10 @@ bestAnglesMoreDaysTest =
         [ testCase "Test 2018 8 15 only" $
           bestAnglesMoreDays (fromGregorian 2018 8 15) (fromGregorian 2018 8 15) 1000 10 @?= bestAnglesDay (toLocalDate 2018 8 15) 1000 10
         , testCase "Test number of angles" $ length (bestAnglesMoreDays (fromGregorian 2018 8 15) (fromGregorian 2018 8 17) 1000 10) @?= 30
+        ]
+
+toUnixTimeTest =
+    testGroup
+        "Test converting JulianDate to Unix time"
+        [ testCase "Test 2018 8 15 15 34 0" $ abs (julianDateToUnixTime $ toUniversalTime 2018 8 15 15 34 0 - 1534340040000) `compare` 0.01 @?= LT
         ]

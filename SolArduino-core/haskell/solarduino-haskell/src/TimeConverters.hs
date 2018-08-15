@@ -1,10 +1,13 @@
-module Util (toLocalTime, toLocalDate, toUniversalTime, julianToLocalTime, julianToLocalDate, localToJulianDate, gmtToCET, isSummerTime) where
+module TimeConverters (toLocalTime, toLocalDate, toUniversalTime, julianToLocalTime, julianToLocalDate, localToJulianDate, gmtToCET, julianDateToUnixTime) where
 
 import           Data.Astro.Time.JulianDate
 import           Data.Astro.Types
+import           Data.Time
 import           Data.Time.Calendar
 import           Data.Time.Calendar.WeekDate
+import           Data.Time.Clock.POSIX
 import           Data.Tuple.Select
+import           SummerTime
 
 -- | Take summer and winter time into account when converting to local time.
 toLocalTime :: Integer -- ^ Year
@@ -72,19 +75,11 @@ toUniversalTime :: Integer -- ^ Year
                 -> JulianDate -- ^ Local time including winter/summer time
 toUniversalTime year month day hour min sec = lctUniversalTime $ toLocalTime year month day hour min sec
 
--- | Uses only days, it does not take the exact hour into account at which summer time starts and ends.
-isSummerTime :: Day -- ^ Date to check if summer time is active
-            -> Bool -- ^ Whether summer time is active
-isSummerTime date = date > lastSundayMarch && date < lastSundayOctober
-    where
-        year = sel1 $ toGregorian date
-        -- Find last Sunday in March
-        aprilOne = fromGregorian year 4 1
-        -- 1 is Monday, ..., 7 is Sunday
-        aprilOneWeekDay = sel3 $ toWeekDate aprilOne
-        -- Use the day number to find Sunday of the previous week: the last Sunday in March
-        lastSundayMarch = addDays (-(toInteger aprilOneWeekDay)) aprilOne
-        -- Same for end of summer time in October
-        novemberOne = fromGregorian year 11 1
-        novemberOneWeekDay = sel3 $ toWeekDate novemberOne
-        lastSundayOctober = addDays (-(toInteger novemberOneWeekDay)) novemberOne
+-- | Convert JulianDate to Unix time. Both times are universal.
+julianDateToUnixTime :: JulianDate -- ^ Time to convert
+                     -> POSIXTime -- ^ Unix time
+julianDateToUnixTime julianDate = utcTimeToPOSIXSeconds utc
+        -- We go via a string, because Haskell and time.
+        where tuple = toYMDHMS julianDate
+              string = show (sel1 tuple) ++ "-" ++ show (sel2 tuple) ++ "-" ++ show (sel3 tuple) ++ " " ++ show (sel4 tuple) ++ ":" ++ show (sel5 tuple) ++ ":" ++ show (sel6 tuple)
+              utc = parseTimeOrError True defaultTimeLocale "%Y-%-m-%-d %-H:%-M:%-S%Q" string

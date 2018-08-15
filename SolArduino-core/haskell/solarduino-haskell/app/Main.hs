@@ -5,7 +5,7 @@ import           Criterion.Main
 import           Data.Astro.Time.JulianDate
 import           PowerFunctions
 import           SunPosition
-import           Util
+import           TimeConverters
 
 --main :: IO ()
 --main = print (directPower 10 0.5)

@@ -8,7 +8,7 @@ import           Data.Astro.Time.JulianDate
 import           Data.Astro.Types
 import           Data.Time.Calendar
 
-import           Util
+import           TimeConverters
 
 -- 51.546545, 4.411744
 location :: GeographicCoordinates

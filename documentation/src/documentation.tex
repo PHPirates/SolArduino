@@ -198,7 +198,9 @@ urlcolor=cyan,
     It is important to note that the functions \verb|angle|, \verb|directPower| and more do not take the hour of the day as input, but the index of the \verb|sunPositions| table which contains the azimuth and altitude of the sun over the day.
     Therefore, \textit{before you call functions which take an index as parameter you need to make sure you have }\verb|sunPositions| \textit{initialised} at the right day, done by calling \verb|calculatesunPos[DateObject[{2016,7,18}]]| with whatever day you want in the table.
 
-    Exporting the angles for ten times a day for two years, like  \verb|exportPeriod[DateObject[{2016, 9, 7}], DateObject[{2018, 9, 15}], 10]| took only ten minutes (Lenovo W541 laptop on high performance).
+    Exporting the angles for ten times a day for two years, like
+
+    \verb|exportPeriod[DateObject[{2016, 9, 7}], DateObject[{2018, 9, 15}], 10]| took only ten minutes (Lenovo W541 laptop on high performance).
 
     \subsubsection{Haskell calculations}
 
