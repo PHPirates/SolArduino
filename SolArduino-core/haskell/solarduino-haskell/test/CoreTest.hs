@@ -33,6 +33,7 @@ tests = testGroup "Tests" [
       , bestAnglesDayTestOct
       , utilTest
       , bestAnglesMoreDaysTest
+      , toUnixTimeTest
       ]
 
 directPowerTest =
