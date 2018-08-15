@@ -25,6 +25,7 @@ library
                      , time
                      , tuple
                      , criterion
+                     , list-extras
   default-language:    Haskell2010
 
 executable solarduino-haskell

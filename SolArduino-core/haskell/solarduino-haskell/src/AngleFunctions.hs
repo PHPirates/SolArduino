@@ -6,6 +6,7 @@ import           SunPosition
 
 import           Data.Astro.Time.JulianDate
 import           Data.Astro.Types
+import           Data.List.Extras.Argmax
 import           Data.Maybe
 import           Data.Time.Calendar             (Day)
 import           Data.Time.Calendar.MonthDay
@@ -21,21 +22,26 @@ bestAngle :: JulianDate -- ^ Start time
              -> JulianDate -- ^ End time
              -> Int -- ^ Number of sun positions to sample for this interval. More is slower but more precise.
              -> Double -- ^ Optimal angle
-bestAngle jdStart jdEnd nrSunPos = fst $ goldenSectionSearch (totalPower listOfSunPos dayOfYear ) 0 90 0.01
-    where -- We need to convert to JulianDate to use the times
-        intervalLengthInHours = 24 * numberOfDays jdStart jdEnd
+bestAngle jdStart jdEnd nrSunPos = betterAngle
+          -- We need to convert to JulianDate to use the times
+  where
+    intervalLengthInHours = 24 * numberOfDays jdStart jdEnd
         -- Time between sampled sun positions, such that the total number of sun positions will be as given.
-        interval = intervalLengthInHours / (fromIntegral nrSunPos - 1)
-
-        listOfSunPos = [getSunPosition (addHours (DH n) jdStart) | n <- take nrSunPos [0, interval..]]
-
+    interval = intervalLengthInHours / (fromIntegral nrSunPos - 1)
+    listOfSunPos = [getSunPosition (addHours (DH n) jdStart) | n <- take nrSunPos [0,interval ..]]
         -- In general the start date may not be the same as the end date, but we take the first one to optimize with.
         -- In practice it will be the same day, as setting the solar panels on an angle for multiple days is uncommon.
-        date = toYMDHMS jdStart
-        year = sel1 date
-        month = sel2 date
-        day = sel3 date
-        dayOfYear = monthAndDayToDayOfYear (isLeapYear year) month day
+    date = toYMDHMS jdStart
+    year = sel1 date
+    month = sel2 date
+    day = sel3 date
+    dayOfYear = monthAndDayToDayOfYear (isLeapYear year) month day
+        -- Function to optimize
+    f = totalPower listOfSunPos dayOfYear
+    optimizedAngle = fst $ goldenSectionSearch f 0 90 0.01
+        -- Sometimes, the maximum is at one of the ends of the interval but the totalPower function can be flat just until a peak at the end, in which case goldenSectionSearch fails to find the maximum.
+        -- Therefore, we take a maximum with values at either end just to be sure.
+    betterAngle = argmax f [0, optimizedAngle, 90]
 
 -- | Find a list of angles and corresponding times for a certain day.
 -- The result is a list of pairs (a, t), the solar panels should be set at angle a at time t.
@@ -49,11 +55,11 @@ bestAnglesDay :: LocalCivilDate -- ^ Date for which to find the optimal angles
 bestAnglesDay date nrSunPos nrAdjustments =
     take nrAdjustments [ -- This ensures not too many elements are returned
         ( bestAngle
-            (addHours (DH n) sunriseDate)
-            (addHours (DH (n + interval)) sunriseDate)
+            (addHours (DH t) sunriseDate)
+            (addHours (DH (t + interval)) sunriseDate)
             (nrSunPos `div` nrAdjustments) -- Use integer division to get an integer number of samples
-      , addHours (DH n) sunriseDate)
-    | n <- [0,interval .. sunShineHours]
+      , addHours (DH t) sunriseDate)
+    | t <- [0,interval .. sunShineHours]
     ]
   where
     -- Hour of the day at which to start, by default 0:00
