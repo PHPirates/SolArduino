@@ -188,5 +188,5 @@ bestAnglesMoreDaysTest =
 toUnixTimeTest =
     testGroup
         "Test converting JulianDate to Unix time"
-        [ testCase "Test 2018 8 15 15 34 0" $ abs (julianDateToUnixTime $ toUniversalTime 2018 8 15 15 34 0 - 1534340040000) `compare` 0.01 @?= LT
+        [ testCase "Test 2018 8 15 15 34 0" $ abs (julianDateToUnixTime (toUniversalTime 2018 8 15 15 34 0) - 1534340040) `compare` 0.01 @?= LT
         ]
