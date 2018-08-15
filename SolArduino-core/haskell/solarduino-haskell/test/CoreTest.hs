@@ -31,6 +31,7 @@ tests = testGroup "Tests" [
       , bestAnglesDayTestAug
       , bestAnglesDayTestOct
       , utilTest
+      , bestAnglesMoreDaysTest
       ]
 
 directPowerTest =
@@ -172,4 +173,12 @@ utilTest =
         , testCase "Test julianToLocalTime" $ localToJulianDate (julianToLocalTime (JD 2458345.5)) @?= JD 2458345.5
         , testCase "Test gmtToCET" $ gmtToCET (2018, 8, 15, 13, 22, 0) @?= (2018, 8, 15, 15, 22, 0)
         , testCase "Test gmtToCET" $ gmtToCET (2018, 2, 15, 13, 22, 0) @?= (2018, 2, 15, 14, 22, 0)
+        ]
+
+bestAnglesMoreDaysTest =
+    testGroup
+        "Test angles multiple days"
+        [ testCase "Test 2018 8 15 only" $
+          bestAnglesMoreDays (fromGregorian 2018 8 15) (fromGregorian 2018 8 15) 1000 10 @?= bestAnglesDay (toLocalDate 2018 8 15) 1000 10
+        , testCase "Test number of angles" $ length (bestAnglesMoreDays (fromGregorian 2018 8 15) (fromGregorian 2018 8 17) 1000 10) @?= 30
         ]

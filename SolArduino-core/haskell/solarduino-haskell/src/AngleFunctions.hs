@@ -1,4 +1,4 @@
-module AngleFunctions (bestAngle, bestAnglesDay) where
+module AngleFunctions (bestAngle, bestAnglesDay, bestAnglesMoreDays) where
 
 import           GoldenSection
 import           PowerFunctions
@@ -8,10 +8,11 @@ import           Data.Astro.Time.JulianDate
 import           Data.Astro.Types
 import           Data.List.Extras.Argmax
 import           Data.Maybe
-import           Data.Time.Calendar             (Day)
+import           Data.Time.Calendar
 import           Data.Time.Calendar.MonthDay
 import           Data.Time.Calendar.OrdinalDate
 import           Data.Tuple.Select
+import           Util                           (toLocalDate)
 
 -- | Find the optimal angle over a certain time period.
 -- This method finds a certain number of sun positions and then optimizes the angle such that the sum of the total of power from the sun at each sun position is maximal.
@@ -76,3 +77,18 @@ bestAnglesDay date nrSunPos nrAdjustments =
     -- The solar panels move after each interval, of this length
     interval = sunShineHours / fromIntegral nrAdjustments
 
+-- | Find the optimal angles for a certain number of days, starting with the start date up to and including the end date.
+-- Example:
+-- import Data.Time.Calendar
+-- bestAnglesMoreDays (fromGregorian 2018 8 15) (fromGregorian 2018 9 1) 1000 10
+bestAnglesMoreDays :: Day -- ^ Start date
+                  -> Day -- ^ End date
+                  -> Int -- ^ Number of sun positions to sample per day
+                  -> Int -- ^ Number of times to adjust the solar panels per day
+                  -> [(Double, JulianDate)] -- ^ List of pairs of angle and time. For each pair, the panels should be set at the angle at that time.
+bestAnglesMoreDays startDate endDate nrSunPos nrAdjustments =
+    concat [oneDay (addDays n startDate) | n <- [0..nrDays]]
+    where -- This function wraps the function which provides optimal angles for one day
+        oneDay d = bestAnglesDay (toLocalDate (sel1 tuple) (sel2 tuple) (sel3 tuple)) nrSunPos nrAdjustments
+                where tuple = toGregorian d
+        nrDays = abs $ diffDays startDate endDate
