@@ -75,11 +75,14 @@ toUniversalTime :: Integer -- ^ Year
                 -> JulianDate -- ^ Local time including winter/summer time
 toUniversalTime year month day hour min sec = lctUniversalTime $ toLocalTime year month day hour min sec
 
--- | Convert JulianDate to Unix time. Both times are universal.
+-- | Convert JulianDate to Unix time. Both times are universal. The number of seconds is rounded to 1 decimal to avoid Haskell switching to scientific notation which it won't parse.
 julianDateToUnixTime :: JulianDate -- ^ Time to convert
                      -> POSIXTime -- ^ Unix time
 julianDateToUnixTime julianDate = utcTimeToPOSIXSeconds utc
         -- We go via a string, because Haskell and time.
         where tuple = toYMDHMS julianDate
-              string = show (sel1 tuple) ++ "-" ++ show (sel2 tuple) ++ "-" ++ show (sel3 tuple) ++ " " ++ show (sel4 tuple) ++ ":" ++ show (sel5 tuple) ++ ":" ++ show (sel6 tuple)
+              string = show (sel1 tuple) ++ "-" ++ show (sel2 tuple) ++ "-" ++ show (sel3 tuple) ++ " " ++ show (sel4 tuple) ++ ":" ++ show (sel5 tuple) ++ ":" ++ show (truncate' (sel6 tuple) 1)
               utc = parseTimeOrError True defaultTimeLocale "%Y-%-m-%-d %-H:%-M:%-S%Q" string
+              -- Rounding to number of decimal places n
+              truncate' x n = fromIntegral (floor (x * t)) / t
+                  where t = 10^n

@@ -99,6 +99,7 @@ bestAnglesMoreDays startDate endDate nrSunPos nrAdjustments =
 -- Example:
 -- import Data.Time.Calendar
 -- writeBestAnglesToFile "angles.times" (fromGregorian 2018 8 15) (fromGregorian 2018 8 16) 1000 10
+-- This function has been tested to run in 1m35s for an interval of a year, 15m28s for 10 years.
 writeBestAnglesToFile :: FilePath -- ^ File to write the result to
                    -> Day -- ^ Start date
                    -> Day -- ^ End date
@@ -108,7 +109,7 @@ writeBestAnglesToFile :: FilePath -- ^ File to write the result to
 writeBestAnglesToFile filePath startDate endDate nrSunPos nrAdjustments =
     appendFile filePath (intercalate "\n" anglesStringList)
     where angles = bestAnglesMoreDays startDate endDate nrSunPos nrAdjustments
-          tupleToString tuple = show (fst tuple) ++ " " ++ show (julianDateToUnixTime $ snd tuple)
+          tupleToString tuple = show (fst tuple) ++ " " ++ init (show $ julianDateToUnixTime $ snd tuple) -- Take init to remove the 's' at the end
           anglesStringList = map tupleToString angles
           printFinishMessage :: IO () -> IO ()
           printFinishMessage x = putStrLn "Finished."

@@ -1,0 +1,3 @@
+**/*.nb binary
+**/*.times binary # generated file
+**/*.pdf merge=theirs
