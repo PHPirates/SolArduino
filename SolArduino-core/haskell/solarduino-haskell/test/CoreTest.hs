@@ -5,6 +5,7 @@ import           Data.Maybe                 (fromMaybe)
 import           Data.Time.Calendar
 import           Data.Tuple.Select
 import           GoldenSection              (goldenSectionSearch)
+import           System.Directory
 import           Test.Tasty
 import           Test.Tasty.HUnit
 
@@ -34,6 +35,7 @@ tests = testGroup "Tests" [
       , utilTest
       , bestAnglesMoreDaysTest
       , toUnixTimeTest
+--      , testWriteBestAnglesToFile
       ]
 
 directPowerTest =
@@ -190,3 +192,37 @@ toUnixTimeTest =
         "Test converting JulianDate to Unix time"
         [ testCase "Test 2018 8 15 15 34 0" $ abs (julianDateToUnixTime (toUniversalTime 2018 8 15 15 34 0) - 1534340040) `compare` 0.01 @?= LT
         ]
+
+-- Ugly, but Haskell and IO...
+
+--class Monad m => FSMonad m where
+--    readFile' :: FilePath -> m String
+--
+--data MockFS = SingleFile FilePath String
+--
+--instance FSMonad (State MockFS) where
+--               -- ^ Reader would be enough in this particular case though
+--    readFile' pathRequested = do
+--        (SingleFile pathExisting contents) <- get
+--        if pathExisting == pathRequested
+--            then return contents
+--            else fail "file not found"
+--
+--testWriteBestAnglesToFile =
+--    testGroup
+--        "Test writing angles to file"
+--        [ testCase "Test file length" $ evalState (lengthOfFileIsFifty "angles.test") (SingleFile "test.txt" "hello world") @?= 50
+--        , testCase "Remove the file" $ removeFile filePath
+--        ]
+--  where
+--    filePath = "angles.test"
+--    written = writeBestAnglesToFile "angles.test" (fromGregorian 2018 8 15) (fromGregorian 2018 8 19) 1000 10
+--    length' string = length $ lines string
+--    compareWithFifty x = x @?= 50
+--    lengthOfFileIsFifty = do
+--        contents <- readFile' filePath
+--        return $ compareWithFifty $ length' contents
+--    lengthOfFile :: FSMonad m => FilePath -> m Int
+--    lengthOfFile file = do
+--        contents <- readFile' file
+--        return $ length' contents
