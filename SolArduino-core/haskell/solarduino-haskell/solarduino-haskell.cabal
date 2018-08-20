@@ -1,0 +1,62 @@
+name:                solarduino-haskell
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/PHPirates/solarduino-haskell#readme
+license:             ISC
+license-file:        LICENSE
+author:              Thomas Schouten
+maintainer:          k3l1n6i2y5k7d1e3@deltadak.slack.com
+copyright:           MIT
+category:            Math
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     PowerFunctions
+                     , SunPosition
+                     , AngleFunctions
+                     , TimeConverters
+                     , SummerTime
+  build-depends:       base >= 4.7 && < 5
+                     , astro
+                     , golden-haskell
+                     , time
+                     , tuple
+                     , criterion
+                     , list-extras
+                     , directory
+  default-language:    Haskell2010
+
+executable solarduino-haskell
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , solarduino-haskell
+                     , criterion
+                     , astro
+                     , time
+  default-language:    Haskell2010
+
+test-suite solarduino-haskell-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             CoreTest.hs
+  build-depends:       base
+                     , solarduino-haskell
+                     , tasty-hunit
+                     , tasty
+                     , astro
+                     , golden-haskell
+                     , time
+                     , tuple
+                     , directory
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/PHPirates/solarduino-haskell

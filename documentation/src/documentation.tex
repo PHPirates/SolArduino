@@ -19,10 +19,10 @@
 
 % Hyperlink setup
 \hypersetup{
-	colorlinks=true,
-	linkcolor=blue,
-	filecolor=magenta,      
-	urlcolor=cyan,
+colorlinks=true,
+linkcolor=blue,
+filecolor=magenta,
+urlcolor=cyan,
 }
 
 % circuitikz shapes ---------------
@@ -47,151 +47,164 @@
 
 % MATH -------------------------------------
 % Vertical vector
-\newcommand{\vvec}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\newcommand{\vvec}[1]{\begin{pmatrix}
+                          #1
+\end{pmatrix}}
 
 \begin{document}
-	
-	\tableofcontents
-	\newpage
-	
-	\section{Maintenance}\label{sec:maintenance}
-		NAS times are online for until around 14/9/2018.
 
-		\subsection{Changing IP address}\label{subsec:changingIpAddress}
-		
-		To change IP address, change it in the Arduino code two times (\verb|myip| en \verb|gw|), if needed also change the NAS ip adress:
-		\begin{lstlisting}
-ether.hisip[0]=192;
-ether.hisip[1]=168;
-ether.hisip[2]=178;
-ether.hisip[3]=29;
-		\end{lstlisting}
-		and the dns (directly under it).
-		
-		It may be needed to find the right dns for the NAS and the gw (gateway) address again, by doing a normal dhcp setup like
-		\begin{lstlisting}
-ether.dhcpSetup();
-ether.printIp("IP:  ", ether.myip);
-ether.printIp("GW:  ", ether.gwip);
-ether.printIp("DNS: ", ether.dnsip);
-ether.printIp("SRV: ", ether.hisip);
-		\end{lstlisting}
-		Do not change the dns for the NTP server, \verb|dns[] = {195,121,1,34}|, otherwise the NTP dns lookup fails.
-		
-		Also change it in the Android app two times (\verb|ipString| and \verb|host|), and in the desktop app.
-		
-		The current ip address is \url{http://192.168.8.42}.
+    \tableofcontents
+    \newpage
 
-	\subsection{Panels are stuck when out of bounds}\label{subsec:outOfBounds}
+    \section{Maintenance}\label{sec:maintenance}
+    NAS times are online for until around 14/9/2018.
 
-	For safety, when panels go out of bounds they cannot move anymore in any direction.
-	To get them moving again, shortcut the low end stop if the panels are down like in Figure~\ref{lowendstop} and do the same for the high end stop if the panels are up like in Figure~\ref{highendstop}.
+    \subsection{Changing IP address}\label{subsec:changingIpAddress}
+
+    To change IP address, change it in the Arduino code two times (\verb|myip| en \verb|gw|), if needed also change the NAS ip adress:
+    \begin{lstlisting}
+        ether.hisip[0]=192;
+        ether.hisip[1]=168;
+        ether.hisip[2]=178;
+        ether.hisip[3]=29;
+    \end{lstlisting}
+    and the dns (directly under it).
+
+    It may be needed to find the right dns for the NAS and the gw (gateway) address again, by doing a normal dhcp setup like
+    \begin{lstlisting}
+        ether.dhcpSetup();
+        ether.printIp("IP: ", ether.myip);
+        ether.printIp("GW: ", ether.gwip);
+        ether.printIp("DNS: ", ether.dnsip);
+        ether.printIp("SRV: ", ether.hisip);
+    \end{lstlisting}
+    Do not change the dns for the NTP server, \verb|dns[] = {195,121,1,34}|, otherwise the NTP dns lookup fails.
+
+    Also change it in the Android app two times (\verb|ipString| and \verb|host|), and in the desktop app.
+
+    The current ip address is \url{http://192.168.8.42}.
+
+    \subsection{Panels are stuck when out of bounds}\label{subsec:outOfBounds}
+
+    For safety, when panels go out of bounds they cannot move anymore in any direction.
+    To get them moving again, shortcut the low end stop if the panels are down like in Figure~\ref{lowendstop} and do the same for the high end stop if the panels are up like in Figure~\ref{highendstop}.
 
 
-	\begin{figure}
-		\centering
-		\includegraphics[width=.8\linewidth]{images/lowendstop.PNG}
-		\caption{Shortcutting the low end stop}
-		\label{lowendstop}
-	\end{figure}
-	\begin{figure}
-		\centering
-		\includegraphics[width=.8\linewidth]{images/highendstop.PNG}
-		\caption{Shortcutting the high end stop}
-		\label{highendstop}
-	\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=.8\linewidth]{images/lowendstop.PNG}
+        \caption{Shortcutting the low end stop}
+        \label{lowendstop}
+    \end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=.8\linewidth]{images/highendstop.PNG}
+        \caption{Shortcutting the high end stop}
+        \label{highendstop}
+    \end{figure}
 
-	\section{Setup of the project}\label{sec:setupOfTheProject}
-	\input{../src/setup.tex}
+    \section{Setup of the project}\label{sec:setupOfTheProject}
+    \input{../src/setup.tex}
 
-	\section{Arduino Code}\label{sec:arduinoCode}
-	\input{../src/arduinocode.tex}
+    \section{Arduino Code}\label{sec:arduinoCode}
+    \input{../src/arduinocode.tex}
 
-	\section{Android App}\label{sec:androidApp}
-		\subsection{User Manual}\label{subsec:userManual}
-			To move the solar panels up (or down), press the up (or down) button and hold it until the desired position/angle is reached.
-			The current degree on the top right and the picture update while the button is held, so you know when the panels are at the desired position.
-			
-			To set the solar panels in auto mode, press the auto checkbox.
+    \section{Android App}\label{sec:androidApp}
+    \subsection{User Manual}\label{subsec:userManual}
+    To move the solar panels up (or down), press the up (or down) button and hold it until the desired position/angle is reached.
+    The current degree on the top right and the picture update while the button is held, so you know when the panels are at the desired position.
 
-			
-			To set the solar panels at a certain degree, move the slider until the $x$ at the button which says "\verb|SET ANGLE AT | $x^{\circ}$" is the desired degree for the angle.
-			Then press the button to set the angle of the panels at that degree.
-			While the panels are moving, the degree on the top right and the picture update to be the current one.
-			May you change your mind about the angle while the panels are moving, simply drag the slider to the desired angle.
-			It's not needed to press the button again, when the panels are still moving.
-			
-			To update the |TextView| containing the current angle, simply press the number.
-			This will also update the position of the picture.
-			This will also check the checkbox if the panels are in auto mode, and uncheck the checkbox if the panels are not in auto mode (if needed).
-		
-		\subsection{Communication with the Arduino}\label{subsec:communicationWithTheArduino}
-			To communicate with the Arduino, the Android app sends http requests to the Arduino.
-			For all the requests accepted by the Arduino, check section~\ref{subsec:arduinotoandroid}.
-			Below a list containing what requests are sent when something is clicked can be found.
-			\begin{itemize}
-				\item \textbf{Up and down button.} \url{http://192.168.2.106/?panel=up} is sent at the moment the button is pressed, so the Arduino knows we want the panels to move up.
-				After that, the request \url{http://192.168.2.106/?update} is sent with a set interval.
-				This interval depends on the speed of the solar panels, and is about as much as it takes the panels to move $1$ degree.
-				This request is sent so often to be able to keep the degree (on the top right of the screen) and the picture up to date with the actual position of the panels.
-				At the moment the button is released the request \url{http://192.168.2.10/?panel=stop} is sent to the Arduino, so it knows we want the panels to not move anymore.
-				No \verb|?update| requests are sent anymore.
-				
-				\item \textbf{Auto checkbox.} \url{http://192.168.2.106/?panel=auto} is sent when the checkbox is being checked, \url{http://192.168.2.106/?panel=manual} is sent when the panels go out of auto mode.
-				Which is either when the user unchecks the checkbox, or when the user clicks the up/down button, or when the user clicks the button to set the panels at a certain angle.
-				
-				\item \textbf{Current degree text.} \url{http://192.168.2.106/?update} to update the current angle in the text, and the position of the picture to the actual position of the solar panels.
-				
-				\item \textbf{Set angle button.} This takes the current position of the slider/seekbar (\verb|seekbar.getProgress()|) and uses that to send a request \url{http://192.168.2.106/?degrees=xx} to the Arduino so it knows at what angle to set the solar panels.
-				Until the panels have reached the set position, the \verb|?update| request is sent with the same interval as for the up and down buttons.
-				The app knows when the panels have reached the set position by comparing the current position of the panels and the position of the slider before each request.
-				If these are equal, it doesn't send an \verb|?update| request anymore.
-				This is why it's not needed to press the \verb|SET| button again when changing the value of the slider while the panels are still moving, if that movement is caused by this button.
-			\end{itemize}
-	
-	\section{Calculations}\label{sec:calculations}
-		\subsection{Finding the angle between the sun and the line perpendicular to the solar panels}\label{subsec:findingTheAngleBetweenTheSunAndTheLinePerpendicularToTheSolarPanels}
-			To find the angle $\alpha$ between the sun and the line perpendicular to the solar panel, we determined both lines in spherical coordinates (with the same distance to the origin) and then calculated the angle between the two.
+    To set the solar panels in auto mode, press the auto checkbox.
 
-			
-			For the sun this would be
-			\[ 
-				\vvec{x \\ y \\ z} = 
-				\vvec{\cos \gamma_s \sin \left(\frac{\pi}{2} - \theta_s\right) \\
-					\sin \gamma_s \sin \left(\frac{\pi}{2} - \theta_s\right) \\
-					\cos \left(\frac{\pi}{2} - \theta_s\right)}
-			 \]
-			 where $ \gamma_s $ is the azimuth, and $ \theta_s $ the altitude of the sun.
 
-			 
-			 For the line perpendicular to the solar panels this would be
-			 \[ 
-				 \vvec{x \\ y \\ z} = 
-				 \vvec{\cos \gamma_p \sin \left(\frac{\pi}{2} - \theta_p\right) \\
-				 	\sin \gamma_p \sin \left(\frac{\pi}{2} - \theta_p\right) \\
-				 	\cos \left(\frac{\pi}{2} - \theta_p\right)}
-			  \]
-			  where $ \gamma_p $ is the azimuth (direction of the solar panels in respect to the South), and $ \theta_p $ the altitude of the solar panels.
-			  
-			  Then, to find the angle $\alpha$ between these two lines, we take the $ \arccos $ of the dot product.
-			  This gives us
-			  
-			  \[ 
-				  \alpha = \arccos (\cos (\gamma_p - \gamma_s) \cos \theta_s \sin \theta_p + \sin \theta_s \cos \theta_p)\,.
-			   \]
-			   
-			   \subsection{Mathematica calculations}\label{subsec:mathematicaCalculations}
-			   
-			   The Mathematica package (imported with \verb|<< SolArduino`|, be sure to place it in your
-			    \url{\%AppData\%\\Mathematica\\Applications} folder) can calculate the optimal angle for a given day.
-			    To do that, it calculates for each angle between $0$ and $90$ the total of the insolation (power received by the sun) at each half hour of that day.
-			    Then it finds the angle for which that value is maximal.
-			    To find the insolation at a given hour, the function \verb|angle| calculates the misalignment with the sun using the formula from the previous subsection, and then calculates the insolation using a formula from \href{http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295 }{www.powerfromthesun.net}, where parameters for urban haze compared a lot better with real life values (17/8) than clear day parameters.
-			   
-			   It can therefore make graphs for optimal angles for a month, and averaging the values for a month, also for a year, and lots more as seen in the demonstration notebook.
-			   When plotting real data, for example days like  13/5, 19/7 and 17/8 are all cloudless days with the solar panels at around 25 degrees.
-			   
-			   It is important to note that the functions \verb|angle|, \verb|directPower| and more do not take the hour of the day as input, but the index of the \verb|sunPositions| table which contains the azimuth and altitude of the sun over the day.
-			   Therefore, \textit{before you call functions which take an index as parameter you need to make sure you have }\verb|sunPositions| \textit{initialised} at the right day, done by calling \verb|calculatesunPos[DateObject[{2016,7,18}]]| with whatever day you want in the table.
-			   	
+    To set the solar panels at a certain degree, move the slider until the $x$ at the button which says "\verb|SET ANGLE AT | $x^{\circ}$" is the desired degree for the angle.
+    Then press the button to set the angle of the panels at that degree.
+    While the panels are moving, the degree on the top right and the picture update to be the current one.
+    May you change your mind about the angle while the panels are moving, simply drag the slider to the desired angle.
+    It's not needed to press the button again, when the panels are still moving.
+
+    To update the |TextView| containing the current angle, simply press the number.
+    This will also update the position of the picture.
+    This will also check the checkbox if the panels are in auto mode, and uncheck the checkbox if the panels are not in auto mode (if needed).
+
+    \subsection{Communication with the Arduino}\label{subsec:communicationWithTheArduino}
+    To communicate with the Arduino, the Android app sends http requests to the Arduino.
+    For all the requests accepted by the Arduino, check section~\ref{subsec:arduinotoandroid}.
+    Below a list containing what requests are sent when something is clicked can be found.
+    \begin{itemize}
+        \item \textbf{Up and down button.} \url{http://192.168.2.106/?panel=up} is sent at the moment the button is pressed, so the Arduino knows we want the panels to move up.
+        After that, the request \url{http://192.168.2.106/?update} is sent with a set interval.
+        This interval depends on the speed of the solar panels, and is about as much as it takes the panels to move $1$ degree.
+        This request is sent so often to be able to keep the degree (on the top right of the screen) and the picture up to date with the actual position of the panels.
+        At the moment the button is released the request \url{http://192.168.2.10/?panel=stop} is sent to the Arduino, so it knows we want the panels to not move anymore.
+        No \verb|?update| requests are sent anymore.
+
+        \item \textbf{Auto checkbox.} \url{http://192.168.2.106/?panel=auto} is sent when the checkbox is being checked, \url{http://192.168.2.106/?panel=manual} is sent when the panels go out of auto mode.
+        Which is either when the user unchecks the checkbox, or when the user clicks the up/down button, or when the user clicks the button to set the panels at a certain angle.
+
+        \item \textbf{Current degree text.} \url{http://192.168.2.106/?update} to update the current angle in the text, and the position of the picture to the actual position of the solar panels.
+
+        \item \textbf{Set angle button.} This takes the current position of the slider/seekbar (\verb|seekbar.getProgress()|) and uses that to send a request \url{http://192.168.2.106/?degrees=xx} to the Arduino so it knows at what angle to set the solar panels.
+        Until the panels have reached the set position, the \verb|?update| request is sent with the same interval as for the up and down buttons.
+        The app knows when the panels have reached the set position by comparing the current position of the panels and the position of the slider before each request.
+        If these are equal, it doesn't send an \verb|?update| request anymore.
+        This is why it's not needed to press the \verb|SET| button again when changing the value of the slider while the panels are still moving, if that movement is caused by this button.
+    \end{itemize}
+
+    \section{Calculations}\label{sec:calculations}
+    \subsection{Finding the angle between the sun and the line perpendicular to the solar panels}\label{subsec:findingTheAngleBetweenTheSunAndTheLinePerpendicularToTheSolarPanels}
+    To find the angle $\alpha$ between the sun and the line perpendicular to the solar panel, we determined both lines in spherical coordinates (with the same distance to the origin) and then calculated the angle between the two.
+
+
+    For the sun this would be
+    \[
+        \vvec{x \\ y \\ z} =
+        \vvec{\cos \gamma_s \sin \left(\frac{\pi}{2} - \theta_s\right) \\
+        \sin \gamma_s \sin \left(\frac{\pi}{2} - \theta_s\right) \\
+        \cos \left(\frac{\pi}{2} - \theta_s\right)}
+    \]
+    where $ \gamma_s $ is the azimuth, and $ \theta_s $ the altitude of the sun.
+
+
+    For the line perpendicular to the solar panels this would be
+    \[
+        \vvec{x \\ y \\ z} =
+        \vvec{\cos \gamma_p \sin \left(\frac{\pi}{2} - \theta_p\right) \\
+        \sin \gamma_p \sin \left(\frac{\pi}{2} - \theta_p\right) \\
+        \cos \left(\frac{\pi}{2} - \theta_p\right)}
+    \]
+    where $ \gamma_p $ is the azimuth (direction of the solar panels in respect to the South), and $ \theta_p $ the altitude of the solar panels.
+
+    Then, to find the angle $\alpha$ between these two lines, we take the $ \arccos $ of the dot product.
+    This gives us
+
+    \[
+        \alpha = \arccos (\cos (\gamma_p - \gamma_s) \cos \theta_s \sin \theta_p + \sin \theta_s \cos \theta_p)\,.
+    \]
+
+    \subsection{Implementation of calculations to find optimal angles}
+
+    \subsubsection{Mathematica calculations}\label{subsec:mathematicaCalculations}
+
+    The Mathematica package (imported with \verb|<< SolArduino`|, be sure to place it in your
+    \url{\%AppData\%\\Mathematica\\Applications} folder) can calculate the optimal angle for a given day.
+    To do that, it calculates for each angle between $0$ and $90$ the total of the insolation (power received by the sun) at each half hour of that day.
+    Then it finds the angle for which that value is maximal.
+    To find the insolation at a given hour, the function \verb|angle| calculates the misalignment with the sun using the formula from the previous subsection, and then calculates the insolation using a formula from \href{http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295 }{www.powerfromthesun.net}, where parameters for urban haze compared a lot better with real life values (17/8) than clear day parameters.
+
+    It can therefore make graphs for optimal angles for a month, and averaging the values for a month, also for a year, and lots more as seen in the demonstration notebook.
+    When plotting real data, for example days like 13/5, 19/7 and 17/8 are all cloudless days with the solar panels at around 25 degrees.
+
+    It is important to note that the functions \verb|angle|, \verb|directPower| and more do not take the hour of the day as input, but the index of the \verb|sunPositions| table which contains the azimuth and altitude of the sun over the day.
+    Therefore, \textit{before you call functions which take an index as parameter you need to make sure you have }\verb|sunPositions| \textit{initialised} at the right day, done by calling \verb|calculatesunPos[DateObject[{2016,7,18}]]| with whatever day you want in the table.
+
+    Exporting the angles for ten times a day for two years, like
+
+    \verb|exportPeriod[DateObject[{2016, 9, 7}], DateObject[{2018, 9, 15}], 10]| took only ten minutes (Lenovo W541 laptop on high performance).
+
+    \subsubsection{Haskell calculations}
+
+    Because Mathematica is proprietary, we decided to also provide a Haskell implementation.
+    It uses the \href{https://hackage.haskell.org/package/astro}{Astro package} to find the position of the sun.
+
 \end{document}

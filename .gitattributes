@@ -1,0 +1,3 @@
+**/*.nb binary
+**/*.times binary
+**/*.pdf merge=theirs
