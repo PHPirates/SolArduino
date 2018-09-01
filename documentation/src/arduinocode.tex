@@ -16,11 +16,11 @@ if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0)
 			The calculation itself as implemented on the Arduino is 0 to 0.01 off, because of the rounding of the long value.
 			 The offset can be seen with this Mathematica command
 			\begin{lstlisting}
-Plot[N[360 + ((x - 5)*100/(50 - 5))*(74 - 360)/100] - 
-N[360 + Floor[((x - 5)/(50 - 5))*100*(74 - 360)]/100], {x, 10, 
+Plot[N[360 + ((x - 5)*100/(50 - 5))*(74 - 360)/100] -
+N[360 + Floor[((x - 5)/(50 - 5))*100*(74 - 360)]/100], {x, 10,
 10.01}]
 			\end{lstlisting}
-			which illustrates the difference between the exact solution and the Arduino code without rounding to the integer \verb|expectedVoltage|, which was implemented as 
+			which illustrates the difference between the exact solution and the Arduino code without rounding to the integer \verb|expectedVoltage|, which was implemented as
 			\begin{lstlisting}
 float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
 int expectedVoltage = POTMETER_LOWEND +
@@ -33,13 +33,13 @@ int expectedVoltage = POTMETER_LOWEND +
 			Because the Arduino program space could by far not store all the unix times and angles for like a year, we decided to use a webserver on the Synology NAS as storage space.
 			Every time the Arduino runs out of angles, it detects that either in the \verb|loop()| or in \verb|solarPanelAuto()|, and then requests new angles at \url{http://192.168.2.7} with \verb|requestNewTable()|. After sending such a request, the program needs to wait for a response before continuing, otherwise it continues with old angles.
 			The 'waiting' is implemented with a global flag variable \verb|responseReceived|, which is set true in the callback after the angle and date arrays are updated.
+
 			Currently the arrays are of size 10, and therefore the little PHP script on the NAS gives the next ten angles and dates when called.
 			The number ten is chosen because of RAM limitations, if you want to change it, change the \verb|tableLength| global variable, the number in the declarations of the arrays, the number of times the PHP script gives back, the \verb|tableSize| which indicates how many bytes the NAS response will need, and is used in the ethernet buffer and when parsing.
 			To calculate that size, given $x$ angles, you'd do something like $11x$ for the dates plus $4x$ for the angles and a little more plus about 140 bytes/characters from the http header would be around 300 bytes for 10 angles.
 			But tests point out almost 400 bytes are needed here, so be sure to test it well.
 			In the NAS, you can find the page with the file browser under \verb|DiskStation/web/index.php|.
-			By the way, on high performace, exporting the angles for ten times a day for two years, like \\ \verb|exportPeriod[DateObject[{2016, 9, 7}], DateObject[{2018, 9, 15}], 10]| took only ten minutes (Lenovo laptop on high performance).
-			A possible improvement is obviously to save the angles locally on for e{subsec:arduinotoandroid} which would decrease dependencies on other systems.
+
 		\subsection{Communication with the Android app} \label{subsec:arduinotoandroid}
 			Communication goes by http requests, in the form of \url{http://192.168.2.106/?panel=up}.
 			Currently implemented are \verb|panel=up,panel=down,panel=stop,panel=auto,degrees=x,update|.
