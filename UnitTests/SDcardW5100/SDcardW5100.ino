@@ -1,27 +1,24 @@
 /*
   SD card read/write
 
-  This code has been confirmed to work on the Micro SD Card Memory Shield Module.
+  This code has been confirmed to work on the W5100 Ethernet and SD Card shield.
 
  This example shows how to read and write data to and from an SD card file
  The circuit:
- * SD card attached to SPI bus as follows:
- ** MOSI - pin 11
- ** MISO - pin 12
- ** CLK - pin 13
- ** CS - pin 14
-
- created   Nov 2010
- by David A. Mellis
- modified 9 Apr 2012
- by Tom Igoe
-
- This example code is in the public domain.
+ * 
+ * https://www.instructables.com/id/Arduino-Nano-with-Ethernet-Shield/
+ * connect ICSP such that nano not underneath shield (ICSP contains MOSI, MISO, SCK, RESET, VCC, GND and the SPI ones are cross-connected with the Arduino pins)
+ * Attach all the following pins between Arduino and shield:
+ * Pins 11, 12, 13 (SPI bus)
+Pin 10 selects the w5100
+Pin 4 selects the SD card
 
  */
 
 #include <SPI.h>
 #include <SD.h>
+
+#define SS_SD_CARD 4 // CS pin
 
 File myFile;
 
@@ -35,11 +32,14 @@ void setup() {
   // According to the Arduino docs, when using a different CS pin than the hardware SS pin (10), pin 10 has to be kept as output for the SD library
   // https://www.arduino.cc/en/Reference/SDbegin
   // PS This example may work without it, may be coincidence.
-  pinMode(10, OUTPUT);
+//  pinMode(10, OUTPUT);
+//  digitalWrite(10, HIGH); // disable w5100 SPI before initializing SD
+//  
+//  pinMode(SS_SD_CARD, OUTPUT);
 
   Serial.print("Initializing SD card...");
 
-  if (!SD.begin(14)) {
+  if (!SD.begin(SS_SD_CARD)) {
     Serial.println("initialization failed!");
     return;
   }
