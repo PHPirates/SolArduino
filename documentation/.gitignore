@@ -10,3 +10,4 @@ aux/
 *.toc
 /Mathematica/AbbyTest.nb
 /Mathematica/ThomasTest.nb
+src/*.pdf
