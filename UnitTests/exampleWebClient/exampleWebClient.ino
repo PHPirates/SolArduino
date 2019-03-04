@@ -1,17 +1,16 @@
-// Demo using DHCP and DNS to perform a web client request.
-// 2011-06-08 <jc@wippler.nl> http://opensource.org/licenses/mit-license.php
+// Example showing a web request, using static setup. Based on the webClient built-in example.
 
 #include <EtherCard.h>
 
 // ethernet interface mac address, must be unique on the LAN
-static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
+static byte mymac[] = { 0x46,0x7B,0x22,0x7B,0xB3,0x70 };
 
-static byte myip[] = {192, 168, 2, 106};// ip Thomas
+static byte myip[] = {192, 168, 8, 42};// ip Thomas
 //static byte myip[] = {192, 168, 0, 23}; // ip Abby
 //hard coded for a static setup:
-const static uint8_t gw[] = {192,168,2,254}; 
+const static uint8_t gw[] = {192,168,8,1}; 
 //const static uint8_t dns[] = {195,121,1,34};  //works for ntp, doesn't work for web request
-const static uint8_t dns[] = {195,121,2,254};  //address from dhcp setup,  not for ntp, works for web request
+const static uint8_t dns[] = {192,168,8,1};  //address from dhcp setup,  not for ntp, works for web request
 //const static uint8_t dns[] = {195,168,2,254}; // doesn't work for ntp, works for web request
 const static uint8_t mask[] = {255,255,255,0}; 
 
@@ -46,8 +45,8 @@ void setup () {
   //instead of dns lookup, set hisip manually to be used by browseURL
   ether.hisip[0]=192;
   ether.hisip[1]=168;
-  ether.hisip[2]=2;
-  ether.hisip[3]=7;
+  ether.hisip[2]=8;
+  ether.hisip[3]=200;
 
   ether.printIp("IP:  ", ether.myip);
   ether.printIp("GW:  ", ether.gwip);  
@@ -55,7 +54,7 @@ void setup () {
   ether.printIp("SRV: ", ether.hisip);
 
   Serial.print("<<< REQ ");
-    ether.browseUrl(PSTR("/index.php"), "", NULL, my_callback);
+    ether.browseUrl(PSTR("/"), "", NULL, my_callback);
 }
 
 void loop () {

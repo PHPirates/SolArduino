@@ -2,3 +2,8 @@
 out/
 aux/
 *.iml
+CMakeLists.txt
+sol_arduino.ino
+User_Setup.h
+cmake-build-debug/
+cmake/

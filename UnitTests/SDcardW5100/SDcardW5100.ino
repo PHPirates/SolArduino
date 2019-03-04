@@ -5,13 +5,13 @@
 
  This example shows how to read and write data to and from an SD card file
  The circuit:
- * 
- * https://www.instructables.com/id/Arduino-Nano-with-Ethernet-Shield/
- * connect ICSP such that nano not underneath shield (ICSP contains MOSI, MISO, SCK, RESET, VCC, GND and the SPI ones are cross-connected with the Arduino pins)
- * Attach all the following pins between Arduino and shield:
- * Pins 11, 12, 13 (SPI bus)
-Pin 10 selects the w5100
-Pin 4 selects the SD card
+  
+  https://www.instructables.com/id/Arduino-Nano-with-Ethernet-Shield/
+  Connect the six ICSP pins such that nano is not underneath the shield (ICSP contains MOSI, MISO, SCK, RESET, VCC, GND and the SPI ones are cross-connected with the Arduino pins)
+  Attach all the following pins between Arduino and shield:
+  Pins 11, 12, 13 (SPI bus)
+  Pin 10 selects the w5100
+  Pin 4 selects the SD card
 
  */
 
@@ -99,5 +99,3 @@ void setup() {
 void loop() {
   // nothing happens after setup
 }
-
-

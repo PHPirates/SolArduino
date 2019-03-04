@@ -1,10 +1,10 @@
 // Demo using DHCP and DNS to perform a web client request.
-// 2011-06-08 <jc@wippler.nl> http://opensource.org/licenses/mit-license.php
+// Based on the webClient built-in example.
 
 #include <EtherCard.h>
 
 // ethernet interface mac address, must be unique on the LAN
-static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
+static byte mymac[] = { 0x96,0x7B,0x22,0x7B,0xB3,0x70 };
 
 byte Ethernet::buffer[700];
 static uint32_t timer;
@@ -38,8 +38,8 @@ void setup () {
   //instead of dns lookup, set hisip manually to be used by browseURL
   ether.hisip[0]=192;
   ether.hisip[1]=168;
-  ether.hisip[2]=2;
-  ether.hisip[3]=7;
+  ether.hisip[2]=8;
+  ether.hisip[3]=200;
     
   ether.printIp("SRV: ", ether.hisip);
   
@@ -52,6 +52,6 @@ void loop () {
     timer = millis() + 5000;
     Serial.println();
     Serial.print("<<< REQ ");
-    ether.browseUrl(PSTR("/index.php"), "", NULL, my_callback);
+    ether.browseUrl(PSTR("/"), "", NULL, my_callback);
   }
 }
