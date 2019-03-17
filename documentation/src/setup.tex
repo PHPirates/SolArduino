@@ -2,6 +2,16 @@
 We used an Arduino Nano ATmega328, bought at \href{http://nl.rs-online.com/}{rs-components}.
 We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano.
 This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
+
+Later when the NAS didn't want to process requests from the Arduino anymore, we bought a Micro SD Card Memory Shield Module from \url{https://www.gearbest.com/goods/pp_009462485053.html?wid=1433363&utm_source=email_sys&utm_medium=email&utm_campaign=shipping} and tried to get it to work with the ethernet shield, but that didn't work.
+
+Then we bought a W5100 Micro SD Card Ethernet Shield from \url{https://www.gearbest.com/development-boards/pp_22810.html?wid=1433363}.
+But we did not manage to get both the ethernet and the sd card to work.
+Theoretically it should be possible, but in practice it seems like we want to let the Arduino do too much things together and it gets very difficult.
+The test files can still be found in the UnitTests folder.
+
+The best solution we could think of was buying a Raspberry Pi, see Section~\ref{ch:pi}.
+
 \subsubsection{Components list}
 	\begin{itemize}
 		\item BC547 NPN transistor

@@ -1,17 +1,18 @@
 #include <EtherCard.h>      // https://github.com/jcw/ethercard
-#include <Time.h>           // http://www.arduino.cc/playground/Code/Time
+#include <TimeLib.h>           // http://www.arduino.cc/playground/Code/Time
 #include <Timezone.h>       // https://github.com/JChristensen/Timezone
 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
-static byte myip[] = {192, 168, 2, 106};// ip Thomas
-const static uint8_t gw[] = {192,168,2,254}; 
+static byte myip[] = {192, 168, 8, 42};// ip Thomas
+const static uint8_t gw[] = {192,168,8,1};
 //const static uint8_t dns[] = {195,121,1,34};  //works for ntp
 //const static uint8_t dns[] = {195,168,2,254}; //doesn't work for ntp
-const static uint8_t dns[] = {195,121,2,254}; //doesn't work for ntp
+//const static uint8_t dns[] = {195,121,2,254}; //doesn't work for ntp
+static uint8_t dns[] = {192,168,8,1};
 const static uint8_t mask[] = {255,255,255,0}; 
 
-const char poolNTP[] PROGMEM = "0.pool.ntp.org"; //pool to get time server from
+const char poolNTP[] PROGMEM = "europe.pool.ntp.org"; //pool to get time server from
 uint8_t ntpMyPort = 123; //port for the time server, TODO why is this needed?
 
 byte Ethernet::buffer[700];
@@ -24,11 +25,18 @@ Timezone timeZone(summerTime, winterTime);
 void setup () {
   Serial.begin(9600);
 
+  // disable SD Card before initializing ethernet
+  pinMode(4, OUTPUT);
+  digitalWrite(4, HIGH);
+
  //do not forget to add the extra '10' argument because of this ethernet shield
   if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) {
     Serial.println(F("Failed to access Ethernet controller"));
   }
 
+  
+  ether.dhcpSetup();
+  
   //static setup
   ether.staticSetup(myip,gw,dns,mask);
   //no serial print because ether.myip is a char[] array
@@ -45,6 +53,9 @@ void setup () {
   delay(1000);
   Serial.print("time: ");
   Serial.println(now());
+  Serial.print(hour());
+  Serial.print(F(":"));
+  Serial.println(minute());
 }
 
 void loop () {}
