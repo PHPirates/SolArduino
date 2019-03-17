@@ -1,0 +1,6 @@
+As explained in Section~\ref{subsec:hardwareUsed} when the NAS stopped serving requests we decided to drop the Arduino and start using a Raspberry Pi.
+
+There are a lot of Raspberry Pi versions, but at the moment of writing (March 2019) it seems the Raspberry Pi 3 B+ is the most recent and complete Pi.
+However, since a Raspberry Pi has no analog inputs, we will need a separate Analog to Digital Converter (ADC) to read the pot meter values.
+It seems that the MCP3008 is widely used, see for example \url{https://electronicshobbyists.com/raspberry-pi-analog-sensing-mcp3008-raspberry-pi-interfacing/}.
+It speaks about setting 3.3v on the potmeter, just like all other places we could find, whereas we put 5v on it with the Arduino but we think it should work all the same.
