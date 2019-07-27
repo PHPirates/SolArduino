@@ -8,5 +8,5 @@ packages:
 # (e.g., acme-missiles-0.3)
 extra-deps:
 - git: https://github.com/PHPirates/golden-haskell.git
-  commit: "ff69e9d"
+  commit: "cf1d07b109eb785f41f36537dfd72ba24e970b2b"
 - list-extras-0.4.1.4
