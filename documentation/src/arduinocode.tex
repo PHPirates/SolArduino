@@ -32,7 +32,7 @@ int expectedVoltage = POTMETER_LOWEND +
 		\subsection{Storage of angles}\label{subsec:storageOfAngles}
 			Because the Arduino program space could by far not store all the unix times and angles for like a year, we decided to use a webserver on the Synology NAS as storage space.
 			Every time the Arduino runs out of angles, it detects that either in the \verb|loop()| or in \verb|solarPanelAuto()|, and then requests new angles at \url{http://192.168.2.7} with \verb|requestNewTable()|. After sending such a request, the program needs to wait for a response before continuing, otherwise it continues with old angles.
-			The 'waiting' is implemented with a global flag variable \verb|responseReceived|, which is set true in the callback after the angle and date arrays are updated.
+			The `waiting' is implemented with a global flag variable \verb|responseReceived|, which is set true in the callback after the angle and date arrays are updated.
 
 			Currently the arrays are of size 10, and therefore the little PHP script on the NAS gives the next ten angles and dates when called.
 			The number ten is chosen because of RAM limitations, if you want to change it, change the \verb|tableLength| global variable, the number in the declarations of the arrays, the number of times the PHP script gives back, the \verb|tableSize| which indicates how many bytes the NAS response will need, and is used in the ethernet buffer and when parsing.

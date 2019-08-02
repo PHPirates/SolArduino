@@ -162,19 +162,25 @@ The best solution we could think of was buying a Raspberry Pi, see Section~\ref{
 			(6.5,11.5) to[switch, align=right, l=high end stop] (6.5,10)
 		;
 	\end{circuitikz}\end{center}
-	\begin{tabular}{l|l|l|l}
-		In circuit & terminal (connection to) & to meter cupboard & Arduino \\
-		\hline
-		Low end stop & no & white/green & 5 \\
-		Ground & 4 & red/brown & GND \\
-		E4 & 5 & blue & 4 \\
-		High end stop & 6 & green & 3 \\
-		\hline
-		Circuit to potmeter &&& \\
-		blue (signal) & 7 & black & A7\\
-		yellow/green (+5V) & 8 & yellow & +5V \\
-		brown (GND) & 9 & &
-	\end{tabular}
+
+	\begin{table}
+		\centering
+		\begin{tabular}{l|l|l|l}
+			In circuit & terminal (connection to) & to meter cupboard & Raspberry Pi gpio \\
+			\hline
+			Ground & 4 & red/brown & GND \\
+			Low end stop & no & white/green & 26 \\
+			E4 & 5 & blue & 19 \\
+			High end stop & 6 & green & 13 \\
+			\hline
+			Circuit to potmeter &&& \\
+			blue (signal) & 7 & black & ? \\
+			yellow/green (+5V) & 8 & yellow & +5V \\
+			brown (GND) & 9 & &
+		\end{tabular}
+		\caption{Wiring}
+		\label{tab:wiring}
+	\end{table}
 \subsubsection{Potentiometer}
 The \textbf{blue} wire from the potentiometer to the main control box is the signal wire, on connection 7 in that box.
 
@@ -187,7 +193,25 @@ Potmeter values as measured by the Arduino, scale 0--1024:
 \end{tabular}
 
 \subsubsection{Motor control}
-We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4--11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of 'base charge storage'.
+We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4--11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of `base charge storage'.
+
+To control the solar panels, see Table~\ref{tab:control}, assuming you are connected as in Table~\ref{tab:wiring}.
+
+\begin{table}
+    \centering
+    \begin{tabular}{llll}
+        \toprule
+        \textbf{Action} & \textbf{Low end stop} & \textbf{High end stop} & \textbf{E4 (direction)} \\
+        \midrule
+        UP & LOW & HIGH & LOW \\
+        DOWN & HIGH & LOW & HIGH \\
+        STOP & LOW & LOW & LOW \\
+        \bottomrule
+    \end{tabular}
+    \caption{How to control the panels.}
+    \label{tab:control}
+\end{table}
+
 
 \subsection{Software used}\label{subsec:softwareUsed}
 
