@@ -24,6 +24,17 @@ class MyServer(BaseHTTPRequestHandler):
         elif self.path == '/?panel=stop':
             panels_stop()
             self.wfile.write(bytes("<body><p>Panels stopping.</p>", "utf-8"))
+        elif self.path == '/?update':
+            self.wfile.write(bytes("<body><p>0 manual</p>", "utf-8"))
+
+        elif self.path == '/?panel=auto':
+            self.wfile.write(bytes("<body><p></p>", "utf-8"))
+
+        elif self.path.contains('/?degrees='):
+            self.wfile.write(bytes("<body><p>0 manual</p>", "utf-8"))
+
+        else:
+            self.wfile.write(bytes("<body><p>Hi.</p>", "utf-8"))
         self.wfile.write(bytes("</body></html>", "utf-8"))
 
 

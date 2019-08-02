@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     String lowerBound = "9";
 
     String urlString;
-    String ipString = "http://192.168.8.42/"; // IP Thomas
+    String ipString = "http://192.168.8.42:8080/"; // IP Thomas
 //    String ipString = "http://192.168.0.23/"; // IP Abby
     String host = "192.168.8.42"; // host Thomas
 //    String host = "192.168.0.23"; // host Abby
