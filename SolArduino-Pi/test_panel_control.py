@@ -24,20 +24,21 @@ def panels_stop():
     direction.off()
 
 
-delay = 20
-while True:
-    panels_up()
-    print("Up...")
-    sleep(delay)
+if __name__ == '__main__':
+    delay = 20
+    while True:
+        panels_up()
+        print("Up...")
+        sleep(delay)
 
-    panels_stop()
-    print("Stop")
-    sleep(delay)
+        panels_stop()
+        print("Stop")
+        sleep(delay)
 
-    panels_down()
-    print("Down...")
-    sleep(delay)
+        panels_down()
+        print("Down...")
+        sleep(delay)
 
-    panels_stop()
-    print("Stop")
-    sleep(delay)
+        panels_stop()
+        print("Stop")
+        sleep(delay)
