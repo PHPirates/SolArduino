@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 
-from test_panel_control import panels_stop, panels_down, panels_up
+from unit_tests.test_panel_control import panels_stop, panels_down, panels_up
 
 hostName = "192.168.8.42"
 hostPort = 8080
