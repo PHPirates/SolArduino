@@ -81,3 +81,16 @@ jobs:
         on:
           tags: true
           branch: master
+
+    - stage: pi
+      dist: xenial  # To use Python 3.7
+      language: python
+      python:
+        - "3.7"
+
+      install:
+        - pip install flake8
+
+      script:
+        - cd SolArduino-Pi
+        - flake8 .

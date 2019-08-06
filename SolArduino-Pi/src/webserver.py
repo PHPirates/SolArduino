@@ -51,4 +51,3 @@ class Webserver(BaseHTTPRequestHandler):
 
         if 'degrees' in url_params.keys():
             self.append_content('Not implemented yet')
-
