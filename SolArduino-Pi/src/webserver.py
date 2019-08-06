@@ -1,27 +1,54 @@
+import urllib.parse
 from http.server import BaseHTTPRequestHandler
+
+from src.panel_controller import PanelController
+
+hostName = "192.168.8.42"
+hostPort = 8080
 
 
 class Webserver(BaseHTTPRequestHandler):
+    """
+    Serve an http server.
+    """
+
+    def append_content(self, content):
+        self.wfile.write(bytes(content, 'utf-8'))
+
     # noinspection PyPep8Naming
     def do_GET(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
-        self.wfile.write(
-            bytes('<html><head><title>SolArduino Pi</title></head><body>',
-                  'utf-8'))
-        if self.path == '/?panel=up':
-            self.wfile.write(bytes('Panels going up.', 'utf-8'))
-        elif self.path == '/?panel=down':
-            self.wfile.write(bytes('Panels going down.', 'utf-8'))
-        elif self.path == '/?panel=stop':
-            self.wfile.write(bytes('Panels stopping.', 'utf-8'))
-        elif self.path == '/?update':
-            self.wfile.write(bytes('0 manual', 'utf-8'))
-        elif self.path == '/?panel=auto':
-            self.wfile.write(bytes('Not implemented yet', 'utf-8'))
-        elif self.path.contains('/?degrees='):
-            self.wfile.write(bytes('Not implemented yet', 'utf-8'))
-        else:
-            self.wfile.write(bytes('Available urls: todo', 'utf-8'))  # todo
-        self.wfile.write(bytes('</body></html>', 'utf-8'))
+
+        preamble = '<html><head><title>SolArduino Pi</title></head><body>'
+        self.append_content(preamble)
+
+        url_params = urllib.parse.parse_qs(self.path[2:])
+        self.parse_params(url_params)
+
+        self.append_content('</body></html>')
+
+    def parse_params(self, url_params):
+
+        # No parameters given.
+        if not url_params.keys():
+            self.append_content('Available parameters:'
+                                'panel=[up,down,auto,stop],update,'
+                                'degrees=[number]')
+
+        if 'panel' in url_params.keys():
+            try:
+                message = PanelController().move_panels(url_params['panel'])
+                self.append_content(message)
+            except ValueError as e:
+                self.append_content(str(e))
+                return
+
+        if 'update' in url_params.keys():
+            self.append_content('Not implemented yet')
+            # todo make sure to handle multiple params properly
+
+        if 'degrees' in url_params.keys():
+            self.append_content('Not implemented yet')
+
