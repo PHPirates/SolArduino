@@ -3,7 +3,8 @@ from http.server import BaseHTTPRequestHandler
 
 from src.panel_controller import PanelController
 
-hostName = "192.168.8.42"
+# hostName = '192.168.8.42'
+hostName = 'localhost'
 hostPort = 8080
 
 
@@ -21,6 +22,8 @@ class Webserver(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
+        # todo handle /?update correctly
+
         preamble = '<html><head><title>SolArduino Pi</title></head><body>'
         self.append_content(preamble)
 
@@ -33,8 +36,9 @@ class Webserver(BaseHTTPRequestHandler):
 
         # No parameters given.
         if not url_params.keys():
-            self.append_content('Available parameters:'
-                                'panel=[up,down,auto,stop],update,'
+            self.append_content('No parameters were found in the request. '
+                                'Available parameters: '
+                                'panel=[up/down/auto/stop], update, '
                                 'degrees=[number]')
 
         if 'panel' in url_params.keys():
