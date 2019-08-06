@@ -1,3 +1,4 @@
+psutil==5.6.3
 gpiozero==1.5.1
 RPi.GPIO==0.7.0
 pep3143daemon==0.0.6
