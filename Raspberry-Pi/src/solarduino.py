@@ -10,4 +10,5 @@ if __name__ == '__main__':
     Daemonizer().start()
 
     # Start webserver
+    # todo some exception handling
     HTTPServer((hostName, hostPort), Webserver).serve_forever()

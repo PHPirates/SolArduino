@@ -11,6 +11,10 @@ class SolarPanel:
     direction = LED(19)
     power_up = LED(13)
 
+    # Potmeter soft end stops
+    upper_bound = None
+    lower_bound = None
+
     def move_up(self):
         self.power_down.off()
         self.power_up.on()
@@ -26,5 +30,8 @@ class SolarPanel:
         self.power_up.off()
         self.direction.off()
 
-    def get_angle(self):
+    def get_potmeter_value(self):
+        if self.upper_bound < self.lower_bound:
+            raise ValueError('Upper bound potmeter value has to be'
+                             ' higher than the lower bound value.')
         raise NotImplementedError

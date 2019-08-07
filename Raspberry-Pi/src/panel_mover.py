@@ -8,13 +8,17 @@ class PanelMover:
     To avoid confusion, only one instance of this class should exist.
     """
 
-    emergency = None
+    emergency: str = None
 
     def __init__(self, panel: SolarPanel):
         """
         :param panel: Solar panel.
         """
         self.panel = panel
+
+    def set_emergency(self, message: str):
+        self.emergency = message
+        self.panel.stop()
 
     def up(self) -> bool:
         """

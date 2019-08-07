@@ -43,9 +43,19 @@ class PanelController:
                              f'panel=auto or panel=stop but received '
                              f'panel={direction} instead.')
 
+    def emergency_message(self) -> str:
+        """
+        :return: Emergency message if there is one, None otherwise.
+        """
+        return self.panel_mover.emergency
+
     def get_angle(self):
         # some sampling...
-        return self.panel.get_angle()
+        try:
+            return self.panel.get_potmeter_value()
+        except ValueError as e:
+            self.panel_mover.set_emergency(str(e))
+            raise e
 
     def up(self):
         self.panel_mover.up()
