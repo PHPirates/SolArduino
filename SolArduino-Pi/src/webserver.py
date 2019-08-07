@@ -22,8 +22,6 @@ class Webserver(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
-        # todo handle /?update correctly
-
         preamble = '<html><head><title>SolArduino Pi</title></head><body>'
         self.append_content(preamble)
 
@@ -33,12 +31,15 @@ class Webserver(BaseHTTPRequestHandler):
         self.append_content('</body></html>')
 
     def parse_params(self, url_params):
+        # todo always return angle and auto/manual
+        # todo return something easy to parse for client
 
         # No parameters given.
         if not url_params.keys():
             self.append_content('No parameters were found in the request. '
                                 'Available parameters: '
-                                'panel=[up/down/auto/stop], update, '
+                                'panel=[up/down/auto/stop], '
+                                'update=[true/false], '
                                 'degrees=[number]')
 
         if 'panel' in url_params.keys():

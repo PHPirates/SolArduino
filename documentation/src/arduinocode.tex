@@ -1,73 +1,89 @@
-		\subsection{Internet/Ethernet connection}\label{subsec:internet/ethernetConnection}
-			To connect the Arduino and the Ethernet shield to the internet, we used the \href{https://github.com/jcw/ethercard}{EtherCard} library.
-			Because the ENC28j60 uses a different default CS pin (10 instead of 8), we had to add that in the code when making the connection.
-			This is done by changing
-			\begin{lstlisting}
-if (ether.begin(sizeof Ethernet::buffer, mymac) == 0)
-			\end{lstlisting}
-			(with no pin specified, so the default pin is used) to
-			\begin{lstlisting}
-if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0)
-			\end{lstlisting}
-			Note the third argument \lstinline|10| added after \lstinline|mymac|.
-			To get the current time using NTP, we adapted \href{http://forum.arduino.cc/index.php?topic=171941.0}{example code} from the Arduino forum.
-		\subsection{Solar Panel control}\label{subsec:solarPanelControl}
-			The calculation to find the goal value of the potmeter is within one voltage point accurate, which is because of the rounding to an integer voltage at the end.
-			The calculation itself as implemented on the Arduino is 0 to 0.01 off, because of the rounding of the long value.
-			 The offset can be seen with this Mathematica command
-			\begin{lstlisting}
-Plot[N[360 + ((x - 5)*100/(50 - 5))*(74 - 360)/100] -
-N[360 + Floor[((x - 5)/(50 - 5))*100*(74 - 360)]/100], {x, 10,
-10.01}]
-			\end{lstlisting}
-			which illustrates the difference between the exact solution and the Arduino code without rounding to the integer \verb|expectedVoltage|, which was implemented as
-			\begin{lstlisting}
-float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
-int expectedVoltage = POTMETER_LOWEND +
-( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
-			\end{lstlisting}
-			The idea is to keep setting the right pins high until the difference between the current voltage and the expected voltage is zero.
-			If the potmeter happens to skip the value, no problem occurs because the Arduino keeps no memory of that and will try to reach the right value again.
-			Tests showed that with sufficient sampling of the input the value may in a rare situation be skipped once but not more.
-		\subsection{Storage of angles}\label{subsec:storageOfAngles}
-			Because the Arduino program space could by far not store all the unix times and angles for like a year, we decided to use a webserver on the Synology NAS as storage space.
-			Every time the Arduino runs out of angles, it detects that either in the \verb|loop()| or in \verb|solarPanelAuto()|, and then requests new angles at \url{http://192.168.2.7} with \verb|requestNewTable()|. After sending such a request, the program needs to wait for a response before continuing, otherwise it continues with old angles.
-			The `waiting' is implemented with a global flag variable \verb|responseReceived|, which is set true in the callback after the angle and date arrays are updated.
+\subsection{Internet/Ethernet connection}\label{subsec:internet/ethernetConnection}
+    To connect the Arduino and the Ethernet shield to the internet, we used the \href{https://github.com/jcw/ethercard}{EtherCard} library.
+    Because the ENC28j60 uses a different default CS pin (10 instead of 8), we had to add that in the code when making the connection.
+    This is done by changing
 
-			Currently the arrays are of size 10, and therefore the little PHP script on the NAS gives the next ten angles and dates when called.
-			The number ten is chosen because of RAM limitations, if you want to change it, change the \verb|tableLength| global variable, the number in the declarations of the arrays, the number of times the PHP script gives back, the \verb|tableSize| which indicates how many bytes the NAS response will need, and is used in the ethernet buffer and when parsing.
-			To calculate that size, given $x$ angles, you'd do something like $11x$ for the dates plus $4x$ for the angles and a little more plus about 140 bytes/characters from the http header would be around 300 bytes for 10 angles.
-			But tests point out almost 400 bytes are needed here, so be sure to test it well.
-			In the NAS, you can find the page with the file browser under \verb|DiskStation/web/index.php|.
+    \begin{lstlisting}
+    if (ether.begin(sizeof Ethernet::buffer, mymac) == 0)
+    \end{lstlisting}
 
-		\subsection{Communication with the Android app} \label{subsec:arduinotoandroid}
-			Communication goes by http requests, in the form of \url{http://192.168.2.106/?panel=up}.
-			Currently implemented are \verb|panel=up,panel=down,panel=stop,panel=auto,degrees=x,update|.
-			To find what these are for and what they return, have a look at the code (communication file).
-			When you request \url{http://192.168.2.106/} you get a homepage with the current status of the solar panels (currently just the internal time of the Arduino).
-			It is also possible to request to set the panel to $x$ degrees by sending \url{http://192.168.2.106/?degrees=xx} where $xx$ is an integer which needs to consist of two digits.
-			To get an update of the current solar panel status, which currently only gives back the current angle and whether the panels are on auto or manual, request \url{http://192.168.2.106/?update}.
-			You'll get back some html, with \verb|[angle] ["auto" or "manual"]|.
-			On every action sent, the Arduino will send back an http response starting with \verb|HTTP/1.0 200 OK|, and including something like \verb|Panels going up.|.
-		\subsection{Safety measures}\label{subsec:safetyMeasures}
-			In order to avoid relying on the hardware end stops, a few safety measures were introduced:
-			\begin{itemize}
-				\item A soft bound was introduced for the potmeter constants and degrees constants.
-				We hope this catches varying potmeter bounds: sometimes the value of the low end may be a few points lower and then the code would try endlessly to get the solar panels below their hardware end stop.
-				\item In the \verb|solarPanelDown| and \verb|solarPanelUp| methods, as close to the solar panel control as possible, we put an extra check if the reading of the analog pin does not go out of bounds.
-				These bounds therefore include the soft bounds.
-				This check intentionally does not rely on \verb|readPotMeter()| (which samples readings for better accuracy), which reduces accuracy near the soft end stops but increases safety.
-				Accuracy inbetween should not be influenced.
-				Moreover, when there is an emergency the panels are stopped by the Arduino, ensured in the main loop.
-				To be more precise: we assume the lowest number of the potmeter value corresponds to the lower end stop.
-				In the code we check that when going down the potmeter value should be higher than the potmeter low end constant, therefore the panels cannot move down when below the (soft) end stop according to the potmeter.
-				If the check fails, the internal EmergencyState is set to ``panels below lower bound!'', which can only be removed in solarPanelUp when the potmeterpin is above the low end constant and the EmergencyState contains exactly the mentioned sentence, or on a reboot of the Arduino.
-				Therefore the panels cannot move downwards by Arduino signals when below the low end stop.
-				For moving up of course everything is the other way around.
-				\item The Arduino now has a timeout on moving the panels up or down, which means that when you do not send another up/down request within the timeout of $x$ seconds the panels will stop automatically.
-				The app and desktop version now try to send a request each $\frac{x}{2}$ seconds, but subject to change.
-				Especially because of the in practice noticed bad connections this is a very practical alternative to keeping an open connection which would be even better but is a bit complicated with an Arduino.
-				\item The high and low end stop were put in series, such that \textit{all power} which can move the panels goes via \textit{both} end stops.
-				That means that whatever happens, as long as the physical end stops work the panels will not go through their end stops anymore.
-				This of course also means that when they do, by Arduino accident or (more probably) by manual buttons, you have to shortcut the end stop with an extra wire (just hold it to both connectors) to get it moving again (one can use the manual buttons).
-			\end{itemize}
+    (with no pin specified, so the default pin is used) to
+
+    \begin{lstlisting}
+    if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0)
+    \end{lstlisting}
+
+    Note the third argument \lstinline|10| added after \lstinline|mymac|.
+    To get the current time using NTP, we adapted \href{http://forum.arduino.cc/index.php?topic=171941.0}{example code} from the Arduino forum.
+
+\subsection{Solar Panel control}\label{subsec:solarPanelControl}
+    The calculation to find the goal value of the potmeter is within one voltage point accurate, which is because of the rounding to an integer voltage at the end.
+    The calculation itself as implemented on the Arduino is 0 to 0.01 off, because of the rounding of the long value.
+     The offset can be seen with this Mathematica command
+    \begin{lstlisting}
+    Plot[N[360 + ((x - 5)*100/(50 - 5))*(74 - 360)/100] -
+    N[360 + Floor[((x - 5)/(50 - 5))*100*(74 - 360)]/100], {x, 10,
+    10.01}]
+    \end{lstlisting}
+    which illustrates the difference between the exact solution and the Arduino code without rounding to the integer \verb|expectedVoltage|, which was implemented as
+    \begin{lstlisting}
+    float fraction = ( ( (float) ( (degrees - DEGREES_LOWEND) ) ) / (float) (DEGREES_HIGHEND - DEGREES_LOWEND) );
+    int expectedVoltage = POTMETER_LOWEND +
+    ( (long) ( fraction*100 * (POTMETER_HIGHEND - POTMETER_LOWEND) ) ) / 100 ;
+    \end{lstlisting}
+    The idea is to keep setting the right pins high until the difference between the current voltage and the expected voltage is zero.
+    If the potmeter happens to skip the value, no problem occurs because the Arduino keeps no memory of that and will try to reach the right value again.
+    Tests showed that with sufficient sampling of the input the value may in a rare situation be skipped once but not more.
+
+\subsection{Storage of angles}\label{subsec:storageOfAngles}
+    Because the Arduino program space could by far not store all the unix times and angles for like a year, we decided to use a webserver on the Synology NAS as storage space.
+    Every time the Arduino runs out of angles, it detects that either in the \verb|loop()| or in \verb|solarPanelAuto()|, and then requests new angles at \url{http://192.168.2.7} with \verb|requestNewTable()|. After sending such a request, the program needs to wait for a response before continuing, otherwise it continues with old angles.
+    The `waiting' is implemented with a global flag variable \verb|responseReceived|, which is set true in the callback after the angle and date arrays are updated.
+
+    Currently the arrays are of size 10, and therefore the little PHP script on the NAS gives the next ten angles and dates when called.
+    The number ten is chosen because of RAM limitations, if you want to change it, change the \verb|tableLength| global variable, the number in the declarations of the arrays, the number of times the PHP script gives back, the \verb|tableSize| which indicates how many bytes the NAS response will need, and is used in the ethernet buffer and when parsing.
+    To calculate that size, given $x$ angles, you'd do something like $11x$ for the dates plus $4x$ for the angles and a little more plus about 140 bytes/characters from the http header would be around 300 bytes for 10 angles.
+    But tests point out almost 400 bytes are needed here, so be sure to test it well.
+    In the NAS, you can find the page with the file browser under \verb|DiskStation/web/index.php|.
+
+\newcommand{\ipaddress}{http://192.168.8.42} % todo
+
+\subsection{Communication with the Android app} \label{subsec:arduinotoandroid}
+    \subsubsection{Request}
+    Communication goes by http requests, in the form of \url{http://192.168.2.106/?key=value}.
+    Currently implemented are the following parameter options.
+
+    \begin{tabular}{ll}
+        \verb|panel=up| & The panels will move up. \\
+        \verb|panel=down| & The panels will move down. \\
+        \verb|panel=stop| & The panels will stop moving.
+        \verb|panel=auto| & The panels will go in automatic mode. \\
+        \verb|degrees=x| & The panels will go to $x$ degrees. \\
+    \end{tabular}
+
+    \subsubsection{Result}
+    The result will be in the form of % todo
+    The result will always contain the current angle of the panels.
+
+\subsection{Safety measures}\label{subsec:safetyMeasures}
+    In order to avoid relying on the hardware end stops, a few safety measures were introduced:
+    \begin{itemize}
+        \item A soft bound was introduced for the potmeter constants and degrees constants.
+        We hope this catches varying potmeter bounds: sometimes the value of the low end may be a few points lower and then the code would try endlessly to get the solar panels below their hardware end stop.
+        \item In the \verb|solarPanelDown| and \verb|solarPanelUp| methods, as close to the solar panel control as possible, we put an extra check if the reading of the analog pin does not go out of bounds.
+        These bounds therefore include the soft bounds.
+        This check intentionally does not rely on \verb|readPotMeter()| (which samples readings for better accuracy), which reduces accuracy near the soft end stops but increases safety.
+        Accuracy inbetween should not be influenced.
+        Moreover, when there is an emergency the panels are stopped by the Arduino, ensured in the main loop.
+        To be more precise: we assume the lowest number of the potmeter value corresponds to the lower end stop.
+        In the code we check that when going down the potmeter value should be higher than the potmeter low end constant, therefore the panels cannot move down when below the (soft) end stop according to the potmeter.
+        If the check fails, the internal EmergencyState is set to ``panels below lower bound!'', which can only be removed in solarPanelUp when the potmeterpin is above the low end constant and the EmergencyState contains exactly the mentioned sentence, or on a reboot of the Arduino.
+        Therefore the panels cannot move downwards by Arduino signals when below the low end stop.
+        For moving up of course everything is the other way around.
+        \item The Arduino now has a timeout on moving the panels up or down, which means that when you do not send another up/down request within the timeout of $x$ seconds the panels will stop automatically.
+        The app and desktop version now try to send a request each $\frac{x}{2}$ seconds, but subject to change.
+        Especially because of the in practice noticed bad connections this is a very practical alternative to keeping an open connection which would be even better but is a bit complicated with an Arduino.
+        \item The high and low end stop were put in series, such that \textit{all power} which can move the panels goes via \textit{both} end stops.
+        That means that whatever happens, as long as the physical end stops work the panels will not go through their end stops anymore.
+        This of course also means that when they do, by Arduino accident or (more probably) by manual buttons, you have to shortcut the end stop with an extra wire (just hold it to both connectors) to get it moving again (one can use the manual buttons).
+    \end{itemize}
