@@ -1,4 +1,5 @@
-from src.solar_panel import SolarPanel
+from src.panel_control.solar_panel import SolarPanel
+from src.stoppable_timer import StoppableTimer
 
 
 class PanelMover:
@@ -13,6 +14,9 @@ class PanelMover:
     # Remember this state to provide a more smooth transition
     cannot_go_up = False
     cannot_go_down = False
+
+    timeout = 4  # seconds
+    timer: StoppableTimer = None
 
     def __init__(self, panel: SolarPanel):
         """
@@ -45,6 +49,11 @@ class PanelMover:
                     self.cannot_go_up = True
                     self.panel.stop()
                 else:
+                    # Start timer
+                    self.timer.stop()
+                    self.timer = StoppableTimer(self.timeout,
+                                                self.panel.stop)
+                    self.timer.start()
                     self.panel.move_up()
                 return True
 
@@ -69,5 +78,10 @@ class PanelMover:
                     self.cannot_go_down = True
                     self.panel.stop()
                 else:
+                    # Start timer
+                    self.timer.stop()
+                    self.timer = StoppableTimer(self.timeout,
+                                                self.panel.stop)
+                    self.timer.start()
                     self.panel.move_down()
             return True

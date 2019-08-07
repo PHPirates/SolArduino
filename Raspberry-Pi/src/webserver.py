@@ -1,7 +1,7 @@
 import urllib.parse
 from http.server import BaseHTTPRequestHandler
 
-from src.panel_controller import PanelController
+from src.panel_control.panel_controller import PanelController
 
 # hostName = '192.168.8.42'
 hostName = 'localhost'

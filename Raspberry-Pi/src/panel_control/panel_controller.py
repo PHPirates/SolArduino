@@ -1,5 +1,5 @@
-from src.panel_mover import PanelMover
-from src.solar_panel import SolarPanel
+from src.panel_control.panel_mover import PanelMover
+from src.panel_control.solar_panel import SolarPanel
 
 
 class PanelController:

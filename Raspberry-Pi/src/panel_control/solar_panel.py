@@ -16,6 +16,7 @@ class SolarPanel:
     lower_bound = None
 
     def move_up(self):
+        print('Moving up...')
         self.power_down.off()
         self.power_up.on()
         self.direction.off()
