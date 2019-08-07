@@ -15,6 +15,11 @@ class SolarPanel:
     upper_bound = None
     lower_bound = None
 
+    # Keep some safe distance from the real end stops
+    soft_bound_angle = 1
+    max_angle = 57 - soft_bound_angle
+    min_angle = 5 + soft_bound_angle
+
     def move_up(self):
         print('Moving up...')
         self.power_down.off()

@@ -2,8 +2,10 @@ import threading
 import time
 import types
 
+from src.stoppable_thread import StoppableThread
 
-class StoppableTimer(threading.Thread):
+
+class StoppableTimer(StoppableThread):
     """
     An asynchronous timer which can be cancelled.
     """
@@ -14,15 +16,8 @@ class StoppableTimer(threading.Thread):
         :param action: A function to execute after the timeout
         """
         super(StoppableTimer, self).__init__()
-        self._stop_event = threading.Event()
         self.timeout = timeout
         self.action = action
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
 
     def run(self):
         start_time = time.time()

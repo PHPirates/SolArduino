@@ -16,7 +16,7 @@ class PanelMover:
     cannot_go_down = False
 
     timeout = 4  # seconds
-    timer: StoppableTimer = None
+    timer: StoppableTimer = StoppableTimer(timeout, lambda: True)
 
     def __init__(self, panel: SolarPanel):
         """
@@ -48,6 +48,7 @@ class PanelMover:
                 if self.panel.is_above_upper_bound():
                     self.cannot_go_up = True
                     self.panel.stop()
+                    return False
                 else:
                     # Start timer
                     self.timer.stop()
@@ -55,7 +56,7 @@ class PanelMover:
                                                 self.panel.stop)
                     self.timer.start()
                     self.panel.move_up()
-                return True
+                    return True
 
     def down(self) -> bool:
         """
@@ -77,6 +78,7 @@ class PanelMover:
                 if self.panel.is_below_lower_bound():
                     self.cannot_go_down = True
                     self.panel.stop()
+                    return False
                 else:
                     # Start timer
                     self.timer.stop()
@@ -84,4 +86,4 @@ class PanelMover:
                                                 self.panel.stop)
                     self.timer.start()
                     self.panel.move_down()
-            return True
+                    return True
