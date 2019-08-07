@@ -9,6 +9,10 @@ class PanelMover:
     """
 
     emergency: str = None
+    # Whether the panels are too high (above soft high end stop) or not
+    # Remember this state to provide a more smooth transition
+    cannot_go_up = False
+    cannot_go_down = False
 
     def __init__(self, panel: SolarPanel):
         """
@@ -29,8 +33,20 @@ class PanelMover:
             self.panel.stop()
             return False
         else:
-            self.panel.move_up()
-            return True
+            if self.cannot_go_up:
+                self.panel.stop()
+                return False
+            else:
+                # If we move above the lower bound, reset state
+                if not self.panel.is_below_lower_bound():
+                    self.cannot_go_down = False
+                # Check if we can move up
+                if self.panel.is_above_upper_bound():
+                    self.cannot_go_up = True
+                    self.panel.stop()
+                else:
+                    self.panel.move_up()
+                return True
 
     def down(self) -> bool:
         """
@@ -41,5 +57,17 @@ class PanelMover:
             self.panel.stop()
             return False
         else:
-            self.panel.move_down()
+            if self.cannot_go_down:
+                self.panel.stop()
+                return False
+            else:
+                # If we move below the upper bound, reset state
+                if not self.panel.is_above_upper_bound():
+                    self.cannot_go_up = False
+                # Check if we can move down
+                if self.panel.is_below_lower_bound():
+                    self.cannot_go_down = True
+                    self.panel.stop()
+                else:
+                    self.panel.move_down()
             return True
