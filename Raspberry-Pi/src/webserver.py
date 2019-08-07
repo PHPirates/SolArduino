@@ -13,6 +13,8 @@ class Webserver(BaseHTTPRequestHandler):
     Serve an http server.
     """
 
+    panel_controller = PanelController()
+
     def append_content(self, content):
         self.wfile.write(bytes(content, 'utf-8'))
 
@@ -32,6 +34,7 @@ class Webserver(BaseHTTPRequestHandler):
 
     def parse_params(self, url_params):
         # todo always return angle and auto/manual
+        self.append_content(self.panel_controller.get_angle() + ' manual/auto')
         # todo return something easy to parse for client
 
         # No parameters given.
@@ -44,15 +47,12 @@ class Webserver(BaseHTTPRequestHandler):
 
         if 'panel' in url_params.keys():
             try:
-                message = PanelController().move_panels(url_params['panel'])
+                message = self.panel_controller.move_panels(url_params['panel'])
                 self.append_content(message)
             except ValueError as e:
                 self.append_content(str(e))
                 return
 
-        if 'update' in url_params.keys():
-            self.append_content('Not implemented yet')
-            # todo make sure to handle multiple params properly
-
         if 'degrees' in url_params.keys():
             self.append_content('Not implemented yet')
+            # todo make sure to handle multiple params properly

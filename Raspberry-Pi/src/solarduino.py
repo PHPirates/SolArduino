@@ -4,6 +4,11 @@ from src.daemonizer import Daemonizer
 from src.webserver import Webserver, hostPort, hostName
 
 if __name__ == '__main__':
-    """ Run the webserver in the background. """
+    """ Start SolArduino. """
+    # Run in the background
     Daemonizer().start()
+
+    SolarPanelController()
+
+    # Start webserver
     HTTPServer((hostName, hostPort), Webserver).serve_forever()

@@ -1,0 +1,30 @@
+from gpiozero import LED
+
+
+class SolarPanel:
+    """
+    Low level panel control. Use PanelController instead for interaction with
+    the panels.
+    """
+
+    power_down = LED(26)
+    direction = LED(19)
+    power_up = LED(13)
+
+    def move_up(self):
+        self.power_down.off()
+        self.power_up.on()
+        self.direction.off()
+
+    def move_down(self):
+        self.power_down.on()
+        self.power_up.off()
+        self.direction.on()
+
+    def stop(self):
+        self.power_down.off()
+        self.power_up.off()
+        self.direction.off()
+
+    def get_angle(self):
+        raise NotImplementedError

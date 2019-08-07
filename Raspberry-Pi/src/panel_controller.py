@@ -1,5 +1,10 @@
+from src.solar_panel import SolarPanel
+
+
 class PanelController:
     """ Control the solar panels. """
+
+    panel = SolarPanel()
 
     def move_panels(self, direction: list) -> str:
         """
@@ -27,3 +32,10 @@ class PanelController:
             raise ValueError(f'Expected one of panel=up, panel=down, '
                              f'panel=auto or panel=stop but received '
                              f'panel={direction} instead.')
+
+    def get_angle(self):
+        # some sampling...
+        return self.panel.get_angle()
+
+    def stop(self):
+        self.panel.stop()
