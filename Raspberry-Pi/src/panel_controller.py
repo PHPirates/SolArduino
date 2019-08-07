@@ -1,10 +1,20 @@
+from src.panel_mover import PanelMover
 from src.solar_panel import SolarPanel
 
 
 class PanelController:
-    """ Control the solar panels. """
+    """
+    Control the solar panels. To avoid confusion, only one
+    instance of this class should exist.
+    """
 
     panel = SolarPanel()
+    panel_mover = PanelMover(panel)
+
+    def __init__(self):
+        """ For safety, stop panels and disable auto mode. """
+        self.stop()
+        self.disable_auto_mode()
 
     def move_panels(self, direction: list) -> str:
         """
@@ -37,5 +47,14 @@ class PanelController:
         # some sampling...
         return self.panel.get_angle()
 
+    def up(self):
+        self.panel_mover.up()
+
+    def down(self):
+        self.panel_mover.down()
+
     def stop(self):
         self.panel.stop()
+
+    def disable_auto_mode(self):
+        raise NotImplementedError
