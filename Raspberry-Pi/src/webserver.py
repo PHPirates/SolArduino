@@ -27,9 +27,9 @@ class Webserver(BaseHTTPRequestHandler):
         preamble = '<html><head><title>SolArduino Pi</title></head><body>'
         self.append_content(preamble)
 
-        emergency = self.panel_controller.emergency_message()
-        if emergency is not None:
-            self.append_content(f'Emergency: {emergency}')
+        emergency = self.panel_controller.emergency
+        if emergency.is_set:
+            self.append_content(f'Emergency: {emergency.message}')
         else:
             # todo exception handling
             url_params = urllib.parse.parse_qs(self.path[2:])

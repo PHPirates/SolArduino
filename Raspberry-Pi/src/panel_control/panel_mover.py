@@ -1,3 +1,4 @@
+from src.emergency import Emergency
 from src.panel_control.solar_panel import SolarPanel
 from src.stoppable_timer import StoppableTimer
 
@@ -9,31 +10,28 @@ class PanelMover:
     To avoid confusion, only one instance of this class should exist.
     """
 
-    emergency: str = None
     # Whether the panels are too high (above soft high end stop) or not
     # Remember this state to provide a more smooth transition
     cannot_go_up = False
     cannot_go_down = False
 
-    timeout = 4  # seconds
-    timer: StoppableTimer = StoppableTimer(timeout, lambda: True)
+    # Stop moving automatically after timeout
+    movement_timeout = 4  # seconds
 
-    def __init__(self, panel: SolarPanel):
+    def __init__(self, panel: SolarPanel, emergency: Emergency):
         """
         :param panel: Solar panel.
         """
         self.panel = panel
-
-    def set_emergency(self, message: str):
-        self.emergency = message
-        self.panel.stop()
+        self.emergency = emergency
+        self.timer = StoppableTimer(self.movement_timeout, self.panel.stop)
 
     def up(self) -> bool:
         """
         Move panels up, if allowed.
         :return: True if the panels will start to move up, false otherwise.
         """
-        if self.emergency is not None:
+        if self.emergency.is_set:
             self.panel.stop()
             return False
         else:
@@ -52,7 +50,7 @@ class PanelMover:
                 else:
                     # Start timer
                     self.timer.stop()
-                    self.timer = StoppableTimer(self.timeout,
+                    self.timer = StoppableTimer(self.movement_timeout,
                                                 self.panel.stop)
                     self.timer.start()
                     self.panel.move_up()
@@ -63,7 +61,7 @@ class PanelMover:
         Move panels down, if allowed.
         :return: True if the panels will start to move down, false otherwise.
         """
-        if self.emergency is not None:
+        if self.emergency.is_set:
             self.panel.stop()
             return False
         else:
@@ -82,7 +80,7 @@ class PanelMover:
                 else:
                     # Start timer
                     self.timer.stop()
-                    self.timer = StoppableTimer(self.timeout,
+                    self.timer = StoppableTimer(self.movement_timeout,
                                                 self.panel.stop)
                     self.timer.start()
                     self.panel.move_down()

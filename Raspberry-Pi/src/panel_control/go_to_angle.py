@@ -16,11 +16,11 @@ class GoToAngleThread(StoppableThread):
         self.panel_controller = panel_controller
 
     def run(self):
-        if self.panel_controller.emergency_message() is None:
+        if not self.panel_controller.emergency.is_set:
 
             current_angle = self.panel_controller.get_angle()
             while abs(self.target_angle - current_angle) > self.accuracy \
-                    and self.panel_controller.emergency_message() is None:
+                    and not self.panel_controller.emergency.is_set:
                 # If someone else stopped this thread
                 if self.stopped():
                     self.panel_controller.stop()

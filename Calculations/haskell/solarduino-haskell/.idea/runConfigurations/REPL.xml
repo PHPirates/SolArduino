@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="REPL" type="HaskellStackConfigurationType" factoryName="Haskell Stack REPL" show_console_on_std_err="false" show_console_on_std_out="false">
+    <module name="solarduino-haskell" />
+    <option name="allowRunningInParallel" value="false" />
+    <option name="stackArgs" value="" />
+    <option name="stackTarget" value="solarduino-haskell:lib" />
+    <option name="workingDirPath" value="$PROJECT_DIR$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

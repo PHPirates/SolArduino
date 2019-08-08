@@ -1,3 +1,5 @@
+from src.auto_mode import AutoMode
+from src.emergency import Emergency
 from src.panel_control.go_to_angle import GoToAngleThread
 from src.panel_control.panel_mover import PanelMover
 from src.panel_control.solar_panel import SolarPanel
@@ -10,13 +12,15 @@ class PanelController:
     """
 
     panel = SolarPanel()
-    panel_mover = PanelMover(panel)
     go_to_angle_thread: GoToAngleThread = None
+    auto_mode_thread: AutoMode = None
 
     def __init__(self):
         """ For safety, stop panels and disable auto mode. """
         self.stop()
         self.disable_auto_mode()
+        self.emergency = Emergency(self.stop)
+        self.panel_mover = PanelMover(self.panel, self.emergency)
 
     def move_panels(self, direction: list) -> str:
         """
@@ -49,18 +53,12 @@ class PanelController:
                              f'panel=auto or panel=stop but received '
                              f'panel={direction} instead.')
 
-    def emergency_message(self) -> str:
-        """
-        :return: Emergency message if there is one, None otherwise.
-        """
-        return self.panel_mover.emergency
-
     def get_angle(self):
         # todo some sampling...
         try:
             return self.panel.get_potmeter_value()
         except ValueError as e:
-            self.panel_mover.set_emergency(str(e))
+            self.emergency.set(str(e))
             raise e
 
     def up(self) -> bool:
@@ -78,14 +76,22 @@ class PanelController:
         self.panel.stop()
 
     def enable_auto_mode(self):
-        raise NotImplementedError
+        """
+        Will not do anything if already started.
+        """
+        if self.auto_mode_thread is None:
+            self.auto_mode_thread = AutoMode(self.emergency, self.go_to_angle)
+            self.auto_mode_thread.start()
 
     def disable_auto_mode(self):
-        raise NotImplementedError
+        if self.auto_mode_thread is not None:
+            self.auto_mode_thread.stop()
+            self.auto_mode_thread.join()
 
     def go_to_angle(self, angle: int):
         """ Start a new thread which will move the panels. """
         if self.go_to_angle_thread is not None:
             self.go_to_angle_thread.stop()
+            self.go_to_angle_thread.join()
         self.go_to_angle_thread = GoToAngleThread(angle, self)
         self.go_to_angle_thread.start()
