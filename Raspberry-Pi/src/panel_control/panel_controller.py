@@ -1,4 +1,6 @@
-from src.auto_mode import AutoMode
+from statistics import mean
+
+from src.auto_mode_thread import AutoModeThread
 from src.emergency import Emergency
 from src.panel_control.go_to_angle import GoToAngleThread
 from src.panel_control.panel_mover import PanelMover
@@ -13,7 +15,7 @@ class PanelController:
 
     panel = SolarPanel()
     go_to_angle_thread: GoToAngleThread = None
-    auto_mode_thread: AutoMode = None
+    auto_mode_thread: AutoModeThread = None
 
     def __init__(self):
         """ For safety, stop panels and disable auto mode. """
@@ -54,9 +56,18 @@ class PanelController:
                              f'panel={direction} instead.')
 
     def get_angle(self):
-        # todo some sampling...
+        """
+        Get the current angle of the solar panels, where 0 is flat and 90
+        upright.
+        """
+        nr_samples = 500
         try:
-            return self.panel.get_potmeter_value()
+            sample_mean = mean([self.panel.get_potmeter_value()
+                                for _ in range(nr_samples)])
+            fraction = (sample_mean - self.panel.lower_bound) / \
+                       (self.panel.upper_bound - self.panel.lower_bound)
+            return fraction * (self.panel.max_angle - self.panel.min_angle) \
+                + self.panel.min_angle
         except ValueError as e:
             self.emergency.set(str(e))
             raise e
@@ -86,7 +97,7 @@ class PanelController:
         Will not do anything if already started.
         """
         if self.auto_mode_thread is None:
-            self.auto_mode_thread = AutoMode(self.emergency, self.go_to_angle)
+            self.auto_mode_thread = AutoModeThread(self.emergency, self.go_to_angle)
             self.auto_mode_thread.start()
 
     def disable_auto_mode(self):

@@ -12,6 +12,7 @@ class GoToAngleThread(StoppableThread):
 
     def __init__(self, angle: int, panel_controller: PanelController):
         super(GoToAngleThread, self).__init__()
+        self.daemon = True
         self.target_angle = angle
         self.panel_controller = panel_controller
 

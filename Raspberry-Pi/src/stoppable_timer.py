@@ -16,6 +16,7 @@ class StoppableTimer(StoppableThread):
         :param action: A function to execute after the timeout
         """
         super(StoppableTimer, self).__init__()
+        self.daemon = True
         self.timeout = timeout
         self.action = action
 

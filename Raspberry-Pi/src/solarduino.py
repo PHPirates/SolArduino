@@ -1,3 +1,4 @@
+from contextlib import redirect_stderr
 from http.server import HTTPServer
 
 from src.daemonizer import Daemonizer
@@ -9,5 +10,5 @@ if __name__ == '__main__':
     Daemonizer().start()
 
     # Start webserver
-    # todo some exception handling
-    HTTPServer((hostName, hostPort), Webserver).serve_forever()
+    with open('solarduino.err.log', 'w') as stderr, redirect_stderr(stderr):
+        HTTPServer((hostName, hostPort), Webserver).serve_forever()

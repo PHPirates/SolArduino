@@ -1,4 +1,3 @@
-import types
 from datetime import date
 from datetime import datetime
 from typing import Callable
@@ -8,7 +7,7 @@ from src.get_optimal_angles import OptimalAnglesCalculator
 from src.stoppable_thread import StoppableThread
 
 
-class AutoMode(StoppableThread):
+class AutoModeThread(StoppableThread):
     """
     This class, when started as a new thread, enables the system to run in
     auto mode.
@@ -28,7 +27,8 @@ class AutoMode(StoppableThread):
         """
         :param go_to_angle_function: What function to use to move the panels.
         """
-        super(AutoMode, self).__init__()
+        super(AutoModeThread, self).__init__()
+        self.daemon = True
         self.emergency = emergency
         self.go_to_angle_function = go_to_angle_function
 
@@ -37,7 +37,7 @@ class AutoMode(StoppableThread):
 
             not_initialised = len(self.times_and_angles) == 0
             out_of_angles = self.latest_time_index + 1 >= \
-                            len(self.times_and_angles)
+                len(self.times_and_angles)
             day_changed = date.today() != self.day_state
 
             # Retrieve new angles when necessary
@@ -52,17 +52,25 @@ class AutoMode(StoppableThread):
                 return
 
             # Now we will assume the index is safe to work with
-            while self.latest_time_index + 1 < len(self.times_and_angles) and \
-                    self.times_and_angles[self.latest_time_index + 1][0] \
+            new_index = self.latest_time_index
+            while new_index + 1 < len(self.times_and_angles) and \
+                    self.times_and_angles[new_index + 1][0] \
                     < datetime.now():
-                self.latest_time_index += 1
+                new_index += 1
 
-            # If not at the end, move panels (otherwise request new angles
-            # in next loop)
-            if self.latest_time_index + 1 < len(self.times_and_angles):
-                angle = self.times_and_angles[self.latest_time_index][1]
-                self.go_to_angle_function(angle)
+            # If we need to advance to a next time and angle
+            if new_index != self.latest_time_index:
+                self.latest_time_index = new_index
+                # If not at the end, move panels (otherwise request new angles
+                # in next loop)
+                if self.latest_time_index + 1 < len(self.times_and_angles):
+                    angle = self.times_and_angles[self.latest_time_index][1]
+                    self.go_to_angle_function(angle)
 
-
-            # todo if time has progressed past a time, set panels
-            # todo error handling
+            # Sanity check
+            if self.times_and_angles[self.latest_time_index][0] > \
+                    datetime.now() \
+                    or self.times_and_angles[self.latest_time_index + 1] \
+                    < datetime.now():
+                self.emergency.set('Could not find a target angle in auto mode'
+                                   )
