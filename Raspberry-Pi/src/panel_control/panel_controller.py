@@ -68,11 +68,17 @@ class PanelController:
         return self.panel_mover.down()
 
     def stop(self):
+        """
+        Will cancel any movement and disable auto mode.
+        """
+        self.panel.stop()
         self.panel_mover.timer.stop()
         # Make sure to wait for the thread to stop, to ensure it doesn't
         # sneakily move something between us asking to stop and it stopping
         self.go_to_angle_thread.stop()
         self.go_to_angle_thread.join()
+        self.auto_mode_thread.stop()
+        self.auto_mode_thread.join()
         self.panel.stop()
 
     def enable_auto_mode(self):

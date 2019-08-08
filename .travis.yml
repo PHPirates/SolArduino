@@ -4,9 +4,6 @@ jobs:
       # config from https://docs.haskellstack.org/en/stable/travis_ci/#running-tests
       # haddock coverage is also shown in the build log
 
-      # Use new container infrastructure to enable caching
-      sudo: false
-
       # Do not choose a language; we provide our own build tools.
       language: generic
 
@@ -22,7 +19,7 @@ jobs:
             - libgmp-dev
 
       before_install:
-      - cd ./SolArduino-core/haskell/solarduino-haskell
+      - cd ./Calculations/haskell/solarduino-haskell
       # Download and unpack the stack executable
       - mkdir -p ~/.local/bin
       - export PATH=$HOME/.local/bin:$PATH
@@ -68,7 +65,7 @@ jobs:
         directories:
           - $HOME/miniconda
       script: # Change working directory each time so including files will work. Change back so the pdfs can be found for deployment. This way, building multiple files goes well.
-       - cd ./documentation/src/
+       - cd ./Documentation/src/
        - tectonic ./documentation.tex --print
        - cd ../../
       deploy:
@@ -92,5 +89,5 @@ jobs:
         - pip install flake8
 
       script:
-        - cd SolArduino-Pi
+        - cd Raspberry-Pi
         - flake8 .
