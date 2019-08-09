@@ -97,7 +97,8 @@ class PanelController:
         Will not do anything if already started.
         """
         if self.auto_mode_thread is None:
-            self.auto_mode_thread = AutoModeThread(self.emergency, self.go_to_angle)
+            self.auto_mode_thread = AutoModeThread(self.emergency,
+                                                   self.go_to_angle)
             self.auto_mode_thread.start()
 
     def disable_auto_mode(self):

@@ -52,7 +52,8 @@ class Webserver(BaseHTTPRequestHandler):
 
         if 'panel' in url_params.keys():
             try:
-                message = self.panel_controller.move_panels(url_params['panel'])
+                message = self.panel_controller.move_panels(
+                    url_params['panel'])
                 self.append_content(message)
             except ValueError as e:
                 self.append_content(str(e))
