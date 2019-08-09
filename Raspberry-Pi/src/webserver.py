@@ -31,9 +31,12 @@ class Webserver(BaseHTTPRequestHandler):
         if emergency.is_set:
             self.append_content(f'Emergency: {emergency.message}')
         else:
-            # todo exception handling
-            url_params = urllib.parse.parse_qs(self.path[2:])
-            self.parse_params(url_params)
+            try:
+                url_params = urllib.parse.parse_qs(self.path[2:])
+                self.parse_params(url_params)
+            except Exception as e:
+                emergency.set(str(e))
+                self.append_content(str(e))
 
         self.append_content('</body></html>')
 
