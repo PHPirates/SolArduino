@@ -19,10 +19,10 @@ class PanelController:
 
     def __init__(self):
         """ For safety, stop panels and disable auto mode. """
-        self.stop()
-        self.disable_auto_mode()
         self.emergency = Emergency(self.stop)
         self.panel_mover = PanelMover(self.panel, self.emergency)
+        self.stop()
+        self.disable_auto_mode()
 
     def move_panels(self, direction: list) -> str:
         """
@@ -86,10 +86,13 @@ class PanelController:
         self.panel_mover.timer.stop()
         # Make sure to wait for the thread to stop, to ensure it doesn't
         # sneakily move something between us asking to stop and it stopping
-        self.go_to_angle_thread.stop()
-        self.go_to_angle_thread.join()
-        self.auto_mode_thread.stop()
-        self.auto_mode_thread.join()
+        if self.go_to_angle_thread is not None:
+            self.go_to_angle_thread.stop()
+            self.go_to_angle_thread.join()
+        if self.auto_mode_thread is not None:
+            self.auto_mode_thread.stop()
+            self.auto_mode_thread.join()
+
         self.panel.stop()
 
     def enable_auto_mode(self):

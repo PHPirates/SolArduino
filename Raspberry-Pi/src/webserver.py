@@ -1,10 +1,10 @@
 import urllib.parse
+import traceback
 from http.server import BaseHTTPRequestHandler
 
 from src.panel_control.panel_controller import PanelController
 
-# hostName = '192.168.8.42'
-hostName = 'localhost'
+hostName = '192.168.8.42'
 hostPort = 8080
 
 
@@ -35,14 +35,15 @@ class Webserver(BaseHTTPRequestHandler):
                 url_params = urllib.parse.parse_qs(self.path[2:])
                 self.parse_params(url_params)
             except Exception as e:
-                emergency.set(str(e))
-                self.append_content(str(e))
+                emergency.set(traceback.format_exc())
+                self.append_content(f'Emergency: {traceback.format_exc()}')
 
         self.append_content('</body></html>')
 
     def parse_params(self, url_params):
         # todo always return angle and auto/manual
-        self.append_content(self.panel_controller.get_angle() + ' manual/auto')
+        self.append_content(str(self.panel_controller.get_angle()) +
+                            ' manual/auto ')
         # todo return something easy to parse for client
 
         # No parameters given.

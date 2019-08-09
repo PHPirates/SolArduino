@@ -1,4 +1,3 @@
-from src.panel_control.panel_controller import PanelController
 from src.stoppable_thread import StoppableThread
 
 
@@ -10,7 +9,7 @@ class GoToAngleThread(StoppableThread):
     # How close to try to get to the target
     accuracy = 0.1  # degrees
 
-    def __init__(self, angle: int, panel_controller: PanelController):
+    def __init__(self, angle: int, panel_controller):
         super(GoToAngleThread, self).__init__()
         self.daemon = True
         self.target_angle = angle
