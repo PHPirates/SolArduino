@@ -89,10 +89,8 @@ class PanelController:
         if self.go_to_angle_thread is not None:
             self.go_to_angle_thread.stop()
             self.go_to_angle_thread.join()
-        if self.auto_mode_thread is not None:
-            self.auto_mode_thread.stop()
-            self.auto_mode_thread.join()
 
+        self.disable_auto_mode()
         self.panel.stop()
 
     def enable_auto_mode(self):
@@ -109,7 +107,7 @@ class PanelController:
             self.auto_mode_thread.stop()
             self.auto_mode_thread.join()
 
-    def go_to_angle(self, angle: int):
+    def go_to_angle(self, angle: float):
         """ Start a new thread which will move the panels. """
         if self.go_to_angle_thread is not None:
             self.go_to_angle_thread.stop()

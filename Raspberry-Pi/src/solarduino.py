@@ -7,7 +7,8 @@ from src.webserver import Webserver, hostPort, hostName
 if __name__ == '__main__':
     """ Start SolArduino. """
     # Run in the background
-    Daemonizer().start()
+    # todo webserver doesn't work in background?
+    # Daemonizer().start()
 
     # Start webserver
     with open('solarduino.err.log', 'w') as stderr, redirect_stderr(stderr):

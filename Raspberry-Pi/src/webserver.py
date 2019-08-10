@@ -31,10 +31,11 @@ class Webserver(BaseHTTPRequestHandler):
         if emergency.is_set:
             self.append_content(f'Emergency: {emergency.message}')
         else:
+            # noinspection PyBroadException
             try:
                 url_params = urllib.parse.parse_qs(self.path[2:])
                 self.parse_params(url_params)
-            except Exception as e:
+            except Exception:
                 emergency.set(traceback.format_exc())
                 self.append_content(f'Emergency: {traceback.format_exc()}')
 
@@ -64,5 +65,7 @@ class Webserver(BaseHTTPRequestHandler):
                 return
 
         if 'degrees' in url_params.keys():
-            self.append_content('Not implemented yet')
+            angle = float(url_params['degrees'][0])
+            self.panel_controller.go_to_angle(angle)
+            self.append_content(f'Going to {angle} degrees')
             # todo make sure to handle multiple params properly
