@@ -16,7 +16,7 @@ class PanelMover:
     cannot_go_down = False
 
     # Stop moving automatically after timeout
-    movement_timeout = 4  # seconds
+    movement_timeout = 10  # seconds
 
     def __init__(self, panel: SolarPanel, emergency: Emergency):
         """
