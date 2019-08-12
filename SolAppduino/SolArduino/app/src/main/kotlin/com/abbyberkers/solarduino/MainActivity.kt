@@ -3,10 +3,7 @@ package com.abbyberkers.solarduino
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
-import com.abbyberkers.solarduino.ui.AutoModeCheckBox
-import com.abbyberkers.solarduino.ui.ChangeAngleButton
-import com.abbyberkers.solarduino.ui.SelectAngleBar
-import com.abbyberkers.solarduino.ui.SolarPanelImage
+import com.abbyberkers.solarduino.ui.*
 
 class MainActivity2 : AppCompatActivity() {
 
@@ -31,9 +28,12 @@ class MainActivity2 : AppCompatActivity() {
         SelectAngleBar(findViewById(R.id.seekBar)).initialise(frameLayout, changeAngleButton, defaultMinAngle, defaultMaxAngle)
         AutoModeCheckBox(findViewById(R.id.autoBox)).initialise(httpClient)
         SolarPanelImage(findViewById(R.id.linePanel)).initialise()
+        MoveUpButton(findViewById(R.id.upButton)).initialise(httpClient)
+        MoveDownButton(findViewById(R.id.downButton)).initialise(httpClient)
+        //SetAnglebutton(
 
-        HttpClient().requestMinMaxAngle()
-        HttpClient().requestUpdate()
+        httpClient.requestMinMaxAngle()
+        httpClient.requestUpdate()
     }
 
 }

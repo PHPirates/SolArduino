@@ -13,8 +13,10 @@ class HttpClient {
 
     fun disableAutoMode() {}
 
-    fun moveUp() {}
+    fun movePanelsUp() {}
 
-    fun moveDown() {}
+    fun movePanelsDown() {}
+
+    fun stopPanels() {}
 
 }

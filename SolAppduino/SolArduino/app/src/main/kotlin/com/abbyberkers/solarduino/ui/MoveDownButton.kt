@@ -2,12 +2,12 @@ package com.abbyberkers.solarduino.ui
 
 import com.abbyberkers.solarduino.HttpClient
 
-class MoveUpButton(private val upButton: AccessibilityImageButton) {
+class MoveDownButton(private val downButton: AccessibilityImageButton) {
 
     fun initialise(httpClient: HttpClient) {
         // When touched, start moving panels.
-        upButton.downAction = { httpClient.movePanelsUp() }
+        downButton.downAction = { httpClient.movePanelsDown() }
         // When released, stop them.
-        upButton.upAction = { httpClient.stopPanels() }
+        downButton.upAction = { httpClient.stopPanels() }
     }
 }

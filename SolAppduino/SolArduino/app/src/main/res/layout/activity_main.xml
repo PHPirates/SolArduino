@@ -22,7 +22,7 @@
                 android:layout_weight="1">
 
                 <TableRow>
-                    <ImageButton
+                    <com.abbyberkers.solarduino.ui.AccessibilityImageButton
                         android:id="@+id/upButton"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -37,7 +37,7 @@
 
                 </TableRow>
                 <TableRow>
-                    <ImageButton
+                    <com.abbyberkers.solarduino.ui.AccessibilityImageButton
                         android:id="@+id/downButton"
                         android:layout_width="0dp"
                         android:layout_weight="1"
