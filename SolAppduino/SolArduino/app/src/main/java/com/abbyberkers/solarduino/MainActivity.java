@@ -118,6 +118,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         downButton = findViewById(R.id.downButton);
         setAngle = findViewById(R.id.setAngle);
 
+        autoBox.setOnClickListener(new CompoundButton.OnClickListener() {
+                                       @Override
+                                       public void onClick(View v) {
+
+                                       }
+                                   });
+
         autoBox = findViewById(R.id.autoBox);
         //clicklistener instead of OnCheckedChange won't register sliding a switch
         //but this way when toggling the button from somewhere else the clicklistener isn't called
@@ -244,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         view.performClick();
                         break;
 
-                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_UP:8
 //                        textView.setText("Down button released.");
                         downButton.setPressed(false); // set pressed state false to change colour to default
                         downTimer.cancel(); // stop the update request being sent

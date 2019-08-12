@@ -1,19 +1,22 @@
-package com.abbyberkers.solarduino
+package com.abbyberkers.solarduino.ui
 
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.SeekBar
 
 /**
  * A seekbar (slider) to select an angle to which the panels should go.
  */
-class SelectAngleBar(val seekbar: SeekBar) {
+class SelectAngleBar(private val seekbar: SeekBar) {
 
-    val panelsMinAngle = 5 // todo magic minAngle
 
-    fun initialise(frameLayout: FrameLayout, changeAngleButton: Button) {
+    fun initialise(frameLayout: FrameLayout,
+                   changeAngleButton: ChangeAngleButton,
+                   defaultMinAngle: Int,
+                   defaultMaxAngle: Int) {
         setHeight(frameLayout)
         setOnChangeListener(changeAngleButton)
+        seekbar.min = defaultMinAngle
+        seekbar.max = defaultMaxAngle
     }
 
     /**
@@ -30,20 +33,15 @@ class SelectAngleBar(val seekbar: SeekBar) {
     /**
      * When the user changes the value, the button text will be updated.
      */
-    private fun setOnChangeListener(changeAngleButton: Button) {
+    private fun setOnChangeListener(changeAngleButton: ChangeAngleButton) {
         seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, initiatedByUser: Boolean) {
                 // Change button text when the progress of the seekbar is changing ("live")
-                // todo if anywhere, this should be located in the ChangeAngleButton class
-                val angleText = "Set angle at " + getAngle() + " \u00b0"
-                changeAngleButton.text = angleText
-
+                changeAngleButton.setText(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
     }
-
-    fun getAngle() = seekbar.progress + panelsMinAngle
 }
