@@ -64,9 +64,10 @@ class PanelController:
         try:
             sample_mean = mean([self.panel.get_potmeter_value()
                                 for _ in range(nr_samples)])
-            # By calculating this way, we linearly project the expected angle even when the potmeter value is out of known bounds
-            degrees_per_value = (self.panel.max_angle - self.panel.min_angle) / (self.panel.upper_bound - self.panel.lower_bound)
-            angle = (sample_mean - self.panel.lower_bound) * degrees_per_value + self.panel.min_angle
+            # By calculating this way, we linearly project the expected angle
+            # even when the potmeter value is out of known bounds
+            degrees_per_value = (self.panel.max_angle - self.panel.min_angle) / (self.panel.upper_bound - self.panel.lower_bound)  # noqa
+            angle = (sample_mean - self.panel.lower_bound) * degrees_per_value + self.panel.min_angle  # noqa
 
             return angle
         except ValueError as e:
