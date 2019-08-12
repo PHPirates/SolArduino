@@ -32,7 +32,6 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/up_button"
                         android:background="#00000000"
-                        android:onClick="unCheck"
                         android:contentDescription="@string/upbuttondescription" />
 
                 </TableRow>
@@ -47,7 +46,6 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/down_button"
                         android:background="#00000000"
-                        android:onClick="unCheck"
                         android:contentDescription="@string/downbuttondescription" />
                 </TableRow>
 
@@ -109,8 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/frame"
-        android:text="@string/setanglebutton"
-        android:onClick="unCheck"/>
+        android:text="@string/setanglebutton"/>
 
     </RelativeLayout>
 </ScrollView>

@@ -37,7 +37,7 @@ class SelectAngleBar(private val seekbar: SeekBar) {
         seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, initiatedByUser: Boolean) {
                 // Change button text when the progress of the seekbar is changing ("live")
-                changeAngleButton.setText(progress)
+                changeAngleButton.angle = progress
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}

@@ -1,13 +1,14 @@
 package com.abbyberkers.solarduino.ui
 
 import android.content.Context
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.ImageButton
 
 /**
  * A class with custom touch events, which takes a certain Android accessibility warning into account.
  */
-class AccessibilityImageButton(context: Context) : ImageButton(context) {
+class AccessibilityImageButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageButton(context, attrs) {
 
     var upAction: () -> Unit = {}
     var downAction: () -> Unit = {}

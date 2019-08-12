@@ -2,14 +2,17 @@ package com.abbyberkers.solarduino
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.FrameLayout
 import com.abbyberkers.solarduino.ui.*
 
-class MainActivity2 : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
+
+    val httpClient = HttpClient()
 
     override fun onResume() {
         super.onResume()
-        HttpClient().requestUpdate()
+        httpClient.requestUpdate()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,21 +22,28 @@ class MainActivity2 : AppCompatActivity() {
         val defaultMinAngle = 6
         val defaultMaxAngle = 56
 
-        val httpClient = HttpClient()
-
         val frameLayout: FrameLayout = findViewById(R.id.frame)
-        val changeAngleButton = ChangeAngleButton(findViewById(R.id.setAngle))
 
         // Init components
-        SelectAngleBar(findViewById(R.id.seekBar)).initialise(frameLayout, changeAngleButton, defaultMinAngle, defaultMaxAngle)
+        val changeAngleButton = ChangeAngleButton(findViewById(R.id.setAngle), resources, httpClient)
+        changeAngleButton.initialise()
         AutoModeCheckBox(findViewById(R.id.autoBox)).initialise(httpClient)
         SolarPanelImage(findViewById(R.id.linePanel)).initialise()
         MoveUpButton(findViewById(R.id.upButton)).initialise(httpClient)
         MoveDownButton(findViewById(R.id.downButton)).initialise(httpClient)
-        //SetAnglebutton(
+        SelectAngleBar(findViewById(R.id.seekBar)).initialise(frameLayout, changeAngleButton, defaultMinAngle, defaultMaxAngle)
 
         httpClient.requestMinMaxAngle()
         httpClient.requestUpdate()
     }
 
+    /**
+     * Triggered by pressing/tapping the currentAngle TextView.
+     * Updates the current angle.
+     *
+     * @param view currentAngle TextView
+     */
+    fun sendUpdateRequest(view: View) {
+        httpClient.requestUpdate()
+    }
 }
