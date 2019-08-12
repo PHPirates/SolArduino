@@ -18,14 +18,25 @@ class SolarPanel:
     direction = LED(19)
     power_up = LED(13)
 
-    # Potmeter soft end stops, upper bound should be higher than lower bound
-    upper_bound = 999
-    lower_bound = 620
-
     # Keep some safe distance from the real end stops
     soft_bound_angle = 1
-    max_angle = 57 - soft_bound_angle
-    min_angle = 5 + soft_bound_angle
+    hard_max_angle = 57
+    hard_min_angle = 5
+    max_angle = hard_max_angle - soft_bound_angle
+    min_angle = hard_min_angle + soft_bound_angle
+
+    # Potmeter end stops, upper bound should be higher than lower bound,
+    # so that's why we take 1023 - x
+    # The hard bounds are the ones on which the panels will hit the
+    # real end stop
+    hard_upper_bound = 1023 - 57
+    hard_lower_bound = 1023 - 415
+    # The soft bounds are the bounds at which the software will stop
+    # to avoid hitting the hard bounds
+    soft_bound_value = (hard_upper_bound - hard_lower_bound) / \
+                       (hard_max_angle - hard_min_angle)
+    upper_bound = hard_upper_bound - soft_bound_value
+    lower_bound = hard_lower_bound + soft_bound_value
 
     def move_up(self):
         self.power_down.off()

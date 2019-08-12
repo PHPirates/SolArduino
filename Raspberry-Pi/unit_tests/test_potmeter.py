@@ -1,5 +1,5 @@
 import spidev  # To communicate with SPI devices
-from numpy import interp  # To scale values
+# from numpy import interp  # To scale values
 from time import sleep  # To add delay
 
 # Start SPI connection
@@ -21,4 +21,4 @@ while True:
     output = analog_input(0)  # Reading from CH0
     # output = interp(output, [0, 1023], [0, 100])
     print(output)
-    sleep(0.1)
+    sleep(2)
