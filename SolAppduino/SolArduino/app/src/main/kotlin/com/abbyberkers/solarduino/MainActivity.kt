@@ -8,7 +8,7 @@ import com.abbyberkers.solarduino.ui.*
 
 class MainActivity : AppCompatActivity() {
 
-    val httpClient = HttpClient()
+    val httpClient = PanelRequestSender()
 
     override fun onResume() {
         super.onResume()

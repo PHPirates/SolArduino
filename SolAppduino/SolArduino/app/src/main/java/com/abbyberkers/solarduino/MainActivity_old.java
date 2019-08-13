@@ -393,7 +393,7 @@
 //     * Starts a http request
 //     */
 //    public void startHttpRequest() {
-//        final DataSender requestSender = new RequestSender();
+//        final DataSender requestSender = new PanelRequestSender();
 //        requestSender.execute(urlString);
 //        startHandler(requestSender);
 //    }
@@ -414,7 +414,7 @@
 //    /**
 //     * Starts handler to handle a dataSender and kill it after x seconds
 //     *
-//     * @param dataSender DataSender object, for example PingSender or RequestSender
+//     * @param dataSender DataSender object, for example PingSender or PanelRequestSender
 //     */
 //    public void startHandler(final DataSender dataSender) {
 //        //start a new handler that will cancel the AsyncTask after x seconds
@@ -486,7 +486,7 @@
 //    }
 //
 //    /**
-//     * Both PingSender and RequestSender extend this task, to allow the handler
+//     * Both PingSender and PanelRequestSender extend this task, to allow the handler
 //     * code to be put in a method and take a DataSender as parameter to include
 //     * both types of data senders.
 //     */
@@ -530,7 +530,7 @@
 //        protected void onPostExecute(String result) { //needs to be a string to extend DataSender
 //            if (reachable) {
 //                super.onPostExecute(result);
-//                new RequestSender().execute(urlString);
+//                new PanelRequestSender().execute(urlString);
 //            } else {
 //                if (unreachableToast != null) {
 //                    unreachableToast.setText("Arduino could not be reached.");
@@ -546,7 +546,7 @@
 //    /**
 //     * http requests happen here in a seperate thread
 //     */
-//    private class RequestSender extends DataSender {
+//    private class PanelRequestSender extends DataSender {
 //
 //        @Override
 //        protected String doInBackground(String... url) {

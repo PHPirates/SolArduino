@@ -2,7 +2,7 @@ package com.abbyberkers.solarduino.ui
 
 import android.content.res.Resources
 import android.widget.Button
-import com.abbyberkers.solarduino.HttpClient
+import com.abbyberkers.solarduino.PanelRequestSender
 import com.abbyberkers.solarduino.R
 
 /**
@@ -10,7 +10,7 @@ import com.abbyberkers.solarduino.R
  */
 class ChangeAngleButton(private val button: Button,
                         private val resources: Resources,
-                        private val httpClient: HttpClient
+                        private val panelRequestSender: PanelRequestSender
 ) {
 
     var angle = 42
@@ -21,7 +21,7 @@ class ChangeAngleButton(private val button: Button,
 
     fun initialise() {
         button.setOnClickListener {
-            httpClient.movePanelsToAngle(angle)
+            panelRequestSender.movePanelsToAngle(angle)
         }
     }
 
