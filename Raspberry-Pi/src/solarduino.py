@@ -2,7 +2,7 @@ from contextlib import redirect_stderr
 from http.server import HTTPServer
 
 # from src.daemonizer import Daemonizer
-from src.webserver import Webserver, hostPort, hostName
+from src.webserver.webserver import Webserver, hostPort, hostName
 
 if __name__ == '__main__':
     """ Start SolArduino. """

@@ -1,4 +1,4 @@
-from src.stoppable_thread import StoppableThread
+from util.stoppable_thread import StoppableThread
 
 
 class GoToAngleThread(StoppableThread):

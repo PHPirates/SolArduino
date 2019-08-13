@@ -1,6 +1,6 @@
 import time
 
-from src.stoppable_timer import StoppableTimer
+from util.stoppable_timer import StoppableTimer
 
 
 def action():

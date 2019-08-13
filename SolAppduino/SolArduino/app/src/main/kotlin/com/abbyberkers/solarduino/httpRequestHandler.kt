@@ -22,7 +22,7 @@ class httpRequestHandler {
                 }
             }
             client.get<String>("http://192.168.8.42:8080/").apply {
-                Log.v("?", this)
+                Log.i("?", this)
             }
             client.close()
         }

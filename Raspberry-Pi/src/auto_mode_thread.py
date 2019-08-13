@@ -4,7 +4,7 @@ from typing import Callable
 
 from src.emergency import Emergency
 from src.get_optimal_angles import OptimalAnglesCalculator
-from src.stoppable_thread import StoppableThread
+from util.stoppable_thread import StoppableThread
 
 
 class AutoModeThread(StoppableThread):

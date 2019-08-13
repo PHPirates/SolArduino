@@ -1,8 +1,11 @@
+import dataclasses
+import json
 import urllib.parse
 import traceback
 from http.server import BaseHTTPRequestHandler
 
 from src.panel_control.panel_controller import PanelController
+from webserver.http_response import HttpResponse
 
 hostName = '192.168.8.42'
 hostPort = 8080
@@ -43,17 +46,18 @@ class Webserver(BaseHTTPRequestHandler):
 
     def parse_params(self, url_params):
         # todo always return angle and auto/manual
-        self.append_content(str(self.panel_controller.get_angle()) +
-                            ' manual/auto ')
+        # self.append_content(str(self.panel_controller.get_angle()) +
+        #                     ' manual/auto ')
         # todo return something easy to parse for client
 
         # No parameters given.
         if not url_params.keys():
-            self.append_content('No parameters were found in the request. '
-                                'Available parameters: '
-                                'panel=[up/down/auto/stop], '
-                                'update=[true/false], '
-                                'degrees=[number]')
+            message = 'No parameters were found in the request. Available parameters: panel=[up/down/auto/stop], update=[true/false], degrees=[number]'  # noqa
+            response = HttpResponse(emergency=False,
+                                    angle=self.panel_controller.get_angle(),
+                                    mode='manual',
+                                    message=message)
+            self.append_content(json.dumps(dataclasses.asdict(response)))
 
         if 'panel' in url_params.keys():
             try:
