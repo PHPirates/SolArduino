@@ -17,6 +17,7 @@ class HttpRequestHandler {
      * Send a http request with the given parameters, in the form of ?key1=value1&key2=value2
      */
     fun sendRequest(parameters: String = "") {
+        // Send http requests in a coroutine
         CoroutineScope(Dispatchers.IO).launch {
             val client = HttpClient(Android) {
                 install(JsonFeature) {
