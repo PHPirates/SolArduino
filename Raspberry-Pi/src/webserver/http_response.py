@@ -5,6 +5,6 @@ from dataclasses import dataclass
 class HttpResponse:
     """ Represents a webserver response. """
     emergency: bool
-    angle: int
+    angle: float
     mode: str
     message: str

@@ -2,13 +2,14 @@ package com.abbyberkers.solarduino
 
 /**
  * todo In case any action is done which is manual control, uncheck auto checkbox
+ * todo option to enable logging to see all http requests and responses
  */
 class PanelRequestSender {
 
-    val handler = httpRequestHandler()
+    val handler = HttpRequestHandler()
 
     fun requestUpdate() {
-        handler.sendRequest("")
+        handler.sendRequest()
     }
 
     /**

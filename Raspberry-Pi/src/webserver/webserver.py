@@ -27,8 +27,8 @@ class Webserver(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
-        preamble = '<html><head><title>SolArduino Pi</title></head><body>'
-        self.append_content(preamble)
+        # preamble = '<html><head><title>SolArduino Pi</title></head><body>'
+        # self.append_content(preamble)
 
         emergency = self.panel_controller.emergency
         if emergency.is_set:
@@ -42,7 +42,7 @@ class Webserver(BaseHTTPRequestHandler):
                 emergency.set(traceback.format_exc())
                 self.append_content(f'Emergency: {traceback.format_exc()}')
 
-        self.append_content('</body></html>')
+        # self.append_content('</body></html>')
 
     def parse_params(self, url_params):
         # todo always return angle and auto/manual
