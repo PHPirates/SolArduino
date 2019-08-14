@@ -17,7 +17,6 @@ out/
 
 # Gradle files
 .idea/gradle.xml
-build.gradle
 .idea/gradle.xml
 .gradle/
 build/
