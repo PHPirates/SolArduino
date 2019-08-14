@@ -1,113 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="4dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.abbyberkers.solarduino.MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
 
-        <TableRow
-            android:id="@+id/table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TableLayout
-                android:layout_width="0dp"
-                android:layout_weight="1">
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_gravity="bottom"
+        app:backgroundTint="#DBDBDB"
+        app:buttonGravity="bottom|top"
+        app:fabAlignmentMode="center"
+        app:hideOnScroll="true"
+        app:layout_scrollFlags="scroll|enterAlways">
 
-                <TableRow>
-                    <com.abbyberkers.solarduino.ui.AccessibilityImageButton
-                        android:id="@+id/upButton"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/up_button"
-                        android:background="#00000000"
-                        android:contentDescription="@string/upbuttondescription" />
-
-                </TableRow>
-                <TableRow>
-                    <com.abbyberkers.solarduino.ui.AccessibilityImageButton
-                        android:id="@+id/downButton"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/down_button"
-                        android:background="#00000000"
-                        android:contentDescription="@string/downbuttondescription" />
-                </TableRow>
-
-            </TableLayout>
-
-            <TableLayout
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:orientation="vertical">
-                <TableRow>
-                    <TextView
-                        android:id="@+id/currentAngle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="80sp"
-                        android:text="@string/initialdegrees"
-                        android:textColor="@drawable/text_selector"
-                        android:onClick="sendUpdateRequest"/>
-                </TableRow>
-                <TableRow
-                    android:gravity="center">
-                    <CheckBox
-                        android:id="@+id/autoBox"
-                        android:layout_width="wrap_content"
-                        android:text="@string/auto"/>
-
-                </TableRow>
-            </TableLayout>
-        </TableRow>
         <FrameLayout
-            android:id="@+id/frame"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_below="@+id/table"
-            android:orientation="horizontal">
-            <SeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="bottom">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="52"
-                android:translationX="-100dp"
-                android:translationY="125dp"
-                android:rotation="270"/>
-            <ImageView
-                android:id="@+id/linePanel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:scaleType="fitXY"
-                android:src="@drawable/panel"
-                android:contentDescription="@string/imagepaneldescription" />
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:clickable="false"
+                app:menu="@menu/menu"/>
+
         </FrameLayout>
+    </com.google.android.material.bottomappbar.BottomAppBar>
 
-    <Button
-        android:id="@+id/setAngle"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/random_quote_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/frame"
-        android:text="@string/setanglebutton"/>
-
-    </RelativeLayout>
-</ScrollView>
+        android:src="@drawable/down_button"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="normal"
+        app:layout_anchor="@id/bottom_app_bar" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
