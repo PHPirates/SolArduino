@@ -1,7 +1,7 @@
 import time
 import types
 
-from src.stoppable_thread import StoppableThread
+from util.stoppable_thread import StoppableThread
 
 
 class StoppableTimer(StoppableThread):

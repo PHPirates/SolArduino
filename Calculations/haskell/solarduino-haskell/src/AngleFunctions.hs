@@ -107,7 +107,7 @@ writeBestAnglesToFile :: FilePath -- ^ File to write the result to
                    -> Int -- ^ Number of times to adjust the solar panels per day
                    -> IO() -- ^ The file will contain a list of pairs, each pair consisting of a angle and Unix time (seconds). For each pair, the panels should be set at the angle at that time.
 writeBestAnglesToFile filePath startDate endDate nrSunPos nrAdjustments =
-    appendFile filePath (intercalate "\n" anglesStringList)
+    appendFile filePath ((intercalate "\n" anglesStringList) ++ "\n")
     where angles = bestAnglesMoreDays startDate endDate nrSunPos nrAdjustments
           tupleToString tuple = show (fst tuple) ++ " " ++ init (show $ julianDateToUnixTime $ snd tuple) -- Take init to remove the 's' at the end
           anglesStringList = map tupleToString angles

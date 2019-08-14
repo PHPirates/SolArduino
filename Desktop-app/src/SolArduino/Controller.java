@@ -166,50 +166,68 @@ public class Controller implements Initializable {
         });
         
         try {
-            // read the times.csv and angles.csv files
-            // times.csv contains the UNIX times in seconds (since January 1,
-            // 00:00:00:00)
-            
-            InputStream timesIS = getClass()
-                    .getResourceAsStream(timesFileString);
-            InputStream anglesIS = getClass()
-                    .getResourceAsStream(anglesFileString);
-            
-            InputStreamReader timesISReader = new InputStreamReader(timesIS);
-            InputStreamReader anglesISReader = new InputStreamReader(anglesIS);
-            
-            BufferedReader timesReader = new BufferedReader(
-                    timesISReader); // BufferedReader to read times file
-            BufferedReader anglesReader = new BufferedReader(
-                    anglesISReader); // BufferedReader to read angles file
-            
-            String timeLine; // line with the times
-            while ((timeLine = timesReader.readLine()) != null) {
-                // runs only once, since times.csv consists of only one line
-                String[] timesString = timeLine
-                        .split(separator); // split the times at the commas
-                data = new long[timesString.length][2]; // create data[][]
-                // based on the number of times/angles
-                for (int i = 0; i < timesString.length; i++) {
-                    data[i][0] = Long.valueOf(
-                            timesString[i]); // fill data[][] with the times
-                }
-                
-                // we can safely read the angles file here, since this only
-                // runs once
-                String angleLine; // line with the angles
-                while ((angleLine = anglesReader.readLine()) != null) {
-                    String[] anglesString = angleLine
-                            .split(separator); // split angles at the commas
-                    for (int i = 0; i < timesString.length; i++) {
-                        data[i][1] = Long.valueOf(
-                                anglesString[i]); // fill data[][] with the
-                        // angles
-                    }
-                }
-                anglesReader.close();
+            // Hack nr of lines
+            LineNumberReader count = new LineNumberReader(new InputStreamReader(getClass().getResourceAsStream("resources/angles.times")));
+            while (count.skip(Long.MAX_VALUE) > 0) {}
+            int nrLines = count.getLineNumber() + 1;
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("resources/angles.times")));
+            String line;
+            data = new long[nrLines][2];
+            int counter = 0;
+            while ((line = reader.readLine()) != null) {
+                String[] angleAndTime = line.split(" ");
+                data[counter][1] = (long) (Float.parseFloat(angleAndTime[0]) * 10);
+                data[counter][0] = (long) Float.parseFloat(angleAndTime[1]);
+                counter++;
             }
-            timesReader.close();
+            reader.close();
+
+//
+//            // read the times.csv and angles.csv files
+//            // times.csv contains the UNIX times in seconds (since January 1,
+//            // 00:00:00:00)
+//
+//            InputStream timesIS = getClass()
+//                    .getResourceAsStream(timesFileString);
+//            InputStream anglesIS = getClass()
+//                    .getResourceAsStream(anglesFileString);
+//
+//            InputStreamReader timesISReader = new InputStreamReader(timesIS);
+//            InputStreamReader anglesISReader = new InputStreamReader(anglesIS);
+//
+//            BufferedReader timesReader = new BufferedReader(
+//                    timesISReader); // BufferedReader to read times file
+//            BufferedReader anglesReader = new BufferedReader(
+//                    anglesISReader); // BufferedReader to read angles file
+//
+//            String timeLine; // line with the times
+//            while ((timeLine = timesReader.readLine()) != null) {
+//                // runs only once, since times.csv consists of only one line
+//                String[] timesString = timeLine
+//                        .split(separator); // split the times at the commas
+//                data = new long[timesString.length][2]; // create data[][]
+//                // based on the number of times/angles
+//                for (int i = 0; i < timesString.length; i++) {
+//                    data[i][0] = Long.valueOf(
+//                            timesString[i]); // fill data[][] with the times
+//                }
+//
+//                // we can safely read the angles file here, since this only
+//                // runs once
+//                String angleLine; // line with the angles
+//                while ((angleLine = anglesReader.readLine()) != null) {
+//                    String[] anglesString = angleLine
+//                            .split(separator); // split angles at the commas
+//                    for (int i = 0; i < timesString.length; i++) {
+//                        data[i][1] = Long.valueOf(
+//                                anglesString[i]); // fill data[][] with the
+//                        // angles
+//                    }
+//                }
+//                anglesReader.close();
+//            }
+//            timesReader.close();
             
         } catch (Exception e) { // catch Exception (FileNotFoundException?)
             e.printStackTrace();

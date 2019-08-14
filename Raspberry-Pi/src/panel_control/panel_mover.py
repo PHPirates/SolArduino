@@ -1,6 +1,6 @@
 from src.emergency import Emergency
 from src.panel_control.solar_panel import SolarPanel
-from src.stoppable_timer import StoppableTimer
+from util.stoppable_timer import StoppableTimer
 
 
 class PanelMover:

@@ -16,6 +16,7 @@ class PanelController:
     panel = SolarPanel()
     go_to_angle_thread: GoToAngleThread = None
     auto_mode_thread: AutoModeThread = None
+    auto_mode_enabled = False
 
     def __init__(self):
         """ For safety, stop panels and disable auto mode. """
@@ -99,20 +100,39 @@ class PanelController:
         """
         Will not do anything if already started.
         """
-        if self.auto_mode_thread is None:
+        if not self.is_auto_mode_on():
             self.auto_mode_thread = AutoModeThread(self.emergency,
                                                    self.go_to_angle)
             self.auto_mode_thread.start()
+            self.auto_mode_enabled = True
 
     def disable_auto_mode(self):
-        if self.auto_mode_thread is not None:
+        if self.auto_mode_enabled:
             self.auto_mode_thread.stop()
             self.auto_mode_thread.join()
+            self.auto_mode_enabled = False
 
-    def go_to_angle(self, angle: float):
-        """ Start a new thread which will move the panels. """
+    def is_auto_mode_on(self):
+        """
+        :return: True if auto mode is enabled and thread is running,
+         false otherwise.
+        """
+        if not self.auto_mode_enabled:
+            return False
+
+        if self.auto_mode_thread is None:
+            return False
+        else:
+            return self.auto_mode_thread.is_alive()
+
+    def go_to_angle(self, angle: float) -> str:
+        """
+        Start a new thread which will move the panels.
+        :return: A human readable message.
+        """
         if self.go_to_angle_thread is not None:
             self.go_to_angle_thread.stop()
             self.go_to_angle_thread.join()
         self.go_to_angle_thread = GoToAngleThread(angle, self)
         self.go_to_angle_thread.start()
+        return f'Going to {angle} degrees'

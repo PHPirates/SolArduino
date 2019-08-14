@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SolArduino</string>
+    <string name="auto">AUTO</string>
+    <string name="change_angle_button_description">Beweeg panelen naar %1$d°</string>
+    <string name="imagepaneldescription">Zonnepaneel</string>
+    <string name="pingmenu">Ping</string>
+    <string name="initialdegrees">42°</string>
+    <string name="downbuttondescription">Knop omlaag</string>
+    <string name="upbuttondescription">Knop omhoog</string>
+    <string name="setanglebutton">Draai panelen</string>
+</resources>

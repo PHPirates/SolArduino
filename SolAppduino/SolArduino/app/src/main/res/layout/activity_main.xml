@@ -22,7 +22,7 @@
                 android:layout_weight="1">
 
                 <TableRow>
-                    <ImageButton
+                    <com.abbyberkers.solarduino.ui.AccessibilityImageButton
                         android:id="@+id/upButton"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -32,12 +32,11 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/up_button"
                         android:background="#00000000"
-                        android:onClick="unCheck"
                         android:contentDescription="@string/upbuttondescription" />
 
                 </TableRow>
                 <TableRow>
-                    <ImageButton
+                    <com.abbyberkers.solarduino.ui.AccessibilityImageButton
                         android:id="@+id/downButton"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -47,7 +46,6 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/down_button"
                         android:background="#00000000"
-                        android:onClick="unCheck"
                         android:contentDescription="@string/downbuttondescription" />
                 </TableRow>
 
@@ -109,8 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/frame"
-        android:text="@string/setanglebutton"
-        android:onClick="unCheck"/>
+        android:text="@string/setanglebutton"/>
 
     </RelativeLayout>
 </ScrollView>
