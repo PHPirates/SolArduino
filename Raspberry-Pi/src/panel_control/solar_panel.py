@@ -19,7 +19,7 @@ class SolarPanel:
     power_up = LED(13)
 
     # Keep some safe distance from the real end stops
-    soft_bound_angle = 1
+    soft_bound_angle = 3
     hard_max_angle = 57
     hard_min_angle = 5
     max_angle = hard_max_angle - soft_bound_angle
