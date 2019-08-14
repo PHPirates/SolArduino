@@ -1,6 +1,6 @@
 package com.abbyberkers.solarduino.ui
 
-import com.abbyberkers.solarduino.PanelRequestSender
+import com.abbyberkers.solarduino.communication.PanelRequestSender
 
 class MoveUpButton(private val upButton: AccessibilityImageButton) {
 

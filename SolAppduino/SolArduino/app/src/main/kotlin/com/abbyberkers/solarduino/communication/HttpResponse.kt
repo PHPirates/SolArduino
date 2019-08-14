@@ -1,4 +1,4 @@
-package com.abbyberkers.solarduino
+package com.abbyberkers.solarduino.communication
 
 /**
  * Response from the webserver.

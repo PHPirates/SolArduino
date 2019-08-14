@@ -1,7 +1,7 @@
 package com.abbyberkers.solarduino.ui
 
 import android.widget.CheckBox
-import com.abbyberkers.solarduino.PanelRequestSender
+import com.abbyberkers.solarduino.communication.PanelRequestSender
 
 /**
  * Checkbox to set/unset panels on auto mode.

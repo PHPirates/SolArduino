@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.FrameLayout
+import com.abbyberkers.solarduino.communication.PanelRequestSender
 import com.abbyberkers.solarduino.ui.*
 
 class MainActivity : AppCompatActivity() {
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         MoveDownButton(findViewById(R.id.downButton)).initialise(httpClient)
         SelectAngleBar(findViewById(R.id.seekBar)).initialise(frameLayout, changeAngleButton, defaultMinAngle, defaultMaxAngle)
 
-        httpClient.requestMinMaxAngle()
+        httpClient.requestAngleBounds()
     }
 
     /**
