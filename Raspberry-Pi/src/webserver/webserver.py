@@ -73,7 +73,7 @@ class Webserver(BaseHTTPRequestHandler):
             message = self.panel_controller.go_to_angle(angle)
             # todo make sure to handle multiple params properly
 
-        if self.panel_controller.auto_mode_enabled:
+        if self.panel_controller.is_auto_mode_on():
             mode = 'auto'
         else:
             mode = 'manual'

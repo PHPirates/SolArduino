@@ -70,7 +70,7 @@ class AutoModeThread(StoppableThread):
             # Sanity check
             if self.times_and_angles[self.latest_time_index][0] > \
                     datetime.utcnow() \
-                    or self.times_and_angles[self.latest_time_index + 1] \
+                    or self.times_and_angles[self.latest_time_index + 1][0] \
                     < datetime.utcnow():
                 self.emergency.set('Could not find a target angle in auto mode'
                                    )

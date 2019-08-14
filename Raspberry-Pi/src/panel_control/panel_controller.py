@@ -100,7 +100,7 @@ class PanelController:
         """
         Will not do anything if already started.
         """
-        if not self.auto_mode_enabled:
+        if not self.is_auto_mode_on():
             self.auto_mode_thread = AutoModeThread(self.emergency,
                                                    self.go_to_angle)
             self.auto_mode_thread.start()
@@ -111,6 +111,19 @@ class PanelController:
             self.auto_mode_thread.stop()
             self.auto_mode_thread.join()
             self.auto_mode_enabled = False
+
+    def is_auto_mode_on(self):
+        """
+        :return: True if auto mode is enabled and thread is running,
+         false otherwise.
+        """
+        if not self.auto_mode_enabled:
+            return False
+
+        if self.auto_mode_thread is None:
+            return False
+        else:
+            return self.auto_mode_thread.is_alive()
 
     def go_to_angle(self, angle: float) -> str:
         """
