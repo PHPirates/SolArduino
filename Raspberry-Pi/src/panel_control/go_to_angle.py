@@ -7,7 +7,7 @@ class GoToAngleThread(StoppableThread):
     """
 
     # How close to try to get to the target
-    accuracy = 0.1  # degrees
+    accuracy = 1  # degrees
 
     def __init__(self, angle: float, panel_controller):
         super(GoToAngleThread, self).__init__()

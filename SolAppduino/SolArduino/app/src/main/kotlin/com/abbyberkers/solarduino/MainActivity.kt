@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         SelectAngleBar(findViewById(R.id.seekBar)).initialise(frameLayout, changeAngleButton, defaultMinAngle, defaultMaxAngle)
 
         httpClient.requestMinMaxAngle()
-        httpClient.requestUpdate()
     }
 
     /**
