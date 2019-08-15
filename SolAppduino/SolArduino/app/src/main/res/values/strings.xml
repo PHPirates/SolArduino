@@ -8,5 +8,7 @@
     <string name="initialdegrees">42°</string>
     <string name="imagepaneldescription">Solar Panel</string>
     <string name="setanglebutton">Set angle</string>
-    <string name="update">Check for updates</string>
+    <string name="update" translatable="false">Check for updates</string>
+    <string name="home">Home</string>
+    <string name="schedule">Schedule</string>
 </resources>

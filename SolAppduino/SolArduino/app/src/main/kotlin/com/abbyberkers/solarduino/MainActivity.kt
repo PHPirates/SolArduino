@@ -3,7 +3,7 @@ package com.abbyberkers.solarduino
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.abbyberkers.solarduino.ui.HomeFragment
-import com.abbyberkers.solarduino.ui.ScheduleFragment
+import com.abbyberkers.solarduino.ui.schedule.ScheduleFragment
 import com.abbyberkers.solarduino.ui.replace
 import kotlinx.android.synthetic.main.activity_main.*
 

@@ -6,7 +6,7 @@
         android:id="@+id/home_button"
         android:enabled="true"
         android:icon="@drawable/ic_home"
-        android:title="Home"
+        android:title="@string/home"
         app:showAsAction="always" />
 
     <item
@@ -21,6 +21,6 @@
         android:id="@+id/schedule_button"
         android:enabled="true"
         android:icon="@drawable/ic_schedule"
-        android:title="Plaatje"
+        android:title="@string/schedule"
         app:showAsAction="always" />
 </menu>
