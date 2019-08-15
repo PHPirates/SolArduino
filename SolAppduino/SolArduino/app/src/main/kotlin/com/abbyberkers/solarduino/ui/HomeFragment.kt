@@ -1,6 +1,7 @@
 package com.abbyberkers.solarduino.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +11,24 @@ import com.abbyberkers.solarduino.R
 import com.abbyberkers.solarduino.communication.PanelRequestSender
 import kotlinx.android.synthetic.main.home_fragment.*
 
-class HomeFragment(private val httpClient: PanelRequestSender) : Fragment() {
+class HomeFragment : Fragment() {
 
+    private val httpClient = PanelRequestSender()
+
+    /** Keep a reference to the current angle, to update it on resume. */
+    private lateinit var currentAngleView: CurrentAngleView
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("on resume", "$currentAngleView")
+        httpClient.requestUpdate(currentAngleView)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.home_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.i("on view created", "start")
         super.onViewCreated(view, savedInstanceState)
 
         val defaultMinAngle = 6
@@ -25,18 +37,13 @@ class HomeFragment(private val httpClient: PanelRequestSender) : Fragment() {
         val frameLayout: FrameLayout = frame
 
         // Init components
-        val changeAngleButton = ChangeAngleButton(setAngle, resources, httpClient)
-        changeAngleButton.initialise()
+        val changeAngleButton = ChangeAngleButton(setAngle, resources, httpClient).apply { initialise() }
         AutoModeCheckBox(autoBox).initialise(httpClient)
-        SolarPanelImage(linePanel).initialise()
+        val panelImage = SolarPanelImage(linePanel).apply { initialise() }
         MoveUpButton(upButton).initialise(httpClient)
         MoveDownButton(downButton).initialise(httpClient)
         SelectAngleBar(seekBar).initialise(frameLayout, changeAngleButton, defaultMinAngle, defaultMaxAngle)
-
-        // Request an update when tapping the current angle textview.
-        currentAngle.setOnClickListener {
-            httpClient.requestUpdate()
-        }
+        currentAngleView = CurrentAngleView(currentAngle, panelImage, httpClient, resources).apply { initialise() }
 
         httpClient.requestAngleBounds()
     }

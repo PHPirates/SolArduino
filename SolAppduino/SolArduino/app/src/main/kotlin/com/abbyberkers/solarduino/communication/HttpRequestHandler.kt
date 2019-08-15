@@ -1,6 +1,5 @@
 package com.abbyberkers.solarduino.communication
 
-import android.util.Log
 import com.google.gson.Gson
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -18,11 +17,15 @@ class HttpRequestHandler {
 
 
     /**
-     * Send a http request with the given parameters, in the form of ?key1=value1&key2=value2
+     * Send a http request with the given parameters.
      *
      * Will cancel a running request if it is of a different type.
+     *
+     * @param jobType: Type of the request.
+     * @param parameters: Http parameters in the form of ?key1=value1&key2=value2
+     * @param updateFunction: Function to execute when the http response is received.
      */
-    fun sendRequest(jobType: RequestType, parameters: String = "") {
+    fun sendRequest(jobType: RequestType, parameters: String = "", updateFunction: (response: HttpResponse) -> Unit = {}) {
         // If there already is a job of the same type running, do not submit a second one
         if (currentJobType != jobType || currentJob?.isActive == false) {
             // Canceling any active job will be done in a coroutine as well to avoid hanging
@@ -31,7 +34,7 @@ class HttpRequestHandler {
                 if (currentJob != null && currentJob!!.isActive) {
                     currentJob!!.cancelAndJoin()
                 }
-                currentJob = startGetRequest(parameters)
+                currentJob = startGetRequest(parameters, updateFunction)
                 currentJobType = jobType
             }
         }
@@ -47,7 +50,7 @@ class HttpRequestHandler {
      *
      * @return The coroutine job.
      */
-    private fun startGetRequest(parameters: String = ""): Job {
+    private fun startGetRequest(parameters: String = "", updateFunction: (response: HttpResponse) -> Unit = {}): Job {
         // Send http requests in a coroutine
         return CoroutineScope(Dispatchers.IO).launch {
             val client = HttpClient(Android) {
@@ -61,8 +64,8 @@ class HttpRequestHandler {
             }
             // Tests have shown that this call is cancellable with job.cancelAndJoin()
             val resultString = client.get<String>("http://192.168.8.42:8080/$parameters")
-            val response = Gson().fromJson(resultString, HttpResponse::class.java)
-            Log.i("Request thread", "${response.angle} ${response.mode}")
+            val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
+            updateFunction(response)
             client.close()
         }
     }

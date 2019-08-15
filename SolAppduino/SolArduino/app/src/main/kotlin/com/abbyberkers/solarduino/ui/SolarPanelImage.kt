@@ -13,4 +13,8 @@ class SolarPanelImage(private val imageView: ImageView) {
             true
         }
     }
+
+    fun setAngle(angle: Float) {
+        imageView.rotation = angle
+    }
 }

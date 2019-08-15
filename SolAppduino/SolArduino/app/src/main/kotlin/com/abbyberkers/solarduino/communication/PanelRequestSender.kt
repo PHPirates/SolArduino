@@ -1,7 +1,6 @@
 package com.abbyberkers.solarduino.communication
 
-import android.util.Log
-import kotlinx.coroutines.*
+import com.abbyberkers.solarduino.ui.CurrentAngleView
 
 /**
  *
@@ -15,8 +14,8 @@ class PanelRequestSender {
 
     private val handler = HttpRequestHandler()
 
-    fun requestUpdate() {
-        handler.sendRequest(RequestType.UPDATE)
+    fun requestUpdate(currentAngleView: CurrentAngleView) {
+        handler.sendRequest(RequestType.UPDATE, updateFunction = { currentAngleView.angle = it.angle })
     }
 
     /**
