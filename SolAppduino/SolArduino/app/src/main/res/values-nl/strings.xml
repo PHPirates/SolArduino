@@ -9,4 +9,6 @@
     <string name="downbuttondescription">Knop omlaag</string>
     <string name="upbuttondescription">Knop omhoog</string>
     <string name="setanglebutton">Draai panelen</string>
+    <string name="home">Thuis</string>
+    <string name="schedule">Planning</string>
 </resources>
