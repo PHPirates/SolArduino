@@ -2,7 +2,7 @@ package com.abbyberkers.solarduino.ui
 
 import android.content.res.Resources
 import android.widget.Button
-import com.abbyberkers.solarduino.PanelRequestSender
+import com.abbyberkers.solarduino.communication.PanelRequestSender
 import com.abbyberkers.solarduino.R
 
 /**

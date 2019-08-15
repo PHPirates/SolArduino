@@ -6,6 +6,10 @@ import com.abbyberkers.solarduino.ui.HomeFragment
 import com.abbyberkers.solarduino.ui.ScheduleFragment
 import com.abbyberkers.solarduino.ui.replace
 import kotlinx.android.synthetic.main.activity_main.*
+import android.view.View
+import android.widget.FrameLayout
+import com.abbyberkers.solarduino.communication.PanelRequestSender
+import com.abbyberkers.solarduino.ui.*
 
 class MainActivity : AppCompatActivity() {
 
