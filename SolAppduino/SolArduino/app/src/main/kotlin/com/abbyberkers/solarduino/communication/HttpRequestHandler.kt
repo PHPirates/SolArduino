@@ -1,5 +1,7 @@
 package com.abbyberkers.solarduino.communication
 
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.gson.Gson
 import io.ktor.client.HttpClient
@@ -9,7 +11,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
 import kotlinx.coroutines.*
 
-class HttpRequestHandler {
+class HttpRequestHandler(private val progressBar: ProgressBar) {
 
 
     /** Remember currently executing job and type. */
@@ -27,6 +29,8 @@ class HttpRequestHandler {
      * @param updateFunction: Function to execute when the http response is received.
      */
     fun sendRequest(jobType: RequestType, parameters: String = "", updateFunction: (response: HttpResponse) -> Unit = {}) {
+        progressBar.visibility = View.VISIBLE
+
         // If there already is a job of the same type running, do not submit a second one
         if (currentJobType != jobType || currentJob?.isActive == false) {
             // Canceling any active job will be done in a coroutine as well to avoid hanging
@@ -68,6 +72,7 @@ class HttpRequestHandler {
             val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
             updateFunction(response)
             client.close()
+            progressBar.visibility = View.INVISIBLE
         }
     }
 

@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.home_fragment.*
 
 class HomeFragment : Fragment() {
 
-    private val httpClient = PanelRequestSender()
+    private lateinit var httpClient: PanelRequestSender
 
     /** Keep a reference to the current angle, to update it on resume. */
     private lateinit var currentAngleView: CurrentAngleView
@@ -33,6 +33,8 @@ class HomeFragment : Fragment() {
         val defaultMaxAngle = 56
 
         val frameLayout: FrameLayout = frame
+
+        httpClient = PanelRequestSender(progressBar)
 
         // Init components
         val changeAngleButton = ChangeAngleButton(setAngle, resources, httpClient).apply { initialise() }
