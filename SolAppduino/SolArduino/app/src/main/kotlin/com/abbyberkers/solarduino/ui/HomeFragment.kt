@@ -1,7 +1,6 @@
 package com.abbyberkers.solarduino.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Log.i("on resume", "$currentAngleView")
         httpClient.requestUpdate(currentAngleView)
     }
 
@@ -28,8 +26,8 @@ class HomeFragment : Fragment() {
             inflater.inflate(R.layout.home_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.i("on view created", "start")
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         val defaultMinAngle = 6
         val defaultMaxAngle = 56

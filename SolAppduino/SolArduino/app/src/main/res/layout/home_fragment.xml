@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -10,6 +12,39 @@
             android:id="@+id/table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <TableLayout
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:orientation="vertical">
+                <TableRow>
+                    <TextView
+                        android:id="@+id/currentAngle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="80sp"
+                        android:text="@string/initialdegrees"
+                        android:textColor="@drawable/text_selector"/>
+                </TableRow>
+                <TableRow
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/autoBox"
+                        android:layout_width="wrap_content"
+                        android:text="@string/auto"/>
+                    <ProgressBar
+                        android:id="@+id/indeterminateBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        android:visibility="visible"
+                        />
+                </TableRow>
+            </TableLayout>
+
             <TableLayout
                 android:layout_width="0dp"
                 android:layout_weight="1">
@@ -44,31 +79,6 @@
 
             </TableLayout>
 
-            <TableLayout
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:orientation="vertical">
-                <TableRow>
-                    <TextView
-                        android:id="@+id/currentAngle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="80sp"
-                        android:text="@string/initialdegrees"
-                        android:textColor="@drawable/text_selector"/>
-                </TableRow>
-                <TableRow
-                    android:gravity="center">
-                    <CheckBox
-                        android:id="@+id/autoBox"
-                        android:layout_width="wrap_content"
-                        android:text="@string/auto"/>
-
-                </TableRow>
-            </TableLayout>
         </TableRow>
         <FrameLayout
             android:id="@+id/frame"

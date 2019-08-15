@@ -1,5 +1,6 @@
 package com.abbyberkers.solarduino.communication
 
+import android.widget.Toast
 import com.google.gson.Gson
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -58,8 +59,8 @@ class HttpRequestHandler {
                     serializer = GsonSerializer()
                 }
                 engine {
-                    connectTimeout = 100_000
-                    socketTimeout = 100_000
+                    connectTimeout = 10_000  // milliseconds
+                    socketTimeout = 10_000
                 }
             }
             // Tests have shown that this call is cancellable with job.cancelAndJoin()

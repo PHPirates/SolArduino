@@ -5,10 +5,10 @@ import com.abbyberkers.solarduino.ui.CurrentAngleView
 /**
  *
  * only one instance of this class should exist
- * todo In case any action is done which is manual control, uncheck auto checkbox
- * todo option to enable logging to see all http requests and responses
- * todo be smart about when to retry: always send latest request only, except when the same one already running etc.
  * todo progressindicator
+ * todo In case any action is done which is manual control, uncheck auto checkbox
+ * todo send update periodically
+ * todo option to enable logging to see all http requests and responses?
  */
 class PanelRequestSender {
 
