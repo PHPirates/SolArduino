@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
-import com.abbyberkers.solarduino.PanelRequestSender
 import com.abbyberkers.solarduino.R
+import com.abbyberkers.solarduino.communication.PanelRequestSender
 import kotlinx.android.synthetic.main.home_fragment.*
 
 class HomeFragment(private val httpClient: PanelRequestSender) : Fragment() {
@@ -38,6 +38,6 @@ class HomeFragment(private val httpClient: PanelRequestSender) : Fragment() {
             httpClient.requestUpdate()
         }
 
-        httpClient.requestMinMaxAngle()
+        httpClient.requestAngleBounds()
     }
 }
