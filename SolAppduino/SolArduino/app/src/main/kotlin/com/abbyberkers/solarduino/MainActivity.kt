@@ -2,9 +2,10 @@ package com.abbyberkers.solarduino
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.view.View
-import android.widget.FrameLayout
-import com.abbyberkers.solarduino.ui.*
+import com.abbyberkers.solarduino.ui.HomeFragment
+import com.abbyberkers.solarduino.ui.ScheduleFragment
+import com.abbyberkers.solarduino.ui.replace
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,30 +20,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val defaultMinAngle = 6
-        val defaultMaxAngle = 56
+        supportFragmentManager.replace(R.id.fragment_container, HomeFragment(httpClient))
 
-        val frameLayout: FrameLayout = findViewById(R.id.frame)
-
-        // Init components
-        val changeAngleButton = ChangeAngleButton(findViewById(R.id.setAngle), resources, httpClient)
-        changeAngleButton.initialise()
-        AutoModeCheckBox(findViewById(R.id.autoBox)).initialise(httpClient)
-        SolarPanelImage(findViewById(R.id.linePanel)).initialise()
-        MoveUpButton(findViewById(R.id.upButton)).initialise(httpClient)
-        MoveDownButton(findViewById(R.id.downButton)).initialise(httpClient)
-        SelectAngleBar(findViewById(R.id.seekBar)).initialise(frameLayout, changeAngleButton, defaultMinAngle, defaultMaxAngle)
-
-        httpClient.requestMinMaxAngle()
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.home_button -> supportFragmentManager.replace(R.id.fragment_container, HomeFragment(httpClient))
+                R.id.schedule_button -> supportFragmentManager.replace(R.id.fragment_container, ScheduleFragment())
+            }
+            true
+        }
     }
 
     /**
-     * Triggered by pressing/tapping the currentAngle TextView.
-     * Updates the current angle.
-     *
-     * @param view currentAngle TextView
+     * When pressing back on the home page, close the app.
+     * When pressing back on any other page, go to the home page.
      */
-    fun sendUpdateRequest(view: View) {
-        httpClient.requestUpdate()
+    override fun onBackPressed() {
+        if (supportFragmentManager.findFragmentById(R.id.fragment_container) is HomeFragment) {
+            finish()
+        } else {
+            bottom_navigation.selectedItemId = R.id.home_button
+        }
     }
 }
