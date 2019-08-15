@@ -22,13 +22,24 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager.replace(R.id.fragment_container, HomeFragment(httpClient))
 
-        bottom_navigation.setOnNavigationItemReselectedListener {
+        bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.home_button -> toast("home button clicked")
-                R.id.schedule_button -> toast("schedule button clicked")
+                R.id.home_button -> supportFragmentManager.replace(R.id.fragment_container, HomeFragment(httpClient))
+                R.id.schedule_button -> supportFragmentManager.replace(R.id.fragment_container, ScheduleFragment())
             }
             true
         }
     }
 
+    /**
+     * When pressing back on the home page, close the app.
+     * When pressing back on any other page, go to the home page.
+     */
+    override fun onBackPressed() {
+        if (supportFragmentManager.findFragmentById(R.id.fragment_container) is HomeFragment) {
+            finish()
+        } else {
+            bottom_navigation.selectedItemId = R.id.home_button
+        }
+    }
 }

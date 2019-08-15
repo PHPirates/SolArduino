@@ -12,7 +12,7 @@ fun FragmentManager.replace(layout: Int, fragment: Fragment) {
 
     // Replace the fragment currently in the container specified by layout.
     transaction.replace(layout, fragment)
-    transaction.addToBackStack(null)
+//    transaction.addToBackStack(null)
 
     // Finish the transaction.
     transaction.commit()
