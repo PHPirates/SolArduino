@@ -1,7 +1,7 @@
 package com.abbyberkers.solarduino.communication
 
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
+import android.util.Log
+import kotlinx.coroutines.*
 
 /**
  *
@@ -9,26 +9,14 @@ import kotlinx.coroutines.cancelAndJoin
  * todo In case any action is done which is manual control, uncheck auto checkbox
  * todo option to enable logging to see all http requests and responses
  * todo be smart about when to retry: always send latest request only, except when the same one already running etc.
+ * todo progressindicator
  */
 class PanelRequestSender {
 
-    /** Remember currently executing job and type. */
-    private var currentJob: Job? = null
-    private var currentJobType: RequestType? = null
-
-    val handler = HttpRequestHandler()
+    private val handler = HttpRequestHandler()
 
     fun requestUpdate() {
-        val jobType = RequestType.UPDATE
-        // If there already is a job of the same type running, do not submit a second one
-        if (currentJobType != jobType || currentJob?.isActive == false) {
-            // Cancel active job
-            if (currentJob != null && currentJob!!.isActive) {
-                currentJob!!.cancelAndJoin()
-            }
-            currentJob = handler.sendRequest()
-            currentJobType = jobType
-        }
+        handler.sendRequest(RequestType.UPDATE)
     }
 
     /**
