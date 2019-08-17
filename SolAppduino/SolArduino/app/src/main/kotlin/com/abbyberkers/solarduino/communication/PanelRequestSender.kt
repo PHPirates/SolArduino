@@ -1,5 +1,6 @@
 package com.abbyberkers.solarduino.communication
 
+import android.widget.CheckBox
 import android.widget.ProgressBar
 import com.abbyberkers.solarduino.ui.AutoModeCheckBox
 import com.abbyberkers.solarduino.ui.CurrentAngleView
@@ -12,9 +13,9 @@ import com.abbyberkers.solarduino.ui.SelectAngleBar
  * todo send update periodically
  * todo option to enable logging to see all http requests and responses?
  */
-class PanelRequestSender(progressBar: ProgressBar, currentAngleView: CurrentAngleView) {
+class PanelRequestSender(progressBar: ProgressBar, currentAngleView: CurrentAngleView, autoCheckBox: CheckBox) {
 
-    private val handler = HttpRequestHandler(progressBar, currentAngleView)
+    private val handler = HttpRequestHandler(progressBar, currentAngleView, autoCheckBox)
 
     fun requestUpdate() {
         handler.sendRequest(RequestType.UPDATE)
@@ -25,8 +26,8 @@ class PanelRequestSender(progressBar: ProgressBar, currentAngleView: CurrentAngl
      */
     fun requestAngleBounds(selectAngleBar: SelectAngleBar) {
         val updateFunction: (response: HttpResponse) -> Unit = {
-            selectAngleBar.seekbar.min = it.minAngle.toInt()
-            selectAngleBar.seekbar.max = it.maxAngle.toInt()
+            selectAngleBar.seekbar.min = it.min_angle.toInt()
+            selectAngleBar.seekbar.max = it.max_angle.toInt()
         }
         handler.sendRequest(RequestType.UPDATE, updateFunction = updateFunction)
     }
@@ -34,13 +35,13 @@ class PanelRequestSender(progressBar: ProgressBar, currentAngleView: CurrentAngl
     fun enableAutoMode(checkBox: AutoModeCheckBox) {
         handler.sendRequest(RequestType.AUTO_ENABLE,
                 parameters = "?panel=auto",
-                updateFunction = { checkBox.checkBox.isSelected = it.autoMode })
+                updateFunction = { checkBox.checkBox.isChecked = it.auto_mode })
     }
 
     fun disableAutoMode(checkBox: AutoModeCheckBox) {
         handler.sendRequest(RequestType.AUTO_ENABLE,
                 parameters = "?panel=manual",
-                updateFunction = { checkBox.checkBox.isSelected = it.autoMode })
+                updateFunction = { checkBox.checkBox.isChecked = it.auto_mode })
     }
 
     fun movePanelsUp() {

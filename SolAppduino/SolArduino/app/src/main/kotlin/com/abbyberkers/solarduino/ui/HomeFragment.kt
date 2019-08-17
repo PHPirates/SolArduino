@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
         // Init components
         val panelImage = SolarPanelImage(linePanel).apply { initialise() }
         val currentAngleView = CurrentAngleView(currentAngle, panelImage,  resources)
-        httpClient = PanelRequestSender(progressBar, currentAngleView)
+        httpClient = PanelRequestSender(progressBar, currentAngleView, autoBox)
         currentAngleView.initialise(httpClient)
         val changeAngleButton = ChangeAngleButton(setAngle, resources, httpClient).apply { initialise() }
         AutoModeCheckBox(autoBox).initialise(httpClient)

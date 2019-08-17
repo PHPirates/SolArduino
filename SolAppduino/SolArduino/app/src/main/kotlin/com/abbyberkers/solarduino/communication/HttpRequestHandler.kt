@@ -1,6 +1,7 @@
 package com.abbyberkers.solarduino.communication
 
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ProgressBar
 import com.abbyberkers.solarduino.ui.CurrentAngleView
 import com.google.gson.Gson
@@ -11,7 +12,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
 import kotlinx.coroutines.*
 
-class HttpRequestHandler(private val progressBar: ProgressBar, private val currentAngleView: CurrentAngleView) {
+class HttpRequestHandler(private val progressBar: ProgressBar, private val currentAngleView: CurrentAngleView, private val autoCheckBox: CheckBox) {
 
 
     /** Remember currently executing job and type. */
@@ -68,11 +69,11 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
                 }
             }
             // Tests have shown that this call is cancellable with job.cancelAndJoin()
-            // todo url in strings.xml
             val resultString = client.get<String>("http://192.168.178.42:8080/$parameters")
             val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
             // Always update angle, for any request
             currentAngleView.angle = response.angle
+            autoCheckBox.isChecked = response.auto_mode
             updateFunction(response)
             client.close()
             progressBar.visibility = View.INVISIBLE
