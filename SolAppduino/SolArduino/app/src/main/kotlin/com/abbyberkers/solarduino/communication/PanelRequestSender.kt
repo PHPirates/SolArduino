@@ -2,9 +2,9 @@ package com.abbyberkers.solarduino.communication
 
 import android.widget.CheckBox
 import android.widget.ProgressBar
-import com.abbyberkers.solarduino.ui.AutoModeCheckBox
-import com.abbyberkers.solarduino.ui.CurrentAngleView
-import com.abbyberkers.solarduino.ui.SelectAngleBar
+import com.abbyberkers.solarduino.ui.components.AutoModeCheckBox
+import com.abbyberkers.solarduino.ui.components.CurrentAngleView
+import com.abbyberkers.solarduino.ui.components.SelectAngleBar
 
 /**
  *

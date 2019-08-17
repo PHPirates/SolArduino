@@ -1,4 +1,4 @@
-package com.abbyberkers.solarduino.ui
+package com.abbyberkers.solarduino.ui.components
 
 import android.content.res.Resources
 import android.widget.TextView

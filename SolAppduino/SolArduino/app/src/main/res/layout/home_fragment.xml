@@ -50,7 +50,7 @@
                 android:layout_weight="1">
 
                 <TableRow>
-                    <com.abbyberkers.solarduino.ui.AccessibilityImageButton
+                    <com.abbyberkers.solarduino.ui.components.AccessibilityImageButton
                         android:id="@+id/upButton"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -64,7 +64,7 @@
 
                 </TableRow>
                 <TableRow>
-                    <com.abbyberkers.solarduino.ui.AccessibilityImageButton
+                    <com.abbyberkers.solarduino.ui.components.AccessibilityImageButton
                         android:id="@+id/downButton"
                         android:layout_width="0dp"
                         android:layout_weight="1"

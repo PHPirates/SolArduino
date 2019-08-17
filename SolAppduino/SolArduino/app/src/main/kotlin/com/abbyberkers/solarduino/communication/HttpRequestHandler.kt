@@ -3,7 +3,7 @@ package com.abbyberkers.solarduino.communication
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ProgressBar
-import com.abbyberkers.solarduino.ui.CurrentAngleView
+import com.abbyberkers.solarduino.ui.components.CurrentAngleView
 import com.google.gson.Gson
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android

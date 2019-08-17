@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.abbyberkers.solarduino.R
 import com.abbyberkers.solarduino.communication.PanelRequestSender
+import com.abbyberkers.solarduino.ui.components.*
 import kotlinx.android.synthetic.main.home_fragment.*
 
 class HomeFragment : Fragment() {
@@ -28,7 +29,7 @@ class HomeFragment : Fragment() {
 
         // Init components
         val panelImage = SolarPanelImage(linePanel).apply { initialise() }
-        val currentAngleView = CurrentAngleView(currentAngle, panelImage,  resources)
+        val currentAngleView = CurrentAngleView(currentAngle, panelImage, resources)
         httpClient = PanelRequestSender(progressBar, currentAngleView, autoBox)
         currentAngleView.initialise(httpClient)
         val changeAngleButton = ChangeAngleButton(setAngle, resources, httpClient).apply { initialise() }
