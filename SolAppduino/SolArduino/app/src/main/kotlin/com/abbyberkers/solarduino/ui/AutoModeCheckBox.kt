@@ -6,15 +6,15 @@ import com.abbyberkers.solarduino.communication.PanelRequestSender
 /**
  * Checkbox to set/unset panels on auto mode.
  */
-class AutoModeCheckBox(private val autoBox: CheckBox) {
+class AutoModeCheckBox(val checkBox: CheckBox) {
 
     fun initialise(panelRequestSender: PanelRequestSender) {
         // This makes sure that when the button is toggled programmatically, the clicklistener isn't called
-        autoBox.setOnClickListener {
-            if (autoBox.isChecked) {
-                panelRequestSender.enableAutoMode()
+        checkBox.setOnClickListener {
+            if (checkBox.isChecked) {
+                panelRequestSender.enableAutoMode(this)
             } else {
-                panelRequestSender.disableAutoMode()
+                panelRequestSender.disableAutoMode(this)
             }
         }
     }

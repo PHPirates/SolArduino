@@ -1,41 +1,60 @@
 package com.abbyberkers.solarduino.communication
 
 import android.widget.ProgressBar
+import com.abbyberkers.solarduino.ui.AutoModeCheckBox
 import com.abbyberkers.solarduino.ui.CurrentAngleView
+import com.abbyberkers.solarduino.ui.SelectAngleBar
 
 /**
  *
  * only one instance of this class should exist
- * todo progressindicator
  * todo In case any action is done which is manual control, uncheck auto checkbox
  * todo send update periodically
  * todo option to enable logging to see all http requests and responses?
  */
-class PanelRequestSender(private val progressBar: ProgressBar) {
+class PanelRequestSender(progressBar: ProgressBar, currentAngleView: CurrentAngleView) {
 
-    private val handler = HttpRequestHandler(progressBar)
+    private val handler = HttpRequestHandler(progressBar, currentAngleView)
 
-    fun requestUpdate(currentAngleView: CurrentAngleView) {
-        handler.sendRequest(RequestType.UPDATE, updateFunction = { currentAngleView.angle = it.angle })
+    fun requestUpdate() {
+        handler.sendRequest(RequestType.UPDATE)
     }
 
     /**
-     * todo update all places where defaultMinAngle/MaxAngle is used
-     *
-     * update (soft) min/max angle
+     * Update (soft bound) min/max angle.
      */
-    fun requestAngleBounds() {}
+    fun requestAngleBounds(selectAngleBar: SelectAngleBar) {
+        val updateFunction: (response: HttpResponse) -> Unit = {
+            selectAngleBar.seekbar.min = it.minAngle.toInt()
+            selectAngleBar.seekbar.max = it.maxAngle.toInt()
+        }
+        handler.sendRequest(RequestType.UPDATE, updateFunction = updateFunction)
+    }
 
-    fun enableAutoMode() {}
+    fun enableAutoMode(checkBox: AutoModeCheckBox) {
+        handler.sendRequest(RequestType.AUTO_ENABLE,
+                parameters = "?panel=auto",
+                updateFunction = { checkBox.checkBox.isSelected = it.autoMode })
+    }
 
-    fun disableAutoMode() {}
+    fun disableAutoMode(checkBox: AutoModeCheckBox) {
+        handler.sendRequest(RequestType.AUTO_ENABLE,
+                parameters = "?panel=manual",
+                updateFunction = { checkBox.checkBox.isSelected = it.autoMode })
+    }
 
-    fun movePanelsUp() {}
+    fun movePanelsUp() {
+        // todo timer
+    }
 
     fun movePanelsDown() {}
 
-    fun stopPanels() {}
+    fun stopPanels() {
+        handler.sendRequest(RequestType.PANELS_STOP, "?panel=stop")
+    }
 
-    fun movePanelsToAngle(angle: Int) {}
+    fun movePanelsToAngle(angle: Int) {
+        handler.sendRequest(RequestType.PANELS_TO_ANGLE, "?degrees=$angle")
+    }
 
 }

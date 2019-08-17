@@ -2,7 +2,7 @@ package com.abbyberkers.solarduino.communication
 
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
+import com.abbyberkers.solarduino.ui.CurrentAngleView
 import com.google.gson.Gson
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -11,7 +11,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
 import kotlinx.coroutines.*
 
-class HttpRequestHandler(private val progressBar: ProgressBar) {
+class HttpRequestHandler(private val progressBar: ProgressBar, private val currentAngleView: CurrentAngleView) {
 
 
     /** Remember currently executing job and type. */
@@ -68,8 +68,11 @@ class HttpRequestHandler(private val progressBar: ProgressBar) {
                 }
             }
             // Tests have shown that this call is cancellable with job.cancelAndJoin()
-            val resultString = client.get<String>("http://192.168.8.42:8080/$parameters")
+            // todo url in strings.xml
+            val resultString = client.get<String>("http://192.168.178.42:8080/$parameters")
             val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
+            // Always update angle, for any request
+            currentAngleView.angle = response.angle
             updateFunction(response)
             client.close()
             progressBar.visibility = View.INVISIBLE

@@ -6,15 +6,16 @@ import android.widget.SeekBar
 /**
  * A seekbar (slider) to select an angle to which the panels should go.
  */
-class SelectAngleBar(private val seekbar: SeekBar) {
+class SelectAngleBar(val seekbar: SeekBar) {
 
+    private val defaultMinAngle = 6
+    private val defaultMaxAngle = 56
 
     fun initialise(frameLayout: FrameLayout,
-                   changeAngleButton: ChangeAngleButton,
-                   defaultMinAngle: Int,
-                   defaultMaxAngle: Int) {
+                   changeAngleButton: ChangeAngleButton) {
         setHeight(frameLayout)
         setOnChangeListener(changeAngleButton)
+        // Use default angle to initialise, a http request will be made to update them to the real values
         seekbar.min = defaultMinAngle
         seekbar.max = defaultMaxAngle
     }

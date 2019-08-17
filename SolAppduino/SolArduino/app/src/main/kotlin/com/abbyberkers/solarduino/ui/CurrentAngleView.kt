@@ -7,7 +7,6 @@ import com.abbyberkers.solarduino.communication.PanelRequestSender
 
 class CurrentAngleView(private val currentAngle: TextView,
                        private val panelImage: SolarPanelImage,
-                       private val httpClient: PanelRequestSender,
                        private val resources: Resources) {
     var angle: Float = (-42).toFloat()
     set(value) {
@@ -16,10 +15,10 @@ class CurrentAngleView(private val currentAngle: TextView,
         field = value
     }
 
-    fun initialise() {
+    fun initialise(httpClient: PanelRequestSender) {
         // Request an update when tapping the current angle textview.
         currentAngle.setOnClickListener {
-            httpClient.requestUpdate(this)
+            httpClient.requestUpdate()
         }
     }
 

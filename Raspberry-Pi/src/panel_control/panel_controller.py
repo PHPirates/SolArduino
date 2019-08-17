@@ -29,7 +29,7 @@ class PanelController:
         """
         Start moving the solar panels.
 
-        :param direction: One of 'up', 'down', 'auto' or 'stop'.
+        :param direction: One of 'up', 'down', 'auto', 'manual' or 'stop'.
         :return: Appropriate human readable response message.
         """
 
@@ -48,6 +48,9 @@ class PanelController:
         elif direction == 'auto':
             self.enable_auto_mode()
             return 'Panels switching to auto mode.'
+        elif direction == 'manual':
+            self.disable_auto_mode()
+            return 'Auto mode switched off.'
         elif direction == 'stop':
             self.stop()
             return 'Panels stopping.'

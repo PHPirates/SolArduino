@@ -6,6 +6,8 @@ package com.abbyberkers.solarduino.communication
 data class HttpResponse(
         val emergency: Boolean,
         val angle: Float,
-        val mode: String,
-        val message: String
+        val autoMode: Boolean,
+        val message: String,
+        val minAngle: Float,
+        val maxAngle: Float
 )

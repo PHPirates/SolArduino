@@ -8,7 +8,7 @@ from emergency import Emergency
 from src.panel_control.panel_controller import PanelController
 from webserver.http_response import HttpResponse
 
-hostName = '192.168.8.42'
+hostName = '192.168.178.42'  # todo get real hostname
 hostPort = 8080
 
 
@@ -58,7 +58,7 @@ class Webserver(BaseHTTPRequestHandler):
 
         # No parameters given.
         if not url_params.keys():
-            message = 'No parameters were found in the request. Available parameters: panel=[up/down/auto/stop], degrees=[number]'  # noqa
+            message = 'No parameters were found in the request. Available parameters: panel=[up/down/auto/manual/stop], degrees=[number]'  # noqa
 
         if 'panel' in url_params.keys():
             try:
@@ -73,15 +73,12 @@ class Webserver(BaseHTTPRequestHandler):
             message = self.panel_controller.go_to_angle(angle)
             # todo make sure to handle multiple params properly
 
-        if self.panel_controller.is_auto_mode_on():
-            mode = 'auto'
-        else:
-            mode = 'manual'
-
+        emergency = False
         angle = self.panel_controller.get_angle()
+        auto_mode = self.panel_controller.is_auto_mode_on()
+        min_angle = self.panel_controller.panel.min_angle
+        max_angle = self.panel_controller.panel.max_angle
 
-        response = HttpResponse(emergency=False,
-                                angle=angle,
-                                mode=mode,
-                                message=message)
+        response = HttpResponse(emergency, angle, auto_mode, message,
+                                min_angle, max_angle)
         self.write_dataclass(response)
