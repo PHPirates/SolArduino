@@ -16,12 +16,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(top_toolbar)
 
-        supportFragmentManager.replace(R.id.fragment_container, HomeFragment())
+        val homeFragment = HomeFragment(stop_button)
+        val scheduleFragment = ScheduleFragment()
+
+        supportFragmentManager.replace(R.id.fragment_container, homeFragment)
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.home_button -> supportFragmentManager.replace(R.id.fragment_container, HomeFragment())
-                R.id.schedule_button -> supportFragmentManager.replace(R.id.fragment_container, ScheduleFragment())
+                R.id.home_button -> supportFragmentManager.replace(R.id.fragment_container, homeFragment)
+                R.id.schedule_button -> supportFragmentManager.replace(R.id.fragment_container, scheduleFragment)
             }
             true
         }

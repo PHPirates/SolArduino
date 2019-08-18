@@ -34,7 +34,7 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
      * @param updateFunction: Function to execute when the http response is received.
      */
     fun sendRequest(jobType: RequestType, parameters: String = "", updateFunction: (response: HttpResponse) -> Unit = {}) {
-        Log.w("request", parameters)
+        Log.w("request", "url$parameters")
         Handler(Looper.getMainLooper()).post(Runnable {
             progressBar.visibility = View.VISIBLE
         })

@@ -15,8 +15,8 @@ class ChangeAngleButton(private val button: Button,
 
     var angle = 42
     set(value) {
-        setText(angle)
         field = value
+        setText(angle)
     }
 
     fun initialise() {

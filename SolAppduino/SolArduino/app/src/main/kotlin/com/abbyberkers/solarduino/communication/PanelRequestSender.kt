@@ -7,10 +7,10 @@ import com.abbyberkers.solarduino.ui.components.CurrentAngleView
 import com.abbyberkers.solarduino.ui.components.SelectAngleBar
 
 /**
- *
- * only one instance of this class should exist
+ * Send requests to the panels.
+ * Only one instance of this class should exist.
  * todo In case any action is done which is manual control, uncheck auto checkbox
- * todo send update periodically
+ * todo always update angle periodically
  * todo option to enable logging to see all http requests and responses?
  */
 class PanelRequestSender(progressBar: ProgressBar, currentAngleView: CurrentAngleView, autoCheckBox: CheckBox) {
