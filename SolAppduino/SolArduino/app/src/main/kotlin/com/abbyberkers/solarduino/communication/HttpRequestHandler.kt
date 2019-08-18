@@ -1,5 +1,6 @@
 package com.abbyberkers.solarduino.communication
 
+import android.os.Handler
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ProgressBar
@@ -11,6 +12,9 @@ import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
 import kotlinx.coroutines.*
+import android.os.Looper
+import android.util.Log
+
 
 class HttpRequestHandler(private val progressBar: ProgressBar, private val currentAngleView: CurrentAngleView, private val autoCheckBox: CheckBox) {
 
@@ -30,7 +34,10 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
      * @param updateFunction: Function to execute when the http response is received.
      */
     fun sendRequest(jobType: RequestType, parameters: String = "", updateFunction: (response: HttpResponse) -> Unit = {}) {
-        progressBar.visibility = View.VISIBLE
+        Log.w("request", parameters)
+        Handler(Looper.getMainLooper()).post(Runnable {
+            progressBar.visibility = View.VISIBLE
+        })
 
         // If there already is a job of the same type running, do not submit a second one
         if (currentJobType != jobType || currentJob?.isActive == false) {
@@ -71,12 +78,15 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
             // Tests have shown that this call is cancellable with job.cancelAndJoin()
             val resultString = client.get<String>("http://192.168.178.42:8080/$parameters")
             val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
-            // Always update angle, for any request
-            currentAngleView.angle = response.angle
-            autoCheckBox.isChecked = response.auto_mode
-            updateFunction(response)
             client.close()
-            progressBar.visibility = View.INVISIBLE
+            // Run in ui thread
+            Handler(Looper.getMainLooper()).post(Runnable {
+                // Always update angle, for any request
+                currentAngleView.angle = response.angle
+                autoCheckBox.isChecked = response.auto_mode
+                updateFunction(response)
+                progressBar.visibility = View.INVISIBLE
+            })
         }
     }
 

@@ -45,10 +45,12 @@ class PanelRequestSender(progressBar: ProgressBar, currentAngleView: CurrentAngl
     }
 
     fun movePanelsUp() {
-        // todo timer
+        handler.sendRequest(RequestType.PANELS_UP, "?panel=up")
     }
 
-    fun movePanelsDown() {}
+    fun movePanelsDown() {
+        handler.sendRequest(RequestType.PANELS_DOWN, "?panel=down")
+    }
 
     fun stopPanels() {
         handler.sendRequest(RequestType.PANELS_STOP, "?panel=stop")

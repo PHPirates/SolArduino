@@ -64,7 +64,7 @@ class PanelController:
         Get the current angle of the solar panels, where 0 is flat and 90
         upright.
         """
-        nr_samples = 500
+        nr_samples = 2
         try:
             sample_mean = mean([self.panel.get_potmeter_value()
                                 for _ in range(nr_samples)])

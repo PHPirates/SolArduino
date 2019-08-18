@@ -29,7 +29,7 @@ class Webserver(BaseHTTPRequestHandler):
     def write_emergency(self, emergency: Emergency):
         response = HttpResponse(emergency=True,
                                 angle=self.panel_controller.get_angle(),
-                                mode='manual',
+                                auto_mode=False,
                                 message=emergency.message)
         self.write_dataclass(response)
 
@@ -50,8 +50,6 @@ class Webserver(BaseHTTPRequestHandler):
             except Exception:
                 emergency.set(traceback.format_exc())
                 self.write_emergency(emergency)
-
-        # self.append_content('</body></html>')
 
     def parse_params(self, url_params):
         message = ""

@@ -2,7 +2,7 @@ package com.abbyberkers.solarduino.ui.components
 
 import com.abbyberkers.solarduino.communication.PanelRequestSender
 
-class MoveDownButton(private val downButton: AccessibilityImageButton) {
+class MoveDownButton(private val downButton: TimerImageButton) {
 
     fun initialise(panelRequestSender: PanelRequestSender) {
         // When touched, start moving panels.
