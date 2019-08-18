@@ -55,8 +55,8 @@
         android:id="@+id/stop_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/down_button"
-        app:backgroundTint="@color/colorAccent"
+        android:src="@drawable/ic_stop"
+        app:backgroundTint="@color/stopColor"
         app:fabSize="normal"
         app:layout_anchor="@id/bottom_app_bar" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

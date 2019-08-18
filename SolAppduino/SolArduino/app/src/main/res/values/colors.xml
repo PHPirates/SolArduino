@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#FF007681</color>
     <color name="colorAccent">#00929F</color>
     <color name="defaultText">#8a000000</color>
-    <!--<color name="colorAccent">#FF4081</color>-->
+
+    <color name="stopColor">#CC0202</color>
 </resources>
