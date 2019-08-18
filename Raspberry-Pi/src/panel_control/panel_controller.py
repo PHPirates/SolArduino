@@ -79,9 +79,11 @@ class PanelController:
             raise e
 
     def up(self) -> bool:
+        self.disable_auto_mode()
         return self.panel_mover.up()
 
     def down(self) -> bool:
+        self.disable_auto_mode()
         return self.panel_mover.down()
 
     def stop(self):
@@ -133,6 +135,8 @@ class PanelController:
         Start a new thread which will move the panels.
         :return: A human readable message.
         """
+        self.disable_auto_mode()
+
         if self.go_to_angle_thread is not None:
             self.go_to_angle_thread.stop()
             self.go_to_angle_thread.join()

@@ -9,7 +9,6 @@ import com.abbyberkers.solarduino.ui.components.SelectAngleBar
 /**
  * Send requests to the panels.
  * Only one instance of this class should exist.
- * todo In case any action is done which is manual control, uncheck auto checkbox
  * todo always update angle periodically
  * todo option to enable logging to see all http requests and responses?
  */

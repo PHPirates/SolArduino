@@ -23,7 +23,7 @@ class AutoModeThread(StoppableThread):
     latest_time_index = 0
 
     def __init__(self, emergency: Emergency,
-                 go_to_angle_function: Callable[[int], None]):
+                 go_to_angle_function: Callable[[float], str]):
         """
         :param go_to_angle_function: What function to use to move the panels.
         """
