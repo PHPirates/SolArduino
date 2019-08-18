@@ -1,3 +1,5 @@
+from socketserver import TCPServer
+
 import psutil
 from pep3143daemon import PidFile, DaemonContext
 
@@ -22,8 +24,9 @@ class Daemonizer:
         except FileNotFoundError:
             pass
 
-    def start(self):
+    def start(self, fileno):
         self.kill_if_exists()
         pidfile = PidFile(self.pid_path)
-        daemon = DaemonContext(pidfile=pidfile)
-        daemon.open()
+        daemon_context = DaemonContext(pidfile=pidfile)
+        daemon_context.files_preserve = [fileno]
+        return daemon_context
