@@ -33,12 +33,6 @@ class PanelController:
         :return: Appropriate human readable response message.
         """
 
-        if len(direction) > 1:
-            raise ValueError(f'Panels can only move in one direction but was '
-                             f'given panel={direction}.')
-
-        direction = direction[0]
-
         if direction == 'up':
             self.up()
             return 'Panels going up.'
