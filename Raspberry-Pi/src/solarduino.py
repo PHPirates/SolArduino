@@ -1,3 +1,4 @@
+import subprocess
 import sys
 
 import cherrypy
@@ -15,6 +16,8 @@ def kill_if_exists():
 
         process = psutil.Process(pid)
         process.terminate()
+    except psutil.AccessDenied:
+        subprocess.check_call(['sudo', 'kill', str(pid)])
     except FileNotFoundError:
         pass
 
@@ -29,8 +32,8 @@ if __name__ == '__main__':
     gettrace = getattr(sys, 'gettrace', None)
     if gettrace is None or not gettrace():
         Daemonizer(cherrypy.engine,
-                   stdout='solarduino_access.log',
-                   stderr='solarduino_error.log').subscribe()
+                   stdout='logs/solarduino_access.log',
+                   stderr='logs/solarduino_error.log').subscribe()
 
     cherrypy.config.update({'server.socket_host': '192.168.178.42',
                             'server.socket_port': 8080,
