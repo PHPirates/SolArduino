@@ -1,1 +1,3 @@
 venv/
+src/solarduino_error.log
+src/solarduino_access.log
