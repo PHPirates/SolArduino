@@ -1,3 +1,4 @@
+import socket
 import subprocess
 import sys
 
@@ -6,6 +7,14 @@ import psutil
 from cherrypy.process.plugins import Daemonizer, PIDFile
 
 from src.webserver.webserver import Webserver
+
+
+def get_ip() -> str:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    s.close()
+    return ip
 
 
 def kill_if_exists():
@@ -35,7 +44,7 @@ if __name__ == '__main__':
                    stdout='logs/solarduino_access.log',
                    stderr='logs/solarduino_error.log').subscribe()
 
-    cherrypy.config.update({'server.socket_host': '192.168.178.42',
+    cherrypy.config.update({'server.socket_host': get_ip(),
                             'server.socket_port': 8080,
                             })
     cherrypy.quickstart(Webserver(), '')

@@ -13,7 +13,7 @@ def get_optimal_angles(sun_samples=1000, nr_angles=10):
     """
     times_and_angles = []
 
-    # todo eventually this should be killable since called from a
+    # todo #78 eventually this should be killable since called from a
     #  daemon thread. Would be okay if calling haskell directly?
     with open('angles.times') as f:
         content = f.readlines()

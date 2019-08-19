@@ -7,9 +7,6 @@ from emergency import Emergency
 from src.panel_control.panel_controller import PanelController
 from webserver.http_response import HttpResponse
 
-hostName = '192.168.178.42'  # todo get real hostname
-hostPort = 8080
-
 
 class Webserver(object):
     """
@@ -64,9 +61,12 @@ class Webserver(object):
                 message = str(e)
 
         if 'degrees' in url_params.keys():
-            angle = float(url_params['degrees'][0])
-            message = self.panel_controller.go_to_angle(angle)
-            # todo make sure to handle multiple params properly
+            if message:
+                message = f'Can do only one thing at a time, skipping' \
+                          f' degrees={url_params["degrees"]}'
+            else:
+                angle = float(url_params['degrees'])
+                message = self.panel_controller.go_to_angle(angle)
 
         emergency = False
         angle = self.panel_controller.get_angle()
