@@ -55,6 +55,7 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
 
     /**
      * Start a get request with the given parameters.
+     * todo #98:
      * todo timeouts
      * todo retry in case of certain failures
      * todo error throwing/handling
@@ -65,30 +66,29 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
      */
     private fun startGetRequest(parameters: String = "", updateFunction: (response: HttpResponse) -> Unit = {}): Job {
         // Send http requests in a coroutine
-//        return CoroutineScope(Dispatchers.IO).launch {
-//            val client = HttpClient(Android) {
-//                install(JsonFeature) {
-//                    serializer = GsonSerializer()
-//                }
-//                engine {
-//                    connectTimeout = 10_000  // milliseconds
-//                    socketTimeout = 10_000
-//                }
-//            }
-//            // Tests have shown that this call is cancellable with job.cancelAndJoin()
-//            val resultString = client.get<String>("http://192.168.178.42:8080/$parameters")
-//            val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
-//            client.close()
-//            // Run in ui thread
-//            Handler(Looper.getMainLooper()).post(Runnable {
-//                // Always update angle, for any request
-//                currentAngleView.angle = response.angle
-//                autoCheckBox.isChecked = response.auto_mode
-//                updateFunction(response)
-//                progressBar.visibility = View.INVISIBLE
-//            })
-//        }
-        return Job()
+        return CoroutineScope(Dispatchers.IO).launch {
+            val client = HttpClient(Android) {
+                install(JsonFeature) {
+                    serializer = GsonSerializer()
+                }
+                engine {
+                    connectTimeout = 10_000  // milliseconds
+                    socketTimeout = 10_000
+                }
+            }
+            // Tests have shown that this call is cancellable with job.cancelAndJoin()
+            val resultString = client.get<String>("http://192.168.178.42:8080/$parameters")
+            val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
+            client.close()
+            // Run in ui thread
+            Handler(Looper.getMainLooper()).post(Runnable {
+                // Always update angle, for any request
+                currentAngleView.angle = response.angle
+                autoCheckBox.isChecked = response.auto_mode
+                updateFunction(response)
+                progressBar.visibility = View.INVISIBLE
+            })
+        }
     }
 
 }

@@ -17,7 +17,7 @@ class ScheduleFragment : Fragment() {
     }
 
     /**
-     * TODO get the data from the Pi instead of our own little file located in /res/raw.
+     * TODO #95: get the data from the Pi instead of our own little file located in /res/raw.
      * TODO move to PanelRequestSender?
      *
      * Gets the data for the schedule chart.
