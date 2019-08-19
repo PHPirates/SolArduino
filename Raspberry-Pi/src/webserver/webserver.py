@@ -1,8 +1,7 @@
 import dataclasses
-import json
-import urllib.parse
 import traceback
-from http.server import BaseHTTPRequestHandler
+
+import cherrypy
 
 from emergency import Emergency
 from src.panel_control.panel_controller import PanelController
@@ -12,46 +11,43 @@ hostName = '192.168.178.42'  # todo get real hostname
 hostPort = 8080
 
 
-class Webserver(BaseHTTPRequestHandler):
+class Webserver(object):
     """
     Serve an http server.
     """
 
     panel_controller = PanelController()
 
-    def write_dataclass(self, dataclass):
-        """
-        Put the dataclass as the content of the http response.
-        """
-        content = json.dumps(dataclasses.asdict(dataclass))
-        self.wfile.write(bytes(content, 'utf-8'))
+    def emergency_to_dict(self, emergency: Emergency) -> dict:
+        resp = HttpResponse(emergency=True,
+                            angle=self.panel_controller.get_angle(),
+                            auto_mode=False,
+                            message=emergency.message,
+                            max_angle=self.panel_controller.panel.max_angle,
+                            min_angle=self.panel_controller.panel.min_angle)
+        return dataclasses.asdict(resp)
 
-    def write_emergency(self, emergency: Emergency):
-        response = HttpResponse(emergency=True,
-                                angle=self.panel_controller.get_angle(),
-                                auto_mode=False,
-                                message=emergency.message)
-        self.write_dataclass(response)
-
-    # noinspection PyPep8Naming
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def index(self, **params):
 
         emergency = self.panel_controller.emergency
         if emergency.is_set:
-            self.write_emergency(emergency)
+            return self.emergency_to_dict(emergency)
         else:
             # noinspection PyBroadException
             try:
-                url_params = urllib.parse.parse_qs(self.path[2:])
-                self.parse_params(url_params)
+                return self.parse_params(params)
             except Exception:
                 emergency.set(traceback.format_exc())
-                self.write_emergency(emergency)
+                return self.emergency_to_dict(emergency)
 
-    def parse_params(self, url_params):
+    def parse_params(self, url_params) -> dict:
+        """
+        Handle the request.
+        :param url_params: Dict with keys and values.
+        :return: Response.
+        """
         message = ""
 
         # No parameters given.
@@ -63,8 +59,9 @@ class Webserver(BaseHTTPRequestHandler):
                 message = self.panel_controller.move_panels(
                     url_params['panel'])
             except ValueError as e:
+                # An incorrect request is not an emergency, we allow the user
+                # to try again
                 message = str(e)
-                return
 
         if 'degrees' in url_params.keys():
             angle = float(url_params['degrees'][0])
@@ -79,4 +76,4 @@ class Webserver(BaseHTTPRequestHandler):
 
         response = HttpResponse(emergency, angle, auto_mode, message,
                                 min_angle, max_angle)
-        self.write_dataclass(response)
+        return dataclasses.asdict(response)

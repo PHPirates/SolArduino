@@ -1,26 +1,14 @@
-from http.server import HTTPServer
-from socketserver import ThreadingMixIn
+import cherrypy
+from cherrypy.process.plugins import Daemonizer
 
-from src.webserver.webserver import hostPort, hostName, Webserver
-from util.daemonizer import Daemonizer
-
-
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """Handle requests in a separate thread."""
+from src.webserver.webserver import Webserver
 
 if __name__ == '__main__':
     """ Start SolArduino. """
-    # Run in the background
-    # todo webserver doesn't work in background?
-
-    # Start webserver
-    # with open('solarduino.err.log', 'w') as stderr, redirect_stderr(stderr):
-    server = ThreadedHTTPServer(
-        (hostName, hostPort),
-        Webserver)
-
-    daemon_context = Daemonizer().start(server.fileno())
-
-    with daemon_context:
-        server.serve_forever()
-
+    Daemonizer(cherrypy.engine,
+               stdout='solarduino_access.log',
+               stderr='solarduino_error.log').subscribe()
+    cherrypy.config.update({'server.socket_host': '192.168.178.42',
+                            'server.socket_port': 8080,
+                            })
+    cherrypy.quickstart(Webserver(), '')
