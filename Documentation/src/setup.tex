@@ -163,6 +163,8 @@ The best solution we could think of was buying a Raspberry Pi, see Section~\ref{
 		;
 	\end{circuitikz}\end{center}
 
+% todo docs about adc converter
+% https://www.raspberrypi-spy.co.uk/2013/10/analogue-sensors-on-the-raspberry-pi-using-an-mcp3008/
 	\begin{table}
 		\centering
 		\begin{tabular}{l|l|l|l}
@@ -181,6 +183,7 @@ The best solution we could think of was buying a Raspberry Pi, see Section~\ref{
 		\caption{Wiring}
 		\label{tab:wiring}
 	\end{table}
+
 \subsubsection{Potentiometer}
 The \textbf{blue} wire from the potentiometer to the main control box is the signal wire, on connection 7 in that box.
 
@@ -190,7 +193,9 @@ Potmeter values as measured by the Arduino, scale 0--1024:
 	Date & Low end stop & High end stop \\
 	2017-10-22 & 360 & 74 \\
 	2018-04-15 & 405 & 40 \\
+	2019-08-11 & 415 & 57 \\
 \end{tabular}
+
 
 \subsubsection{Motor control}
 We bought BC547 NPN transistors to control the 12V/20mA (\href{http://download.lenze.com/TD/8201-8204__Inverter__v02-08__EN.pdf }{docs}, page 4--11) or 14V/40mA (measured) current of the EVF8202-E frequency inverter, and also base resistors otherwise the Arduino needs to give too much current to the transistor, and the transistor will be slow to turn off because of `base charge storage'.

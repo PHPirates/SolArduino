@@ -52,6 +52,8 @@ urlcolor=cyan,
                           #1
 \end{pmatrix}}
 
+\newcommand{\ipaddress}{http://192.168.8.42}
+
 \begin{document}
 
     \tableofcontents
@@ -83,7 +85,7 @@ urlcolor=cyan,
 
     Also change it in the Android app two times (\verb|ipString| and \verb|host|), and in the desktop app.
 
-    The current ip address is \url{http://192.168.8.42}.
+    The current ip address is \url{\ipaddress}.
 
     \subsection{Panels are stuck when out of bounds}\label{subsec:outOfBounds}
 
@@ -133,19 +135,19 @@ urlcolor=cyan,
     For all the requests accepted by the Arduino, check section~\ref{subsec:arduinotoandroid}.
     Below a list containing what requests are sent when something is clicked can be found.
     \begin{itemize}
-        \item \textbf{Up and down button.} \url{http://192.168.2.106/?panel=up} is sent at the moment the button is pressed, so the Arduino knows we want the panels to move up.
-        After that, the request \url{http://192.168.2.106/?update} is sent with a set interval.
+        \item \textbf{Up and down button.} \url{\ipaddress/?panel=up} is sent at the moment the button is pressed, so the Arduino knows we want the panels to move up.
+        After that, the request \url{\ipaddress/?update} is sent with a set interval.
         This interval depends on the speed of the solar panels, and is about as much as it takes the panels to move $1$ degree.
         This request is sent so often to be able to keep the degree (on the top right of the screen) and the picture up to date with the actual position of the panels.
-        At the moment the button is released the request \url{http://192.168.2.10/?panel=stop} is sent to the Arduino, so it knows we want the panels to not move anymore.
+        At the moment the button is released the request \url{\ipaddress/?panel=stop} is sent to the Arduino, so it knows we want the panels to not move anymore.
         No \verb|?update| requests are sent anymore.
 
-        \item \textbf{Auto checkbox.} \url{http://192.168.2.106/?panel=auto} is sent when the checkbox is being checked, \url{http://192.168.2.106/?panel=manual} is sent when the panels go out of auto mode.
+        \item \textbf{Auto checkbox.} \url{\ipaddress/?panel=auto} is sent when the checkbox is being checked, \url{\ipaddress/?panel=manual} is sent when the panels go out of auto mode.
         Which is either when the user unchecks the checkbox, or when the user clicks the up/down button, or when the user clicks the button to set the panels at a certain angle.
 
-        \item \textbf{Current degree text.} \url{http://192.168.2.106/?update} to update the current angle in the text, and the position of the picture to the actual position of the solar panels.
+        \item \textbf{Current degree text.} \url{\ipaddress/?update} to update the current angle in the text, and the position of the picture to the actual position of the solar panels.
 
-        \item \textbf{Set angle button.} This takes the current position of the slider/seekbar (\verb|seekbar.getProgress()|) and uses that to send a request \url{http://192.168.2.106/?degrees=xx} to the Arduino so it knows at what angle to set the solar panels.
+        \item \textbf{Set angle button.} This takes the current position of the slider/seekbar (\verb|seekbar.getProgress()|) and uses that to send a request \url{\ipaddress/?degrees=xx} to the Arduino so it knows at what angle to set the solar panels.
         Until the panels have reached the set position, the \verb|?update| request is sent with the same interval as for the up and down buttons.
         The app knows when the panels have reached the set position by comparing the current position of the panels and the position of the slider before each request.
         If these are equal, it doesn't send an \verb|?update| request anymore.

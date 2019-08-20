@@ -46,11 +46,9 @@
     But tests point out almost 400 bytes are needed here, so be sure to test it well.
     In the NAS, you can find the page with the file browser under \verb|DiskStation/web/index.php|.
 
-\newcommand{\ipaddress}{http://192.168.8.42} % todo
-
 \subsection{Communication with the Android app} \label{subsec:arduinotoandroid}
     \subsubsection{Request}
-    Communication goes by http requests, in the form of \url{http://192.168.2.106/?key=value}.
+    Communication goes by http requests, in the form of \url{\ipaddress/?key=value}.
     Currently implemented are the following parameter options.
 
     \begin{tabular}{ll}
