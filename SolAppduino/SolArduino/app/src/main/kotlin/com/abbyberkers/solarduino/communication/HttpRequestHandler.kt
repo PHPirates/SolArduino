@@ -77,7 +77,7 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
                 }
             }
             // Tests have shown that this call is cancellable with job.cancelAndJoin()
-            val resultString = client.get<String>("http://192.168.178.42:8080/$parameters")
+            val resultString = client.get<String>("http://192.168.8.42:8080/$parameters")
             val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
             client.close()
             // Run in ui thread

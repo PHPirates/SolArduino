@@ -22,8 +22,8 @@ class PanelController:
         """ For safety, stop panels and disable auto mode. """
         self.emergency = Emergency(self.stop)
         self.panel_mover = PanelMover(self.panel, self.emergency)
+        # Will also disable auto mode
         self.stop()
-        self.disable_auto_mode()
 
     def move_panels(self, direction: list) -> str:
         """
@@ -80,19 +80,29 @@ class PanelController:
         self.disable_auto_mode()
         return self.panel_mover.down()
 
-    def stop(self):
+    def stop(self, stop_angle_thread=True, stop_auto_thread=True):
         """
         Will cancel any movement and disable auto mode.
+
+        :param stop_angle_thread: Whether to join the go_to_angle_thread.
+        Should be false if calling from that thread, because a thread cannot
+        stop itself this way - it should just stop itself by returning from
+        the run method.
+        :param stop_auto_thread: Same for auto_mode_thread.
         """
         self.panel.stop()
         self.panel_mover.timer.stop()
-        # Make sure to wait for the thread to stop, to ensure it doesn't
-        # sneakily move something between us asking to stop and it stopping
-        if self.go_to_angle_thread is not None:
-            self.go_to_angle_thread.stop()
-            self.go_to_angle_thread.join()
 
-        self.disable_auto_mode()
+        if stop_angle_thread:
+            # Make sure to wait for the thread to stop, to ensure it doesn't
+            # sneakily move something between us asking to stop and it stopping
+            if self.go_to_angle_thread is not None:
+                self.go_to_angle_thread.stop()
+                self.go_to_angle_thread.join()
+
+        if stop_auto_thread:
+            self.disable_auto_mode()
+
         self.panel.stop()
 
     def enable_auto_mode(self):
@@ -124,12 +134,18 @@ class PanelController:
         else:
             return self.auto_mode_thread.is_alive()
 
-    def go_to_angle(self, angle: float) -> str:
+    def go_to_angle(self, angle: float, auto_mode=False) -> str:
         """
         Start a new thread which will move the panels.
+
+        :param angle: angle
+        :param auto_mode: True if called while in auto mode. If false,
+        we assume the user wants to execute this function manually
+        and auto mode will be disabled.
         :return: A human readable message.
         """
-        self.disable_auto_mode()
+        if not auto_mode:
+            self.disable_auto_mode()
 
         if self.go_to_angle_thread is not None:
             self.go_to_angle_thread.stop()

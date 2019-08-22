@@ -30,7 +30,7 @@ class SolarPanel:
     # The hard bounds are the ones on which the panels will hit the
     # real end stop
     hard_upper_bound = 1023 - 57
-    hard_lower_bound = 1023 - 415
+    hard_lower_bound = 1023 - 407
     # The soft bounds are the bounds at which the software will stop
     # to avoid hitting the hard bounds
     soft_bound_value = (hard_upper_bound - hard_lower_bound) / \

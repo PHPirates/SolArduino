@@ -23,7 +23,7 @@ class AutoModeThread(StoppableThread):
     latest_time_index = 0
 
     def __init__(self, emergency: Emergency,
-                 go_to_angle_function: Callable[[float], str]):
+                 go_to_angle_function: Callable[[float, bool], str]):
         """
         :param go_to_angle_function: What function to use to move the panels.
         """
@@ -33,36 +33,45 @@ class AutoModeThread(StoppableThread):
         self.go_to_angle_function = go_to_angle_function
 
     def run(self):
-        while not self.stopped():
+        try:
+            while not self.stopped():
+                if not self.do_auto_mode():
+                    return
+        except Exception as e:
+            self.emergency.set(str(e), stop_auto_thread=False)
 
-            not_initialised = len(self.times_and_angles) == 0
-            out_of_angles = self.latest_time_index + 1 >= \
-                len(self.times_and_angles)
-            day_changed = date.today() != self.day_state
+    def do_auto_mode(self) -> bool:
+        not_initialised = len(self.times_and_angles) == 0
+        out_of_angles = self.latest_time_index + 1 >= \
+            len(self.times_and_angles)
+        day_changed = date.today() != self.day_state
 
-            # Retrieve new angles when necessary
-            if not_initialised or out_of_angles or day_changed:
-                self.day_state = date.today()
-                self.times_and_angles = get_optimal_angles()
-                self.latest_time_index = 0
+        # Retrieve new angles when necessary
+        if not_initialised or out_of_angles or day_changed:
+            self.day_state = date.today()
+            self.times_and_angles = get_optimal_angles()
+            self.latest_time_index = 0
 
-            # If we passed the last time, we did not receive correct times
-            if self.times_and_angles[-1][0] < datetime.utcnow():
-                self.emergency.set('Could not retrieve optimal angles')
-                return
+        # If we passed the last time, we did not receive correct times
+        if self.times_and_angles[-1][0] < datetime.utcnow():
+            self.emergency.set('Could not retrieve optimal angles',
+                               stop_auto_thread=False)
+            return False
 
-            # Now we will assume the index is safe to work with
-            new_index = self.latest_time_index
-            while new_index + 1 < len(self.times_and_angles) and \
-                    self.times_and_angles[new_index + 1][0] \
-                    < datetime.utcnow():
-                new_index += 1
+        # Now we will assume the index is safe to work with
+        new_index = self.latest_time_index
+        while new_index + 1 < len(self.times_and_angles) and \
+                self.times_and_angles[new_index + 1][0] \
+                < datetime.utcnow():
+            new_index += 1
 
-            # If we need to advance to a next time and angle
-            if new_index != self.latest_time_index:
-                self.latest_time_index = new_index
-                # If not at the end, move panels (otherwise request new angles
-                # in next loop)
-                if self.latest_time_index + 1 < len(self.times_and_angles):
-                    angle = self.times_and_angles[self.latest_time_index][1]
-                    self.go_to_angle_function(angle)
+        # If we need to advance to a next time and angle
+        if new_index != self.latest_time_index:
+            self.latest_time_index = new_index
+            # If not at the end, move panels (otherwise request new angles
+            # in next loop)
+            if self.latest_time_index + 1 < len(self.times_and_angles):
+                angle = self.times_and_angles[self.latest_time_index][1]
+                self.go_to_angle_function(angle, True)
+
+        return True
