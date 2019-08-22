@@ -34,9 +34,11 @@ class PanelController:
         """
 
         if direction == 'up':
+            self.disable_auto_mode()
             self.up()
             return 'Panels going up.'
         elif direction == 'down':
+            self.disable_auto_mode()
             self.down()
             return 'Panels going down.'
         elif direction == 'auto':
@@ -73,11 +75,9 @@ class PanelController:
             raise e
 
     def up(self) -> bool:
-        self.disable_auto_mode()
         return self.panel_mover.up()
 
     def down(self) -> bool:
-        self.disable_auto_mode()
         return self.panel_mover.down()
 
     def stop(self, stop_angle_thread=True, stop_auto_thread=True):
