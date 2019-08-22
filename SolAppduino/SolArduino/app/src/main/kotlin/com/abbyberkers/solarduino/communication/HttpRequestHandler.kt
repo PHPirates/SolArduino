@@ -14,6 +14,7 @@ import io.ktor.client.request.get
 import kotlinx.coroutines.*
 import android.os.Looper
 import android.util.Log
+import java.net.SocketTimeoutException
 
 
 class HttpRequestHandler(private val progressBar: ProgressBar, private val currentAngleView: CurrentAngleView, private val autoCheckBox: CheckBox) {
@@ -77,17 +78,46 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
                 }
             }
             // Tests have shown that this call is cancellable with job.cancelAndJoin()
-            val resultString = client.get<String>("http://192.168.8.42:8080/$parameters")
-            val response: HttpResponse = Gson().fromJson(resultString, HttpResponse::class.java)
-            client.close()
-            // Run in ui thread
-            Handler(Looper.getMainLooper()).post(Runnable {
-                // Always update angle, for any request
-                currentAngleView.angle = response.angle
-                autoCheckBox.isChecked = response.auto_mode
-                updateFunction(response)
+
+            var resultString: String? = null
+            run {
+                // Try to get a response a couple of times
+                repeat(3) {
+                    resultString = doRequest(client, parameters)
+                    if (resultString != null) {
+                        return@run
+                    }
+                }
+            }
+            if (resultString == null) {
+                // Give up.
                 progressBar.visibility = View.INVISIBLE
-            })
+                return@launch
+            } else {
+                val response: HttpResponse = Gson().fromJson(resultString!!, HttpResponse::class.java)
+                client.close()
+                // Run in ui thread
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    // Always update angle, for any request
+                    currentAngleView.angle = response.angle
+                    autoCheckBox.isChecked = response.auto_mode
+                    updateFunction(response)
+                    progressBar.visibility = View.INVISIBLE
+                })
+            }
+        }
+    }
+
+    /**
+     * Try a http request.
+     *
+     * @return Response or null in case request didn't reach the server.
+     */
+    private suspend fun doRequest(client: HttpClient, parameters: String): String? {
+        return try {
+            client.get<String>("http://192.168.8.42:8080/$parameters")
+        } catch (e: SocketTimeoutException) {
+            return null
         }
     }
 
