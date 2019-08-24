@@ -1,0 +1,54 @@
+\subsection{Finding the angle between the sun and the line perpendicular to the solar panels}\label{subsec:findingTheAngleBetweenTheSunAndTheLinePerpendicularToTheSolarPanels}
+To find the angle $\alpha$ between the sun and the line perpendicular to the solar panel, we determined both lines in spherical coordinates (with the same distance to the origin) and then calculated the angle between the two.
+
+
+For the sun this would be
+\[
+    \vvec{x \\ y \\ z} =
+    \vvec{\cos \gamma_s \sin \left(\frac{\pi}{2} - \theta_s\right) \\
+    \sin \gamma_s \sin \left(\frac{\pi}{2} - \theta_s\right) \\
+    \cos \left(\frac{\pi}{2} - \theta_s\right)}
+\]
+where $ \gamma_s $ is the azimuth, and $ \theta_s $ the altitude of the sun.
+
+
+For the line perpendicular to the solar panels this would be
+\[
+    \vvec{x \\ y \\ z} =
+    \vvec{\cos \gamma_p \sin \left(\frac{\pi}{2} - \theta_p\right) \\
+    \sin \gamma_p \sin \left(\frac{\pi}{2} - \theta_p\right) \\
+    \cos \left(\frac{\pi}{2} - \theta_p\right)}
+\]
+where $ \gamma_p $ is the azimuth (direction of the solar panels in respect to the South), and $ \theta_p $ the altitude of the solar panels.
+
+Then, to find the angle $\alpha$ between these two lines, we take the $ \arccos $ of the dot product.
+This gives us
+
+\[
+    \alpha = \arccos (\cos (\gamma_p - \gamma_s) \cos \theta_s \sin \theta_p + \sin \theta_s \cos \theta_p)\,.
+\]
+
+\subsection{Implementation of calculations to find optimal angles}
+
+\subsubsection{Mathematica calculations}\label{subsec:mathematicaCalculations}
+
+The Mathematica package (imported with \verb|<< SolArduino`|, be sure to place it in your
+\url{\%AppData\%\\Mathematica\\Applications} folder) can calculate the optimal angle for a given day.
+To do that, it calculates for each angle between $0$ and $90$ the total of the insolation (power received by the sun) at each half hour of that day.
+Then it finds the angle for which that value is maximal.
+To find the insolation at a given hour, the function \verb|angle| calculates the misalignment with the sun using the formula from the previous subsection, and then calculates the insolation using a formula from \href{http://www.powerfromthesun.net/Book/chapter02/chapter02.html#ZEqnNum929295 }{www.powerfromthesun.net}, where parameters for urban haze compared a lot better with real life values (17/8) than clear day parameters.
+
+It can therefore make graphs for optimal angles for a month, and averaging the values for a month, also for a year, and lots more as seen in the demonstration notebook.
+When plotting real data, for example days like 13/5, 19/7 and 17/8 are all cloudless days with the solar panels at around 25 degrees.
+
+It is important to note that the functions \verb|angle|, \verb|directPower| and more do not take the hour of the day as input, but the index of the \verb|sunPositions| table which contains the azimuth and altitude of the sun over the day.
+Therefore, \textit{before you call functions which take an index as parameter you need to make sure you have }\verb|sunPositions| \textit{initialised} at the right day, done by calling \verb|calculatesunPos[DateObject[{2016,7,18}]]| with whatever day you want in the table.
+
+Exporting the angles for ten times a day for two years, like
+
+\verb|exportPeriod[DateObject[{2016, 9, 7}], DateObject[{2018, 9, 15}], 10]| took only ten minutes (Lenovo W541 laptop on high performance).
+
+\subsubsection{Haskell calculations}
+
+Because Mathematica is proprietary, we decided to also provide a Haskell implementation.
+It uses the \href{https://hackage.haskell.org/package/astro}{Astro package} to find the position of the sun.

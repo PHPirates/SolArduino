@@ -1,0 +1,43 @@
+
+
+Communication goes by http requests, in the form of \url{\ipaddress/?key=value}.
+
+\subsection{Request}
+Currently implemented are the following parameter options.
+
+\begin{tabular}{ll}
+    \verb|panel=up| & The panels will move up until a timeout is reached, or a new up or down request is sent. \\
+    \verb|panel=down| & The panels will move down under the same conditions. \\
+    \verb|panel=stop| & The panels will stop moving and disable automatic mode. \\
+    \verb|panel=auto| & Enable automatic mode. \\
+    \verb|panel=manual| & Disable automatic mode. \\
+    \verb|degrees=x| & The panels will go to $x$ degrees. \\
+\end{tabular}
+
+\subsection{Response}
+
+The result will be in the form of json, containing the following values.
+
+\begin{tabular}{ll}
+    \verb|emergency: boolean| & Whether the system is in emergency mode or not. \\
+    \verb|angle: float| & Current angle of the panels. \\
+    \verb|auto_mode: boolean| & Whether the system is in automatic mode. \\
+    \verb|message: string| & Human readable response message containing more information about the response, or error message in case of emergency. \\
+    \verb|min_angle: float| & Lowest angle the panels can be set at. \\
+    \verb|max_angle: float| & Highest angle the panels can be set at. \\
+\end{tabular}
+
+\section{Android App User Manual}\label{subsec:userManual}
+To move the solar panels up (or down), press the up (or down) button and hold it until the desired position/angle is reached.
+The current degree on the top right and the picture updates while the button is held, so you know when the panels are at the desired position.
+
+To set the solar panels in auto mode, press the auto checkbox.
+
+
+To set the solar panels at a certain degree, move the slider until the $x$ at the button which says "\verb|SET ANGLE AT | $x^{\circ}$" is the desired degree for the angle.
+Then press the button to set the angle of the panels at that degree.
+May you change your mind about the angle while the panels are moving, stop the panels with the stop button at the bottom and send a new angle request.
+
+To update the |TextView| containing the current angle, simply press the number.
+This will also update the position of the picture.
+This will also check the checkbox if the panels are in auto mode, and uncheck the checkbox if the panels are not in auto mode (if needed).

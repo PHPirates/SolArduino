@@ -46,22 +46,6 @@
     But tests point out almost 400 bytes are needed here, so be sure to test it well.
     In the NAS, you can find the page with the file browser under \verb|DiskStation/web/index.php|.
 
-\subsection{Communication with the Android app} \label{subsec:arduinotoandroid}
-    \subsubsection{Request}
-    Communication goes by http requests, in the form of \url{\ipaddress/?key=value}.
-    Currently implemented are the following parameter options.
-
-    \begin{tabular}{ll}
-        \verb|panel=up| & The panels will move up. \\
-        \verb|panel=down| & The panels will move down. \\
-        \verb|panel=stop| & The panels will stop moving. \\
-        \verb|panel=auto| & The panels will go in automatic mode. \\
-        \verb|degrees=x| & The panels will go to $x$ degrees. \\
-    \end{tabular}
-
-    \subsubsection{Result}
-    The result will be in the form of % todo
-    The result will always contain the current angle of the panels.
 
 \subsection{Safety measures}\label{subsec:safetyMeasures}
     In order to avoid relying on the hardware end stops, a few safety measures were introduced:

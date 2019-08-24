@@ -66,7 +66,7 @@ class AutoModeThread(StoppableThread):
             new_index += 1
 
         # If we need to advance to a next time and angle
-        if new_index != self.latest_time_index:
+        if new_index != self.latest_time_index or not_initialised:
             self.latest_time_index = new_index
             # If not at the end, move panels (otherwise request new angles
             # in next loop)
