@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:circuit-cache
 EELAYER 30 0
 EELAYER END
 $Descr A2 23386 16535
@@ -14,32 +15,75 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L solarduino:button S?
-U 1 1 5D618DF8
-P 1850 3100
-F 0 "S?" H 2128 3146 50  0000 L CNN
-F 1 "Down button" H 2128 3055 50  0000 L CNN
-F 2 "" H 1650 3150 50  0001 C CNN
-F 3 "" H 1650 3150 50  0001 C CNN
-	1    1850 3100
+L solarduino:MCP3008 U4
+U 1 1 5D640D67
+P 11700 5050
+F 0 "U4" H 11925 5465 50  0000 C CNN
+F 1 "MCP3008" H 11925 5374 50  0000 C CNN
+F 2 "" H 11700 5050 50  0001 C CNN
+F 3 "" H 11700 5050 50  0001 C CNN
+	1    11700 5050
 	1    0    0    -1  
 $EndComp
 $Comp
-L solarduino:button S?
-U 1 1 5D61A850
-P 1850 4000
-F 0 "S?" H 2128 4046 50  0000 L CNN
-F 1 "Up button" H 2128 3955 50  0000 L CNN
-F 2 "" H 1650 4050 50  0001 C CNN
-F 3 "" H 1650 4050 50  0001 C CNN
-	1    1850 4000
+L solarduino:RaspberryPi_4 U3
+U 1 1 5D643C9E
+P 11050 2300
+F 0 "U3" H 11575 2615 50  0000 C CNN
+F 1 "RaspberryPi_4" H 11575 2524 50  0000 C CNN
+F 2 "" H 11050 2300 50  0001 C CNN
+F 3 "" H 11050 2300 50  0001 C CNN
+	1    11050 2300
+	1    0    0    -1  
+$EndComp
+Wire Bus Line
+	6200 2250 6200 2600
+$Comp
+L Transistor_BJT:BC557 Q6
+U 1 1 5D639566
+P 6400 2400
+F 0 "Q6" V 6728 2400 50  0000 C CNN
+F 1 "BC557" V 6637 2400 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 6600 2325 50  0001 L CIN
+F 3 "http://www.fairchildsemi.com/ds/BC/BC557.pdf" H 6400 2400 50  0001 L CNN
+	1    6400 2400
+	0    1    -1   0   
+$EndComp
+Wire Bus Line
+	6600 2250 6600 2600
+Wire Wire Line
+	4850 2000 6700 2000
+Wire Wire Line
+	6700 2000 6700 2400
+Wire Wire Line
+	4850 2350 4850 2000
+Wire Wire Line
+	6700 2400 6600 2400
+Connection ~ 4700 1850
+Wire Wire Line
+	4700 1500 4700 1850
+Wire Wire Line
+	5500 2450 6200 2450
+Wire Wire Line
+	5500 1850 5500 2450
+Wire Wire Line
+	4700 1850 5500 1850
+$Comp
+L solarduino:terminal U2
+U 1 1 5D63573B
+P 7000 5050
+F 0 "U2" H 8128 4671 50  0000 L CNN
+F 1 "terminal" H 8128 4580 50  0000 L CNN
+F 2 "" H 6850 4900 50  0001 C CNN
+F 3 "" H 6850 4900 50  0001 C CNN
+	1    7000 5050
 	1    0    0    -1  
 $EndComp
 $Comp
-L solarduino:panel-controller U?
+L solarduino:panel-controller U1
 U 1 1 5D62F629
 P 4400 2550
-F 0 "U?" H 4375 3515 50  0000 C CNN
+F 0 "U1" H 4375 3515 50  0000 C CNN
 F 1 "panel-controller" H 4375 3424 50  0000 C CNN
 F 2 "" H 4400 3200 50  0001 C CNN
 F 3 "" H 4400 3200 50  0001 C CNN
@@ -47,51 +91,702 @@ F 3 "" H 4400 3200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L solarduino:terminal U?
-U 1 1 5D63573B
-P 6300 5350
-F 0 "U?" H 7428 4971 50  0000 L CNN
-F 1 "terminal" H 7428 4880 50  0000 L CNN
-F 2 "" H 6150 5200 50  0001 C CNN
-F 3 "" H 6150 5200 50  0001 C CNN
-	1    6300 5350
-	1    0    0    -1  
+L Transistor_BJT:BC557 Q2
+U 1 1 5D669786
+P 7450 2400
+F 0 "Q2" V 7778 2400 50  0000 C CNN
+F 1 "BC557" V 7687 2400 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 7650 2325 50  0001 L CIN
+F 3 "http://www.fairchildsemi.com/ds/BC/BC557.pdf" H 7450 2400 50  0001 L CNN
+	1    7450 2400
+	0    1    -1   0   
+$EndComp
+$Comp
+L Transistor_BJT:BC557 Q4
+U 1 1 5D66D42B
+P 8500 2400
+F 0 "Q4" V 8828 2400 50  0000 C CNN
+F 1 "BC557" V 8737 2400 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 8700 2325 50  0001 L CIN
+F 3 "http://www.fairchildsemi.com/ds/BC/BC557.pdf" H 8500 2400 50  0001 L CNN
+	1    8500 2400
+	0    1    -1   0   
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q1
+U 1 1 5D676572
+P 7450 3400
+F 0 "Q1" V 7778 3400 50  0000 C CNN
+F 1 "BC547" V 7687 3400 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 7650 3325 50  0001 L CIN
+F 3 "http://www.fairchildsemi.com/ds/BC/BC547.pdf" H 7450 3400 50  0001 L CNN
+	1    7450 3400
+	0    1    -1   0   
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q3
+U 1 1 5D6770F7
+P 8500 3400
+F 0 "Q3" V 8828 3400 50  0000 C CNN
+F 1 "BC547" V 8750 3400 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 8700 3325 50  0001 L CIN
+F 3 "http://www.fairchildsemi.com/ds/BC/BC547.pdf" H 8500 3400 50  0001 L CNN
+	1    8500 3400
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	4700 2350 4800 2350
+Wire Wire Line
+	4800 2350 4800 1450
+Connection ~ 4800 2350
+Wire Wire Line
+	4800 2350 4850 2350
+Wire Wire Line
+	4700 2450 4900 2450
+Wire Wire Line
+	4900 2450 4900 1400
+Wire Wire Line
+	4900 1400 4000 1400
+Wire Wire Line
+	4000 1400 4000 1950
+Wire Wire Line
+	4000 1950 4050 1950
+Wire Wire Line
+	4900 2450 4950 2450
+Wire Wire Line
+	4950 2450 4950 1800
+Wire Wire Line
+	4950 1800 9450 1800
+Wire Wire Line
+	9450 1800 9450 3500
+Wire Wire Line
+	9450 3500 9200 3500
+Connection ~ 4900 2450
+Wire Bus Line
+	9200 3600 9200 3350
+Wire Wire Line
+	4700 2700 5550 2700
+Wire Wire Line
+	5550 2700 5550 5050
+Wire Wire Line
+	5550 5050 6800 5050
+Wire Wire Line
+	6800 5050 6800 5200
+Wire Wire Line
+	4700 2800 5500 2800
+Wire Wire Line
+	5500 2800 5500 5000
+Wire Wire Line
+	5500 5000 6900 5000
+Wire Wire Line
+	6900 5000 6900 5200
+Wire Wire Line
+	4700 2900 5450 2900
+Wire Wire Line
+	5450 2900 5450 4950
+Wire Wire Line
+	5450 4950 7000 4950
+Wire Wire Line
+	7000 4950 7000 5200
+Wire Notes Line
+	6700 6650 6700 6900
+Wire Notes Line
+	6700 6900 6950 6900
+Wire Notes Line
+	6950 6900 6950 6650
+Wire Notes Line
+	6950 6650 6700 6650
+Wire Notes Line
+	7600 6650 7600 6900
+Wire Notes Line
+	7600 6900 7850 6900
+Wire Notes Line
+	7850 6900 7850 6650
+Wire Notes Line
+	7850 6650 7600 6650
+Wire Notes Line
+	5150 7700 5150 7950
+Wire Notes Line
+	5150 7950 7500 7950
+Wire Notes Line
+	7500 7950 7500 7700
+Wire Notes Line
+	7500 7700 5150 7700
+Wire Wire Line
+	4700 3200 5400 3200
+Wire Wire Line
+	5400 3200 5400 6700
+Wire Wire Line
+	5400 6700 6750 6700
+Wire Wire Line
+	6750 6800 5350 6800
+Wire Wire Line
+	5350 6800 5350 3300
+Wire Wire Line
+	5350 3300 4700 3300
+Wire Wire Line
+	4050 2050 4050 2150
+Wire Wire Line
+	7700 4400 7700 4950
+Wire Wire Line
+	7100 5200 7100 5050
+Wire Wire Line
+	7100 4300 9100 4300
+Wire Wire Line
+	9100 4300 9100 3550
+Wire Wire Line
+	9100 3550 9200 3550
+Wire Wire Line
+	6900 4250 7200 4250
+Wire Wire Line
+	7200 4250 7200 5200
+$Comp
+L Device:R R1
+U 1 1 5D634E9C
+P 7600 3650
+F 0 "R1" V 7800 3650 50  0000 C CNN
+F 1 "4.7k" V 7700 3650 50  0000 C CNN
+F 2 "" V 7530 3650 50  0001 C CNN
+F 3 "~" H 7600 3650 50  0001 C CNN
+	1    7600 3650
+	0    1    1    0   
 $EndComp
 Wire Bus Line
-	6200 2200 6200 2600
+	7750 3750 7750 3600
+Wire Wire Line
+	7800 3700 7800 4350
+Wire Wire Line
+	7800 4350 7300 4350
+Wire Wire Line
+	7400 5200 7400 5150
+Wire Wire Line
+	7400 5150 5500 5150
+Wire Wire Line
+	7500 5200 7500 5100
+Wire Wire Line
+	7500 5100 5850 5100
+Text GLabel 5500 7850 0    50   Input ~ 0
+black
+Text GLabel 5850 7850 0    50   Input ~ 0
+yellow
+Wire Wire Line
+	7600 5200 7600 5050
+Wire Wire Line
+	7600 5050 7100 5050
+Connection ~ 7100 5050
+Wire Wire Line
+	7100 5050 7100 4300
+Wire Bus Line
+	7650 2250 7650 2600
+Wire Wire Line
+	7700 4950 8950 4950
+Wire Wire Line
+	8950 2400 8700 2400
+Connection ~ 7700 4950
+Wire Bus Line
+	8700 2250 8700 2600
+Wire Bus Line
+	8300 2250 8300 2600
+Wire Bus Line
+	7250 2250 7250 2600
+Wire Bus Line
+	6200 3250 6200 3600
+Wire Bus Line
+	7650 3250 7650 3500
+Wire Bus Line
+	7250 3250 7250 3600
+Wire Bus Line
+	8300 3250 8300 3600
+Wire Bus Line
+	8700 3250 8700 3500
+Wire Wire Line
+	7800 5200 7900 5200
+Wire Wire Line
+	4700 1950 5600 1950
+Wire Wire Line
+	5600 1950 5600 4900
+Wire Wire Line
+	5600 4900 8050 4900
+Wire Wire Line
+	8050 4900 8050 5200
+Wire Wire Line
+	8050 5200 8000 5200
+Text Notes 9150 3300 0    50   ~ 0
+GND
+Wire Wire Line
+	8900 4850 6400 4850
+Wire Wire Line
+	6400 4850 6400 7450
+Text GLabel 6900 7850 0    50   Input ~ 0
+white-green
+Wire Notes Line
+	850  950  850  11650
+Wire Notes Line
+	850  11650 9600 11600
+Wire Notes Line
+	9650 11600 9650 900 
+Wire Notes Line
+	9650 900  850  950 
+Text Notes 8000 1300 0    168  ~ 0
+solar panels
 $Comp
-L Transistor_BJT:BC557 Q?
-U 1 1 5D639566
-P 6400 2400
-F 0 "Q?" V 6728 2400 50  0000 C CNN
-F 1 "BC557" V 6637 2400 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-92_Inline" H 6600 2325 50  0001 L CIN
-F 3 "http://www.fairchildsemi.com/ds/BC/BC557.pdf" H 6400 2400 50  0001 L CNN
-	1    6400 2400
+L Device:R R9
+U 1 1 5D6C940F
+P 6250 2700
+F 0 "R9" V 6050 2700 50  0000 C CNN
+F 1 "10k" V 6150 2700 50  0000 C CNN
+F 2 "" V 6180 2700 50  0001 C CNN
+F 3 "~" H 6250 2700 50  0001 C CNN
+	1    6250 2700
 	0    -1   -1   0   
 $EndComp
 Wire Bus Line
-	6600 2200 6600 2600
+	6400 2600 6400 2750
+Wire Bus Line
+	6400 3600 6400 3700
+Wire Bus Line
+	6600 3250 6600 3500
+Wire Wire Line
+	6900 3700 6900 4250
+Wire Bus Line
+	6700 3750 6700 3600
 $Comp
-L solarduino:MCP3008 U?
-U 1 1 5D640D67
-P 11300 5000
-F 0 "U?" H 11525 5415 50  0000 C CNN
-F 1 "MCP3008" H 11525 5324 50  0000 C CNN
-F 2 "" H 11300 5000 50  0001 C CNN
-F 3 "" H 11300 5000 50  0001 C CNN
-	1    11300 5000
+L Device:R R7
+U 1 1 5D6C0464
+P 6550 3650
+F 0 "R7" V 6350 3650 50  0000 C CNN
+F 1 "4.7k" V 6450 3650 50  0000 C CNN
+F 2 "" V 6480 3650 50  0001 C CNN
+F 3 "~" H 6550 3650 50  0001 C CNN
+	1    6550 3650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q5
+U 1 1 5D6725EB
+P 6400 3400
+F 0 "Q5" V 6728 3400 50  0000 C CNN
+F 1 "BC547" V 6637 3400 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 6600 3325 50  0001 L CIN
+F 3 "http://www.fairchildsemi.com/ds/BC/BC547.pdf" H 6400 3400 50  0001 L CNN
+	1    6400 3400
+	0    1    -1   0   
+$EndComp
+Wire Bus Line
+	7450 3600 7450 3700
+Wire Wire Line
+	8900 3700 8800 3700
+$Comp
+L Device:R R4
+U 1 1 5D6A6D36
+P 8650 3650
+F 0 "R4" V 8850 3650 50  0000 C CNN
+F 1 "4.7k" V 8750 3650 50  0000 C CNN
+F 2 "" V 8580 3650 50  0001 C CNN
+F 3 "~" H 8650 3650 50  0001 C CNN
+	1    8650 3650
+	0    1    1    0   
+$EndComp
+Wire Bus Line
+	8800 3600 8800 3750
+Wire Wire Line
+	6700 3700 6900 3700
+Wire Wire Line
+	7750 3700 7800 3700
+Wire Bus Line
+	8500 3600 8500 3700
+Wire Wire Line
+	8900 3700 8900 4850
+Wire Wire Line
+	6200 2550 7250 2550
+Wire Wire Line
+	6100 2700 6050 2700
+Wire Wire Line
+	6050 2700 6050 2400
+Wire Wire Line
+	6050 2400 6200 2400
+$Comp
+L Device:R R8
+U 1 1 5D7513AB
+P 6700 3000
+F 0 "R8" H 6770 3046 50  0000 L CNN
+F 1 "1k" H 6770 2955 50  0000 L CNN
+F 2 "" V 6630 3000 50  0001 C CNN
+F 3 "~" H 6700 3000 50  0001 C CNN
+	1    6700 3000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6700 3150 6700 3350
+Wire Wire Line
+	6700 3350 6600 3350
+Wire Wire Line
+	6700 2850 6700 2650
+Wire Wire Line
+	6700 2650 6400 2650
+$Comp
+L Device:R R3
+U 1 1 5D75AC60
+P 7300 2700
+F 0 "R3" V 7100 2700 50  0000 C CNN
+F 1 "10k" V 7200 2700 50  0000 C CNN
+F 2 "" V 7230 2700 50  0001 C CNN
+F 3 "~" H 7300 2700 50  0001 C CNN
+	1    7300 2700
+	0    -1   -1   0   
+$EndComp
+Wire Bus Line
+	7450 2600 7450 2750
+Wire Wire Line
+	7150 2700 7100 2700
+$Comp
+L Device:R R6
+U 1 1 5D75E5FA
+P 8350 2700
+F 0 "R6" V 8150 2700 50  0000 C CNN
+F 1 "10k" V 8250 2700 50  0000 C CNN
+F 2 "" V 8280 2700 50  0001 C CNN
+F 3 "~" H 8350 2700 50  0001 C CNN
+	1    8350 2700
+	0    -1   -1   0   
+$EndComp
+Wire Bus Line
+	8500 2600 8500 2750
+Wire Wire Line
+	8200 2700 8150 2700
+Wire Wire Line
+	7100 2700 7100 2400
+Wire Wire Line
+	7100 2400 7250 2400
+Wire Wire Line
+	8150 2700 8150 2400
+Wire Wire Line
+	8150 2400 8300 2400
+Wire Wire Line
+	7250 2500 7300 2500
+Wire Wire Line
+	7300 2500 7300 2550
+Wire Wire Line
+	7300 2550 8300 2550
+$Comp
+L Device:R R2
+U 1 1 5D770781
+P 7750 3000
+F 0 "R2" H 7820 3046 50  0000 L CNN
+F 1 "1k" H 7820 2955 50  0000 L CNN
+F 2 "" V 7680 3000 50  0001 C CNN
+F 3 "~" H 7750 3000 50  0001 C CNN
+	1    7750 3000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7750 3150 7750 3350
+Wire Wire Line
+	7750 2850 7750 2650
+$Comp
+L Device:R R5
+U 1 1 5D774A20
+P 8750 3000
+F 0 "R5" H 8800 3050 50  0000 L CNN
+F 1 "1k" H 8800 2950 50  0000 L CNN
+F 2 "" V 8680 3000 50  0001 C CNN
+F 3 "~" H 8750 3000 50  0001 C CNN
+	1    8750 3000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8750 3150 8750 3350
+Wire Wire Line
+	8750 2850 8750 2650
+Wire Wire Line
+	7450 2650 7750 2650
+Wire Wire Line
+	7750 3350 7650 3350
+Wire Wire Line
+	8750 3350 8700 3350
+Wire Wire Line
+	8750 2650 8500 2650
+Wire Wire Line
+	8700 2550 8350 2550
+Wire Wire Line
+	8350 2550 8350 2500
+Wire Wire Line
+	8350 2500 7650 2500
+Wire Wire Line
+	7700 4950 7700 5200
+Wire Wire Line
+	6200 3450 6150 3450
+Wire Wire Line
+	6150 3450 6150 4200
+Wire Wire Line
+	6150 4200 9050 4200
+Wire Wire Line
+	9050 4200 9050 3450
+Wire Wire Line
+	9050 3450 9200 3450
+Wire Wire Line
+	6200 3550 7250 3550
+Wire Wire Line
+	8300 3550 9000 3550
+Wire Wire Line
+	9000 3550 9000 3400
+Wire Wire Line
+	9000 3400 9200 3400
+Wire Wire Line
+	7300 4350 7300 5200
+Wire Wire Line
+	4800 1450 3900 1450
+Wire Wire Line
+	4700 1500 3100 1500
+Connection ~ 3100 4400
+Wire Wire Line
+	3100 4400 7700 4400
+Wire Wire Line
+	3100 4400 3100 4300
+Wire Wire Line
+	2800 4400 3100 4400
+Wire Wire Line
+	2800 3650 2800 4400
+Wire Wire Line
+	3100 3650 2800 3650
+Wire Wire Line
+	3100 3700 3100 3650
+Wire Wire Line
+	2750 3700 2950 3700
+Wire Wire Line
+	2750 2700 2750 3700
+Wire Wire Line
+	3250 2700 2750 2700
+Wire Wire Line
+	3250 2800 3250 2700
+Wire Wire Line
+	2800 3400 2950 3400
+Wire Wire Line
+	3100 2750 3100 2800
+Connection ~ 3100 2750
+Wire Wire Line
+	2800 2750 2800 3400
+Wire Wire Line
+	3100 2750 2800 2750
+Wire Wire Line
+	3250 4500 3250 4300
+Wire Wire Line
+	2650 4500 3250 4500
+Wire Wire Line
+	2650 2800 2650 4500
+Wire Wire Line
+	2950 2800 2650 2800
+Wire Wire Line
+	2950 3500 2950 3400
+Wire Wire Line
+	3900 3500 2950 3500
+Wire Wire Line
+	3900 1450 3900 3500
+Wire Wire Line
+	3100 1500 3100 2750
+$Comp
+L solarduino:button S2
+U 1 1 5D61A850
+P 3100 4000
+F 0 "S2" H 3378 4046 50  0000 L CNN
+F 1 "Up button" H 3378 3955 50  0000 L CNN
+F 2 "" H 2900 4050 50  0001 C CNN
+F 3 "" H 2900 4050 50  0001 C CNN
+	1    3100 4000
 	1    0    0    -1  
 $EndComp
 $Comp
-L solarduino:RaspberryPi_4 U?
-U 1 1 5D643C9E
-P 10950 1350
-F 0 "U?" H 11475 1665 50  0000 C CNN
-F 1 "RaspberryPi_4" H 11475 1574 50  0000 C CNN
-F 2 "" H 10950 1350 50  0001 C CNN
-F 3 "" H 10950 1350 50  0001 C CNN
-	1    10950 1350
+L solarduino:button S1
+U 1 1 5D618DF8
+P 3100 3100
+F 0 "S1" H 3378 3146 50  0000 L CNN
+F 1 "Down button" H 3378 3055 50  0000 L CNN
+F 2 "" H 2900 3150 50  0001 C CNN
+F 3 "" H 2900 3150 50  0001 C CNN
+	1    3100 3100
 	1    0    0    -1  
 $EndComp
+Connection ~ 2950 3400
+Wire Wire Line
+	2950 3400 3100 3400
+Wire Wire Line
+	8950 2400 8950 4950
+Wire Wire Line
+	6800 5750 6800 6600
+Wire Wire Line
+	6800 6600 7650 6600
+Wire Wire Line
+	7650 6600 7650 6750
+Wire Wire Line
+	6900 5750 6900 6550
+Wire Wire Line
+	6900 6550 7700 6550
+Wire Wire Line
+	7700 6550 7700 6750
+Wire Wire Line
+	7000 5750 7000 6500
+Wire Wire Line
+	7000 6500 7750 6500
+Wire Wire Line
+	7750 6500 7750 6750
+Wire Wire Line
+	7100 5750 7100 7600
+Text GLabel 6350 7850 0    50   Input ~ 0
+red-brown
+Text GLabel 7150 7850 0    50   Input ~ 0
+blue
+Text GLabel 7450 7850 0    50   Input ~ 0
+green
+Wire Wire Line
+	7200 5750 7200 7650
+Wire Wire Line
+	7200 7650 7150 7650
+Wire Wire Line
+	7300 5750 7300 7650
+Wire Wire Line
+	7300 7650 7450 7650
+Wire Notes Line
+	8000 7700 8000 7800
+Wire Notes Line
+	8000 7800 8200 7800
+Wire Notes Line
+	8200 7800 8200 7700
+Wire Notes Line
+	8200 7700 8000 7700
+Wire Notes Line
+	8000 7850 8000 7950
+Wire Notes Line
+	8000 7950 8150 7950
+Wire Notes Line
+	8150 7950 8150 7850
+Wire Notes Line
+	8150 7850 8000 7850
+Wire Notes Line
+	8200 7850 8200 7950
+Wire Notes Line
+	8200 7950 8350 7950
+Wire Notes Line
+	8350 7950 8350 7850
+Wire Notes Line
+	8350 7850 8200 7850
+Wire Notes Line
+	7950 7650 7950 8000
+Wire Notes Line
+	7950 8000 8400 8000
+Wire Notes Line
+	8400 8000 8400 7650
+Wire Notes Line
+	8400 7650 7950 7650
+Wire Wire Line
+	7400 5750 7400 6450
+Wire Wire Line
+	7400 6450 8050 6450
+Wire Wire Line
+	8050 6450 8050 7750
+Wire Wire Line
+	7500 5750 7500 6400
+Wire Wire Line
+	7500 6400 8100 6400
+Wire Wire Line
+	8100 6400 8100 7750
+Wire Wire Line
+	7600 5750 7600 6350
+Wire Wire Line
+	7600 6350 8150 6350
+Wire Wire Line
+	8150 6350 8150 7750
+Wire Wire Line
+	7700 5750 7700 6300
+Wire Wire Line
+	7700 6300 8500 6300
+Wire Wire Line
+	8500 6300 8500 8100
+Wire Wire Line
+	8500 8100 8050 8100
+Wire Wire Line
+	7800 5750 7800 6250
+Wire Wire Line
+	7800 6250 8450 6250
+Wire Wire Line
+	8450 6250 8450 8050
+Wire Wire Line
+	8450 8050 8100 8050
+Wire Wire Line
+	8100 8050 8100 7900
+Wire Wire Line
+	8050 8100 8050 7900
+Wire Wire Line
+	7900 5750 7900 6200
+Wire Wire Line
+	7900 6200 8250 6200
+Wire Wire Line
+	8250 6200 8250 7900
+Wire Wire Line
+	8000 5750 8000 6150
+Wire Wire Line
+	8000 6150 8300 6150
+Wire Wire Line
+	8300 6150 8300 7900
+Text Notes 9850 1300 0    168  ~ 0
+meter cupboard
+Wire Wire Line
+	6400 7450 6900 7450
+Wire Wire Line
+	6350 7600 7100 7600
+Wire Notes Line
+	10150 7850 10150 8050
+Wire Notes Line
+	10150 8050 10450 8050
+Wire Notes Line
+	10450 8050 10450 7850
+Wire Notes Line
+	10450 7850 10150 7850
+Wire Notes Line
+	10750 7850 10750 8050
+Wire Notes Line
+	10750 8050 11050 8050
+Wire Notes Line
+	11050 8050 11050 7850
+Wire Notes Line
+	11050 7850 10750 7850
+Wire Wire Line
+	6350 8150 10200 8150
+Wire Wire Line
+	10200 8150 10200 7950
+Wire Wire Line
+	6350 7600 6350 8150
+Wire Wire Line
+	5850 8250 10300 8250
+Wire Wire Line
+	10300 8250 10300 7950
+Wire Wire Line
+	5850 5100 5850 8250
+Wire Wire Line
+	5500 8350 10400 8350
+Wire Wire Line
+	10400 8350 10400 7950
+Wire Wire Line
+	5500 5150 5500 8350
+Wire Wire Line
+	7450 8450 10800 8450
+Wire Wire Line
+	10800 8450 10800 7950
+Wire Wire Line
+	7450 7650 7450 8450
+Wire Wire Line
+	7150 8550 10900 8550
+Wire Wire Line
+	10900 8550 10900 7950
+Wire Wire Line
+	7150 7650 7150 8550
+Wire Wire Line
+	6900 8650 11000 8650
+Wire Wire Line
+	11000 8650 11000 7950
+Wire Wire Line
+	6900 7450 6900 8650
+Wire Bus Line
+	13200 4800 13200 5800
+Wire Bus Line
+	13400 4800 13400 5800
 $EndSCHEMATC
