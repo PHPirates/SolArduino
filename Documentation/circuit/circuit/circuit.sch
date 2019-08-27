@@ -2,7 +2,7 @@ EESchema Schematic File Version 4
 LIBS:circuit-cache
 EELAYER 30 0
 EELAYER END
-$Descr A2 23386 16535
+$Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title "SolArduino"
@@ -28,12 +28,12 @@ $EndComp
 $Comp
 L solarduino:RaspberryPi_4 U3
 U 1 1 5D643C9E
-P 11050 2300
-F 0 "U3" H 11575 2615 50  0000 C CNN
-F 1 "RaspberryPi_4" H 11575 2524 50  0000 C CNN
-F 2 "" H 11050 2300 50  0001 C CNN
-F 3 "" H 11050 2300 50  0001 C CNN
-	1    11050 2300
+P 12900 2300
+F 0 "U3" H 13425 2615 50  0000 C CNN
+F 1 "RaspberryPi_4" H 13425 2524 50  0000 C CNN
+F 2 "" H 12900 2300 50  0001 C CNN
+F 3 "" H 12900 2300 50  0001 C CNN
+	1    12900 2300
 	1    0    0    -1  
 $EndComp
 Wire Bus Line
@@ -320,11 +320,9 @@ Wire Wire Line
 Text GLabel 6900 7850 0    50   Input ~ 0
 white-green
 Wire Notes Line
-	850  950  850  11650
+	850  950  850  10250
 Wire Notes Line
-	850  11650 9600 11600
-Wire Notes Line
-	9650 11600 9650 900 
+	9650 10250 9650 900 
 Wire Notes Line
 	9650 900  850  950 
 Text Notes 8000 1300 0    168  ~ 0
@@ -752,41 +750,121 @@ Wire Notes Line
 Wire Wire Line
 	6350 8150 10200 8150
 Wire Wire Line
-	10200 8150 10200 7950
-Wire Wire Line
 	6350 7600 6350 8150
 Wire Wire Line
 	5850 8250 10300 8250
-Wire Wire Line
-	10300 8250 10300 7950
 Wire Wire Line
 	5850 5100 5850 8250
 Wire Wire Line
 	5500 8350 10400 8350
 Wire Wire Line
-	10400 8350 10400 7950
-Wire Wire Line
 	5500 5150 5500 8350
 Wire Wire Line
 	7450 8450 10800 8450
-Wire Wire Line
-	10800 8450 10800 7950
 Wire Wire Line
 	7450 7650 7450 8450
 Wire Wire Line
 	7150 8550 10900 8550
 Wire Wire Line
-	10900 8550 10900 7950
-Wire Wire Line
 	7150 7650 7150 8550
 Wire Wire Line
 	6900 8650 11000 8650
-Wire Wire Line
-	11000 8650 11000 7950
 Wire Wire Line
 	6900 7450 6900 8650
 Wire Bus Line
 	13200 4800 13200 5800
 Wire Bus Line
 	13400 4800 13400 5800
+Text Notes 13150 4750 0    50   ~ 0
++
+Text Notes 13350 4750 0    50   ~ 0
+-
+Wire Wire Line
+	10200 5950 13500 5950
+Wire Wire Line
+	13500 5950 13500 5600
+Wire Wire Line
+	13500 5600 13400 5600
+Wire Wire Line
+	10200 5950 10200 8150
+Wire Wire Line
+	10300 6050 13100 6050
+Wire Wire Line
+	13100 6050 13100 5650
+Wire Wire Line
+	13100 5650 13200 5650
+Wire Wire Line
+	10300 6050 10300 8250
+Wire Wire Line
+	10400 5000 11550 5000
+Wire Wire Line
+	10400 5000 10400 8350
+Wire Wire Line
+	12300 5000 13200 5000
+Wire Wire Line
+	12300 5100 13200 5100
+Wire Wire Line
+	12300 5200 13400 5200
+Wire Wire Line
+	11000 4050 12750 4050
+Wire Wire Line
+	11000 4050 11000 8600
+Wire Wire Line
+	10900 3950 12750 3950
+Wire Wire Line
+	10900 3950 10900 8500
+Wire Wire Line
+	10800 3850 12750 3850
+Wire Wire Line
+	10800 3850 10800 8400
+Wire Wire Line
+	12300 5300 12350 5300
+Wire Wire Line
+	12350 5300 12350 3350
+Wire Wire Line
+	12350 3350 12750 3350
+Wire Wire Line
+	12300 5400 12400 5400
+Wire Wire Line
+	12400 5400 12400 3250
+Wire Wire Line
+	12400 3250 12750 3250
+Wire Wire Line
+	12300 5500 12450 5500
+Wire Wire Line
+	12450 5500 12450 3150
+Wire Wire Line
+	12450 3150 12750 3150
+Wire Wire Line
+	12300 5600 12500 5600
+Wire Wire Line
+	12500 5600 12500 4400
+Wire Wire Line
+	12500 4400 14250 4400
+Wire Wire Line
+	14250 4400 14250 3350
+Wire Wire Line
+	14250 3350 14100 3350
+Wire Wire Line
+	12300 5700 13400 5700
+Wire Wire Line
+	12750 4150 12750 4500
+Wire Wire Line
+	12750 4500 13500 4500
+Wire Wire Line
+	13500 4500 13500 5000
+Wire Wire Line
+	13500 5000 13400 5000
+Wire Wire Line
+	13400 4900 12300 4900
+Wire Wire Line
+	12300 4900 12300 3050
+Wire Wire Line
+	12300 3050 12750 3050
+Wire Notes Line
+	9650 900  14650 900 
+Wire Notes Line
+	14650 900  14600 10250
+Wire Notes Line
+	850  10250 14650 10250
 $EndSCHEMATC
