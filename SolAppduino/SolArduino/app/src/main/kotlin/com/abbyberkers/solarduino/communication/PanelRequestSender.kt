@@ -57,4 +57,8 @@ class PanelRequestSender(progressBar: ProgressBar, currentAngleView: CurrentAngl
         handler.sendRequest(RequestType.PANELS_TO_ANGLE, "?degrees=$angle")
     }
 
+    fun resetEmergency() {
+        handler.sendRequest(RequestType.RESET_EMERGENCY, "?emergency=reset")
+    }
+
 }

@@ -5,11 +5,11 @@
     <string name="upbuttondescription">Button Up</string>
     <string name="downbuttondescription">Button Down</string>
     <string name="change_angle_button_description">Move panels to %1$d°</string>
-    <string name="initialdegrees">…</string>
+    <string name="initialdegrees" translatable="false">…</string>
     <string name="angle" translatable="false">%1$d°</string>
     <string name="imagepaneldescription">Solar Panel</string>
     <string name="setanglebutton">Set angle</string>
-    <string name="update" translatable="false">Check for updates</string>
     <string name="home">Home</string>
     <string name="schedule">Schedule</string>
+    <string name="emergency_reset">Reset emergency</string>
 </resources>

@@ -1,9 +1,7 @@
 package com.abbyberkers.solarduino.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import com.abbyberkers.solarduino.R
 import com.abbyberkers.solarduino.communication.PanelRequestSender
@@ -40,5 +38,17 @@ class HomeFragment(private val stopButton: FloatingActionButton) : Fragment() {
         stopButton.setOnClickListener { httpClient.stopPanels() }
 
         httpClient.requestAngleBounds(selectAngleBar)
+    }
+
+//    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//        inflater?.inflate(R.menu.mainmenu, menu)
+//    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.emergencyResetButton) {
+            httpClient.resetEmergency()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

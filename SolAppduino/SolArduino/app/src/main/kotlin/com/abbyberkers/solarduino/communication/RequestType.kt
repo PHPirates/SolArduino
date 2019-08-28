@@ -12,4 +12,5 @@ enum class RequestType {
     PANELS_DOWN,
     PANELS_STOP,
     PANELS_TO_ANGLE,
+    RESET_EMERGENCY,
 }

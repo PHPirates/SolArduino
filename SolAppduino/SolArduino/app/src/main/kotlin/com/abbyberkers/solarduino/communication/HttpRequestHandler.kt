@@ -2,9 +2,11 @@ package com.abbyberkers.solarduino.communication
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.abbyberkers.solarduino.ui.components.CurrentAngleView
 import com.google.gson.Gson
 import io.ktor.client.HttpClient
@@ -22,6 +24,9 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
     /** Remember currently executing job and type. */
     private var currentJob: Job? = null
     private var currentJobType: RequestType? = null
+
+    /** Keep track of whether a toast is shown or not. */
+    private var currentToast: Toast? = null
 
 
     /**
@@ -64,6 +69,7 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
      * @return The coroutine job.
      */
     private fun startGetRequest(parameters: String = "", updateFunction: (response: HttpResponse) -> Unit = {}): Job {
+        Log.w("request", "$parameters ")
         // Send http requests in a coroutine
         return CoroutineScope(Dispatchers.IO).launch {
             val client = HttpClient(Android) {
@@ -99,6 +105,11 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
                     // Always update angle, for any request
                     currentAngleView.angle = response.angle
                     autoCheckBox.isChecked = response.auto_mode
+                    if (response.emergency) {
+                        currentToast?.cancel()
+                        currentToast = Toast.makeText(progressBar.context, response.message, Toast.LENGTH_SHORT)
+                        currentToast!!.show()
+                    }
                     updateFunction(response)
                     progressBar.visibility = View.INVISIBLE
                 })

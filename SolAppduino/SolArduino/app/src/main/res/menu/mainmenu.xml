@@ -2,13 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ProgressBar
-        android:id="@+id/indeterminateBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="visible"
-        app:showAsAction="always"
-        />
+<!--    <ProgressBar-->
+<!--        android:id="@+id/indeterminateBar"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:indeterminate="true"-->
+<!--        android:visibility="visible"-->
+<!--        app:showAsAction="ifroom"-->
+<!--        />-->
+
+    <item
+        android:id="@+id/emergencyResetButton"
+        android:enabled="true"
+        android:title="@string/emergency_reset"
+        app:showAsAction="never" />
 
 </menu>
