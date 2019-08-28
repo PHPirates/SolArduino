@@ -21,3 +21,7 @@ class Emergency:
         self.is_set = True
         self.message = message
         self.stop_function(stop_angle_thread, stop_auto_thread)
+
+    def reset(self):
+        self.is_set = False
+        self.message = None

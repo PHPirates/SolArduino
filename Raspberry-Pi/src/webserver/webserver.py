@@ -68,6 +68,10 @@ class Webserver(object):
                 angle = float(url_params['degrees'])
                 message = self.panel_controller.go_to_angle(angle)
 
+        if 'emergency' in url_params.keys():
+            if url_params['emergency'] == 'reset':
+                self.panel_controller.emergency.reset()
+
         emergency = False
         angle = self.panel_controller.get_angle()
         auto_mode = self.panel_controller.is_auto_mode_on()
