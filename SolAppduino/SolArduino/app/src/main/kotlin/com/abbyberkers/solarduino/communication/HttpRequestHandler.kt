@@ -1,6 +1,7 @@
 package com.abbyberkers.solarduino.communication
 
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ProgressBar
@@ -12,8 +13,6 @@ import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
 import kotlinx.coroutines.*
-import android.os.Looper
-import android.util.Log
 import java.net.SocketTimeoutException
 
 
@@ -35,7 +34,6 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
      * @param updateFunction: Function to execute when the http response is received.
      */
     fun sendRequest(jobType: RequestType, parameters: String = "", updateFunction: (response: HttpResponse) -> Unit = {}) {
-        Log.w("request", "url$parameters")
         Handler(Looper.getMainLooper()).post(Runnable {
             progressBar.visibility = View.VISIBLE
         })
