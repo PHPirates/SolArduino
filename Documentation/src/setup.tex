@@ -1,4 +1,9 @@
 \subsection{Hardware used}\label{subsec:hardwareUsed}
+
+The first version of the project used an Arduino.
+Arduino-specific documentation that is now obsolete for this project is gathered in Section~\ref{ch:arduino}.
+
+\subsubsection{Arduino}
 We used an Arduino Nano ATmega328, bought at \href{http://nl.rs-online.com/}{rs-components}.
 We used a \href{http://www.mijn-gadgets.nl/Webwinkel-Product-157562595/ENC28J60-Ethernet-Shield-Network-Module-V1.0-For-Arduino-Nano.html}{ENC28j60 Ethernet shield}, the version specifically for the nano.
 This seemed easier than a wifi shield because of this reason, and with a wifi shield it seemed we needed extra components and a circuit, and we didn't really understand it.
@@ -10,16 +15,33 @@ But we did not manage to get both the ethernet and the sd card to work.
 Theoretically it should be possible, but in practice it seems like we want to let the Arduino do too much things together and it gets very difficult.
 The test files can still be found in the UnitTests folder.
 
-The best solution we could think of was buying a Raspberry Pi, see Section~\ref{ch:pi}.
+\subsubsection{Raspberry Pi}
+The best solution we could think of was buying a Raspberry Pi.
+As explained in Section~\ref{subsec:hardwareUsed} when the NAS stopped serving requests we decided to drop the Arduino and start using a Raspberry Pi.
+
+There are a lot of Raspberry Pi versions, but at the moment of writing (July 2019) it seems the Raspberry Pi 4 is the most recent and complete Pi.
+At the moment only the 2GB version is available.
+However, since a Raspberry Pi has no analog inputs, we will need a separate Analog to Digital Converter (ADC) to read the pot meter values.
+It seems that the MCP3008 is widely used, see for example \url{https://electronicshobbyists.com/raspberry-pi-analog-sensing-mcp3008-raspberry-pi-interfacing/}.
+It speaks about setting 3.3v on the potmeter, just like all other places we could find, whereas we put 5v on it with the Arduino but we think it should work all the same.
+
+%An other possibility would be to try to control the Arduino as a slave, and use the ADC of the Arduino, for example with \url{https://github.com/nanpy/nanpy} or \url{http://www.uugear.com/portfolio/raspberry-pi-measures-voltage-via-arduino/}
 
 \subsubsection{Components list}
 	\begin{itemize}
+        \item Raspberry Pi 4 2GB
+        \item MCP3008
+        \item RJ45 breakout board
+        \item JE342 ethernet connection box
+        \item Adafruit Perma-Proto Full-sized breadboard
 		\item BC547 NPN transistor
 		\item BC557 PNP transistor
-		\item $4.7$k $\Omega$ resistor (yellow - violet - red - gold)
-		\item $1$k $\Omega$ resistor (brown - black - black - brown - brown - red)
-		\item $10$k $\Omega$ resistor (brown - black - orange - gold)
+		\item $4.7$ k$\Omega$ resistor (yellow - violet - red - gold)
+		\item $1$ k$\Omega$ resistor (brown - black - black - brown - brown - red)
+		\item $10$ k$\Omega$ resistor (brown - black - orange - gold)
 	\end{itemize}
+
+
 \subsubsection{Button circuit}
 	We implemented the begin- and endstops in the circuit for the buttons that move the panels up and down.
 	When a button is NOT pushed, 1 and 1B, and 2 and 2B of that button are connected.
