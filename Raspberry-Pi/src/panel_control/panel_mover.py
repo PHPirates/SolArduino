@@ -48,8 +48,10 @@ class PanelMover:
                     self.panel.stop()
                     return False
                 else:
+                    if self.timer.is_alive():
+                        self.timer.stop()
+                        self.timer.join()
                     # Start timer
-                    self.timer.stop()
                     self.timer = StoppableTimer(self.movement_timeout,
                                                 self.panel.stop)
                     self.timer.start()
@@ -78,8 +80,10 @@ class PanelMover:
                     self.panel.stop()
                     return False
                 else:
+                    if self.timer.is_alive():
+                        self.timer.stop()
+                        self.timer.join()
                     # Start timer
-                    self.timer.stop()
                     self.timer = StoppableTimer(self.movement_timeout,
                                                 self.panel.stop)
                     self.timer.start()

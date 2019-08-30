@@ -91,7 +91,9 @@ class PanelController:
         :param stop_auto_thread: Same for auto_mode_thread.
         """
         self.panel.stop()
-        self.panel_mover.timer.stop()
+        if self.panel_mover.timer.is_alive():
+            self.panel_mover.timer.stop()
+            self.panel_mover.timer.join()
 
         if stop_angle_thread:
             # Make sure to wait for the thread to stop, to ensure it doesn't
