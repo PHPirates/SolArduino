@@ -33,8 +33,8 @@ android {
         applicationId "com.abbyberkers.solarduino"
         minSdkVersion 26
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.3"
+        versionCode 5
+        versionName "1.4"
     }
     repositories {
         maven { url 'http://repo1.maven.org/maven2' }

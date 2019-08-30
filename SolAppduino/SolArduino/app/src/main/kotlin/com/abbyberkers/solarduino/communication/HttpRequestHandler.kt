@@ -15,6 +15,7 @@ import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
 import kotlinx.coroutines.*
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 
@@ -126,6 +127,8 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
         return try {
             client.get<String>("http://192.168.8.42:8080/$parameters")
         } catch (e: SocketTimeoutException) {
+            return null
+        } catch (e: ConnectException) {
             return null
         }
     }
