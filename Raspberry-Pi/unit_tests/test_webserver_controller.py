@@ -20,6 +20,6 @@ class Root(object):
 if __name__ == '__main__':
     Daemonizer(cherrypy.engine).subscribe()
     cherrypy.config.update({'server.socket_host': '192.168.8.42',
-                            'server.socket_port': 8080,
+                            'server.socket_port': 8081,
                             })
     cherrypy.quickstart(Root(), '/')
