@@ -30,6 +30,9 @@ class Webserver(object):
 
         emergency = self.panel_controller.emergency
         if emergency.is_set:
+            if 'emergency' in params.keys():
+                if params['emergency'] == 'reset':
+                    self.panel_controller.emergency.reset()
             return self.emergency_to_dict(emergency)
         else:
             # noinspection PyBroadException
@@ -67,10 +70,6 @@ class Webserver(object):
             else:
                 angle = float(url_params['degrees'])
                 message = self.panel_controller.go_to_angle(angle)
-
-        if 'emergency' in url_params.keys():
-            if url_params['emergency'] == 'reset':
-                self.panel_controller.emergency.reset()
 
         emergency = False
         angle = self.panel_controller.get_angle()
