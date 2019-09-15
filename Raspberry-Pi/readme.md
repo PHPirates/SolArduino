@@ -9,3 +9,6 @@ We use supervisor to ensure the program is started after boot.
 
 
 @reboot bash -c 'export PYTHONPATH=/opt/solarduino_venv/solarduino && cd /opt/solarduino_venv/solarduino && source /opt/solarduino_venv/bin/activate && python /opt/solarduino_venv/solarduino/src/solarduino.py'
+
+# Troubleshooting
+* `kex_exchange_identification: read: Connection reset by peer` when connecting via ssh: https://raspberrypi.stackexchange.com/a/102076/106568

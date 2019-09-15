@@ -38,11 +38,11 @@ if __name__ == '__main__':
     kill_if_exists()
     PIDFile(cherrypy.engine, pid_path).subscribe()
     # Don't daemonize when Pycharm is debugging
-    # gettrace = getattr(sys, 'gettrace', None)
-    # if gettrace is None or not gettrace():
-    #     Daemonizer(cherrypy.engine,
-    #                stdout='logs/solarduino_access.log',
-    #                stderr='logs/solarduino_error.log').subscribe()
+    gettrace = getattr(sys, 'gettrace', None)
+    if gettrace is None or not gettrace():
+        Daemonizer(cherrypy.engine,
+                   stdout='logs/solarduino_access.log',
+                   stderr='logs/solarduino_error.log').subscribe()
 
     cherrypy.config.update({'server.socket_host': get_ip(),
                             'server.socket_port': 8080,

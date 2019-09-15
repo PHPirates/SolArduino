@@ -96,7 +96,12 @@ class HttpRequestHandler(private val progressBar: ProgressBar, private val curre
             }
             if (resultString == null) {
                 // Give up.
-                progressBar.visibility = View.INVISIBLE
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    progressBar.visibility = View.INVISIBLE
+                    currentToast?.cancel()
+                    currentToast = Toast.makeText(progressBar.context, "Could not connect to Pi", Toast.LENGTH_SHORT)
+                    currentToast!!.show()
+                })
                 return@launch
             } else {
                 val response: HttpResponse = Gson().fromJson(resultString!!, HttpResponse::class.java)
