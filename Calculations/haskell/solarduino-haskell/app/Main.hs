@@ -11,7 +11,7 @@ import           TimeConverters
 
 --main :: IO ()
 --main = print (directPower 10 0.5)
-main = writeBestAnglesToFile "angles.times" (fromGregorian 2019 8 30) (fromGregorian 2019 8 30) 10000 100
+main = writeBestAnglesToFile "angles.times" (fromGregorian 2019 8 30) (fromGregorian 2019 11 30) 10000 100
 ---- | Benchmark functions using Criterion.
 --main = defaultMain [
 --    bgroup "benchmarking..." [ -- would usually be function name here
