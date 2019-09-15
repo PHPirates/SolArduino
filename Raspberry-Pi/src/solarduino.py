@@ -8,6 +8,8 @@ from cherrypy.process.plugins import Daemonizer, PIDFile
 
 from src.webserver.webserver import Webserver
 
+pid_path = '/tmp/solarduino.pid'
+
 
 def get_ip() -> str:
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -33,7 +35,6 @@ def kill_if_exists():
 
 if __name__ == '__main__':
     """ Start SolArduino. """
-    pid_path = '/tmp/solarduino.pid'
     cherrypy.engine.exit()
     kill_if_exists()
     PIDFile(cherrypy.engine, pid_path).subscribe()
