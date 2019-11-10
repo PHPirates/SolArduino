@@ -6,8 +6,8 @@ $Descr User 12039 9071
 encoding utf-8
 Sheet 1 1
 Title "SolArduino"
-Date "2019-08-30"
-Rev "5"
+Date "2019-11-10"
+Rev "6"
 Comp "Thomas Schouten"
 Comment1 ""
 Comment2 ""
@@ -449,9 +449,6 @@ Text Notes 7450 1050 0    168  ~ 0
 meter cupboard
 Wire Wire Line
 	6850 2150 6850 4700
-Wire Wire Line
-	850  3150 1000 3150
-Connection ~ 850  3150
 $Comp
 L solarduino:button S1
 U 1 1 5D618DF8
@@ -493,12 +490,10 @@ Wire Wire Line
 Wire Wire Line
 	1000 2500 700  2500
 Wire Wire Line
-	700  2500 700  3150
+	700  2500 700  3200
 Connection ~ 1000 2500
 Wire Wire Line
 	1000 2500 1000 2550
-Wire Wire Line
-	700  3150 850  3150
 Wire Wire Line
 	1150 2550 1150 2450
 Wire Wire Line
@@ -1106,4 +1101,8 @@ Wire Wire Line
 	8250 4700 10450 4700
 Wire Wire Line
 	8250 3650 8250 4700
+Wire Wire Line
+	700  3200 1000 3200
+Wire Wire Line
+	1000 3150 1000 3200
 $EndSCHEMATC
